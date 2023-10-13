@@ -42,11 +42,19 @@ extra_prey <- function(A, j, i0, tp, theta, kappa, cannibal = FALSE) {
   # pick 'kappa' samples from index[-i0]
   # weighted by p_ij
   resample <- function(x, ...) x[sample.int(length(x), ...)]
-  i_pick <- resample(i_index[-i0],
-                     size = kappa,
-                     prob = p_ij[-i0])
   
-  i <- c(i0, i_pick)
+  if (length(i_index) > 1) {
+    i_pick <- resample(i_index[-i0],
+                       size = kappa,
+                       prob = p_ij[-i0])
+    
+    i <- c(i0, i_pick)
+  } else {
+    # when j = 2 with no cannibalism
+    # no choice but i0 available as prey
+    i <- i0  
+  }
+  
   A[i, j] <- 1
   
   return(A)
