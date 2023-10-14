@@ -154,3 +154,179 @@ ppm <- function(n_species,
   return(list(A = A, tp = tp))
 }
 
+
+# convert A ---------------------------------------------------------------
+
+to_alpha <- function(A,
+                     attack = list(min = 0,
+                                   max = 1),
+                     convert = list(min = 0,
+                                    max = 1),
+                     mortal = list(min = 0,
+                                   max = 1)) {
+  
+  # identify basal species
+  uA <- A
+  basal <- which(colSums(A) == 0)
+  
+  # scale by # of resources
+  suA <- t(t(A[, -basal]) / colSums(A)[-basal])
+  
+  # interaction matrix
+  ## matrix for attack rates
+  a <- with(attack, matrix(runif(ncol(A)^2, min = min, max = max),
+                           nrow = nrow(A),
+                           ncol = ncol(A)))
+  
+  ## matrix for conversion efficiency
+  b <- with(convert, matrix(runif(ncol(A)^2, min = min, max = max),
+                            nrow = nrow(A),
+                            ncol = ncol(A)))
+  
+  ## vector for intraspecific competition
+  m <- with(mortal, runif(ncol(A), min = min, max = max))
+  
+  uA[, -basal] <- a * suA
+  alpha <- b * uA - t(uA)
+  
+  # intraspecific interaction
+  diag(alpha) <- - m
+  
+  return(alpha)
+}
+
+# deSolve wrapper ---------------------------------------------------------
+
+sglv <- function(n_species,
+                 n_patch,
+                 n_timestep = 100,
+                 interval = 0.01,
+                 r,
+                 alpha,
+                 phi,
+                 connectivity,
+                 disturb = list(int = 1,
+                                rate = (1 / n_timestep) * 10,
+                                s = interval * 10),
+                 n0 = list(min = 0,
+                           max = 1),
+                 threshold = 1E-4,
+                 ...) {
+  
+  # verify inputs -----------------------------------------------------------
+  
+  # r input
+  if (length(r) != 1 && length(r) != n_species)
+    stop("r must have length one or n_species")
+  
+  # alpha input
+  if (all(dim(alpha) == n_speices))
+    stop("alpha's dimensions must be n_species x n_species")
+  
+  # connectivity input
+  if (all(dim(connectivity) == n_patch))
+    stop("connectivity's dimensions must be n_patch x n_patch")
+  
+  # disturbance intensity
+  if (length(disturb$int) != 1 && length(disturb$int) != n_patch)
+    stop("disturbance intensity (int) must have length one or n_patch")
+    
+  # disturbance setup -------------------------------------------------------
+  
+  # n possible disturbance points
+  # + 100 to ensure cumsum(x) > n_timestep
+  # remove points > n_timestep
+  psi <- with(disturb,
+              cumsum(rexp(n = ceiling((1 / rate) + 100), rate)))
+  psi <- psi[psi <= n_timestep]
+  
+  # pseudo time steps
+  time <- seq(0, n_timestep, by = disturb$s)
+  t_psi <- sapply(psi, FUN = function(x) which.min(abs(time - x)))
+  
+  # create dummy time-series for signals
+  signal <- data.frame(time = time,
+                       psi = rep(0, length(time)))
+  signal$psi[t_psi] <- 1
+  
+  # linear interpolation function
+  input <- approxfun(signal, rule = 2)
+  
+  # n_patch x n_species disturbance intensity matrix
+  ## fun_to_m() returns n_species x n_patch matrix
+  ## transpose to n_patch x n_species
+  Et <- with(disturb, mcbrnet::fun_to_m(int, 
+                                        n_species = n_species,
+                                        n_patch = n_patch,
+                                        param_attr = "patch"))
+  
+  E <- t(Et$m_x)
+  
+  # intrinsic growth --------------------------------------------------------
+  
+  Rt <- mcbrnet::fun_to_m(r,
+                          n_species = n_species,
+                          n_patch = n_patch,
+                          param_attr = "species")  
+  
+  R <- t(Rt$m_x)
+  
+  # ode ---------------------------------------------------------------------
+  
+  # n: n_patch x n_species abundance vector
+  # N: n_patch x n_species abundance matrix
+  # R: n_patch x n_species growth rate matrix
+  # psi: indicator parameter scalar
+  # E: n_patch x n_species disturbance intensity matrix
+  # A: n_species x n_species interaction matrix
+  # phi: migration rate
+  # C: n_patch x n_patch connectivity matrix
+  
+  deriv <- function(t, n, parms) {
+    with(parms, {
+      psi <- input(t)
+      N <- matrix(n, nrow = n_patch, ncol = n_species)
+      dN <- N * (R + psi * E + N %*% A) + phi * C %*% N
+      list(dN)
+    })
+  }
+  
+  # define absorbing condition
+  ## root function
+  rootfun <- function (t, n, parms) {
+    return(n - threshold)
+  }
+  
+  ## extinction: triggered when "n - threshold = 0"
+  eventfun <- function(t, n, pars) {
+    n <- ifelse(n <= threshold, 0, n)
+    return(n)
+  }
+  
+  # parameter list
+  parms <- list(n_species = n_species,
+                n_patch = n_patch,
+                R = R,
+                E = E,
+                A = A,
+                phi = phi,
+                C = C)
+  
+  # initial values for a state variable
+  n_init <- with(n0, runif(n_species * n_patch,
+                           min = min,
+                           max = max))
+  
+  # time-series
+  time <- seq(0, n_timestep, by = interval)
+  
+  # run ode solver
+  cout <- deSolve::ode(y = n_init,
+                       times = times,
+                       func = deriv,
+                       parms = parms,
+                       events = list(func = eventfun, root = TRUE),
+                       rootfun = rootfun,
+                       ...)
+}
+
