@@ -172,7 +172,7 @@ to_alpha <- function(A,
   # scale by # of resources
   suA <- t(t(A[, -basal]) / colSums(A)[-basal])
   
-  # interaction matrix
+  # generate random parameters
   ## matrix for attack rates
   a <- with(attack, matrix(runif(ncol(A)^2, min = min, max = max),
                            nrow = nrow(A),
@@ -186,7 +186,8 @@ to_alpha <- function(A,
   ## vector for intraspecific competition
   m <- with(mortal, runif(ncol(A), min = min, max = max))
   
-  uA[, -basal] <- a * suA
+  # interaction matrix
+  uA[, -basal] <- a[, -basal] * suA
   alpha <- b * uA - t(uA)
   
   # intraspecific interaction
@@ -194,6 +195,7 @@ to_alpha <- function(A,
   
   return(alpha)
 }
+
 
 # deSolve wrapper ---------------------------------------------------------
 
