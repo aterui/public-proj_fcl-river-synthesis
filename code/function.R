@@ -222,11 +222,11 @@ sglv <- function(n_species,
     stop("r must have length one or n_species")
   
   # alpha input
-  if (all(dim(alpha) == n_speices))
+  if (!all(dim(alpha) == n_species))
     stop("alpha's dimensions must be n_species x n_species")
   
   # connectivity input
-  if (all(dim(connectivity) == n_patch))
+  if (!all(dim(connectivity) == n_patch))
     stop("connectivity's dimensions must be n_patch x n_patch")
   
   # disturbance intensity
@@ -310,9 +310,9 @@ sglv <- function(n_species,
                 n_patch = n_patch,
                 R = R,
                 E = E,
-                A = A,
+                A = alpha,
                 phi = phi,
-                C = C)
+                C = connectivity)
   
   # initial values for a state variable
   n_init <- with(n0, runif(n_species * n_patch,
@@ -320,7 +320,7 @@ sglv <- function(n_species,
                            max = max))
   
   # time-series
-  time <- seq(0, n_timestep, by = interval)
+  times <- seq(0, n_timestep, by = interval)
   
   # run ode solver
   cout <- deSolve::ode(y = n_init,
@@ -330,5 +330,7 @@ sglv <- function(n_species,
                        events = list(func = eventfun, root = TRUE),
                        rootfun = rootfun,
                        ...)
+  
+  return(cout)
 }
 
