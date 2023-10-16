@@ -288,7 +288,7 @@ sglv <- function(n_species,
     with(parms, {
       psi <- input(t)
       N <- matrix(n, nrow = n_patch, ncol = n_species)
-      dN <- N * (R + psi * E + N %*% A) + phi * C %*% N
+      dN <- N * (R - psi * E + N %*% A) + phi * C %*% N
       list(dN)
     })
   }
