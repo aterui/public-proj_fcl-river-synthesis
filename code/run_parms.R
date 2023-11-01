@@ -7,7 +7,7 @@ source("code/library.R")
 # foodweb -----------------------------------------------------------------
 
 ## replicate number
-n_fw <- 5
+n_fw <- 10
 
 ## food web setup
 ## 0.18 proportion of basal species - see Briand and Cohen 1987 Nature
@@ -16,34 +16,57 @@ n_fw <- 5
 s <- 16
 b <- floor(s * 0.18)
 l <- floor(0.11 * s ^ 2)
-theta <- 0.25
+theta <- c(0.25, 1)
 
 ## generate food webs
 set.seed(123)
-list_fw <- replicate(n = n_fw,
-                     foodweb(n_species = s,
-                             n_basal = b,
-                             l = l,
-                             theta = theta),
-                     simplify = FALSE)
+
+list_fw <- foreach(x = theta,
+                   .combine = c) %do% {
+                     replicate(n = n_fw, {
+                       fw <- foodweb(n_species = s,
+                                     n_basal = b,
+                                     l = l,
+                                     theta = x)
+                       attr(fw, "theta") <- x
+                       return(fw)
+                     },
+                     simplify = FALSE) 
+                   }
 
 saveRDS(list_fw, "data_fmt/parms_foodweb.rds")
 
 
 # network -----------------------------------------------------------------
 
+## set network parameters
+## n_rep = number of network replicates
+## sigma_src = SD for disturbance values at headwaters
+## sigma_lon = longitudinal SD for disturbance values
 n_rep <- 100
 sigma_src <- 1
 sigma_lon <- 0.01
 
+## np_xx = min or max values for n_patch
+## pb_xx = min or max values for p_branch
+np_min <- 10
+np_max <- 100
+pb_min <- 0.05
+pb_max <- 0.95
+
+## sample parameter values
 repeat {
-  n_patch <- round(10^runif(n_rep, log(10, base = 10), log(50, base = 10)))
-  p_branch <- 10^runif(n_rep, log(0.05, base = 10), log(0.95, base = 10))
+  n_patch <- round(10^runif(n_rep,
+                            log(np_min, base = 10),
+                            log(np_max, base = 10)))
+  p_branch <- 10^runif(n_rep,
+                       log(pb_min, base = 10),
+                       log(pb_max, base = 10))
   
-  if(min(n_patch) < 15 & 
-     max(n_patch) > 45 &
-     min(p_branch) < 0.10 &
-     max(p_branch) > 0.90) break    
+  if(min(n_patch) < np_min + 5 & 
+     max(n_patch) > np_max - 5 &
+     min(p_branch) < pb_min + 0.05 &
+     max(p_branch) > pb_max - 0.05) break    
 }
 
 parms <- data.table::data.table(id = seq_len(n_rep),
@@ -51,7 +74,11 @@ parms <- data.table::data.table(id = seq_len(n_rep),
                                 n_patch,
                                 p_branch,
                                 sigma_src,
-                                sigma_lon)
+                                sigma_lon,
+                                np_min,
+                                np_max,
+                                pb_min,
+                                pb_max)
 
 list_net <- lapply(seq_len(n_rep), function(i) {
   

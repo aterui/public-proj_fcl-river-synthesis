@@ -3,6 +3,7 @@
 
 rm(list = ls())
 source("code/library.R")
+source("code/run_parms.R")
 
 cl <- makeCluster(10)
 registerDoSNOW(cl)
@@ -24,8 +25,8 @@ n_rep <- length(list_net)
 # xi = search interval for findr()
 parms <- expand.grid(n_timestep = 200,
                      n_species = ncol(list_fw[[1]]),
-                     phi = c(1E-3, 1E-2),
-                     rate = 0.1, #c(0.05, 0.1),
+                     phi = 1E-3,
+                     rate = c(0.01, 0.1),
                      s = 0.25,
                      threshold = 1E-3,
                      k_base = 1,
@@ -33,6 +34,7 @@ parms <- expand.grid(n_timestep = 200,
                      foodweb = seq_len(length(list_fw)),
                      xi = 0.025) %>%
   mutate(m = phi * 0.1,
+         theta = sapply(list_fw, function(x) attr(x, "theta"))[foodweb],
          i = row_number()) %>% 
   as_tibble()
 
