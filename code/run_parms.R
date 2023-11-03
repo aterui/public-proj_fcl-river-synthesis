@@ -14,8 +14,8 @@ n_fw <- 10
 ## 0.11 connectance - see Dunne et al. 2002 PNAS
 ## 0.25 theta - see Johnson et al. 2014 PNAS
 s <- 16
-b <- floor(s * 0.18)
-l <- floor(0.11 * s ^ 2)
+b <- round(s * 0.18)
+l <- round(0.11 * s ^ 2)
 theta <- c(0.25, 1)
 
 ## generate food webs
@@ -50,7 +50,7 @@ sigma_lon <- 0.01
 ## np_xx = min or max values for n_patch
 ## pb_xx = min or max values for p_branch
 np_min <- 10
-np_max <- 100
+np_max <- 50
 pb_min <- 0.05
 pb_max <- 0.95
 
