@@ -25,15 +25,15 @@ n_rep <- length(list_net)
 # xi = search interval for findr()
 parms <- expand.grid(n_timestep = 200,
                      n_species = ncol(list_fw[[1]]),
-                     phi = 1E-3,
+                     phi = c(1E-2, 1E-1),
                      rate = c(0.01, 0.1),
                      s = 0.25,
                      threshold = 1E-3,
-                     k_base = 10,
+                     k_base = 1,
                      z = 0.54,
                      foodweb = seq_len(length(list_fw)),
                      xi = 0.05) %>%
-  mutate(m = phi * 0.1,
+  mutate(m = phi * 1E-2,
          theta = sapply(list_fw, function(x) attr(x, "theta"))[foodweb],
          i = row_number()) %>% 
   as_tibble()
@@ -91,7 +91,9 @@ df_fcl <- foreach(x = iterators::iter(parms, by = "row"),
                                                      disturb = list(int = e,
                                                                     rate = rate,
                                                                     s = s),
-                                                     threshold = threshold)
+                                                     threshold = threshold,
+                                                     n0 = list(min = threshold,
+                                                               max = 1))
                                       )
                                       
                                       fcl <- with(x, foodchain(n,
