@@ -25,7 +25,7 @@ n_rep <- length(list_net)
 # xi = search interval for findr()
 parms <- expand.grid(n_timestep = 200,
                      n_species = ncol(list_fw[[1]]),
-                     phi = c(1E-2, 1E-1),
+                     phi = c(1E-1, 1),
                      rate = c(0.01, 0.1),
                      s = 0.25,
                      threshold = 1E-3,

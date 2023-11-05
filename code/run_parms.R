@@ -50,18 +50,14 @@ sigma_lon <- 0.01
 ## np_xx = min or max values for n_patch
 ## pb_xx = min or max values for p_branch
 np_min <- 10
-np_max <- 50
+np_max <- 100
 pb_min <- 0.05
 pb_max <- 0.95
 
 ## sample parameter values
 repeat {
-  n_patch <- round(10^runif(n_rep,
-                            log(np_min, base = 10),
-                            log(np_max, base = 10)))
-  p_branch <- 10^runif(n_rep,
-                       log(pb_min, base = 10),
-                       log(pb_max, base = 10))
+  n_patch <- round(runif(n_rep, np_min, np_max))
+  p_branch <- runif(n_rep, pb_min, pb_max)
   
   if(min(n_patch) < np_min + 5 & 
      max(n_patch) > np_max - 5 &
