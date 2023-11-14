@@ -5,7 +5,7 @@ rm(list = ls())
 source("code/library.R")
 source("code/run_parms.R")
 
-cl <- makeCluster(10)
+cl <- makeCluster(detectCores() - 1)
 registerDoSNOW(cl)
 
 # parameter setup ---------------------------------------------------------
