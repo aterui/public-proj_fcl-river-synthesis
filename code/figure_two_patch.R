@@ -9,24 +9,21 @@ df_fcl <- readRDS("data_fmt/sim_fcl_two_patch.rds")
 
 # figure ------------------------------------------------------------------
 
-df_fcl %>% 
-  group_by(phi, m, threshold, theta) %>% 
+g_heat <- df_fcl %>% 
+  group_by(phi, k, threshold, theta) %>% 
   summarize(fcl = mean(fcl)) %>% 
   ungroup() %>% 
   ggplot(aes(x = phi,
-             y = m,
+             y = k,
              fill = fcl)) +
   geom_raster() +
   facet_grid(rows = vars(theta),
              cols = vars(threshold),
              labeller = label_both) +
-  MetBrewer::scale_fill_met_c("Hiroshige", direction = -1)
+  MetBrewer::scale_fill_met_c("Hiroshige", direction = -1) +
+  theme_classic()
 
-df_fcl %>% 
-  ggplot(aes(x = factor(phi),
-             y = fcl,
-             color = factor(m))) +
-  geom_jitter(alpha = 0.4) +
-  geom_boxplot(alpha = 0.25, outlier.color = NA) +
-  facet_grid(rows = vars(m),
-             cols = vars(theta, threshold))
+ggsave(g_heat,
+       filename = "output/figure_two_patch.pdf",
+       height = 7,
+       width = 8)

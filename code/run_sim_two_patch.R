@@ -20,13 +20,13 @@ n_rep <- 10
 # xi = search interval for findr()
 parms <- expand.grid(n_timestep = 200,
                      n_species = ncol(list_fw[[1]]),
-                     n_patch = 3,
-                     phi = seq(0.01, 1, length = 6),
-                     m = seq(0, 0.01, length = 6),
+                     n_patch = 2,
+                     phi = seq(0, 0.01, length = 10),
+                     m = 0,
                      rate = 0.1,
                      e = 0.9,
-                     k = 1,
-                     s = 0.25,
+                     k = seq(1, 50, length = 10),
+                     s = 0.5,
                      threshold = c(1E-4, 1E-3),
                      foodweb = seq_len(length(list_fw)),
                      xi = 0.05) %>%
