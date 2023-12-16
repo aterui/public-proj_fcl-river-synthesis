@@ -7,7 +7,7 @@ source("code/library.R")
 # foodweb -----------------------------------------------------------------
 
 ## replicate number
-n_fw <- 30
+n_fw <- 10
 
 ## food web setup
 ## 0.18 proportion of basal species - see Briand and Cohen 1987 Nature
@@ -27,7 +27,8 @@ list_fw <- foreach(x = theta,
                        fw <- foodweb(n_species = s,
                                      n_basal = b,
                                      l = l,
-                                     theta = x)
+                                     theta = x,
+                                     convert = list(min = 0.5, max = 0.5))
                        attr(fw, "theta") <- x
                        return(fw)
                      },
@@ -43,7 +44,7 @@ saveRDS(list_fw, "data_fmt/parms_foodweb.rds")
 ## n_rep = number of network replicates
 ## sigma_src = SD for disturbance values at headwaters
 ## sigma_lon = longitudinal SD for disturbance values
-n_rep <- 100
+n_rep <- 50
 sigma_src <- 1
 sigma_lon <- 0.01
 
@@ -51,8 +52,8 @@ sigma_lon <- 0.01
 ## pb_xx = min or max values for p_branch
 np_min <- 10
 np_max <- 50
-pb_min <- 0.05
-pb_max <- 0.95
+pb_min <- 0.1
+pb_max <- 0.9
 
 ## sample parameter values
 repeat {
