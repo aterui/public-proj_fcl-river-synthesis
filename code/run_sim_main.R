@@ -37,7 +37,7 @@ parms <- expand.grid(n_timestep = 200,
                      phi = c(0, 1E-2, 1E-1),
                      m = 0,
                      rate = c(1E-2, 1E-1),
-                     s = 0.25,
+                     s = 0.5,
                      threshold = 1E-4,
                      k_base = 1,
                      z = 0.54,
@@ -49,10 +49,15 @@ parms <- expand.grid(n_timestep = 200,
          m = ifelse(phi == 0, 0, m)) %>% 
   as_tibble()
 
+
+# simulation run ----------------------------------------------------------
+
+## progress bar setup for doSNOW
 pb <- txtProgressBar(max = nrow(parms), style = 3)
 fun_progress <- function(n) setTxtProgressBar(pb, n)
 opts <- list(progress = fun_progress)
 
+## simulation run
 tictoc::tic()
 df_fcl <- foreach(x = iterators::iter(parms, by = "row"),
                   .combine = rbind,

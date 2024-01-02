@@ -7,7 +7,7 @@ source("code/library.R")
 # foodweb -----------------------------------------------------------------
 
 ## replicate number
-n_fw <- 10
+n_fw <- 20
 
 ## food web setup
 ## 0.18 proportion of basal species - see Briand and Cohen 1987 Nature
@@ -52,8 +52,8 @@ sigma_lon <- 0.01
 ## pb_xx = min or max values for p_branch
 np_min <- 10
 np_max <- 50
-pb_min <- 0.1
-pb_max <- 0.9
+pb_min <- 0.05
+pb_max <- 0.95
 
 ## sample parameter values
 repeat {

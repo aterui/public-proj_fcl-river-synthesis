@@ -15,22 +15,28 @@ df_fcl <- readRDS("data_fmt/sim_fcl_main.rds") %>%
 # figure ------------------------------------------------------------------
 
 df_fcl %>% 
-  filter(k_base == 10) %>% 
   ggplot(aes(x = p_branch,
              y = fcl)) +
   geom_point(alpha = 0.1) +
-  geom_smooth(se = TRUE, method = "loess") +
-  facet_grid(rows = vars(rate), cols = vars(phi)) +
-  guides(color = "none")# +
-  #scale_x_continuous(trans = "log10") +
-  #scale_y_continuous(trans = "log10")
+  geom_smooth(se = F, method = "lm") +
+  facet_grid(rows = vars(rate, theta), cols = vars(phi), scales = "free") +
+  guides(color = "none") +
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10") +
+  theme_bw()
 
 m <- lme4::lmer(log(fcl) ~ 
-                  log(n_patch) +
-                  log(p_branch) + 
-                  k_base + 
+                  log(n_patch) * rate +
+                  log(p_branch) * rate + 
+                  log(n_patch) * phi +
+                  log(p_branch) * phi + 
                   theta + 
-                  rate + 
                   phi +
                   (1 | foodweb),
-                data = df_fcl %>% dplyr::filter(phi != "0"))
+                data = df_fcl,
+                REML = FALSE)
+
+library(MuMIn)
+options(na.action = "na.fail")
+
+ms <- dredge(m)
