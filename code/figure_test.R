@@ -15,12 +15,14 @@ df_fcl <- readRDS("data_fmt/sim_fcl_main.rds") %>%
 # figure ------------------------------------------------------------------
 
 df_fcl %>% 
-  ggplot(aes(x = n_patch,
-             y = fcl,
-             color = factor(foodweb))) +
+  ggplot(aes(x = p_branch,
+             y = fcl)) +
   geom_point(alpha = 0.1) +
-  geom_smooth(se = F, method = "lm") +
-  facet_grid(rows = vars(rate, theta), cols = vars(phi), scales = "free") +
+  geom_smooth(se = F, method = "gam") +
+  facet_grid(rows = vars(rate, theta),
+             cols = vars(phi),
+             scales = "free",
+             labeller = label_both) +
   guides(color = "none") +
   scale_x_continuous(trans = "log10") +
   scale_y_continuous(trans = "log10") +
