@@ -11,7 +11,7 @@ df_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
   dplyr::select(-geometry)
 
 ## local environment
-df_env <- readRDS("data_fmt/data_env.rds") %>% 
+df_env <- readRDS("data_fmt/data_env_local.rds") %>% 
   rename(local_area = area) %>% 
   mutate(local_area = as.numeric(local_area),
          across(starts_with("mean."),
