@@ -12,21 +12,21 @@ source("code/format_data4jags.R")
 ## set data for JAGS
 ## - local level data
 list_jags <- with(df_fcl,
-                  list(logY = log(fcl),
+                  list(logY = log(fcl_max),
                        C = censoring,
                        logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
                        Hsize = local_area,
-                       Forest = mean.forest,
-                       Prec = mean.prec,
-                       Temp = mean.temp,
+                       Hfp = hfp,
                        Ns = length(fcl),
                        Nw = n_distinct(uid),
                        G = g)
 )
 
 ## - watershed level data
-list_jags$Esize <- as.numeric(df_g$area)
+list_jags$Esize <- df_g$area
 list_jags$Pbranch <- df_g$p_branch
+list_jags$Prec <- df_g$mean.prec
+list_jags$Temp <- df_g$mean.temp
 list_jags$W <- df_g$w
 
 

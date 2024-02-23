@@ -14,12 +14,12 @@ model {
   
   ## regression coefficients
   ## - local level
-  for (l in 1:5) {
+  for (l in 1:3) {
     a[l] ~ dnorm(0, tau0)
   }
     
   ## - watershed level
-  for (m in 1:2) {
+  for (m in 1:4) {
     b[m] ~ dnorm(0, tau0)
   }
       
@@ -32,11 +32,12 @@ model {
     logY[i] ~ dnorm(mu[i], tau[1])
     
     mu[i] <- 
-      a[1] + r[G[i]] +
+      a[1] + 
       a[2] * log(Hsize[i]) +
-      a[3] * Forest[i] +
-      a[4] * log(Prec[i]) +
-      a[5] * Temp[i]
+      a[3] * scl_hfp[i] +
+      r[G[i]]
+  
+    scl_hfp[i] <- (Hfp[i] - mean(Hfp[])) / sd(Hfp[])
     
   }
   
@@ -45,9 +46,14 @@ model {
     r[j] <- 
       b[1] * log(Esize[j]) +
       b[2] * log(Pbranch[j]) +
+      b[3] * scl_prec[j] +
+      b[4] * scl_temp[j] +
       eps[j]
     
     eps[j] ~ dnorm(0, tau[2] * W[j])
+    
+    scl_prec[j] <- (Prec[j] - mean(Prec[])) / sd(Prec[])
+    scl_temp[j] <- (Temp[j] - mean(Temp[])) / sd(Temp[])
   }
   
 }
