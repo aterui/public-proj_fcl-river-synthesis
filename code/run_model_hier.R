@@ -16,11 +16,10 @@ list_local <- with(df_fcl,
                         C = censoring,
                         logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
                         Hsize = local_area,
-                        Agri = frac_agri,
+                        Forest = forest_b1km,
                         G = g,
                         Ns = length(fcl),
-                        Nw = n_distinct(g))
-)
+                        Nw = n_distinct(g)))
 
 ## - watershed level data
 list_wsd <- with(df_g,
@@ -34,6 +33,7 @@ list_wsd <- with(df_g,
                       Score = score))
 
 list_jags <- c(list_local, list_wsd)
+
 
 # jags fit ----------------------------------------------------------------
 
@@ -49,7 +49,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu")
+parms <- c("a", "b0", "b", "sigma", "z", "nu", "r")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -66,5 +66,28 @@ post <- runjags::run.jags(model = m$model,
                           method = "parallel",
                           module = "glm")
 
+
+# export ------------------------------------------------------------------
+
 ## summary
-MCMCvis::MCMCsummary(post$mcmc)
+pr_neg <- MCMCvis::MCMCpstr(post$mcmc, func = function(x) mean(x < 0)) %>% 
+  unlist()
+
+df_est <- MCMCvis::MCMCsummary(post$mcmc) %>% 
+  as_tibble(rownames = "parms") %>% 
+  transmute(parms,
+            median = `50%`,
+            low = `2.5%`,
+            high = `97.5%`,
+            rhat = Rhat) %>% 
+  mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),
+         parms_num = str_extract(parms, "\\d{1,}"),
+         pr_neg = pr_neg,
+         pr_pos = 1 - pr_neg) %>% 
+  relocate(parms, parms_gr, parms_num)
+
+saveRDS(df_est, "data_fmt/output_model_hier_summary.rds")
+
+## mcmc samples
+mcmc <- MCMCvis::MCMCchains(post$mcmc)
+saveRDS(mcmc, "data_fmt/output_model_hier_mcmc.rds")

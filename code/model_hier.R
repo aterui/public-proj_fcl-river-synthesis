@@ -44,8 +44,10 @@ model {
     logY[i] ~ dt(mu[i], tau[1], nu)
     
     mu[i] <- a0[G[i]] + 
-      a[1] * log(Hsize[i])
+      a[1] * log(Hsize[i]) +
+      a[2] * scl_forest[i]
     
+    scl_forest[i] <- (Forest[i] - mean(Forest[])) / sd(Forest[])
   }
   
   ## watershed level
