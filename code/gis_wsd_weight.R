@@ -104,8 +104,7 @@ df_cov <- foreach(x = uid, .combine = bind_rows) %do% {
 ## join watershed polygons
 df_weight <- df_cov %>% 
   left_join(df_wsd, by = 'uid') %>% 
-  mutate(sqrt_score = sqrt(as.numeric((coverage / perimeter) * n_site)),
-         w = as.numeric(sqrt_score / max(sqrt_score)))
+  mutate(score = as.numeric((coverage / perimeter) * n_site))
 
 ## export
 saveRDS(df_weight, "data_fmt/data_weight.rds")

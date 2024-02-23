@@ -11,24 +11,28 @@ source("code/format_data4jags.R")
 
 ## set data for JAGS
 ## - local level data
-list_jags <- with(df_fcl,
-                  list(logY = log(fcl_max),
-                       C = censoring,
-                       logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
-                       Hsize = local_area,
-                       Hfp = hfp,
-                       Ns = length(fcl),
-                       Nw = n_distinct(uid),
-                       G = g)
+list_local <- with(df_fcl,
+                   list(logY = log(fcl_obs),
+                        C = censoring,
+                        logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
+                        Hsize = local_area,
+                        G = g,
+                        Ns = length(fcl),
+                        Nw = n_distinct(g))
 )
 
 ## - watershed level data
-list_jags$Esize <- df_g$area
-list_jags$Pbranch <- df_g$p_branch
-list_jags$Prec <- df_g$mean.prec
-list_jags$Temp <- df_g$mean.temp
-list_jags$W <- df_g$w
+list_wsd <- with(df_g,
+                 list(Esize = area,
+                      Pbranch = p_branch,
+                      Prec = mean.prec,
+                      Temp = mean.temp,
+                      Hfp = hfp,
+                      H = h,
+                      Nh = n_distinct(h),
+                      Score = score))
 
+list_jags <- c(list_local, list_wsd)
 
 # jags fit ----------------------------------------------------------------
 
@@ -42,7 +46,7 @@ inits <- replicate(3,
 for (j in 1:3) inits[[j]]$.RNG.seed <- (j - 1) * 10 + 1
 
 ## - parameters to be monitored
-parms <- c("a", "b", "sigma")
+parms <- c("a", "b", "sigma", "z")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
