@@ -60,22 +60,10 @@ df_fcl <- df_fcl0 %>%
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
   relocate(uid, h, g, sid, fcl, fcl_obs, fcl_min, tpc, censoring)
 
-## - `df_bias` is to account for non-random spatial sampling
 ## - left join `distinct(df_fcl, uid, g)` to align group id `g` between the two data frames
 ## - CAUTION! Don't forget `arrange(g)`
-
-df_bias <- df_fcl %>%
-  group_by(uid) %>%
-  summarize(mu_local_area = log(local_area) %>% 
-              mean() %>% 
-              exp(),
-            mu_hfp = log(hfp) %>% 
-              mean() %>% 
-              exp())
-
 df_g <- df_g %>% 
   left_join(distinct(df_fcl, uid, g, h)) %>%
-  left_join(df_bias) %>% 
   arrange(g) %>%
   relocate(uid, g)
 

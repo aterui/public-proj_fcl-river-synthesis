@@ -1,43 +1,51 @@
 model {
   
   tau0 <- 0.1
-  df0 <- 6  
+  df_tau <- 2 
   
   # prior -------------------------------------------------------------------
   
   ## variance parameters
   ## - residual SD, sigma[1]
-  ## - random SD, sigma[2]
+  ## - watershed random SD, sigma[2]
+  ## - region random SD, sigma[3]
   for (k in 1:3) {
-    tau[k] ~ dscaled.gamma(2.5, df0)
+    tau[k] ~ dscaled.gamma(2.5, df_tau)
     sigma[k] <- pow(sqrt(tau[k]), -1)
   }
 
-  ## regression coefficients
-  ## - local level
-  for (l in 1:1) {
-    a[l] ~ dt(0, tau0, df0)
+  ## local level
+  ## - coefficients
+  for (l in 1:2) {
+    a[l] ~ dnorm(0, tau0)
   }
   
-  ## regression coefficients
-  ## - watershed level
-  for (m in 1:6) {
-    b[m] ~ dt(0, tau0, df0)
+  ## watershed level
+  ## - intercept
+  b0 ~ dnorm(0, tau0)
+  
+  ## - coefficients
+  for (m in 1:5) {
+    b[m] ~ dnorm(0, tau0)
   }
-   
+  
+  ## weight scaling exponent
   z ~ dunif(0, 1)
-     
+   
+  ## degree of freedom
+  nu ~ dexp(0.01)T(2, )
+    
   # likelihood --------------------------------------------------------------
   
   ## local level
   for (i in 1:Ns) {
     ## - censoring
     C[i] ~ dinterval(logY[i], logY_min[i])
-    logY[i] ~ dt(mu[i], tau[1], df0)
+    logY[i] ~ dt(mu[i], tau[1], nu)
     
-    mu[i] <- 
-      a0[G[i]] +
+    mu[i] <- a0[G[i]] + 
       a[1] * log(Hsize[i])
+    
   }
   
   ## watershed level
@@ -45,16 +53,17 @@ model {
     
     ## - watershed regression
     a0[j] <- 
-      b[1] +
-      b[2] * log(Esize[j]) +
-      b[3] * log(Pbranch[j]) +
-      b[4] * scl_prec[j] +
-      b[5] * scl_temp[j] +
-      b[6] * scl_hfp[j] +
       r[H[j]] +
+      b[1] * log(Esize[j]) +
+      b[2] * log(Pbranch[j]) +
+      b[3] * scl_prec[j] +
+      b[4] * scl_temp[j] +
+      b[5] * scl_hfp[j] +
       eps[j]
     
     eps[j] ~ dnorm(0, tau[2] * scl_w[j])
+    
+    ## - scaled weight
     scl_w[j] <- w[j] / max(w[])
     log(w[j]) <- z * log(Score[j])
     
@@ -65,6 +74,6 @@ model {
   }
   
   for (h in 1:Nh) {
-    r[h] ~ dnorm(0, tau[3])
+    r[h] ~ dnorm(b0, tau[3])
   }
 }

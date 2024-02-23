@@ -16,6 +16,7 @@ list_local <- with(df_fcl,
                         C = censoring,
                         logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
                         Hsize = local_area,
+                        Agri = frac_agri,
                         G = g,
                         Ns = length(fcl),
                         Nw = n_distinct(g))
@@ -38,15 +39,17 @@ list_jags <- c(list_local, list_wsd)
 
 ## run.jags arguments
 ## - initial values
-inits <- replicate(3,
+n_chain <- 3
+
+inits <- replicate(n_chain,
                    list(.RNG.name = "base::Mersenne-Twister",
                         .RNG.seed = NA),
                    simplify = FALSE)
 
-for (j in 1:3) inits[[j]]$.RNG.seed <- (j - 1) * 10 + 1
+for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
 
 ## - parameters to be monitored
-parms <- c("a", "b", "sigma", "z")
+parms <- c("a", "b0", "b", "sigma", "z", "nu")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -57,8 +60,8 @@ post <- runjags::run.jags(model = m$model,
                           monitor = parms,
                           burnin = 10000,
                           sample = 1000,
-                          thin = 10,
-                          n.chains = 3,
+                          thin = 20,
+                          n.chains = n_chain,
                           inits = inits,
                           method = "parallel",
                           module = "glm")
