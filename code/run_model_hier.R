@@ -32,7 +32,17 @@ list_wsd <- with(df_g,
                       Nh = n_distinct(h),
                       Score = score))
 
-list_jags <- c(list_local, list_wsd)
+## - data for prediction
+list_pred <- with(df_x,
+                  list(X_h = h,
+                       X_log_area = x_log_area,
+                       X_log_pb = x_log_pb,
+                       X_prec = x_prec,
+                       X_temp = x_temp,
+                       X_hfp = x_hfp,
+                       Npred = nrow(df_x)))
+
+list_jags <- c(list_local, list_wsd, list_pred)
 
 
 # jags fit ----------------------------------------------------------------
@@ -49,7 +59,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
+parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0", "y_pred")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -83,27 +93,51 @@ df_est <- MCMCvis::MCMCsummary(post$mcmc) %>%
             pr_neg = pr_neg,
             pr_pos = 1 - pr_neg) %>% 
   relocate(pr_neg, pr_pos, .before = rhat)
+
+## - check convergence: rhat < 1.1
+print(max(df_est$rhat))
   
 df_summary <- df_est %>% 
-  filter(!str_detect(parms, "a0")) %>% 
+  filter(!str_detect(parms, "a0|y_pred|r")) %>% 
   mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),
          parms_num = str_extract(parms, "\\d{1,}")) %>% 
   relocate(parms, parms_gr, parms_num)
 
-saveRDS(df_est, "data_fmt/output_model_summary.rds")
+saveRDS(df_summary, "data_fmt/output_model_summary.rds")
 
 ## estimated watershed means
+## - observed mean, not accounting for censoring
+df_fcl_g <- df_fcl %>% 
+  group_by(g) %>% 
+  summarize(mu_fcl_obs = log(fcl) %>% 
+              mean() %>% 
+              exp(),
+            tpc = ifelse(any(tpc == "N"), "N", "Y"))
+
+## - estimated mean, after accounting for weighting and censoring
 df_a0 <- df_est %>% 
   filter(str_detect(parms, "a0")) %>% 
   transmute(g = row_number(),
             fcl_est = exp(median),
             fcl_low = exp(low),
-            fcl_high = exp(high),
-            rhat)
+            fcl_high = exp(high))
 
-df_wsd <- left_join(df_g, df_a0)
+df_wsd <- reduce(list(df_g, df_fcl_g, df_a0), left_join)
 
-saveRDS(df_wsd, "data_fmt/output_model_pred.rds")
+saveRDS(df_wsd, "data_fmt/output_model_mu_est.rds")
+
+## prediction
+## - prediction for each hydrological region
+df_pred <- df_est %>% 
+  filter(str_detect(parms, "y_pred")) %>% 
+  transmute(y = exp(median),
+            y_low = exp(low),
+            y_high = exp(high)) %>% 
+  bind_cols(df_x) %>% 
+  mutate(area = exp(x_log_area),
+         pb = exp(x_log_pb))
+
+saveRDS(df_pred, "data_fmt/output_model_pred.rds")
 
 ## mcmc samples
 mcmc <- MCMCvis::MCMCchains(post$mcmc)

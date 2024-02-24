@@ -5,17 +5,27 @@ rm(list = ls())
 source("code/library.R")
 source("code/function.R")
 
-## FCL data selected
-## - join level01 group id
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
-  st_make_valid()
 
-sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
-  st_join(sf_lev01)
+# preformat ---------------------------------------------------------------
+# ## update as needed
+# ## FCL data selected
+# ## - join level01 group id
+# sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
+#   st_make_valid()
+# 
+# sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
+#   st_join(sf_lev01)
+# 
+# df_fcl0 <- sf_fcl0 %>% 
+#   as_tibble() %>% 
+#   dplyr::select(-geometry)
+# 
+# saveRDS(df_fcl0, "data_fmt/data_fcl.rds")
 
-df_fcl0 <- sf_fcl0 %>% 
-  as_tibble() %>% 
-  dplyr::select(-geometry)
+# read data ---------------------------------------------------------------
+
+## local environment
+df_fcl0 <- readRDS("data_fmt/data_fcl.rds")
 
 ## local environment
 df_env_local <- readRDS("data_fmt/data_env_local.rds")
@@ -68,23 +78,21 @@ df_g <- df_g %>%
   relocate(uid, g)
 
 
-# test plot ---------------------------------------------------------------
-# 
-# df_y <- df_fcl %>% 
-#   left_join(df_g, by = "uid") %>% 
-#   group_by(id_lev01, uid) %>% 
-#   summarize(fcl = mean(fcl),
-#             p_branch = unique(p_branch),
-#             area = unique(area),
-#             w = unique(w)) %>% 
-#   ungroup() %>% 
-#   left_join(df_bias)  
-# 
-# df_y %>% 
-#   ggplot(aes(x = p_branch,
-#              y = fcl,
-#              size = w)) +
-#   geom_point() +
-#   facet_wrap(facets = ~id_lev01) +
-#   scale_x_continuous(trans = "log10") +
-#   scale_y_continuous(trans = "log10")
+# data frame for prediction -----------------------------------------------
+
+## add scaled variables
+df_g <- df_g %>% 
+  mutate(scl_prec = c(scale(mean.prec)),
+         scl_temp = c(scale(mean.temp)),
+         scl_hfp = c(scale(hfp)))
+
+## expanded data frame for prediction
+df_x <- df_g %>% 
+  group_by(h) %>% 
+  reframe(x_log_area = mean(log(area)),
+          x_log_pb = seq(log(min(p_branch)),
+                         log(max(p_branch)),
+                         length = 100),
+          x_prec = mean(scl_prec),
+          x_temp = mean(scl_temp),
+          x_hfp = mean(scl_hfp))

@@ -51,19 +51,21 @@ df_cov <- foreach(x = uid, .combine = bind_rows) %do% {
   
   if (n_distinct(sf_i$sid) == 1) {
     
-    ## - if only one site
-    ## - get coordinates
-    xy <- st_coordinates(sf_i)
-    arc3sec <- (1 / 3600) * 3 * 0.5
+    y <- units::set_units(2 * (50 / 1000) * pi, "km")
     
-    ## - measure length of diagonal line of a 3-arc second pixel
-    ## - 3-arc second is a resolution of flow direction/upstream watershed area
-    y <- st_linestring(rbind(c(xy[,1] - arc3sec, xy[,2]),
-                             c(xy[,1] + arc3sec, xy[,2]))) %>% 
-      st_sfc() %>% 
-      st_set_crs(4326) %>% 
-      st_length() %>% 
-      units::set_units("km")
+    # ## - if only one site
+    # ## - get coordinates
+    # xy <- st_coordinates(sf_i)
+    # arc3sec <- (1 / 3600) * 3 * 0.5
+    # 
+    # ## - measure length of diagonal line of a 3-arc second pixel
+    # ## - 3-arc second is a resolution of flow direction/upstream watershed area
+    # y <- st_linestring(rbind(c(xy[,1] - arc3sec, xy[,2]),
+    #                          c(xy[,1] + arc3sec, xy[,2]))) %>% 
+    #   st_sfc() %>% 
+    #   st_set_crs(4326) %>% 
+    #   st_length() %>% 
+    #   units::set_units("km")
     
   } else {
     
