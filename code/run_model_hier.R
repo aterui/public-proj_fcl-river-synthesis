@@ -49,7 +49,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r")
+parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -79,15 +79,32 @@ df_est <- MCMCvis::MCMCsummary(post$mcmc) %>%
             median = `50%`,
             low = `2.5%`,
             high = `97.5%`,
-            rhat = Rhat) %>% 
+            rhat = Rhat,
+            pr_neg = pr_neg,
+            pr_pos = 1 - pr_neg) %>% 
+  relocate(pr_neg, pr_pos, .before = rhat)
+  
+df_summary <- df_est %>% 
+  filter(!str_detect(parms, "a0")) %>% 
   mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),
-         parms_num = str_extract(parms, "\\d{1,}"),
-         pr_neg = pr_neg,
-         pr_pos = 1 - pr_neg) %>% 
+         parms_num = str_extract(parms, "\\d{1,}")) %>% 
   relocate(parms, parms_gr, parms_num)
 
-saveRDS(df_est, "data_fmt/output_model_hier_summary.rds")
+saveRDS(df_est, "data_fmt/output_model_summary.rds")
+
+## estimated watershed means
+df_a0 <- df_est %>% 
+  filter(str_detect(parms, "a0")) %>% 
+  transmute(g = row_number(),
+            fcl_est = exp(median),
+            fcl_low = exp(low),
+            fcl_high = exp(high),
+            rhat)
+
+df_wsd <- left_join(df_g, df_a0)
+
+saveRDS(df_wsd, "data_fmt/output_model_pred.rds")
 
 ## mcmc samples
 mcmc <- MCMCvis::MCMCchains(post$mcmc)
-saveRDS(mcmc, "data_fmt/output_model_hier_mcmc.rds")
+saveRDS(mcmc, "data_fmt/output_model_mcmc.rds")
