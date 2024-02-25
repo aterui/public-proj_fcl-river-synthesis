@@ -8,8 +8,6 @@ source("code/function.R")
 
 # read data ---------------------------------------------------------------
 
-sf_wsd <- readRDS("data_fmt/wgs84_wsd_sub.rds")
-
 sf_str <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
   bind_rows() %>% 
   mutate(wid = str_pad(wid, width = 5, pad = "0"),
@@ -68,8 +66,7 @@ df_ratio <- foreach(i = 1:length(v_uid),
 
 # score -------------------------------------------------------------------
 
-df_weight <- left_join(sf_wsd, df_ratio) %>% 
-  mutate(area = units::set_units(st_area(.), "100km^2")) %>% 
+df_weight <- df_ratio %>% 
   mutate(score = n_site * (d_ratio + 1))
 
 ## export
