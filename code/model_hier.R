@@ -44,8 +44,10 @@ model {
     logY[i] ~ dt(mu[i], tau[1], nu)
     
     mu[i] <- a0[G[i]] + 
-      a[1] * log(Hsize[i])
+      a[1] * log(Hsize[i]) +
+      a[2] * scl_forest[i]
     
+    scl_forest[i] <- (Forest[i] - mean(Forest[])) / sd(Forest[])
   }
   
   ## watershed level
@@ -76,4 +78,19 @@ model {
   for (h in 1:Nh) {
     r[h] ~ dnorm(b0, tau[3])
   }
+
+  # prediction --------------------------------------------------------------
+  
+  for (i in 1:Npred) {
+    
+    y_pred[i] <- 
+      r[X_h[i]] + 
+      b[1] * X_log_area[i] + 
+      b[2] * X_log_pb[i] +
+      b[3] * X_prec[i] +
+      b[4] * X_temp[i] +
+      b[5] * X_hfp[i]
+    
+  }
+  
 }
