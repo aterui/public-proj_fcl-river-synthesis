@@ -2,8 +2,8 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
-source("code/function.R")
+source("code/set_library.R")
+source("code/set_function.R")
 source("code/format_data4jags.R")
 
 

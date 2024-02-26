@@ -2,7 +2,7 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
+source("code/set_library.R")
 
 df_fcl <- readRDS("data_fmt/sim_fcl_two_patch.rds")
 

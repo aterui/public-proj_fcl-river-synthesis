@@ -2,22 +2,21 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
-source("code/function.R")
+source("code/set_library.R")
+source("code/set_function.R")
 
 
 # preformat ---------------------------------------------------------------
-# ## update as needed
-# ## FCL data selected
-# ## - join level01 group id
-# sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
-#   st_make_valid()
+# # update as needed
+# # FCL data selected
+# # - join level01 group id
+# sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds")
 # 
-# sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
+# sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
 #   st_join(sf_lev01)
 # 
-# df_fcl0 <- sf_fcl0 %>% 
-#   as_tibble() %>% 
+# df_fcl0 <- sf_fcl0 %>%
+#   as_tibble() %>%
 #   dplyr::select(-geometry)
 # 
 # saveRDS(df_fcl0, "data_fmt/data_fcl.rds")

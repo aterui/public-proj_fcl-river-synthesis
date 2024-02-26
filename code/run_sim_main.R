@@ -2,7 +2,7 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
+source("code/set_library.R")
 source("code/run_parms.R")
 
 cl <- makeCluster(detectCores() - 2)
