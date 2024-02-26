@@ -70,7 +70,7 @@ post <- runjags::run.jags(model = m$model,
                           monitor = parms,
                           burnin = 10000,
                           sample = 1000,
-                          thin = 20,
+                          thin = 15,
                           n.chains = n_chain,
                           inits = inits,
                           method = "parallel",
@@ -130,9 +130,9 @@ saveRDS(df_wsd, "data_fmt/output_model_mu_est.rds")
 ## - prediction for each hydrological region
 df_pred <- df_est %>% 
   filter(str_detect(parms, "y_pred")) %>% 
-  transmute(y = exp(median),
-            y_low = exp(low),
-            y_high = exp(high)) %>% 
+  transmute(y = median,
+            y_low = low,
+            y_high = high) %>% 
   bind_cols(df_x) %>% 
   mutate(area = exp(x_log_area),
          pb = exp(x_log_pb))

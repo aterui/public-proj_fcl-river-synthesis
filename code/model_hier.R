@@ -1,7 +1,7 @@
 model {
   
   tau0 <- 0.1
-  df_tau <- 2 
+  df_tau <- 4 
   
   # prior -------------------------------------------------------------------
   
@@ -13,7 +13,7 @@ model {
     tau[k] ~ dscaled.gamma(2.5, df_tau)
     sigma[k] <- pow(sqrt(tau[k]), -1)
   }
-
+  
   ## local level
   ## - coefficients
   for (l in 1:2) {
@@ -31,10 +31,10 @@ model {
   
   ## weight scaling exponent
   z ~ dunif(0, 1)
-   
+  
   ## degree of freedom
   nu ~ dexp(0.01)T(2, )
-    
+  
   # likelihood --------------------------------------------------------------
   
   ## local level
@@ -78,18 +78,19 @@ model {
   for (h in 1:Nh) {
     r[h] ~ dnorm(b0, tau[3])
   }
-
+  
   # prediction --------------------------------------------------------------
   
   for (i in 1:Npred) {
     
+    ## prediction in an ordinary scale
     y_pred[i] <- 
-      r[X_h[i]] + 
-      b[1] * X_log_area[i] + 
-      b[2] * X_log_pb[i] +
-      b[3] * X_prec[i] +
-      b[4] * X_temp[i] +
-      b[5] * X_hfp[i]
+      exp(r[X_h[i]] + 
+            b[1] * X_log_area[i] + 
+            b[2] * X_log_pb[i] +
+            b[3] * X_prec[i] +
+            b[4] * X_temp[i] +
+            b[5] * X_hfp[i])
     
   }
   
