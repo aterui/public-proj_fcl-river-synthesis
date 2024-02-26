@@ -4,7 +4,7 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
+source("code/set_library.R")
 source("code/format_data4jags.R")
 
 ## read data
@@ -82,10 +82,38 @@ g_pb <- df_mu_est %>%
          color = "none")
 
 ## map
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
-  st_make_valid() %>% 
-  rmapshaper::ms_simplify(keep = 0.5)
+sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds")
 
-ggplot(sf_lev01) +
-  geom_sf()
+sf_site <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
+  group_by(sid) %>% 
+  slice(1) %>% 
+  dplyr::select(NULL) %>% 
+  st_join(sf_lev01) %>% 
+  mutate(h = as.numeric(factor(id_lev01)))
 
+df_site_ref <- sf_site %>% 
+  as_tibble() %>% 
+  dplyr::select(-geometry) %>% 
+  distinct(id_lev01, h) %>% 
+  arrange(id_lev01)
+
+sf_region <- sf_lev01  %>% 
+  rmapshaper::ms_simplify() %>%
+  left_join(df_site_ref) %>% 
+  st_make_valid()
+
+g_map <- ggplot(sf_region) +
+  geom_sf(aes(fill = factor(h)),
+          alpha = 0.4) +
+  geom_sf(data = sf_site,
+          aes(color = factor(h))) +
+  guides(fill = "none",
+         color = "none")
+
+g_comb <- g_pb / g_map
+
+
+ggsave(g_comb,
+       filename = "output/figure_fcl_pb.pdf",
+       width = 7,
+       height = 9)
