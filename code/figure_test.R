@@ -2,7 +2,7 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/library.R")
+source("code/set_library.R")
 
 df_fcl <- readRDS("data_fmt/sim_fcl_main.rds") %>% 
   mutate(foodweb = factor(foodweb),
@@ -15,10 +15,10 @@ df_fcl <- readRDS("data_fmt/sim_fcl_main.rds") %>%
 # figure ------------------------------------------------------------------
 
 df_fcl %>% 
-  ggplot(aes(x = p_branch,
+  ggplot(aes(x = n_patch,
              y = fcl)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(se = F, method = "gam") +
+  #geom_point(alpha = 0.1) +
+  geom_smooth(se = T, method = "gam") +
   facet_grid(rows = vars(rate, theta),
              cols = vars(phi),
              scales = "free",
