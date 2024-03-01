@@ -55,10 +55,11 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
                     cid <- which(colnames(df_g) %in% c("h", cnm[j]))
                     
                     x <- df_g %>% 
-                      select(all_of(cid)) %>% 
+                      dplyr::select(all_of(cid)) %>% 
+                      rename_with(.fn = function(z) ifelse(z %in% cnm, "x", z)) %>% 
                       group_by(h) %>% 
-                      reframe(x = seq(min(.[, 2]),
-                                      max(.[, 2]),
+                      reframe(x = seq(min(x),
+                                      max(x),
                                       length = 100)
                       ) %>% 
                       pull(x)
@@ -84,7 +85,8 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
                     cout <- df_x %>% 
                       rowwise() %>% 
                       mutate(log_y = Y[i, h],
-                             y = exp(log_y))
+                             y = exp(log_y)) %>% 
+                      ungroup()
                     
                     return(cout)
                   }
@@ -98,7 +100,7 @@ df_yh <- df_yh0 %>%
          hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp))
 
 
-# overall prediction ------------------------------------------------------
+# global prediction -------------------------------------------------------
 
 x <- with(df_g,
           seq(min(log(p_branch)),
@@ -125,8 +127,9 @@ df_y <- foreach(j = seq_len(length(cnm)),
                   
                   x <- df_g %>% 
                     select(all_of(cid)) %>% 
-                    reframe(x = seq(min(.[, 2]),
-                                    max(.[, 2]),
+                    rename_with(.fn = function(z) ifelse(z %in% cnm, "x", z)) %>% 
+                    reframe(x = seq(min(x),
+                                    max(x),
                                     length = 100)
                     ) %>% 
                     pull(x)
@@ -151,9 +154,14 @@ df_y <- foreach(j = seq_len(length(cnm)),
                     apply(MARGIN = 1, quantile, c(0.5, 0.025, 0.975)) %>% 
                     t() %>% 
                     as_tibble() %>% 
-                    setNames(c("y", "y_low", "y_high")) %>% 
+                    setNames(c("log_y", "log_y_low", "log_y_high")) %>% 
+                    mutate(y = exp(log_y),
+                           y_low = exp(log_y_low),
+                           y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
-                    mutate(prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
+                    mutate(area = exp(log_area),
+                           pb = exp(log_pb),
+                           prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
                            temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
                            hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp)) %>% 
                     relocate(focus)
