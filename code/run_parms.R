@@ -12,7 +12,7 @@ n_fw <- 20
 ## food web setup
 ## 0.18 proportion of basal species - see Briand and Cohen 1987 Nature
 ## 0.11 connectance - see Dunne et al. 2002 PNAS
-## 0.25 theta - see Johnson et al. 2014 PNAS
+## 0.25 theta - degree of omnivory; see Johnson et al. 2014 PNAS
 s <- 16
 b <- round(s * 0.18)
 l <- round(0.11 * s ^ 2)
@@ -24,11 +24,23 @@ set.seed(123)
 list_fw <- foreach(x = theta,
                    .combine = c) %do% {
                      replicate(n = n_fw, {
+                       ## generate food webs
                        fw <- foodweb(n_species = s,
                                      n_basal = b,
                                      l = l,
                                      theta = x,
-                                     convert = list(min = 0.5, max = 0.5))
+                                     convert = list(min = 0.1, max = 0.5))
+                       
+                       while(any(rowSums(fw[1:b, (b + 1):s]) == 0)) {
+                         ## make sure that all the basal species have 
+                         ## at least one consumer
+                         fw <- foodweb(n_species = s,
+                                       n_basal = b,
+                                       l = l,
+                                       theta = x,
+                                       convert = list(min = 0.1, max = 0.5))
+                       }
+                       
                        attr(fw, "theta") <- x
                        return(fw)
                      },
@@ -36,7 +48,6 @@ list_fw <- foreach(x = theta,
                    }
 
 saveRDS(list_fw, "data_fmt/parms_foodweb.rds")
-
 
 # network -----------------------------------------------------------------
 
