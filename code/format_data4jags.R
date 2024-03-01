@@ -39,12 +39,12 @@ df_weight <- readRDS("data_fmt/data_weight.rds")
 
 ## watershed-level data frame
 ## - join `df_weight` for weighted regression
-## - remove watersheds with less than 10 links; unreliable estimates of p_branch
+## - remove watersheds with less than 5 links; unreliable estimates of p_branch
 df_g <- df_env_wsd %>% 
   mutate(uid = paste0(huid,
                       str_pad(wid, width = 5, pad = "0"))) %>% 
   left_join(df_weight) %>% 
-  filter(n_link > 5)
+  filter(n_link > 4)
   
 ## - uid for those included
 uid_incl <- df_g %>% 

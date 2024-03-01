@@ -98,7 +98,7 @@ df_est <- MCMCvis::MCMCsummary(post$mcmc) %>%
 print(max(df_est$rhat))
   
 df_summary <- df_est %>% 
-  filter(!str_detect(parms, "a0|y_pred|r")) %>% 
+  filter(!str_detect(parms, "a0|y_pred")) %>% 
   mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),
          parms_num = str_extract(parms, "\\d{1,}")) %>% 
   relocate(parms, parms_gr, parms_num)
