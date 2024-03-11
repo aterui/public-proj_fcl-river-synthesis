@@ -192,10 +192,11 @@ u_length <- function(lambda, q, L) {
   pr_z <- dpois(v_z, lambda = lambda * L)
   
   ## pr_z_tr: truncate probabilities for z taking odd numbers
-  ## (= n links/branches becomes even)
+  ## (z odd = n links/branches even)
+  even_id <- which(v_z %% 2 == 0)
   odd_id <- which(v_z %% 2 == 1)
-  pr_odd <- sum(pr_z[odd_id])
-  pr_z_tr <- pr_z / pr_odd
+  pr_even <- sum(pr_z[even_id])
+  pr_z_tr <- pr_z / pr_even
   pr_z_tr[odd_id] <- 0
   
   ## expected total length of upstream links/branches, conditional on z
@@ -222,11 +223,10 @@ u_length <- function(lambda, q, L) {
       ub_hat <- sum(w_ub)
       
       ## expected value for upstream stream length
-      ## - add within-branch upstream portion (l_hat * (1 + q * l_hat) ^ (-1))
-      ## - q * l_hat = patch intensity (rate) parameter given the link length
-      ## - (1 + q * l_hat) ^ (-1) = expected fraction of link length to a focal patch
-      ## - this fraction derived from a beta distribution Beta(1, q * l_hat)
-      u <- ub_hat * l_hat + l_hat * (1 + q * l_hat) ^ (-1)
+      ## - if poisson distributed,
+      ## - the arrival time (distance to a given patch) will be a uniform dist
+      ## - thus, expectation is (max - min) / 2 = l / 2
+      u <- ub_hat * l_hat + 0.5 * l_hat
     } else {
       ## when z is odd = n branches is even
       u <- -1
