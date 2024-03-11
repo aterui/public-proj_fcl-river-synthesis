@@ -184,7 +184,14 @@ p_mag <- function(m, M) {
 ## @q patch rate parameter (per unit distance)
 ## @L total stream length
 
-u_length <- function(lambda, q, L) {
+u_length <- function(lambda, L) {
+  ## check input
+  if (lambda < 0) 
+    stop("invalid input: lambda must be >= 0")
+  
+  if (L <= 0)
+    stop("invalid input: L must be > 0")
+  
   ## z: (number of links/branches) minus 1
   ## pr_z: probability of b - 1 (= z) links/branches
   pois_max <- qpois(1 - 1e-10, lambda = lambda * L)
@@ -212,6 +219,9 @@ u_length <- function(lambda, q, L) {
       
       ## maximum magnitude in a network
       M <- 0.5 * (b + 1)
+      
+      if (M > 514)
+        stop(paste0("Stream magnitude exceeds 514; consider smaller values of lambda and/or L"))
       
       ## weighted values for the number of upstream links/branches
       ## - `2m - 2` is the number of upstream links/branches, ub
