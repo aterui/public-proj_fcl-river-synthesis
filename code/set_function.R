@@ -221,7 +221,7 @@ u_length <- function(lambda, L) {
       M <- 0.5 * (b + 1)
       
       if (M > 514)
-        stop(paste0("Stream magnitude exceeds 514; consider smaller values of lambda and/or L"))
+        stop(paste0("Stream magnitude M exceeds 514, which will return Inf in choose(2 * M, M); consider smaller values of lambda and/or L"))
       
       ## weighted values for the number of upstream links/branches
       ## - `2m - 2` is the number of upstream links/branches, ub
