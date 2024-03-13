@@ -329,9 +329,12 @@ p_cnsm <- function(lambda,
     if (length(mu) != 3) stop("error in mu")
   }
   
-  extn <- mu[1] * 
+  extn <- mu[1] +
     mu[2] * rho * u_length(lambda = lambda, L = L) +
     mu[3] * (1 - (prey / max_prey))
+  
+  if (extn == 0 & clnz == 0) 
+    stop("both colonization and extinction rates are zero; equilibrium undefined.")
   
   p_hat <- 1 - (extn / clnz)
   p_hat <- ifelse(p_hat > 0, p_hat, 0)
@@ -345,17 +348,14 @@ fcl <- function(foodweb,
                 qr = 1,
                 delta = c(1, 1),
                 rsrc = 1,
-                pg = c(100, 100),
+                pg = c(10, 10),
                 mu_base = 1,
                 mu_cnsm = 1,
-                rho = 0.5) {
+                rho = c(0.5, 0.5)) {
   
   ## foodweb: matrix, consumer-resource matrix. produce with ppm()
   foodweb <- abs(foodweb)
   foodweb[lower.tri(foodweb)] <- 0
-  
-  ## get binary trophic position
-  tp <- attr(foodweb, "tp")
   
   ## p_hat: vector, equilibrium occpancy
   ## max_prey: vector, maximum number of prey items for consumer j
@@ -373,7 +373,7 @@ fcl <- function(foodweb,
                          delta = delta[1],
                          rsrc = rsrc,
                          mu = mu_base,
-                         rho = rho,
+                         rho = rho[1],
                          pg = pg[1])
       
     } else {
@@ -395,14 +395,42 @@ fcl <- function(foodweb,
                          prey = prey,
                          max_prey = n_prey,
                          mu = mu_cnsm,
-                         rho = rho,
+                         rho = rho[2],
                          pg = pg[2])
       
     } # ifelse
   } # for j
   
   ## report fcl as the maximum binary trophic position in the landscape
-  fcl <- ifelse(any(p_hat > 0), max(tp[p_hat > 0]), 0)
+  if (any(p_hat > 0)) {
+    index_p <- which(p_hat > 0)
+    sub_fw <- foodweb[index_p, index_p]
+    tp <- rep(-1, ncol(sub_fw))
+    
+    index_b <- which(colSums(sub_fw) == 0)
+    n_b <- sum(colSums(sub_fw) == 0)
+    n_p <- colSums(sub_fw)
+    
+    if (any(n_p > 0)) {
+      
+      tp[index_b] <- 1  
+      
+      for (i in (n_b + 1):length(tp)) {
+        tp[i] <-  (drop(tp %*% sub_fw)[i]) / n_p[i] + 1
+      }
+      
+    } else {
+      
+      tp[index_b] <- 1
+      
+    }
+
+    fcl <- max(tp)
+    attr(fcl, "tp") <- tp
+  } else {
+    fcl <- 0
+  }
+
   attr(fcl, "p_hat") <- p_hat
   
   return(fcl)
