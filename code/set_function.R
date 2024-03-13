@@ -53,7 +53,7 @@ d_ratio <- function(x, point, n_rand = 100, seed) {
                           p_rand <- suppressMessages(sf::st_sample(x, size = nrow(point)))
                           p_rand <- p_rand[!sf::st_is_empty(p_rand)]
                         } 
-                          
+                        
                         m_dist_rand <- sf::st_distance(p_rand)
                         d <- units::set_units(median(m_dist_rand[upper.tri(m_dist_rand)]),
                                               "km") %>% 
@@ -181,7 +181,6 @@ p_mag <- function(m, M) {
 
 ## get expected upstream length
 ## @lambda branching rate (per unit distance)
-## @q patch rate parameter (per unit distance)
 ## @L total stream length
 
 u_length <- function(lambda, L) {
@@ -249,4 +248,162 @@ u_length <- function(lambda, L) {
   u_hat <- sum(pr_z_tr * u_z)
   
   return(u_hat)
+}
+
+
+
+# metapopulation model ----------------------------------------------------
+
+## for basal species
+p_base <- function(lambda,
+                   L,
+                   qr = 1,
+                   delta = 1,
+                   rsrc = 1,
+                   mu = c(1, 1),
+                   rho = 0.5,
+                   pg = 100) {
+  
+  ## n_patch: scalar, # habitat patches
+  ## - qr: scalar, rate parameter for patch density (unit distance)
+  ## - L: scalar, ecosystem size or total river length
+  n_patch <- qr * L
+  
+  ## clnz: colonization rate
+  ## - s: scalar, survival probability during migration
+  ## - delta: vector, rate parameter(s) for species i's movement ability
+  ## - rsrc: resource availability
+  s <- 1 - exp(- delta * qr)
+  pgle <- ifelse(s * pg < n_patch, 
+                 yes = s * pg,
+                 no = n_patch)
+  clnz <- rsrc * pgle
+  
+  ## extn: extinction rate
+  if (length(mu) == 1) {
+    mu <- rep(mu, 2)
+  } else {
+    if (length(mu) != 2) stop("error in mu")
+  }
+  
+  extn <- mu[1] + mu[2] * rho * u_length(lambda = lambda, L = L)
+  
+  p_hat <- 1 - (extn / clnz)
+  p_hat <- ifelse(p_hat > 0, p_hat, 0)
+  
+  return(p_hat)
+}
+
+## for consumers
+p_cnsm <- function(lambda,
+                   L,
+                   qr = 1,
+                   delta = 1,
+                   prey,
+                   max_prey,
+                   mu = c(1, 1, 1),
+                   rho = 0.5,
+                   pg = 100) {
+  
+  ## n_patch: scalar, # habitat patches
+  ## - qr: scalar, rate parameter for patch density (unit distance)
+  ## - L: scalar, ecosystem size or total river length
+  n_patch <- qr * L
+  
+  ## clnz: colonization rate
+  ## - s: scalar, survival probability during migration
+  ## - delta: vector, rate parameter(s) for species i's movement ability
+  ## - rsrc: resource availability
+  s <- 1 - exp(- delta * qr)
+  
+  pgle <- ifelse(s * pg < n_patch, 
+                 yes = s * pg,
+                 no = n_patch)
+  
+  clnz <- prey * pgle
+  
+  ## extn: extinction rate
+  if (length(mu) == 1) {
+    mu <- rep(mu, 3)
+  } else {
+    if (length(mu) != 3) stop("error in mu")
+  }
+  
+  extn <- mu[1] * 
+    mu[2] * rho * u_length(lambda = lambda, L = L) +
+    mu[3] * (1 - (prey / max_prey))
+  
+  p_hat <- 1 - (extn / clnz)
+  p_hat <- ifelse(p_hat > 0, p_hat, 0)
+  
+  return(p_hat)
+}
+
+fcl <- function(foodweb,
+                lambda,
+                L,
+                qr = 1,
+                delta = c(1, 1),
+                rsrc = 1,
+                pg = c(100, 100),
+                mu_base = 1,
+                mu_cnsm = 1,
+                rho = 0.5) {
+  
+  ## foodweb: matrix, consumer-resource matrix. produce with ppm()
+  foodweb <- abs(foodweb)
+  foodweb[lower.tri(foodweb)] <- 0
+  
+  ## get binary trophic position
+  tp <- attr(foodweb, "tp")
+  
+  ## p_hat: vector, equilibrium occpancy
+  ## max_prey: vector, maximum number of prey items for consumer j
+  p_hat <- rep(-1, ncol(foodweb))
+  max_prey <- colSums(foodweb)
+  
+  ## seqencial determination of equilibrium occupancies
+  for (j in seq_len(ncol(foodweb))) {
+    
+    if (max_prey[j] == 0) {
+      ## basal species
+      p_hat[j] <- p_base(lambda = lambda,
+                         L = L,
+                         qr = qr,
+                         delta = delta[1],
+                         rsrc = rsrc,
+                         mu = mu_base,
+                         rho = rho,
+                         pg = pg[1])
+      
+    } else {
+      ## consumers
+      
+      ## index of prey species for consumer j
+      index_prey <- which(foodweb[, j] == 1)
+      
+      ## mean-field prey richness
+      prey <- sum(p_hat[index_prey])
+      
+      ## possible maximum of prey richness
+      n_prey <- max_prey[j]
+      
+      p_hat[j] <- p_cnsm(lambda = lambda,
+                         L = L,
+                         qr = qr,
+                         delta = delta[2],
+                         prey = prey,
+                         max_prey = n_prey,
+                         mu = mu_cnsm,
+                         rho = rho,
+                         pg = pg[2])
+      
+    } # ifelse
+  } # for j
+  
+  ## report fcl as the maximum binary trophic position in the landscape
+  fcl <- ifelse(any(p_hat > 0), max(tp[p_hat > 0]), 0)
+  attr(fcl, "p_hat") <- p_hat
+  
+  return(fcl)
 }
