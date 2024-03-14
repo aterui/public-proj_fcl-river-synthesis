@@ -5,19 +5,45 @@
 
 rm(list = ls())
 source("code/set_library.R")
+source("code/format_data4jags.R")
 
 ## read data
-## - sourced `format_data4jags.R` in the following script
-source("code/format_est2figure.R")
+df_est <- readRDS("data_fmt/output_model_summary.rds")
+df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds")
+df_pred <- readRDS("data_fmt/output_model_pred.rds")
+mcmc <- readRDS("data_fmt/output_model_mcmc.rds")
 
-## latent variables
-z <- df_est %>% 
-  filter(parms == "z") %>% 
+
+# format data -------------------------------------------------------------
+
+## weight values for each observation
+z <- df_est %>%
+  filter(parms == "z") %>%
   pull(median)
 
-df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>% 
-  mutate(w = score^z) %>% 
-  rename(pb = p_branch)
+df_mu_est <- df_mu_est %>%
+  mutate(w = score^z / max(score^z))
+
+x <- with(df_g,
+          seq(min(log(p_branch)),
+              max(log(p_branch)),
+              length = 100))
+
+X <- with(df_g,
+          cbind(1,
+                mean(log(area)),
+                x))
+
+b <- rbind(mcmc[,"b0"], mcmc[,"b[1]"], mcmc[,"b[2]"])
+
+df_y <- (X %*% b) %>% 
+  exp() %>% 
+  apply(MARGIN = 1, quantile, c(0.025, 0.5, 0.975)) %>% 
+  t() %>% 
+  as_tibble() %>% 
+  setNames(c("low", "median", "high")) %>% 
+  mutate(x_log_pb = x,
+         x_pb = exp(x))
 
 
 # prediction plot ---------------------------------------------------------
@@ -25,60 +51,29 @@ df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>%
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
-x0 <- c("area", "p_branch")
-x1 <- c("log_area", "log_pb")
-
-## fcl vs. watershed area
-g_area <- df_mu_est %>% 
-  ggplot(aes(x = area,
-             y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = w),
-             alpha = 0.4) + 
-  geom_line(data = filter(df_yh, focus == "log_area"),
-            aes(x = area,
-                y = y,
-                color = factor(h)),
-            alpha = 1,
-            linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_area"),
-            aes(x = area,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_area"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = area),
-              alpha = 0.1) +
-  scale_x_continuous(trans = "log10") +
-  scale_y_continuous(trans = "log10") +
-  labs(y = "Food chain length",
-       x = expression("Watershed area ("*km^2*")")) +
-  guides(size = "none",
-         color = "none")
-
-## fcl vs. branching prob
+## fcl vs. p_branch
 g_pb <- df_mu_est %>% 
-  ggplot(aes(x = pb,
+  ggplot(aes(x = p_branch,
              y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = w),
+  geom_point(aes(size = w,
+                 color = factor(h)),
              alpha = 0.4) + 
-  geom_line(data = filter(df_yh, focus == "log_pb"),
+  geom_line(data = df_pred,
             aes(x = pb,
                 y = y,
                 color = factor(h)),
             alpha = 1,
             linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_pb"),
-            aes(x = pb,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_pb"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = pb),
+  geom_line(data = df_y,
+            aes(x = x_pb,
+                y = median)) +
+  geom_ribbon(data = df_y,
+              aes(y = median,
+                  ymin = low,
+                  ymax = high,
+                  x = x_pb),
               alpha = 0.1) +
+  #facet_wrap(facets = ~ factor(h)) +
   scale_x_continuous(trans = "log10") +
   scale_y_continuous(trans = "log10") +
   labs(y = "Food chain length",
@@ -86,15 +81,10 @@ g_pb <- df_mu_est %>%
   guides(size = "none",
          color = "none")
 
-
-# map ---------------------------------------------------------------------
-
-## map layer
+## map
 sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds")
 
-## site layer
-sf_site <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
-  filter(uid %in% uid_incl) %>% 
+sf_site <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
   group_by(sid) %>% 
   slice(1) %>% 
   dplyr::select(NULL) %>% 
@@ -117,24 +107,13 @@ g_map <- ggplot(sf_region) +
           alpha = 0.4) +
   geom_sf(data = sf_site,
           aes(color = factor(h))) +
-  guides(color = "none",
-         fill = "none")
+  guides(fill = "none",
+         color = "none")
 
+g_comb <- g_pb / g_map
 
-# arrange -----------------------------------------------------------------
-
-layout <- "
-AABB
-CCCC
-"
-
-g_reg <- g_pb + (g_area + theme(axis.title.y = element_blank()))
-
-g_comb <- g_reg + g_map + plot_layout(nrow = 2, 
-                                      widths = c(1, 3),
-                                      design = layout)
 
 ggsave(g_comb,
-       filename = "output/figure_fcl.pdf",
-       width = 9,
-       height = 8)
+       filename = "output/figure_fcl_pb.pdf",
+       width = 7,
+       height = 9)

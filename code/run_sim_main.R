@@ -33,18 +33,18 @@ n_rep <- length(list_net)
 # xi = search interval for findr()
 # interval = simulation interval for ode()
 parms <- expand.grid(n_timestep = 200,
-                     n_species = ncol(list_fw[[1]]),
                      phi = c(0, 1E-2, 1E-1),
-                     m = 0,
+                     m = c(0, 1E-3),
                      rate = c(1E-2, 1E-1),
                      s = 0.5,
                      threshold = 1E-4,
                      k_base = 1,
                      z = 0.54,
                      foodweb = seq_len(length(list_fw)),
-                     xi = 0.05,
+                     xi = 0.025,
                      interval = 0.01) %>%
   mutate(theta = sapply(list_fw, function(x) attr(x, "theta"))[foodweb],
+         n_species = sapply(list_fw, function(x) ncol(x))[foodweb],
          i = row_number(),
          m = ifelse(phi == 0, 0, m)) %>% 
   as_tibble()
