@@ -44,7 +44,7 @@ df_g <- df_env_wsd %>%
   mutate(uid = paste0(huid,
                       str_pad(wid, width = 5, pad = "0"))) %>% 
   left_join(df_weight) %>% 
-  filter(n_link > 5)
+  filter(n_link > 4)
   
 ## - uid for those included
 uid_incl <- df_g %>% 
