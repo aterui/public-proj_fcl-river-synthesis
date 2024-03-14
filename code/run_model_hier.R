@@ -32,17 +32,7 @@ list_wsd <- with(df_g,
                       Nh = n_distinct(h),
                       Score = score))
 
-## - data for prediction
-list_pred <- with(df_x,
-                  list(X_h = h,
-                       X_log_area = x_log_area,
-                       X_log_pb = x_log_pb,
-                       X_prec = x_prec,
-                       X_temp = x_temp,
-                       X_hfp = x_hfp,
-                       Npred = nrow(df_x)))
-
-list_jags <- c(list_local, list_wsd, list_pred)
+list_jags <- c(list_local, list_wsd)
 
 
 # jags fit ----------------------------------------------------------------
@@ -59,7 +49,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0", "y_pred")
+parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -125,19 +115,6 @@ df_a0 <- df_est %>%
 df_wsd <- reduce(list(df_g, df_fcl_g, df_a0), left_join)
 
 saveRDS(df_wsd, "data_fmt/output_model_mu_est.rds")
-
-## prediction
-## - prediction for each hydrological region
-df_pred <- df_est %>% 
-  filter(str_detect(parms, "y_pred")) %>% 
-  transmute(y = median,
-            y_low = low,
-            y_high = high) %>% 
-  bind_cols(df_x) %>% 
-  mutate(area = exp(x_log_area),
-         pb = exp(x_log_pb))
-
-saveRDS(df_pred, "data_fmt/output_model_pred.rds")
 
 ## mcmc samples
 mcmc <- MCMCvis::MCMCchains(post$mcmc)

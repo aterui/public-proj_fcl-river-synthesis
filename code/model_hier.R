@@ -79,19 +79,4 @@ model {
     r[h] ~ dnorm(b0, tau[3])
   }
   
-  # prediction --------------------------------------------------------------
-  
-  for (i in 1:Npred) {
-    
-    ## prediction in an ordinary scale
-    y_pred[i] <- 
-      exp(r[X_h[i]] + 
-            b[1] * X_log_area[i] + 
-            b[2] * X_log_pb[i] +
-            b[3] * X_prec[i] +
-            b[4] * X_temp[i] +
-            b[5] * X_hfp[i])
-    
-  }
-  
 }
