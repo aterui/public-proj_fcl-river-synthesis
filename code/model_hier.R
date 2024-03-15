@@ -30,7 +30,7 @@ model {
   }
   
   ## weight scaling exponent
-  z ~ dunif(0, 1)
+  z ~ dnorm(0, tau0)T(0,)
   
   ## degree of freedom
   nu ~ dexp(0.01)T(2, )
@@ -66,8 +66,12 @@ model {
     eps[j] ~ dnorm(0, tau[2] * scl_w[j])
     
     ## - scaled weight
+    ## - Ratio is the distance ratio to randomly-generated sites
+    ## - dev[j], squared deviation from the random samples
+    ## - N_site is the number of sites within a watershed
     scl_w[j] <- w[j] / max(w[])
-    log(w[j]) <- z * log(Score[j])
+    log(w[j]) <- z * (log(N_site[j]) - dev[j])
+    dev[j] <- pow((Ratio[j] - 1), 2)
     
     ## - standardization
     scl_prec[j] <- (Prec[j] - mean(Prec[])) / sd(Prec[])

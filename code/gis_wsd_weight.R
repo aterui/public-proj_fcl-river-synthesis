@@ -66,9 +66,5 @@ df_ratio <- foreach(i = 1:length(v_uid),
 
 # score -------------------------------------------------------------------
 
-df_weight <- df_ratio %>% 
-  mutate(ratio_weight = exp(-(d_ratio - 1)^2),
-         score = n_site * ratio_weight)
-
 ## export
-saveRDS(df_weight, "data_fmt/data_weight.rds")
+saveRDS(df_ratio, "data_fmt/data_weight.rds")

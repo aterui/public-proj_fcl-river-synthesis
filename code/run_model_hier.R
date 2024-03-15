@@ -30,7 +30,8 @@ list_wsd <- with(df_g,
                       Hfp = hfp,
                       H = h,
                       Nh = n_distinct(h),
-                      Score = score))
+                      Ratio = d_ratio,
+                      N_site = n_site))
 
 list_jags <- c(list_local, list_wsd)
 
