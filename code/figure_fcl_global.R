@@ -18,7 +18,7 @@ z <- df_est %>%
   pull(median)
 
 df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>% 
-  mutate(w = score^z) %>% 
+  mutate(w = (exp(-(d_ratio - 1)^2) * n_site)^z) %>% 
   rename(pb = p_branch)
 
 

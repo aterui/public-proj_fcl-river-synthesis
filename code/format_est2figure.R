@@ -74,7 +74,7 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
                       relocate(focus)
                     
                     X0 <- df_x %>% 
-                      dplyr::select(cnm)
+                      dplyr::select(all_of(cnm))
                     
                     X <- model.matrix(~ ., X0)
                     
@@ -143,7 +143,7 @@ df_y <- foreach(j = seq_len(length(cnm)),
                     relocate(focus)
                   
                   X0 <- df_x %>% 
-                    dplyr::select(cnm)
+                    dplyr::select(all_of(cnm))
                   
                   X <- model.matrix(~ ., X0)
                   
