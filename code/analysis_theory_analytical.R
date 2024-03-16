@@ -6,113 +6,74 @@ source("code/set_function.R")
 source("code/set_library.R")
 
 
-# prediction --------------------------------------------------------------
+# set parameters ----------------------------------------------------------
 
+## generate food webs
 set.seed(123)
 S <- 32
 
-list_fw <- replicate(10,
-                     {fw <- ppm(n_species = S,
-                                n_basal = round(S * 0.18),
-                                l = round(S^2 * 0.11),
-                                theta = 0.25)
-                     },
-                     simplify = FALSE)
+list_fw <- replicate(10, {
+  fw <- ppm(n_species = S,
+            n_basal = round(S * 0.18),
+            l = round(S^2 * 0.11),
+            theta = 0.25)},
+  simplify = FALSE)
+
+## other parameters
 rsrc <- c(0.25, 2.5)
 mu <- c(0.25, 2.5)
 rho <- 0.5
 delta <- 1.5
 fw <- seq_len(length(list_fw))
 
-## focus, branching
-parms <- expand.grid(L = 50,
+## parms data frame
+## - get vectors for lambda and river length
+x_lambda <- seq(-log(1 - 0.2), -log(1 - 0.8), length = 100)
+x_rl <- seq(1, 100, length = 100)
+
+## - fix values when varying another
+lambda <- c(x_lambda, rep(-log(0.5), length(x_lambda)))
+rl <- c(rep(50, length(x_rl)), x_rl)
+
+## - assemble x values along with `focus` and `id`
+df_x <- tibble(lambda,
+               rl,
+               focus = rep(c("branch", "size"),
+                           each = length(x_lambda))) %>% 
+  mutate(id = row_number())
+
+## - combine with other parameters
+parms <- expand.grid(id = seq_len(length(lambda)),
                      rsrc = rsrc,
                      mu = mu,
                      rho = rho,
                      delta = delta,
-                     fw = fw)
-
-lambda <- seq(-log(1 - 0.2), -log(1 - 0.8), length = 100)
-
-df_fcl_pb <- foreach(i = seq_len(nrow(parms)),
-                     .combine = bind_rows) %do% {
-                       
-                       print(i)
-                       y <- sapply(lambda,
-                                   function(x) {
-                                     with(parms, 
-                                          fcl(foodweb = list_fw[[fw[i]]],
-                                              lambda = x,
-                                              L = L[i],
-                                              rsrc = rsrc[i],
-                                              mu_base = mu[i],
-                                              mu_cnsm = mu[i],
-                                              delta = rep(delta[i], 2),
-                                              rho = rep(rho[i], 2))
-                                     )
-                                   })
-                       
-                       cout <- with(parms,
-                                    tibble(fcl = y,
-                                           lambda = lambda,
-                                           p_branch = 1 - exp(-lambda),
-                                           L = L[i],
-                                           rsrc = rsrc[i],
-                                           mu = mu[i],
-                                           rho = rho[i],
-                                           foodweb = fw[i],
-                                           focus = "p_branch")
-                       )
-                       
-                       return(cout)
-                     }
+                     fw = fw) %>% 
+  left_join(df_x)
 
 
-## focus, size
-parms <- expand.grid(p_branch = c(0.5),
-                     rsrc = rsrc,
-                     mu = mu,
-                     rho = rho,
-                     delta = delta,
-                     fw = fw)
+# prediction --------------------------------------------------------------
 
-L <- seq(1, 100, length = 100)
-
-df_fcl_l <- foreach(i = seq_len(nrow(parms)),
-                    .combine = bind_rows) %do% {
-                      
-                      print(i)
-                      y <- sapply(L,
-                                  function(x) {
-                                    with(parms, 
-                                         fcl(foodweb = list_fw[[fw[i]]],
-                                             lambda = -log(1 - p_branch[i]),
-                                             L = x,
-                                             rsrc = rsrc[i],
-                                             mu_base = mu[i],
-                                             mu_cnsm = mu[i],
-                                             delta = rep(delta[i], 2),
-                                             rho = rep(rho[i], 2))
-                                    )
-                                  })
-                      
-                      cout <- with(parms,
-                                   tibble(fcl = y,
-                                          lambda = -log(1 - p_branch[i]),
-                                          p_branch = p_branch[i],
-                                          L = L,
-                                          rsrc = rsrc[i],
-                                          mu = mu[i],
-                                          rho = rho[i],
-                                          foodweb = fw[i],
-                                          focus = "size")
-                      )
-                      
-                      return(cout)
-                    }
+y <- foreach(i = seq_len(nrow(parms)),
+             .combine = c) %do% {
+               
+               print(i)
+               y <- with(parms, 
+                         fcl(foodweb = list_fw[[fw[i]]],
+                             lambda = lambda[i],
+                             L = rl[i],
+                             rsrc = rsrc[i],
+                             mu_base = mu[i],
+                             mu_cnsm = mu[i],
+                             delta = rep(delta[i], 2),
+                             rho = rep(rho[i], 2)))
+               
+             }
 
 
 # export ------------------------------------------------------------------
 
-df_fcl <- bind_rows(df_fcl_pb, df_fcl_l)
+df_fcl <- parms %>% 
+  mutate(fcl = y)
+
 saveRDS(df_fcl, file = "data_fmt/sim_fcl_analytical.rds")

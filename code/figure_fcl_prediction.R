@@ -7,14 +7,13 @@ rm(list = ls())
 source("code/set_library.R")
 
 df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>% 
-  group_by(focus, p_branch, L, rsrc, mu) %>% 
+  group_by(focus, lambda, rl, rsrc, mu) %>% 
   summarize(mu_fcl = mean(fcl),
             min_fcl = min(fcl),
             max_fcl = max(fcl)) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(p_branch = 1 - exp(-lambda))
 
-df_fcl_raw <- readRDS("data_fmt/sim_fcl_analytical.rds")
-  
 # a -----------------------------------------------------------------------
 
 source("code/set_theme.R")
@@ -27,7 +26,7 @@ lab_r <- c(`0.25` = "Unproductive",
            `2.5` = "Productive")
 
 g1 <- df_fcl_mu %>% 
-  filter(focus == "p_branch") %>% 
+  filter(focus == "branch") %>% 
   ggplot(aes(x = p_branch,
              y = mu_fcl)) + 
   geom_line(linewidth = 1,
@@ -52,7 +51,7 @@ g1 <- df_fcl_mu %>%
 
 g2 <- df_fcl_mu %>% 
   filter(focus == "size") %>% 
-  ggplot(aes(x = L,
+  ggplot(aes(x = rl,
              y = mu_fcl)) + 
   geom_line(linewidth = 1,
             alpha = 0.8,
