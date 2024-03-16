@@ -14,17 +14,21 @@ df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>%
   ungroup() %>% 
   mutate(p_branch = 1 - exp(-lambda))
 
-# a -----------------------------------------------------------------------
 
+# fcl vs size or p_branch plot --------------------------------------------
+
+## set plot theme
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
+## label mapper
 lab_mu <- c(`0.25` = "Stable",
             `2.5` = "Disturbed")
 
 lab_r <- c(`0.25` = "Unproductive",
            `2.5` = "Productive")
 
+## food chain length vs. branching
 g1 <- df_fcl_mu %>% 
   filter(focus == "branch") %>% 
   ggplot(aes(x = p_branch,
@@ -49,6 +53,7 @@ g1 <- df_fcl_mu %>%
         strip.text = element_text(size = 16)) +
   guides(color = "none")
 
+## food chain length vs. size
 g2 <- df_fcl_mu %>% 
   filter(focus == "size") %>% 
   ggplot(aes(x = rl,
@@ -73,7 +78,7 @@ g2 <- df_fcl_mu %>%
   guides(color = "none")
 
 
-# export ------------------------------------------------------------------
+## export 
 
 ggsave(g1, filename = "output/fig_theory_branch.pdf",
        width = 7.25,
