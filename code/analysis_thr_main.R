@@ -9,9 +9,12 @@ source("code/set_library.R")
 # set parameters ----------------------------------------------------------
 
 ## generate food webs
+## - set seed for reproducibility
 set.seed(123)
-S <- 32
 
+## - generate food web matrix
+## - S: number of nodes/species in a community
+S <- 32
 list_fw <- replicate(10, {
   fw <- ppm(n_species = S,
             n_basal = round(S * 0.18),

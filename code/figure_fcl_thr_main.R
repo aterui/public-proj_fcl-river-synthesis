@@ -5,7 +5,12 @@
 
 rm(list = ls())
 source("code/set_library.R")
+source("code/set_function.R")
 
+
+# fcl vs size or p_branch plot --------------------------------------------
+
+## read data
 df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>% 
   group_by(focus, lambda, rl, rsrc, mu) %>% 
   summarize(mu_fcl = mean(fcl),
@@ -13,9 +18,6 @@ df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>%
             max_fcl = max(fcl)) %>% 
   ungroup() %>% 
   mutate(p_branch = 1 - exp(-lambda))
-
-
-# fcl vs size or p_branch plot --------------------------------------------
 
 ## set plot theme
 source("code/set_theme.R")
@@ -88,3 +90,51 @@ ggsave(g2, filename = "output/fig_theory_size.pdf",
        width = 7.25,
        height = 6)
 
+
+# upstream distance function ----------------------------------------------
+
+## set parameters
+rl <- 1:100
+lambda <- -log(1 - seq(0.2, 0.8, by = 0.2))
+x_values <- expand.grid(rl = rl, lambda = lambda)
+
+u_dist <- sapply(seq_len(nrow(x_values)), function(i) {
+  with(x_values,
+       u_length(L = rl[i], lambda = lambda[i]))
+})
+
+## get data frame for upstream distance
+df_u <- bind_cols(x_values, u_dist) %>% 
+  as_tibble() %>% 
+  setNames(c("rl", "lambda", "u_dist")) %>% 
+  mutate(p_branch = round(1 - exp(-lambda), 1))
+
+ug0 <- df_u %>% 
+  filter(p_branch == 0.2) %>% 
+  ggplot(aes(x = rl,
+             y = u_dist)) +
+  geom_line(linewidth = 1.5,
+            color = grey(0.3)) +
+  labs(y = "E(Upstream distance)",
+       x = "River length") +
+  guides(color = "none")
+
+ug <- df_u %>% 
+  ggplot(aes(x = rl,
+             y = u_dist,
+             color = factor(p_branch))) +
+  geom_line(linewidth = 1.5) +
+  MetBrewer::scale_color_met_d("Hiroshige",
+                               direction = -1) +
+  labs(y = "E(Upstream distance)",
+       x = "River length") +
+  guides(color = "none")
+
+## export
+ggsave(ug0, 
+       filename = "output/figure_ud0.pdf",
+       width = 6, height = 5)
+
+ggsave(ug, 
+       filename = "output/figure_ud.pdf",
+       width = 6, height = 5)
