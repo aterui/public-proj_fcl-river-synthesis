@@ -251,10 +251,19 @@ u_length <- function(lambda, L) {
 }
 
 
-
 # metapopulation model ----------------------------------------------------
 
 ## for basal species
+## arguments
+## - lambda, branching rate. branching probability = 1 - exp(-lambda)
+## - L, total river length
+## - qr, habitat patch density (or rate) per unit distance
+## - delta, species' dispersal capability
+## - rsrc, resource availability for basal species
+## - mu, disturbance rate: mu[1], base rate; mu[2], spatial rate
+## - rho, sychrony probability of spatial disturbance
+## - pg, propagule size
+
 p_base <- function(lambda,
                    L,
                    qr = 1,
@@ -265,14 +274,10 @@ p_base <- function(lambda,
                    pg = 100) {
   
   ## n_patch: scalar, # habitat patches
-  ## - qr: scalar, rate parameter for patch density (unit distance)
-  ## - L: scalar, ecosystem size or total river length
   n_patch <- qr * L
   
   ## clnz: colonization rate
   ## - s: scalar, survival probability during migration
-  ## - delta: vector, rate parameter(s) for species i's movement ability
-  ## - rsrc: resource availability
   s <- 1 - exp(- delta * qr)
   pgle <- ifelse(s * pg < n_patch, 
                  yes = s * pg,
@@ -288,6 +293,10 @@ p_base <- function(lambda,
   
   extn <- mu[1] + mu[2] * rho * u_length(lambda = lambda, L = L)
   
+  ## equilibrium patch occupancy
+  if (extn == 0 & clnz == 0) 
+    stop("both colonization and extinction rates are zero; equilibrium undefined.")
+
   p_hat <- 1 - (extn / clnz)
   p_hat <- ifelse(p_hat > 0, p_hat, 0)
   
@@ -295,6 +304,17 @@ p_base <- function(lambda,
 }
 
 ## for consumers
+## arguments
+## - lambda, branching rate. branching probability = 1 - exp(-lambda)
+## - L, total river length
+## - qr, habitat patch density (or rate) per unit distance
+## - delta, species' dispersal capability
+## - prey, expected prey richness (i.e., sum of equilibrium occupancies of prey)
+## - max_prey, the number of prey species the consumer can prey on
+## - mu, disturbance rate: mu[1] = base rate, mu[2] = spatial rate, mu[3] = prey
+## - rho, synchronous extinction probability due to spatial disturbance
+## - pg, propagule size
+
 p_cnsm <- function(lambda,
                    L,
                    qr = 1,
@@ -306,14 +326,10 @@ p_cnsm <- function(lambda,
                    pg = 100) {
   
   ## n_patch: scalar, # habitat patches
-  ## - qr: scalar, rate parameter for patch density (unit distance)
-  ## - L: scalar, ecosystem size or total river length
   n_patch <- qr * L
   
   ## clnz: colonization rate
   ## - s: scalar, survival probability during migration
-  ## - delta: vector, rate parameter(s) for species i's movement ability
-  ## - rsrc: resource availability
   s <- 1 - exp(- delta * qr)
   
   pgle <- ifelse(s * pg < n_patch, 
@@ -333,6 +349,7 @@ p_cnsm <- function(lambda,
     mu[2] * rho * u_length(lambda = lambda, L = L) +
     mu[3] * (1 - (prey / max_prey))
   
+  ## equilibrium patch occupancy
   if (extn == 0 & clnz == 0) 
     stop("both colonization and extinction rates are zero; equilibrium undefined.")
   
@@ -341,6 +358,19 @@ p_cnsm <- function(lambda,
   
   return(p_hat)
 }
+
+## for food chain length
+## arguments
+## - foodweb, binary food web matrix from ppm()
+## - lambda, branching rate. branching probability = 1 - exp(-lambda)
+## - L, total river length
+## - qr, habitat patch density (or rate) per unit distance
+## - delta, species' dispersal capability
+## - rsrc, resource availability for basal species
+## - pg, propagule size
+## - mu_base, disturbance rate for basal species
+## - mu_cnsm, disturbance rate for consumers
+## - rho, synchronous extinction probability due to spatial disturbance
 
 fcl <- function(foodweb,
                 lambda,
@@ -403,19 +433,25 @@ fcl <- function(foodweb,
   
   ## report fcl as the maximum binary trophic position in the landscape
   if (any(p_hat > 0)) {
+    ## at least one species persist
+    
+    ## index of persistent species
+    ## subset the foodweb by persistent species
     index_p <- which(p_hat > 0)
     sub_fw <- foodweb[index_p, index_p]
     tp <- rep(-1, ncol(sub_fw))
     
+    ## index of basal species, number of basal, number of prey
     index_b <- which(colSums(sub_fw) == 0)
     n_b <- sum(colSums(sub_fw) == 0)
     n_p <- colSums(sub_fw)
     
     if (any(n_p > 0)) {
-      
+      ## tp = 1 if basal
       tp[index_b] <- 1  
       
       for (i in (n_b + 1):length(tp)) {
+        ## update tp recursively if consumers
         tp[i] <-  (drop(tp %*% sub_fw)[i]) / n_p[i] + 1
       }
       
@@ -428,6 +464,7 @@ fcl <- function(foodweb,
     fcl <- max(tp)
     attr(fcl, "tp") <- tp
   } else {
+    ## no species persist
     fcl <- 0
   }
 
