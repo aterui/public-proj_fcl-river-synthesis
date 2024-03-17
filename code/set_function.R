@@ -157,8 +157,9 @@ get_phi <- function(n, p) {
 # flow-connected fraction -------------------------------------------------
 
 ## get probability of drawing a link with m magnitude from a network with M magnitude
-## @m m magnitude
-## @M maximum magnitude of a network
+## arguments
+## - m, magnitude of a given link
+## - M, maximum magnitude of a network
 p_mag <- function(m, M) {
   
   if (any(m > M)) stop("M must be >= m")
@@ -180,8 +181,9 @@ p_mag <- function(m, M) {
 }
 
 ## get expected upstream length
-## @lambda branching rate (per unit distance)
-## @L total stream length
+## arguments
+## - lambda, branching rate (per unit distance)
+## - L, total stream length
 
 u_length <- function(lambda, L) {
   ## check input
