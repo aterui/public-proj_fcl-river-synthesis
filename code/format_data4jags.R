@@ -32,6 +32,25 @@ df_env_local <- readRDS("data_fmt/data_env_local.rds")
 
 ## network properties
 df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
+df_channel <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
+  lapply(function(x) {
+    x %>% 
+      mutate(uid = paste0(huid,
+                          str_pad(wid,
+                                  width = 5,
+                                  pad = "0")),
+             length = units::set_units(length(.), "km")) %>% 
+      group_by(uid) %>% 
+      summarize(r_length = sum(length)) %>% 
+      as_tibble() %>% 
+      transmute(uid,
+                r_length = units::drop_units(r_length),
+                unit_length = "km")
+  }) %>% 
+  bind_rows()
+
+df_env_wsd <- left_join(df_env_wsd,
+                        df_channel)
 
 ## weight information for each watershed
 df_weight <- readRDS("data_fmt/data_weight.rds")
