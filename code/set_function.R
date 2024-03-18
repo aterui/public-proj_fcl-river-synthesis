@@ -259,7 +259,7 @@ u_length <- function(lambda, L) {
 ## arguments
 ## - lambda, branching rate. branching probability = 1 - exp(-lambda)
 ## - L, total river length
-## - qr, habitat patch density (or rate) per unit distance
+## - h, habitat patch density (or rate) per unit distance
 ## - delta, species' dispersal capability
 ## - rsrc, resource availability for basal species
 ## - mu, disturbance rate: mu[1], base rate; mu[2], spatial rate
@@ -268,7 +268,7 @@ u_length <- function(lambda, L) {
 
 p_base <- function(lambda,
                    L,
-                   qr = 1,
+                   h = 1,
                    delta = 1,
                    rsrc = 1,
                    mu = c(1, 1),
@@ -276,11 +276,11 @@ p_base <- function(lambda,
                    pg = 100) {
   
   ## n_patch: scalar, # habitat patches
-  n_patch <- qr * L
+  n_patch <- h * L
   
   ## clnz: colonization rate
   ## - s: scalar, survival probability during migration
-  s <- 1 - exp(- delta * qr)
+  s <- 1 - exp(- delta * h)
   pgle <- ifelse(s * pg < n_patch, 
                  yes = s * pg,
                  no = n_patch)
@@ -298,7 +298,7 @@ p_base <- function(lambda,
   ## equilibrium patch occupancy
   if (extn == 0 & clnz == 0) 
     stop("both colonization and extinction rates are zero; equilibrium undefined.")
-
+  
   p_hat <- 1 - (extn / clnz)
   p_hat <- ifelse(p_hat > 0, p_hat, 0)
   
@@ -309,7 +309,7 @@ p_base <- function(lambda,
 ## arguments
 ## - lambda, branching rate. branching probability = 1 - exp(-lambda)
 ## - L, total river length
-## - qr, habitat patch density (or rate) per unit distance
+## - h, habitat patch density (or rate) per unit distance
 ## - delta, species' dispersal capability
 ## - prey, expected prey richness (i.e., sum of equilibrium occupancies of prey)
 ## - max_prey, the number of prey species the consumer can prey on
@@ -319,7 +319,7 @@ p_base <- function(lambda,
 
 p_cnsm <- function(lambda,
                    L,
-                   qr = 1,
+                   h = 1,
                    delta = 1,
                    prey,
                    max_prey,
@@ -328,11 +328,11 @@ p_cnsm <- function(lambda,
                    pg = 100) {
   
   ## n_patch: scalar, # habitat patches
-  n_patch <- qr * L
+  n_patch <- h * L
   
   ## clnz: colonization rate
   ## - s: scalar, survival probability during migration
-  s <- 1 - exp(- delta * qr)
+  s <- 1 - exp(- delta * h)
   
   pgle <- ifelse(s * pg < n_patch, 
                  yes = s * pg,
@@ -366,7 +366,7 @@ p_cnsm <- function(lambda,
 ## - foodweb, binary food web matrix from ppm()
 ## - lambda, branching rate. branching probability = 1 - exp(-lambda)
 ## - L, total river length
-## - qr, habitat patch density (or rate) per unit distance
+## - h, habitat patch density (or rate) per unit distance
 ## - delta, species' dispersal capability
 ## - rsrc, resource availability for basal species
 ## - pg, propagule size
@@ -377,7 +377,7 @@ p_cnsm <- function(lambda,
 fcl <- function(foodweb,
                 lambda,
                 L,
-                qr = 1,
+                h = 1,
                 delta = c(1, 1),
                 rsrc = 1,
                 pg = c(10, 10),
@@ -401,7 +401,7 @@ fcl <- function(foodweb,
       ## basal species
       p_hat[j] <- p_base(lambda = lambda,
                          L = L,
-                         qr = qr,
+                         h = h,
                          delta = delta[1],
                          rsrc = rsrc,
                          mu = mu_base,
@@ -422,7 +422,7 @@ fcl <- function(foodweb,
       
       p_hat[j] <- p_cnsm(lambda = lambda,
                          L = L,
-                         qr = qr,
+                         h = h,
                          delta = delta[2],
                          prey = prey,
                          max_prey = n_prey,
@@ -462,15 +462,158 @@ fcl <- function(foodweb,
       tp[index_b] <- 1
       
     }
-
+    
     fcl <- max(tp)
     attr(fcl, "tp") <- tp
   } else {
     ## no species persist
     fcl <- 0
   }
-
+  
   attr(fcl, "p_hat") <- p_hat
   
   return(fcl)
+}
+
+
+# numerical metapopulation model ------------------------------------------
+
+## utility function
+to_v <- function(x, n) {
+  
+  if (length(x) == 1) {
+    
+    v_x <- rep(x, n)
+    
+  } else {
+    
+    if (n != length(x))
+      stop("incorrect input in one or more of the parameters")
+    
+    v_x <- x
+  }
+  
+  return(v_x) 
+}
+
+## numerical solver with top down effects
+p_fw <- function(foodweb,
+                 h = 1,
+                 delta = 1,
+                 r = 1,
+                 g = 1,
+                 mu0 = 1,
+                 mu_p = 1,
+                 mu_c = 1,
+                 mu_s = 1,
+                 rho = 0.5,
+                 L,
+                 lambda,
+                 x0 = 0.5,
+                 n_timestep = 100,
+                 interval = 0.01,
+                 threshold = 1E-5) {
+  
+  n_species <- nrow(foodweb)
+  Mc <- Mm <- abs(foodweb)
+  
+  Mc[upper.tri(Mc)] <- 0
+  Mm[lower.tri(Mm)] <- 0
+  
+  s_prey <- rowSums(Mc)
+  inv_s_prey <- ifelse(s_prey > 0,
+                       yes = 1 / s_prey,
+                       no = -1)
+  
+  id_b <- which(s_prey == 0)
+  n_b <- length(id_b)
+  
+  id_c <- which(s_prey > 0)
+  n_c <- length(id_c)
+  
+  ## colonization rate
+  ## - propagule survival
+  v_phi <- to_v(h, n = n_species)
+  
+  ## - resource availability
+  r0 <- to_v(r, n = n_b)
+  v_r <- c(r0, rep(0, n_c))
+  
+  ## - propagule
+  n_patch <- h * L
+  v_g <- to_v(g, n = n_species)
+  v_phi_x_g <- v_phi * v_g
+  
+  id_phi_x_g <- which(v_phi_x_g < n_patch)
+  id_n_patch <- which(v_phi_x_g >= n_patch)
+  v_g[id_phi_x_g] <- v_phi_x_g[id_phi_x_g]
+  v_g[id_n_patch] <- n_patch
+  
+  ## extinction rate
+  ## - base rate
+  v_mu0 <- to_v(mu0, n = n_species)
+  
+  ## - prey availability
+  v_mu_p <- to_v(mu_p, n = n_species)
+  v_mu_p[id_b] <- 0
+  
+  ## - prey availability
+  v_mu_c <- to_v(mu_c, n = n_species)
+  
+  ## - spatial
+  v_mu_s <- to_v(mu_s, n = n_species)
+  v_rho <- to_v(rho, n = n_species)
+  u <- u_length(lambda = lambda, L = L)
+  
+  ## derivative
+  derivr <- function(t, x, parms) {
+    with(parms, {
+      
+      dx <- phi * g * (Mc %*% x + r) * x * (1 - x) -
+        (mu0 + 
+           mu_p * (1 - (Mc %*% x) * inv_s_prey) + 
+           mu_c * Mm %*% x + 
+           mu_s * rho * u) * x
+      
+      list(dx)
+    })
+  }
+  
+  ## set parameters for ode()
+  parms <- list(phi = v_phi,
+                g = v_g,
+                Mc = Mc,
+                r = v_r,
+                mu0 = v_mu0,
+                mu_p = v_mu_p,
+                mu_c = v_mu_c,
+                mu_s = v_mu_s,
+                inv_s_prey = inv_s_prey,
+                u = u)
+  
+  x_init <- rep(x0, n_species)
+  times <- seq(0, n_timestep, by = interval)
+  
+  ## define absorbing condition
+  ## - root function
+  rootfun <- function(t, x, parms) {
+    return(x - threshold)
+  }
+  
+  ## - extinction: triggered when "x - threshold = 0"
+  eventfun <- function(t, x, parms) {
+    x <- ifelse(x <= threshold, 0, x)
+    return(x)
+  }
+  
+  # run ode solver
+  cout <- deSolve::ode(y = x_init,
+                       times = times,
+                       func = derivr,
+                       parms = parms,
+                       events = list(func = eventfun,
+                                     root = TRUE),
+                       rootfun = rootfun)
+  
+  return(cout)
 }
