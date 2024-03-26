@@ -13,7 +13,7 @@ source("code/set_library.R")
 source("code/format_data4jags.R")
 
 df_g <- df_g %>% 
-  mutate(log_area = log(area),
+  mutate(log_r_length = log(r_length),
          log_pb = log(p_branch))
 
 ## read data
@@ -39,7 +39,7 @@ B <- rbind(v_r, m_b)
 
 ## prepare predictors
 ## - predictor columns
-cnm <- c("log_area", "log_pb", "scl_prec", "scl_temp", "scl_hfp")
+cnm <- c("log_r_length", "log_pb", "scl_prec", "scl_temp", "scl_hfp")
 
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
@@ -93,7 +93,7 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 
 ## get unscaled values
 df_yh <- df_yh0 %>% 
-  mutate(area = exp(log_area),
+  mutate(r_length = exp(log_r_length),
          pb = exp(log_pb),
          prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
          temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
@@ -109,7 +109,7 @@ x <- with(df_g,
 
 X <- with(df_g,
           cbind(1,
-                mean(log(area)),
+                mean(log(r_length)),
                 x))
 
 mcmc_b <- mcmc[, str_detect(colnames(mcmc), "b0|b\\[.{1,}\\]")]
@@ -159,7 +159,7 @@ df_y <- foreach(j = seq_len(length(cnm)),
                            y_low = exp(log_y_low),
                            y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
-                    mutate(area = exp(log_area),
+                    mutate(r_length = exp(log_r_length),
                            pb = exp(log_pb),
                            prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
                            temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),

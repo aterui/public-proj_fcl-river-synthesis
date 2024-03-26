@@ -23,7 +23,7 @@ list_local <- with(df_fcl,
 
 ## - watershed level data
 list_wsd <- with(df_g,
-                 list(Esize = area,
+                 list(Esize = r_length,
                       Pbranch = p_branch,
                       Prec = mean.prec,
                       Temp = mean.temp,

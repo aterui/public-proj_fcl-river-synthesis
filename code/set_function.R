@@ -160,6 +160,7 @@ get_phi <- function(n, p) {
 ## arguments
 ## - m, magnitude of a given link
 ## - M, maximum magnitude of a network
+
 p_mag <- function(m, M) {
   
   if (any(m > M)) stop("M must be >= m")
@@ -557,7 +558,7 @@ p_fw <- function(foodweb,
   v_mu_p <- to_v(mu_p, n = n_species)
   v_mu_p[id_b] <- 0
   
-  ## - prey availability
+  ## - predation influence
   v_mu_c <- to_v(mu_c, n = n_species)
   
   ## - spatial

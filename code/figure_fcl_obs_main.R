@@ -27,35 +27,35 @@ df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>%
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
-x0 <- c("area", "p_branch")
-x1 <- c("log_area", "log_pb")
+x0 <- c("r_length", "p_branch")
+x1 <- c("log_r_length", "log_pb")
 
 ## fcl vs. watershed area
-g_area <- df_mu_est %>% 
-  ggplot(aes(x = area,
+g_size <- df_mu_est %>% 
+  ggplot(aes(x = r_length,
              y = fcl_est)) +
   geom_point(aes(color = factor(h),
                  size = w),
              alpha = 0.4) + 
-  geom_line(data = filter(df_yh, focus == "log_area"),
-            aes(x = area,
+  geom_line(data = filter(df_yh, focus == "log_r_length"),
+            aes(x = r_length,
                 y = y,
                 color = factor(h)),
             alpha = 1,
             linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_area"),
-            aes(x = area,
+  geom_line(data = filter(df_y, focus == "log_r_length"),
+            aes(x = r_length,
                 y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_area"),
+  geom_ribbon(data = filter(df_y, focus == "log_r_length"),
               aes(y = y,
                   ymin = y_low,
                   ymax = y_high,
-                  x = area),
+                  x = r_length),
               alpha = 0.1) +
   scale_x_continuous(trans = "log10") +
   scale_y_continuous(trans = "log10") +
   labs(y = "Food chain length",
-       x = expression("Watershed area ("*km^2*")")) +
+       x = "River length (km)") +
   guides(size = "none",
          color = "none")
 
@@ -129,7 +129,7 @@ AABB
 CCCC
 "
 
-g_reg <- g_pb + (g_area + theme(axis.title.y = element_blank()))
+g_reg <- g_pb + (g_size + theme(axis.title.y = element_blank()))
 
 g_comb <- g_reg + g_map + plot_layout(nrow = 2, 
                                       widths = c(1, 3),
