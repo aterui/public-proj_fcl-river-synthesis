@@ -5,7 +5,6 @@
 
 rm(list = ls())
 source("code/set_library.R")
-source("code/format_data4jags.R")
 
 ## - sourced `format_data4jags.R` in the following script
 source("code/format_est2figure.R")
@@ -91,7 +90,8 @@ g_pb <- df_mu_est %>%
 # map ---------------------------------------------------------------------
 
 ## map layer
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds")
+sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
+  st_make_valid()
 
 ## site layer
 sf_site <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%

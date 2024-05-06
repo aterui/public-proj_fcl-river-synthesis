@@ -48,7 +48,7 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
                     df_x <- df_g %>% 
                       dplyr::select(all_of(c("h", cnm))) %>% 
                       group_by(h) %>% 
-                      reframe(across(cnm,
+                      reframe(across(all_of(cnm),
                                      .fns = function(x) rep(mean(x), 100)))
                     
                     ## get min-max range for a focus predictor
