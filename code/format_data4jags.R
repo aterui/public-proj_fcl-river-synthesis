@@ -10,7 +10,8 @@ source("code/set_function.R")
 # update as needed
 # FCL data selected
 # - join level01 group id
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds")
+sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
+  st_make_valid()
 
 sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
   st_join(sf_lev01)
@@ -34,18 +35,20 @@ df_env_local <- readRDS("data_fmt/data_env_local.rds")
 df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
 df_channel <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
   lapply(function(x) {
-    x %>% 
-      mutate(uid = paste0(huid,
-                          str_pad(wid,
-                                  width = 5,
-                                  pad = "0")),
-             length = units::set_units(length(.), "km")) %>% 
-      group_by(uid) %>% 
-      summarize(r_length = sum(length)) %>% 
-      as_tibble() %>% 
-      transmute(uid,
-                r_length = units::drop_units(r_length),
-                unit_length = "km")
+    if(!is.null(x)) {
+      x %>% 
+        mutate(uid = paste0(huid,
+                            str_pad(wid,
+                                    width = 5,
+                                    pad = "0")),
+               length = units::set_units(length(.), "km")) %>% 
+        group_by(uid) %>% 
+        summarize(r_length = sum(length)) %>% 
+        as_tibble() %>% 
+        transmute(uid,
+                  r_length = units::drop_units(r_length),
+                  unit_length = "km")
+    }
   }) %>% 
   bind_rows()
 
