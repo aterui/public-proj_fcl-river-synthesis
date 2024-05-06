@@ -1,7 +1,7 @@
 model {
   
   tau0 <- 0.1
-  df_tau <- 4 
+  df_tau <- 6
   
   # prior -------------------------------------------------------------------
   
@@ -30,10 +30,12 @@ model {
   }
   
   ## weight scaling exponent
-  z ~ dnorm(0, tau0)T(0,)
+  for (k in 1:2) {
+    z[k] ~ dnorm(0, tau0)T(0, )
+  }
   
   ## degree of freedom
-  nu ~ dexp(0.01)T(2, )
+  nu ~ dexp(0.05)T(2, )
   
   # likelihood --------------------------------------------------------------
   
@@ -67,11 +69,11 @@ model {
     
     ## - scaled weight
     ## - Ratio is the distance ratio to randomly-generated sites
-    ## - dev[j], squared deviation from the random samples
+    ## - xi[j], squared deviation from the random samples
     ## - N_site is the number of sites within a watershed
     scl_w[j] <- w[j] / max(w[])
-    log(w[j]) <- z * (log(N_site[j]) - dev[j])
-    dev[j] <- pow((Ratio[j] - 1), 2)
+    log(w[j]) <- z[1] * log(N_site[j]) - z[2] * xi[j]
+    xi[j] <- pow((Ratio[j] - 1), 2)
     
     ## - standardization
     scl_prec[j] <- (Prec[j] - mean(Prec[])) / sd(Prec[])
