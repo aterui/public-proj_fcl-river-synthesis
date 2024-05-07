@@ -13,11 +13,11 @@ source("code/format_est2figure.R")
 
 ## latent variables
 z <- df_est %>% 
-  filter(parms == "z") %>% 
+  filter(str_detect(parms, "z\\[.\\]")) %>% 
   pull(median)
 
 df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>% 
-  mutate(w = (exp(-(d_ratio - 1)^2) * n_site)^z) %>% 
+  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2))) %>% 
   rename(pb = p_branch)
 
 
