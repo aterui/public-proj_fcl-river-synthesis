@@ -29,7 +29,10 @@ saveRDS(df_fcl0, "data_fmt/data_fcl.rds")
 df_fcl0 <- readRDS("data_fmt/data_fcl.rds")
 
 ## local environment
-df_env_local <- readRDS("data_fmt/data_env_local.rds")
+df_env_local0 <- readRDS("data_fmt/data_env_local.rds")
+df_env_flow_var <- readRDS("data_fmt/data_env_flow_var.rds")
+
+df_env_local <- left_join(df_env_local0, df_env_flow_var)
 
 ## network properties
 df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
@@ -62,7 +65,7 @@ df_weight <- readRDS("data_fmt/data_weight.rds")
 
 ## watershed-level data frame
 ## - join `df_weight` for weighted regression
-## - remove watersheds with less than 10 links; unreliable estimates of p_branch
+## - remove watersheds with less than 5 links; unreliable estimates of p_branch
 df_g <- df_env_wsd %>% 
   mutate(uid = paste0(huid,
                       str_pad(wid, width = 5, pad = "0"))) %>% 
@@ -75,7 +78,7 @@ uid_incl <- df_g %>%
 
 ## remove within-site replicates
 ## - take an average across seasons or years
-## - censoring = 1 if top predator not collected
+## - censoring = 1 if top predator not collected (i.e., tpc == "N")
 df_fcl <- df_fcl0 %>% 
   group_by(sid, wid, huid, id_lev01) %>% 
   summarize(fcl = mean(fcl),
@@ -99,6 +102,9 @@ df_g <- df_g %>%
   arrange(g) %>%
   relocate(uid, g)
 
+## check g has a proper vector
+z <- mean(df_g$g == seq_len(nrow(df_g)))
+if (z != 1) stop("Error in data formatting")
 
 # data frame for prediction -----------------------------------------------
 
