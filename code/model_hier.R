@@ -16,7 +16,7 @@ model {
   
   ## local level
   ## - coefficients
-  for (l in 1:2) {
+  for (l in 1:3) {
     a[l] ~ dnorm(0, tau0)
   }
   
@@ -47,9 +47,11 @@ model {
     
     mu[i] <- a0[G[i]] + 
       a[1] * log(Hsize[i]) +
-      a[2] * scl_forest[i]
-    
+      a[2] * scl_fsd[i] +
+      a[3] * scl_forest[i]
+
     scl_forest[i] <- (Forest[i] - mean(Forest[])) / sd(Forest[])
+    scl_fsd[i] <- (Fsd[i] - mean(Fsd[])) / sd(Fsd[])
   }
   
   ## watershed level
@@ -67,10 +69,10 @@ model {
     
     eps[j] ~ dnorm(0, tau[2] * scl_w[j])
     
-    ## - scaled weight
-    ## - Ratio is the distance ratio to randomly-generated sites
-    ## - xi[j], squared deviation from the random samples
-    ## - N_site is the number of sites within a watershed
+    ## - "scl_w[j]" scaled weight
+    ## - "Ratio[j]" is the distance ratio to randomly-generated sites
+    ## - "xi[j]", squared deviation from the random samples
+    ## - "N_site[j]" is the number of sites within a watershed
     scl_w[j] <- w[j] / max(w[])
     log(w[j]) <- z[1] * log(N_site[j]) - z[2] * xi[j]
     xi[j] <- pow((Ratio[j] - 1), 2)
