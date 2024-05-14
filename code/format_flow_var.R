@@ -13,12 +13,12 @@ source("code/set_function.R")
 
 df_flow <- readRDS("data_fmt/data_env_flow.rds") %>% 
   mutate(month = month(date),
-         flow = abs(discharge),
+         flow = abs(discharge) + 1,
+         log_flow = log(flow, 10),
          julian = format(date, "%j") %>% 
            as.numeric()) %>% 
   group_by(sid) %>% 
-  mutate(flow_norm = flow / median(flow),
-         flow_median = median(flow)) %>% 
+  mutate(norm_log_flow = log_flow / mean(log_flow)) %>% 
   ungroup()
 
 v_sid <- sort(unique(df_flow$sid))
@@ -33,20 +33,21 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
                       filter(sid == v_sid[i])
                     
                     ## gam fitting for seasonality
-                    ## gaussian fit
-                    fit <- mgcv::gam(flow_norm ~ s(julian), data = df_i)
+                    ## error structure student-t, with minimum d.f. = 2
+                    fit <- mgcv::gam(norm_log_flow ~ s(julian),
+                                     family = mgcv::scat(min.df = 2),
+                                     data = df_i)
                     
-                    ## flow SD of residuals
-                    fsd <- sqrt(fit$sig2)
+                    ## degree of freedom in student-t
+                    nu <- with(family(fit), getTheta(trans = TRUE))[1]
                     
-                    ## flow inter-quantile of residuals
-                    fqr <- quantile(fit$residuals, c(0.25, 0.75)) %>% 
-                      diff()
+                    ## SD in student-t
+                    sigma0 <- with(family(fit), getTheta(trans = TRUE))[2]
                     
                     ## output set
                     cout <- tibble(sid = v_sid[i],
-                                   fsd = fsd,
-                                   fqr = fqr)
+                                   fsd = sigma0,
+                                   fnu = nu)
                     
                     return(cout)
                   }
@@ -55,20 +56,20 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
 # visualization for error check -------------------------------------------
 
 # for (i in seq_len(length(v_sid))) {
-#   
+# 
 #   print(i)
-#   
-#   g_i <- df_flow %>% 
-#     filter(sid == v_sid[i]) %>% 
+# 
+#   g_i <- df_flow %>%
+#     filter(sid == "003_jackson_s007") %>%
 #     ggplot(aes(x = julian,
-#                y = flow_norm)) +
+#                y = log_flow)) +
 #     geom_point(alpha = 0.1,
 #                size = 1) +
 #     geom_smooth(color = "black") +
 #     theme_classic() +
-#     labs(y = "Normalized flow (Y / median(Y))",
+#     labs(y = "Normalized flow (Y / mean(Y))",
 #          x = "Julian date")
-#   
+# 
 #   ggsave(g_i, width = 5, height = 4,
 #          filename = paste0("output/figure_flow/", v_sid[i], ".pdf"))
 # }
