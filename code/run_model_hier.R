@@ -11,24 +11,48 @@ source("code/format_data4jags.R")
 
 ## set data for JAGS
 ## - local level data
+X1 <- df_fcl %>% 
+  dplyr::select(local_area,
+                forest_b1km,
+                fsd,
+                elev) %>% 
+  mutate(across(.cols = -local_area,
+                .fns = function(x) c(scale(x))),
+         log_area = log(local_area, 10)) %>% 
+  dplyr::select(-local_area) %>% 
+  relocate(log_area, fsd, elev, forest_b1km) %>% 
+  data.matrix()
+
 list_local <- with(df_fcl,
-                   list(logY = log(fcl_obs),
+                   list(logY = log(fcl_obs, 10),
                         C = censoring,
-                        logY_min = ifelse(is.na(fcl_min), 0, log(fcl_min)),
-                        Hsize = local_area,
-                        Forest = forest_b1km,
-                        Fsd = fsd,
+                        logY_min = ifelse(is.na(fcl_min),
+                                          yes = 0,
+                                          no = log(fcl_min, 10)),
+                        X1 = X1,
                         G = g,
+                        K1 = ncol(X1),
                         Ns = length(fcl),
                         Nw = n_distinct(g)))
 
 ## - watershed level data
+X2 <- df_g %>% 
+  dplyr::select(r_length,
+                lambda,
+                mean.prec,
+                mean.temp,
+                hfp) %>% 
+  mutate(across(.cols = -c(r_length, lambda),
+                .fns = function(x) c(scale(x))),
+         log_r_length = log(r_length),
+         log_lambda = log(lambda)) %>% 
+  dplyr::select(-c(r_length, lambda)) %>% 
+  relocate(log_r_length, log_lambda) %>% 
+  data.matrix()
+  
 list_wsd <- with(df_g,
-                 list(Esize = r_length,
-                      Pbranch = p_branch,
-                      Prec = mean.prec,
-                      Temp = mean.temp,
-                      Hfp = hfp,
+                 list(X2 = X2,
+                      K2 = ncol(X2),
                       H = h,
                       Nh = n_distinct(h),
                       Ratio = d_ratio,
@@ -48,10 +72,10 @@ inits <- replicate(n_chain,
                         .RNG.seed = NA),
                    simplify = FALSE)
 
-for (j in 1:n_chain) inits[[j]]$.RNG.seed <- 10 * j
+for (j in 1:n_chain) inits[[j]]$.RNG.seed <- j * 100
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
+parms <- c("a", "b", "b0", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -72,7 +96,8 @@ post <- runjags::run.jags(model = m$model,
 # export ------------------------------------------------------------------
 
 ## summary
-pr_neg <- MCMCvis::MCMCpstr(post$mcmc, func = function(x) mean(x < 0)) %>% 
+pr_neg <- MCMCvis::MCMCpstr(post$mcmc,
+                            func = function(x) mean(x < 0)) %>% 
   unlist()
 
 df_est <- MCMCvis::MCMCsummary(post$mcmc) %>% 

@@ -16,7 +16,7 @@ model {
   
   ## local level
   ## - coefficients
-  for (l in 1:3) {
+  for (l in 1:K1) {
     a[l] ~ dnorm(0, tau0)
   }
   
@@ -25,7 +25,7 @@ model {
   b0 ~ dnorm(0, tau0)
   
   ## - coefficients
-  for (m in 1:5) {
+  for (m in 1:K2) {
     b[m] ~ dnorm(0, tau0)
   }
   
@@ -45,29 +45,15 @@ model {
     C[i] ~ dinterval(logY[i], logY_min[i])
     logY[i] ~ dt(mu[i], tau[1], nu)
     
-    mu[i] <- a0[G[i]] + 
-      a[1] * log(Hsize[i]) +
-      a[2] * scl_fsd[i] +
-      a[3] * scl_forest[i]
-
-    scl_forest[i] <- (Forest[i] - mean(Forest[])) / sd(Forest[])
-    scl_fsd[i] <- (Fsd[i] - mean(Fsd[])) / sd(Fsd[])
+    mu[i] <- a0[G[i]] + inprod(a[], X1[i, ])
   }
   
   ## watershed level
   for (j in 1:Nw) {
     
     ## - watershed regression
-    a0[j] <- 
-      r[H[j]] +
-      b[1] * log(Esize[j]) +
-      b[2] * log(Pbranch[j]) +
-      b[3] * scl_prec[j] +
-      b[4] * scl_temp[j] +
-      b[5] * scl_hfp[j] +
-      eps[j]
-    
-    eps[j] ~ dnorm(0, tau[2] * scl_w[j])
+    a0[j] ~ dnorm(a0_hat[j], tau[2] * scl_w[j])
+    a0_hat[j] <- r[H[j]] + inprod(b[], X2[j, ])
     
     ## - "scl_w[j]" scaled weight
     ## - "Ratio[j]" is the distance ratio to randomly-generated sites
@@ -76,11 +62,6 @@ model {
     scl_w[j] <- w[j] / max(w[])
     log(w[j]) <- z[1] * log(N_site[j]) - z[2] * xi[j]
     xi[j] <- pow((Ratio[j] - 1), 2)
-    
-    ## - standardization
-    scl_prec[j] <- (Prec[j] - mean(Prec[])) / sd(Prec[])
-    scl_temp[j] <- (Temp[j] - mean(Temp[])) / sd(Temp[])
-    scl_hfp[j] <- (Hfp[j] - mean(Hfp[])) / sd(Hfp[])
   }
   
   for (h in 1:Nh) {
