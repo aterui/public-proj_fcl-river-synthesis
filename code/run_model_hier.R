@@ -18,17 +18,17 @@ X1 <- df_fcl %>%
                 elev) %>% 
   mutate(across(.cols = -local_area,
                 .fns = function(x) c(scale(x))),
-         log_area = log(local_area, 10)) %>% 
+         log_area = log(local_area)) %>% 
   dplyr::select(-local_area) %>% 
   relocate(log_area, fsd, elev, forest_b1km) %>% 
   data.matrix()
 
 list_local <- with(df_fcl,
-                   list(logY = log(fcl_obs, 10),
+                   list(logY = log(fcl_obs),
                         C = censoring,
                         logY_min = ifelse(is.na(fcl_min),
                                           yes = 0,
-                                          no = log(fcl_min, 10)),
+                                          no = log(fcl_min)),
                         X1 = X1,
                         G = g,
                         K1 = ncol(X1),
