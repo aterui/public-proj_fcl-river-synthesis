@@ -119,7 +119,7 @@ df_y <- foreach(j = seq_len(length(cnm)),
                   ## set mean values for each predictor
                   df_x <- df_g %>% 
                     dplyr::select(all_of(c("h", cnm))) %>% 
-                    reframe(across(cnm,
+                    reframe(across(all_of(cnm),
                                    .fns = function(x) rep(mean(x), 100)))
                   
                   ## get min-max range for a focus predictor
