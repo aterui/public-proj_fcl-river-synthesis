@@ -38,12 +38,8 @@ list_local <- with(df_fcl,
 
 ## - watershed level data
 X2 <- df_g %>% 
-  mutate(log_r_length = log(r_length) %>% 
-           scale(scale = FALSE) %>% 
-           c(),
-         log_lambda = log(lambda) %>% 
-           scale(scale = FALSE) %>% 
-           c()) %>% 
+  mutate(log_r_length = log(r_length),
+         log_lambda = log(lambda)) %>% 
   dplyr::select(log_r_length,
                 log_lambda,
                 mean.prec,
@@ -85,7 +81,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- j * 100
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
+parms <- c("a", "b0", "b", "b0_c", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -107,6 +103,7 @@ post <- runjags::run.jags(model = m$model,
 # export ------------------------------------------------------------------
 
 ## summary
+## - get posterior probabilities
 pr_neg <- MCMCvis::MCMCpstr(post$mcmc,
                             func = function(x) mean(x < 0)) %>% 
   unlist()
@@ -122,11 +119,18 @@ df_est <- MCMCvis::MCMCsummary(post$mcmc) %>%
             pr_pos = 1 - pr_neg) %>% 
   relocate(pr_neg, pr_pos, .before = rhat)
 
+## - assign variable names
+vn <- c(colnames(X1), "const", colnames(X2))
+varname <- c(vn, rep(NA, nrow(df_est) - length(vn)))
+
+df_est <- df_est %>% 
+  mutate(varname = varname)
+
 ## - check convergence: rhat < 1.1
 print(max(df_est$rhat))
   
 df_summary <- df_est %>% 
-  filter(!str_detect(parms, "a0|y_pred")) %>% 
+  filter(!str_detect(parms, "a0")) %>% 
   mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),
          parms_num = str_extract(parms, "\\d{1,}")) %>% 
   relocate(parms, parms_gr, parms_num)

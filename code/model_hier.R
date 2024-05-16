@@ -35,7 +35,7 @@ model {
   }
   
   ## degree of freedom
-  nu ~ dexp(0.05)T(2, )
+  nu ~ dexp(0.01)T(2, )
   
   # likelihood --------------------------------------------------------------
   
@@ -68,4 +68,10 @@ model {
     r[h] ~ dnorm(b0, tau[3])
   }
   
+
+  # transformed parameter ---------------------------------------------------
+  
+  ## log_r_length and log_lambda are not centered
+  ## b0_c is a constant term when all predictors are centered
+  b0_c <- b0 + (b[1] * mean(X2[, 1]) + b[2] * mean(X2[, 2]))  
 }
