@@ -64,9 +64,15 @@ list_jags <- c(list_local, list_wsd)
 # jags fit ----------------------------------------------------------------
 
 ## run.jags arguments
-## - initial values
+## - mcmc setup
+n_ad <- 1000
+n_iter <- 1.0E+4
+n_sample <- 1000
+n_thin <- max(3, ceiling(n_iter / n_sample))
+n_burn <- ceiling(max(10, n_iter * 0.5))
 n_chain <- 3
 
+## - initial values
 inits <- replicate(n_chain,
                    list(.RNG.name = "base::Mersenne-Twister",
                         .RNG.seed = NA),
@@ -84,9 +90,10 @@ m <- runjags::read.jagsfile("code/model_hier.R")
 post <- runjags::run.jags(model = m$model,
                           data = list_jags,
                           monitor = parms,
-                          burnin = 10000,
-                          sample = 1000,
-                          thin = 20,
+                          adapt = n_ad,
+                          burnin = n_burn,
+                          sample = n_sample,
+                          thin = n_thin,
                           n.chains = n_chain,
                           inits = inits,
                           method = "parallel",
