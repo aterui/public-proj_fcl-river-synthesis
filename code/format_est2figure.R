@@ -14,7 +14,10 @@ source("code/format_data4jags.R")
 
 df_g <- df_g %>% 
   mutate(log_r_length = log(r_length),
-         log_pb = log(p_branch))
+         log_lambda = log(lambda),
+         scl_prec = c(scale(mean.prec)),
+         scl_temp = c(scale(mean.temp)),
+         scl_hfp = c(scale(hfp)))
 
 ## read data
 df_est <- readRDS("data_fmt/output_model_summary.rds")
@@ -39,7 +42,7 @@ B <- rbind(v_r, m_b)
 
 ## prepare predictors
 ## - predictor columns
-cnm <- c("log_r_length", "log_pb", "scl_prec", "scl_temp", "scl_hfp")
+cnm <- c("log_r_length", "log_lambda", "scl_prec", "scl_temp", "scl_hfp")
 
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
@@ -94,7 +97,7 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 ## get unscaled values
 df_yh <- df_yh0 %>% 
   mutate(r_length = exp(log_r_length),
-         pb = exp(log_pb),
+         lambda = exp(log_lambda),
          prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
          temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
          hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp))
@@ -103,8 +106,8 @@ df_yh <- df_yh0 %>%
 # overall prediction ------------------------------------------------------
 
 x <- with(df_g,
-          seq(min(log(p_branch)),
-              max(log(p_branch)),
+          seq(min(log(lambda)),
+              max(log(lambda)),
               length = 100))
 
 X <- with(df_g,
@@ -112,7 +115,7 @@ X <- with(df_g,
                 mean(log(r_length)),
                 x))
 
-mcmc_b <- mcmc[, str_detect(colnames(mcmc), "b0|b\\[.{1,}\\]")]
+mcmc_b <- mcmc[, str_detect(colnames(mcmc), "b0$|b\\[.{1,}\\]")]
 
 df_y <- foreach(j = seq_len(length(cnm)),
                 .combine = bind_rows) %do% {
@@ -160,7 +163,7 @@ df_y <- foreach(j = seq_len(length(cnm)),
                            y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
                     mutate(r_length = exp(log_r_length),
-                           pb = exp(log_pb),
+                           lambda = exp(log_lambda),
                            prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
                            temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
                            hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp)) %>% 

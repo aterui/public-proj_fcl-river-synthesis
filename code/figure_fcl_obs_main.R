@@ -17,75 +17,8 @@ z <- df_est %>%
   pull(median)
 
 df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>% 
-  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2))) %>% 
-  rename(pb = p_branch)
+  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2)))
 
-
-# prediction plot ---------------------------------------------------------
-
-source("code/set_theme.R")
-ggplot2::theme_set(default_theme)
-
-x0 <- c("r_length", "p_branch")
-x1 <- c("log_r_length", "log_pb")
-
-## fcl vs. watershed area
-g_size <- df_mu_est %>% 
-  ggplot(aes(x = r_length,
-             y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = w),
-             alpha = 0.4) + 
-  geom_line(data = filter(df_yh, focus == "log_r_length"),
-            aes(x = r_length,
-                y = y,
-                color = factor(h)),
-            alpha = 1,
-            linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_r_length"),
-            aes(x = r_length,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_r_length"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = r_length),
-              alpha = 0.1) +
-  scale_x_continuous(trans = "log10") +
-  scale_y_continuous(trans = "log10") +
-  labs(y = "Food chain length",
-       x = "River length (km)") +
-  guides(size = "none",
-         color = "none")
-
-## fcl vs. branching prob
-g_pb <- df_mu_est %>% 
-  ggplot(aes(x = pb,
-             y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = w),
-             alpha = 0.4) +
-  geom_line(data = filter(df_yh, focus == "log_pb"),
-            aes(x = pb,
-                y = y,
-                color = factor(h)),
-            alpha = 1,
-            linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_pb"),
-            aes(x = pb,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_pb"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = pb),
-              alpha = 0.1) +
-  scale_x_continuous(trans = "log10") +
-  scale_y_continuous(trans = "log10") +
-  labs(y = "Food chain length",
-       x = "Branching probability") +
-  guides(size = "none",
-         color = "none")
 
 # map ---------------------------------------------------------------------
 
@@ -115,11 +48,82 @@ sf_region <- sf_lev01  %>%
 
 g_map <- ggplot(sf_region) +
   geom_sf(aes(fill = factor(h)),
-          alpha = 0.4) +
+          alpha = 0.5) +
   geom_sf(data = sf_site,
-          aes(color = factor(h))) +
+          aes(color = factor(h)),
+          alpha = 0.5,
+          size = 0.4) +
   guides(color = "none",
-         fill = "none")
+         fill = "none") +
+  coord_sf(xlim = c(-163.8, 163.8)) +
+  theme_bw() +
+  theme(axis.text = element_text(size = 12),
+        axis.ticks = element_blank(),
+        panel.border = element_blank())
+
+
+# prediction plot ---------------------------------------------------------
+
+source("code/set_theme.R")
+ggplot2::theme_set(default_theme)
+
+## fcl vs. watershed area
+g_size <- df_mu_est %>% 
+  ggplot(aes(x = r_length,
+             y = fcl_est)) +
+  geom_point(aes(color = factor(h),
+                 size = w),
+             alpha = 0.5) + 
+  geom_line(data = filter(df_yh, focus == "log_r_length"),
+            aes(x = r_length,
+                y = y,
+                color = factor(h)),
+            alpha = 1,
+            linetype = "dashed") + 
+  geom_line(data = filter(df_y, focus == "log_r_length"),
+            aes(x = r_length,
+                y = y)) +
+  geom_ribbon(data = filter(df_y, focus == "log_r_length"),
+              aes(y = y,
+                  ymin = y_low,
+                  ymax = y_high,
+                  x = r_length),
+              alpha = 0.1) +
+  scale_x_log10(labels = scales::label_log(digits = 2)) +
+  scale_y_log10() +
+  labs(y = "Food chain length",
+       x = "River length (km)") +
+  guides(size = "none",
+         color = "none")
+
+## fcl vs. branching prob
+g_b <- df_mu_est %>% 
+  ggplot(aes(x = lambda,
+             y = fcl_est)) +
+  geom_point(aes(color = factor(h),
+                 size = w),
+             alpha = 0.4) +
+  geom_line(data = filter(df_yh, focus == "log_lambda"),
+            aes(x = lambda,
+                y = y,
+                color = factor(h)),
+            alpha = 1,
+            linetype = "dashed") + 
+  geom_line(data = filter(df_y, focus == "log_lambda"),
+            aes(x = lambda,
+                y = y)) +
+  geom_ribbon(data = filter(df_y, focus == "log_lambda"),
+              aes(y = y,
+                  ymin = y_low,
+                  ymax = y_high,
+                  x = lambda),
+              alpha = 0.1) +
+  scale_x_continuous(trans = "log10") +
+  scale_y_continuous(trans = "log10") +
+  labs(y = "Food chain length",
+       x = expression("Branching rate ("*km^-1*")")) +
+  guides(size = "none",
+         color = "none")
 
 
 # arrange -----------------------------------------------------------------
@@ -129,7 +133,7 @@ AABB
 CCCC
 "
 
-g_reg <- g_pb + (g_size + theme(axis.title.y = element_blank()))
+g_reg <- g_b + (g_size + theme(axis.title.y = element_blank()))
 
 g_comb <- g_reg + g_map + plot_layout(nrow = 2, 
                                       widths = c(1, 3),
