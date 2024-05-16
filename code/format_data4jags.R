@@ -71,7 +71,7 @@ df_g <- df_env_wsd %>%
                       str_pad(wid, width = 5, pad = "0"))) %>% 
   left_join(df_weight) %>% 
   filter(n_link > 4)
-  
+
 ## - uid for those included
 uid_incl <- df_g %>% 
   pull(uid)
@@ -105,22 +105,3 @@ df_g <- df_g %>%
 ## check g has a proper vector
 z <- mean(df_g$g == seq_len(nrow(df_g)))
 if (z != 1) stop("Error in data formatting")
-
-# data frame for prediction -----------------------------------------------
-
-## add scaled variables
-df_g <- df_g %>% 
-  mutate(scl_prec = c(scale(mean.prec)),
-         scl_temp = c(scale(mean.temp)),
-         scl_hfp = c(scale(hfp)))
-
-## expanded data frame for prediction
-df_x <- df_g %>% 
-  group_by(h) %>% 
-  reframe(x_log_area = mean(log(area)),
-          x_log_pb = seq(log(min(p_branch)),
-                         log(max(p_branch)),
-                         length = 100),
-          x_prec = mean(scl_prec),
-          x_temp = mean(scl_temp),
-          x_hfp = mean(scl_hfp))
