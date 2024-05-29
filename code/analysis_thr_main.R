@@ -2,7 +2,6 @@
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
-source("code/set_function.R")
 source("code/set_library.R")
 
 
@@ -24,18 +23,19 @@ list_fw <- replicate(10, {
 
 ## other parameters
 rsrc <- c(0.25, 2.5)
-mu <- c(0.25, 2.5)
+mu0 <- c(0.25, 2.5)
+mu_p <- 0.1
 rho <- 0.5
 delta <- 1.5
 fw <- seq_len(length(list_fw))
 
 ## parms data frame
 ## - get vectors for lambda and river length
-x_lambda <- seq(-log(1 - 0.2), -log(1 - 0.8), length = 100)
+x_lambda <- seq(0.1, 1, length = 100)
 x_rl <- seq(1, 100, length = 100)
 
 ## - fix values when varying another
-lambda <- c(x_lambda, rep(-log(0.5), length(x_lambda)))
+lambda <- c(x_lambda, rep(0.5, length(x_lambda)))
 rl <- c(rep(50, length(x_rl)), x_rl)
 
 ## - assemble x values along with `focus` and `id`
@@ -48,7 +48,9 @@ df_x <- tibble(lambda,
 ## - combine with other parameters
 parms <- expand.grid(id = seq_len(length(lambda)),
                      rsrc = rsrc,
-                     mu = mu,
+                     mu0 = mu0,
+                     mu_s = mu0,
+                     mu_p = mu_p,
                      rho = rho,
                      delta = delta,
                      fw = fw) %>% 
@@ -57,22 +59,30 @@ parms <- expand.grid(id = seq_len(length(lambda)),
 
 # prediction --------------------------------------------------------------
 
+pb <- txtProgressBar(min = 0,
+                     max = nrow(parms),
+                     initial = 0,
+                     style = 3) 
+
 y <- foreach(i = seq_len(nrow(parms)),
              .combine = c) %do% {
                
-               print(i)
+               setTxtProgressBar(pb, i)
                y <- with(parms, 
                          fcl(foodweb = list_fw[[fw[i]]],
                              lambda = lambda[i],
-                             L = rl[i],
+                             size = rl[i],
                              rsrc = rsrc[i],
-                             mu_base = mu[i],
-                             mu_cnsm = mu[i],
-                             delta = rep(delta[i], 2),
-                             rho = rep(rho[i], 2)))
+                             mu0 = mu0[i],
+                             mu_s = mu0[i],
+                             mu_p = mu_p[i],
+                             delta = delta[i],
+                             rho = rho[i]))
                
+               return(y)
              }
 
+close(pb)
 
 # export ------------------------------------------------------------------
 

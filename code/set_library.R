@@ -7,5 +7,6 @@ pacman::p_load(
   ## simulation
   foreach,
   mcbrnet,
+  rpom,
   doParallel,
   doSNOW)
