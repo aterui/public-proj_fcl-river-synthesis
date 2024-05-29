@@ -12,12 +12,11 @@ source("code/set_function.R")
 
 ## read data
 df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>% 
-  group_by(focus, lambda, rl, rsrc, mu) %>% 
+  group_by(focus, lambda, rl, rsrc, mu0) %>% 
   summarize(mu_fcl = mean(fcl),
             min_fcl = min(fcl),
             max_fcl = max(fcl)) %>% 
-  ungroup() %>% 
-  mutate(p_branch = 1 - exp(-lambda))
+  ungroup()
 
 ## set plot theme
 source("code/set_theme.R")
@@ -33,7 +32,7 @@ lab_r <- c(`0.25` = "Unproductive",
 ## food chain length vs. branching
 g1 <- df_fcl_mu %>% 
   filter(focus == "branch") %>% 
-  ggplot(aes(x = p_branch,
+  ggplot(aes(x = lambda,
              y = mu_fcl)) + 
   geom_line(linewidth = 1,
             alpha = 0.8,
@@ -43,11 +42,11 @@ g1 <- df_fcl_mu %>%
               fill = "steelblue",
               alpha = 0.1,
               col = NA) +
-  facet_grid(rows = vars(mu),
+  facet_grid(rows = vars(mu0),
              cols = vars(rsrc),
-             labeller = labeller(mu = lab_mu,
+             labeller = labeller(mu0 = lab_mu,
                                  rsrc = lab_r)) +
-  labs(x = "Ecosystem complexity (branching prob.)",
+  labs(x = "Ecosystem complexity (branching rate)",
        y = "Food chain length",
        color = "Ecosystem size") +
   MetBrewer::scale_color_met_d("Hiroshige") +
@@ -68,9 +67,9 @@ g2 <- df_fcl_mu %>%
               fill = "steelblue",
               alpha = 0.1,
               col = NA) +
-  facet_grid(rows = vars(mu),
+  facet_grid(rows = vars(mu0),
              cols = vars(rsrc),
-             labeller = labeller(mu = lab_mu,
+             labeller = labeller(mu0 = lab_mu,
                                  rsrc = lab_r)) +
   labs(x = "Ecosystem size (river length)",
        y = "Food chain length") +
@@ -95,38 +94,37 @@ ggsave(g2, filename = "output/fig_theory_size.pdf",
 
 ## set parameters
 rl <- 1:100
-lambda <- -log(1 - seq(0.2, 0.8, by = 0.2))
+lambda <- seq(0.1, 0.9, by = 0.2)
 x_values <- expand.grid(rl = rl, lambda = lambda)
 
 u_dist <- sapply(seq_len(nrow(x_values)), function(i) {
   with(x_values,
-       u_length(L = rl[i], lambda = lambda[i]))
+       u_length(size = rl[i], lambda = lambda[i]))
 })
 
 ## get data frame for upstream distance
-df_u <- bind_cols(x_values, u_dist) %>% 
+df_u <- bind_cols(x_values, y = u_dist) %>% 
   as_tibble() %>% 
-  setNames(c("rl", "lambda", "u_dist")) %>% 
-  mutate(p_branch = round(1 - exp(-lambda), 1))
+  setNames(c("rl", "lambda", "u_dist"))
 
 ug0 <- df_u %>% 
-  filter(p_branch == 0.2) %>% 
+  filter(lambda == 0.1) %>% 
   ggplot(aes(x = rl,
              y = u_dist)) +
   geom_line(linewidth = 1.5,
             color = grey(0.3)) +
-  labs(y = "E(Upstream distance)",
+  labs(y = "E(Upstream length)",
        x = "River length") +
   guides(color = "none")
 
 ug <- df_u %>% 
   ggplot(aes(x = rl,
              y = u_dist,
-             color = factor(p_branch))) +
+             color = factor(lambda))) +
   geom_line(linewidth = 1.5) +
   MetBrewer::scale_color_met_d("Hiroshige",
                                direction = -1) +
-  labs(y = "E(Upstream distance)",
+  labs(y = "E(Upstream length)",
        x = "River length") +
   guides(color = "none")
 
