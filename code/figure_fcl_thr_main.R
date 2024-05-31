@@ -97,20 +97,20 @@ rl <- 1:100
 lambda <- seq(0.1, 0.9, by = 0.2)
 x_values <- expand.grid(rl = rl, lambda = lambda)
 
-u_dist <- sapply(seq_len(nrow(x_values)), function(i) {
+u <- sapply(seq_len(nrow(x_values)), function(i) {
   with(x_values,
        u_length(size = rl[i], lambda = lambda[i]))
 })
 
 ## get data frame for upstream distance
-df_u <- bind_cols(x_values, y = u_dist) %>% 
+df_u <- bind_cols(x_values, y = u) %>% 
   as_tibble() %>% 
-  setNames(c("rl", "lambda", "u_dist"))
+  setNames(c("rl", "lambda", "u"))
 
 ug0 <- df_u %>% 
   filter(lambda == 0.1) %>% 
   ggplot(aes(x = rl,
-             y = u_dist)) +
+             y = u)) +
   geom_line(linewidth = 1.5,
             color = grey(0.3)) +
   labs(y = "E(Upstream length)",
@@ -119,7 +119,7 @@ ug0 <- df_u %>%
 
 ug <- df_u %>% 
   ggplot(aes(x = rl,
-             y = u_dist,
+             y = u,
              color = factor(lambda))) +
   geom_line(linewidth = 1.5) +
   MetBrewer::scale_color_met_d("Hiroshige",
