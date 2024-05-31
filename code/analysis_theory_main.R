@@ -26,6 +26,7 @@ rsrc <- c(0.25, 2.5)
 mu0 <- c(0.25, 2.5)
 mu_p <- 0.1
 rho <- 0.5
+g <- 10
 delta <- 1.5
 fw <- seq_len(length(list_fw))
 
@@ -49,9 +50,9 @@ df_x <- tibble(lambda,
 parms <- expand.grid(id = seq_len(length(lambda)),
                      rsrc = rsrc,
                      mu0 = mu0,
-                     mu_s = mu0,
                      mu_p = mu_p,
                      rho = rho,
+                     g = g,
                      delta = delta,
                      fw = fw) %>% 
   left_join(df_x)
@@ -74,9 +75,9 @@ y <- foreach(i = seq_len(nrow(parms)),
                              size = rl[i],
                              rsrc = rsrc[i],
                              mu0 = mu0[i],
-                             mu_s = mu0[i],
                              mu_p = mu_p[i],
                              delta = delta[i],
+                             g = g[i],
                              rho = rho[i]))
                
                return(y)
