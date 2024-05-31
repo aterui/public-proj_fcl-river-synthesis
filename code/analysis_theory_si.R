@@ -13,16 +13,16 @@ source("code/set_library.R")
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
 S <- 32
-v_theta <- rep(c(0.25, 1), each = 5)
+v_theta <- rep(c(0.25, 0.50), each = 5)
 
 list_fw <- lapply(seq_len(length(v_theta)), function(i) {
   ## - set seed for reproducibility
-  set.seed(i)
+  set.seed(i * 10)
   
-  ppm(n_species = S,
-      n_basal = round(S * 0.18),
-      l = round(S ^ 2 * 0.11),
-      theta = v_theta[i])
+  mcbrnet::ppm(n_species = S,
+               n_basal = rpois(1, lambda = S * 0.18),
+               l = rpois(1, lambda = S^2 * 0.11),
+               theta = v_theta[i])
 })
 
 ## other parameters
@@ -37,12 +37,12 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - mu_c, predator-induced extinction rate
 ## - rho, synchrony prob.
 ## - fw, foodweb index
-parms <- expand.grid(rl = seq(10, 100, length = 10),
-                     lambda = seq(0.1, 1, length = 10),
+parms <- expand.grid(rl = seq(10, 100, length = 15),
+                     lambda = seq(0.1, 1, length = 15),
                      h = 1,
                      delta0 = 1,
                      rsrc = c(0.25, 2.5),
-                     g = c(10, 50),
+                     g = c(25, 50, 100),
                      mu0 = c(0.25, 2.5),
                      mu_p = c(0, 1),
                      mu_c = c(0, 1),
