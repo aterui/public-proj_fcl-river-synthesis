@@ -1,9 +1,11 @@
+#' DESCRIPTION:
+#' This script explores possible outcomes of food chain length
+#' in a variety of ecological scenarios
 
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
 source("code/set_library.R")
-
 
 # set parameters ----------------------------------------------------------
 
@@ -11,7 +13,6 @@ source("code/set_library.R")
 ## - set seed for reproducibility
 set.seed(123)
 
-## - generate food web matrix
 ## - S: number of nodes/species in a community
 S <- 32
 list_fw <- replicate(10, {
@@ -22,31 +23,37 @@ list_fw <- replicate(10, {
   simplify = FALSE)
 
 ## other parameters
-rsrc <- c(0.25, 2.5)
-mu0 <- c(0.25, 2.5)
-rho <- c(0, 0.5)
-mu_p <- c(0, 1)
-mu_c <- c(0, 1)
-g <- c(10, 100)
-delta0 <- 1
-fw <- seq_len(length(list_fw))
-
-## parms data frame
-parms <- expand.grid(rl = seq(1, 100, length = 10),
+## - rl, ecoystem size
+## - lambda, branching rate
+## - h, habitat density
+## - delta0, dispersal capability for basal
+## - rsrc, resource supply rate
+## - g, propagule number
+## - mu0, disturbance rate
+## - mu_p, prey-induced extinction rate
+## - mu_c, predator-induced extinction rate
+## - rho, synchrony prob.
+## - fw, foodweb index
+parms <- expand.grid(rl = seq(10, 100, length = 10),
                      lambda = seq(0.1, 1, length = 10),
-                     rsrc = rsrc,
-                     mu0 = mu0,
-                     mu_p = mu_p,
-                     mu_c = mu_c,
-                     rho = rho,
-                     g = g,
-                     delta0 = delta0,
-                     fw = fw)
+                     h = 1,
+                     delta0 = 1,
+                     rsrc = c(0.25, 2.5),
+                     g = c(10, 100),
+                     mu0 = c(0.25, 2.5),
+                     mu_p = c(0, 1),
+                     mu_c = c(0, 1),
+                     rho = c(0, 0.5),
+                     fw = seq_len(length(list_fw)))
 
+## - nt0, # time steps for numerical simulations
+## - tol, tolerance value for convergence check
+## - p_th, absorbing condition for p
+nt0 <- 50
+tol <- 1e-4
+p_th <- 1e-5
 
-# prediction --------------------------------------------------------------
-
-parms <- filter(parms, fw == 1)
+# run ---------------------------------------------------------------------
 
 ncore <- floor(0.8 * detectCores())
 cl <- makeCluster(ncore)
@@ -60,44 +67,103 @@ fun_progress <- function(n) setTxtProgressBar(pb, n)
 opts <- list(progress = fun_progress)
 
 tictoc::tic()
-y <- foreach(i = seq_len(nrow(parms)),
-             .combine = c,
-             .options.snow = opts) %dopar% {
-               
-               y <- with(parms, {
-                 
-                 v_tp <- attr(list_fw[[parms$fw[i]]], "tp")
-                 
-                 if (mu_c[i] == 0) {
-                   y0 <- rpom::fcl(foodweb = list_fw[[fw[i]]],
-                                   lambda = lambda[i],
-                                   size = rl[i],
-                                   rsrc = rsrc[i],
-                                   mu0 = mu0[i],
-                                   mu_p = mu_p[i],
-                                   delta = delta0[i] * sqrt(v_tp),
-                                   g = g[i],
-                                   rho = rho[i],
-                                   weight = TRUE)
-                 } else {
-                   y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
-                                    lambda = lambda[i],
-                                    size = rl[i],
-                                    rsrc = rsrc[i],
-                                    mu0 = mu0[i],
-                                    mu_p = mu_p[i],
-                                    mu_c = mu_c[i],
-                                    delta = delta0[i] * sqrt(v_tp),
-                                    g = g[i],
-                                    rho = rho[i],
-                                    weight = TRUE)
-                 }
-                 
-                 return(y0)
-               })
-               
-               return(y)
-             }
+df_y <- foreach(i = seq_len(nrow(parms)),
+                .combine = bind_rows,
+                .options.snow = opts) %dopar% {
+                  
+                  y <- with(parms, {
+                    
+                    ## vector of binary trophic positions if all present
+                    v_tp <- attr(list_fw[[parms$fw[i]]], "tp")
+                    
+                    if (mu_c[i] == 0) {
+                      ## w/o predation effect
+                      
+                      ## - analytical equilibrium with rpom::fcl()
+                      y0 <- rpom::fcl(foodweb = list_fw[[fw[i]]],
+                                      lambda = lambda[i],
+                                      size = rl[i],
+                                      h = h[i],
+                                      delta = delta0[i] * sqrt(v_tp),
+                                      rsrc = rsrc[i],
+                                      g = g[i],
+                                      mu0 = mu0[i],
+                                      mu_p = mu_p[i],
+                                      rho = rho[i],
+                                      weight = TRUE)
+                    } else {
+                      ## w/ predation effect
+                      
+                      ## - numerical equilibrium with rpom::nfcl()
+                      y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
+                                       lambda = lambda[i],
+                                       size = rl[i],
+                                       h = h[i],
+                                       delta = delta0[i] * sqrt(v_tp),
+                                       rsrc = rsrc[i],
+                                       g = g[i],
+                                       mu0 = mu0[i],
+                                       mu_p = mu_p[i],
+                                       mu_c = mu_c[i],
+                                       rho = rho[i],
+                                       x0 = 0.5,
+                                       n_timestep = nt0,
+                                       interval = 0.01,
+                                       threshold = p_th,
+                                       n_plus = 10,
+                                       weight = TRUE,
+                                       tol = tol)
+                      
+                      ## - # time steps used
+                      nt <- nt0
+                      attr(y0, "nt") <- nt
+                      
+                      ## - update initial values x0
+                      ## - repeat numerical runs if not converged
+                      while (attr(y0, "convergence") > 0) {
+                        y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
+                                         lambda = lambda[i],
+                                         size = rl[i],
+                                         h = h[i],
+                                         delta = delta0[i] * sqrt(v_tp),
+                                         rsrc = rsrc[i],
+                                         g = g[i],
+                                         mu0 = mu0[i],
+                                         mu_p = mu_p[i],
+                                         mu_c = mu_c[i],
+                                         rho = rho[i],
+                                         x0 = attr(y0, "p_hat"),
+                                         n_timestep = nt0,
+                                         interval = 0.01,
+                                         threshold = p_th,
+                                         n_plus = 10,
+                                         weight = TRUE,
+                                         tol = tol)
+                        
+                        ## - # time steps updated
+                        nt <- nt + nt0
+                        attr(y0, "nt") <- nt
+                        
+                        if (nt >= 500) break
+                      }
+                      
+                    }
+                    
+                    return(y0)
+                  })
+                  
+                  nt <- ifelse(is.null(attr(y, "nt")),
+                               NA,
+                               attr(y, "nt")) 
+                  
+                  z <- ifelse(is.null(attr(y, "convergence")),
+                              NA,
+                              attr(y, "convergence"))
+                  
+                  return(dplyr::tibble(fcl = y,
+                                       nt = nt,
+                                       converge = z))
+                }
 tictoc::toc()
 
 stopCluster(cl)
@@ -105,6 +171,6 @@ stopCluster(cl)
 # export ------------------------------------------------------------------
 
 df_fcl <- parms %>% 
-  mutate(fcl = y)
+  bind_cols(df_y)
 
 saveRDS(df_fcl, file = "data_fmt/sim_fcl_si.rds")
