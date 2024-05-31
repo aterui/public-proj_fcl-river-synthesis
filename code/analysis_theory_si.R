@@ -13,15 +13,19 @@ source("code/set_library.R")
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
 S <- 32
+
+set.seed(10)
 v_theta <- rep(c(0.25, 0.50), each = 5)
+v_n_base <- rpois(length(v_theta), lambda = S * 0.18)
+v_l <- rpois(length(v_theta), lambda = S^2 * 0.11)
 
 list_fw <- lapply(seq_len(length(v_theta)), function(i) {
   ## - set seed for reproducibility
   set.seed(i * 10)
   
   mcbrnet::ppm(n_species = S,
-               n_basal = rpois(1, lambda = S * 0.18),
-               l = rpois(1, lambda = S^2 * 0.11),
+               n_basal = v_n_base[i],
+               l = v_l[i],
                theta = v_theta[i])
 })
 
@@ -48,7 +52,9 @@ parms <- expand.grid(rl = seq(10, 100, length = 15),
                      mu_c = c(0, 1),
                      rho = c(0, 0.5),
                      fw = seq_len(length(list_fw))) %>% 
-  mutate(theta = v_theta[fw]) %>% 
+  mutate(theta = v_theta[fw],
+         n_base = v_n_base[fw],
+         link = v_l[fw]) %>% 
   as_tibble()
 
 ## - nt0, # time steps for numerical simulations
