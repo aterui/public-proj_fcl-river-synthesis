@@ -10,17 +10,20 @@ source("code/set_library.R")
 # set parameters ----------------------------------------------------------
 
 ## generate food webs
-## - set seed for reproducibility
-set.seed(123)
-
 ## - S: number of nodes/species in a community
+## - theta: degree of omnivory
 S <- 32
-list_fw <- replicate(10, {
-  fw <- ppm(n_species = S,
-            n_basal = round(S * 0.18),
-            l = round(S ^ 2 * 0.11),
-            theta = 0.25)},
-  simplify = FALSE)
+v_theta <- rep(c(0.25, 1), each = 5)
+
+list_fw <- lapply(seq_len(length(v_theta)), function(i) {
+  ## - set seed for reproducibility
+  set.seed(i)
+  
+  ppm(n_species = S,
+      n_basal = round(S * 0.18),
+      l = round(S ^ 2 * 0.11),
+      theta = v_theta[i])
+})
 
 ## other parameters
 ## - rl, ecoystem size
@@ -39,12 +42,14 @@ parms <- expand.grid(rl = seq(10, 100, length = 10),
                      h = 1,
                      delta0 = 1,
                      rsrc = c(0.25, 2.5),
-                     g = c(10, 100),
+                     g = c(10, 50),
                      mu0 = c(0.25, 2.5),
                      mu_p = c(0, 1),
                      mu_c = c(0, 1),
                      rho = c(0, 0.5),
-                     fw = seq_len(length(list_fw)))
+                     fw = seq_len(length(list_fw))) %>% 
+  mutate(theta = v_theta[fw]) %>% 
+  as_tibble()
 
 ## - nt0, # time steps for numerical simulations
 ## - tol, tolerance value for convergence check
