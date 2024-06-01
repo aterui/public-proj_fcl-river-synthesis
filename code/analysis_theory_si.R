@@ -61,6 +61,7 @@ parms <- expand.grid(rl = seq(10, 100, length = 15),
 ## - tol, tolerance value for convergence check
 ## - p_th, absorbing condition for p
 nt0 <- 50
+max_nt <- 1000
 tol <- 1e-4
 p_th <- 1e-5
 
@@ -155,7 +156,7 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                         nt <- nt + nt0
                         attr(y0, "nt") <- nt
                         
-                        if (nt >= 500) break
+                        if (nt >= max_nt) break
                       }
                       
                     }
