@@ -1,0 +1,389 @@
+\documentclass[11pt, class=article, crop=false]{standalone}
+\usepackage[subpreambles=true]{standalone}
+\usepackage[T1]{fontenc} % for font setting
+\usepackage{tgtermes} % for font setting
+\usepackage{import,
+            graphicx,
+            parskip,
+            url,
+            amsmath,
+            wrapfig,
+            fancyhdr,
+            soul,
+            tabularx}
+
+% side caption figure
+\usepackage{sidecap}
+\sidecaptionvpos{figure}{t}
+
+% for special characters in bibliography            
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% citation setup
+\usepackage[euler]{textgreek}
+\usepackage[sort&compress]{natbib}
+\setcitestyle{square}
+\setcitestyle{comma}
+\bibliographystyle{bibstyle}
+
+% caption setup
+\usepackage[font={f, small}, labelfont={bf, small}]{caption}
+           
+% color box
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable}
+
+% margin
+\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
+
+% \pagenumbering{gobble}
+
+\begin{document}
+
+\section{Supplementary text}
+
+\subsection{Theory}
+
+\subsubsection{Model derivation}
+
+\textit{Single patch dynamics} --
+Our model builds upon the deterministic approximation of the continuous-time Markov process.
+Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at patch $i$ and time $t$.
+The exact dynamics can be described by a stochastic differential equation:
+
+\begin{equation}
+    \pi'_{ik}(t + dt) - \pi'_{ik}(t) = c'_{ik}(t) (1 - \pi'_{ik}(t)) - \mu'_{ik}(t) \pi'_{ik}(t),
+    \label{eq:sde0}
+\end{equation}
+
+where $c'_{ik}(t)$ and $\mu'_{ik}(t)$ are time-independent Bernoulli random variables representing colonization and extinction with means:
+
+\begin{align}
+    \begin{split}
+        \overrightarrow{c'_{ik}(t)} &= c_{ik} dt,\\
+        \overrightarrow{\mu'_{ik}(t)} &= \mu_{ik} dt.
+    \end{split}
+\end{align}
+
+The notation $\overrightarrow{\cdot}$ denotes the average over an ensemble of stochastic realizations of the temporal Markov process at patch $i$.
+We rewrite Equation \ref{eq:sde0} using the means:
+
+\begin{equation}
+    d \pi'_{ik} = [c_{ik} (1 - \pi'_{ik}(t)) - \mu_{ik} \pi'_{ik}(t)]dt + d\xi_{ik}(t),
+    \label{eq:sde1}
+\end{equation}
+
+where $d\xi_{ik}(t)$ is the stochastic term given by:
+
+\begin{equation}
+    d\xi_{ik}(t) = (c'_{ik}(t) - \overrightarrow{c'_{ik}(t)}) (1 - \pi'_{ik}(t)) - (\mu'_{ik}(t) - \overrightarrow{\mu_{ik}(t)}) \pi'_{ik}(t).
+\end{equation}
+
+Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
+A proxy $\pi_{ik}$ ($0 \le \pi_{ik} \le 1$) is used to approximate the probability of patch $i$ being occupied ($\overrightarrow{\pi'_{ik}(t)}$), leading to the deterministic counterpart of Equation \ref{eq:sde1} expressed as:
+
+\begin{equation}
+    \frac{d \pi_{ik}}{d t} = c_{ik} (1 - \pi_{ik}) - \mu_{ik} \pi_{ik}
+    \label{eq:dm0}
+\end{equation}
+
+In what follows, we use Equation \ref{eq:dm0} as the baseline model that describes the temporal evolution of occupancy probability at a single patch.
+
+\textit{Colonization} --
+We express the colonization rate $c_{ik}$ as a function of ecological and ecosystem attributes.
+Specifically, we define $c_{ik}$ as follows:
+
+\begin{equation}
+    c_{ik} = r_{ik} \frac{\sum_{j \ne i}^N c_{0, jk} \pi_{jk}}{N},
+    \label{eq:clnz}
+\end{equation}
+
+where $r_{ik}$ is the scaling factor related to resource supply rate or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem.
+The term $\sum_{j \ne i}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
+We scaled $\sum_{j \ne i}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
+For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} \equiv c_{0, k}$).
+We also use the approximation for the proportion of patches occupied $p_k$ as $p_k \approx N^{-1}\sum_{j \ne i}^N \pi_{jk}$, assuming that $N$ is sufficiently large.
+These simplifying assumptions, without loss of generality, yield:
+
+\begin{equation}
+     c_{ik} \approx r_{ik} c_{0, k} p_k
+\end{equation}
+
+The scaling factor $r_{ik}$ ($\ge 0$) represents different quantities for producers and consumers:
+
+\begin{equation}
+    r_{ik} =
+    \begin{cases}
+    r_{0} & \text{if $k~\in~\text{producer}$,}\\
+    \sum_{q~\in~\text{prey}} \pi_{iq} & \text{if $k~\in~\text{consumer}$,}
+    \end{cases}
+    \label{eq:r-eq}
+\end{equation}
+
+where $r_0$ is the resource supply rate and $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$.
+The resource supply rate $r_0$ is assumed to be constant over space and across producer species.
+
+The number of effective propagules produced by a single occupied patch $c_{0, k}$ is the product of the gross number of propagules $g_{k}$ and the survival probability during dispersal $\phi_k$.
+For producers, however, we constrain $c_{0, k}$ by the number of habitat patches $N$ since $N$ is the maximum number of patches that effective propagules can colonize:
+
+\begin{equation}
+    c_{0, k~\in~\text{producer}} = 
+    \begin{cases}
+        g_k \phi_k & \text{if $g_k \phi_k \le N$},\\
+        N & \text{if $g_k \phi_k > N$}.
+    \end{cases}
+    \label{eq:c0-prod}
+\end{equation}
+
+
+\begin{equation}
+    c_{0, k~\in~\text{consumer}} = g_k \phi_k
+    \label{eq:c0-con}
+\end{equation}
+
+The $N$-constraint propagates naturally from lower to higher trophic levels because consumer colonization is limited by their prey availability (see Equation \ref{eq:r-eq}).
+The survival probability during dispersal $\phi_k$ is a function of the species' dispersal capability $\delta_k$ and habitat density $h$:
+
+\begin{equation}
+    \phi_k = 1 - e^{-\delta_k h}.
+    \label{eq:phi}
+\end{equation}
+
+Equation \ref{eq:phi} assumes that propagule survival during dispersal increases with increasing dispersal capability and habitat density.
+
+\textit{Extinction} -- 
+We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey availability, and predation:
+
+\begin{equation}
+    \mu_{ik} = 
+        \underbrace{\mu_{k}^{(0)} + \mu_{k}^{(u)} \rho u_i}_{\text{Disturbance}} + 
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey}} + 
+        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} \pi_{iq}}_{\text{Predation}}.
+    \label{eq:extn}
+\end{equation}
+
+The disturbance term is composed of two sources. The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
+The second component is the influence of downstream cascade ($\mu_{k}^{(u)} \rho u_i$), where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively.
+In rivers, any disturbance can cascade downstream as water flows downstream.
+For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement.
+Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches, likely causing synchronized extirpation of organisms across space.
+Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u_i$, allowing us to capture the essential feature of riverine systems.
+The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
+
+In the prey term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
+Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of prey species.
+The extinction risk caused by the lack of prey is reduced by the factor $S_{p, k}^{-1} \sum_{q~\in~\text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of possible prey species $S_{p, k}$.
+Note that $\mu_{k}^{(p)} = 0$ for producers.
+
+In the predation term, the extinction risk caused by predation is assumed to increase linearly with the species richness of predators at patch $i$.
+The parameter $\mu_{k}^{(c)}$ defines how quickly the extinction rate increases with the expected species richness of predators $\sum_{q~\in~\text{predator}} \pi_{iq}$.
+
+\textit{Mean field approximation} --
+We describe the temporal dynamics of the proportion of patches occupied, $p_k$ ($= N^{-1} \sum_i \pi_{ik}$), as the spatial mean field approximation of Equation \ref{eq:dm0}, dropping subscript $i$:
+
+\begin{equation}
+    \frac{dp_k}{dt} = r_{k} c_{0, k} p_{k} (1 - p_{k}) - \mu_{k} p_{k},
+    \label{eq:master}
+\end{equation}
+
+where
+
+\begin{equation}
+    r_{k} = 
+    \begin{cases}
+        r_0 & \text{for producers,}\\
+        \sum_{q~\in~\text{prey}} p_{q} & \text{for consumers,}
+    \end{cases}
+\end{equation}
+
+and
+
+\begin{equation}
+    \mu_{k} = 
+        \mu_{k}^{(0)} + 
+        \mu_{k}^{(u)} \rho \hat{u} + 
+        \mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right) + 
+        \mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}.
+    \label{eq:extn}    
+\end{equation}
+
+The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod} and \ref{eq:c0-con}. 
+In Equation \ref{eq:extn}, we introduce the expected value of the upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
+
+\subsubsection{Derivation of expected upstream river length} \label{updist}
+
+We derive the expected value of the upstream river length, $\mbox{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
+Our objective is to express $\mbox{E}(u)$ as a function of $L$ and $\lambda_b$, considering the probabilistic nature of river bifurcation.
+In this section, we use the following key terms: \textbf{link} and \textbf{magnitude}.
+The term \textbf{link} refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth).
+The term \textbf{magnitude} refers to the number of exterior source links (links containing upstream terminals) at a given position within the network. The magnitude is one at an exterior source link.
+Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
+
+
+\begin{table}
+    \centering
+    \caption{Key symbols for the derivation of expected upstream river length}
+    \begin{tabularx}{\textwidth}{ll}
+        Symbol & Description\\
+        \hline
+        $u$ & upstream river length at a given habitat patch.\\
+        $L$ & Total river length.\\
+        $\lambda_b$ & Branching rate defining the length distribution of individual links.\\
+        $l$ & Individual link length. Assumed to follow $l \sim \mbox{Exp}(\lambda_b)$.\\
+        $B$ & Number of links ($B = Z + 1$).\\
+        $Z$ & Number of links minus one ($Z = B - 1$).\\
+        \hline
+    \end{tabularx}
+    \label{tab:key-symbol}
+\end{table}
+
+In our theoretical framework, we assume that the length of an individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$, but is conditional on the constraint $\sum_s l_s = L$.
+The length $l_s$ can be interpreted as the ``waiting time'' to a branching event (or termination events for upstream sources).
+According to statistical theory, the number of such events within a given duration follows a Poisson distribution.
+In our case, this translates into counting the number of branching events $Z$ within the ``time'' frame $L$, excluding the final branching event (since link termination occurs at $L$ regardless).
+Thus, $Z \sim \mbox{Poisson}(\lambda_b L)$.
+The total number of links $B$ equals $Z + 1$, where the addition of one accounts for the final event of link termination at length $L$.
+We use these assumptions in the following derivation.
+
+The expected upstream river length, $\mbox{E}(u)$, can be decomposed as $\mbox{E}(u) = \mbox{E}(u') + \mbox{E}(l')$, where $u'$ and $l'$ represent the summed length of upstream links (excluding the link containing the habitat patch) and the distance from the upstream link end to the habitat patch, respectively.
+In the following, we first derive the expected values of $u'$ and $l'$ when the random variables $Z$ and $B$ are given as $Z = z$ ($z \in \{\text{even integer}\}$, $z \ge 0$) and $B = b = z + 1$ ($b \in \{\text{odd integer}\}$, $b \ge 1$).
+We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
+We account for the randomness of $Z$ as the final step of the derivation.
+
+The summed length of upstream links $u'$ is the product of the mean length of upstream links $\hat{l}$ and the number of upstream links $n$.
+If $\lambda_b L \rightarrow \infty$ and each link length follows the \textit{i.i.d.} assumption, the expected value of mean length $\hat{l}$ ($= \sum_s^n l_s n^{-1}$) can be approximated as $\lambda_b^{-1}$ (the expected value of an exponential distribution) since one may ignore the length constraint imposed by the condition $\sum_s l_s = L$.
+If $\lambda_b L$ is not sufficiently large, however, we need to account for this constraint.
+With the known sum $L$, the fraction of single link length $\psi_s$ (= $l_s L^{-1}$) follows a Beta distribution as $\psi_s ~|~ z \sim \mbox{Beta}(1, z)$, whose expected value is $\mbox{E}(\psi~|~z) = (z + 1)^{-1}$.
+Thus, we obtain an intuitive solution for the expectation of mean length as:
+
+\begin{align}
+    \begin{split}
+    \mbox{E}(\hat{l}~|~z) &= L \times \mbox{E}(\psi~|~z)\\
+                          &= L(z + 1)^{-1}\\
+                          &= Lb^{-1}.
+    \end{split}
+\end{align}
+
+The expected value of this quantity, $\mbox{E}(Lb^{-1})$, approaches $\lambda_b^{-1}$ as $\lambda_b L \rightarrow \infty$ since $\mbox{E}(b) = \lambda_b L + 1$.
+
+The number of upstream links $n$ requires the consideration of its probability distribution since $n$ depends on the location in a network.
+Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs), a classical framework of bifurcating river networks upon which our theory builds.
+Specifically, the probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $w(m; M)$, is described as:
+
+\begin{equation}
+    w(m; M) = \frac{1}{2m - 1} \frac{\binom{2m}{m} \binom{2(M - m)}{M - m}}{\binom{2M}{M}}.
+\end{equation}
+
+The notation $\binom{\cdot}{\cdot}$ denotes a binomial coefficient.
+The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of TDCNs, leading to the expected number of upstream links $\mbox{E}(n~|~z)$ as:
+
+\begin{align}
+    \begin{split}
+    \mbox{E}(n~|~z) &= \sum_{m=1}^{M} (2m - 2) w(m; M)\\
+                    &= 2 \sum_{m=1}^{M} m~w(m; M) - 2\\
+                    &= 2 \times \frac{4^{M-1}}{\binom{2M-1}{M}} - 2\\
+                    &= \frac{2^{2M-1}}{\binom{2M-1}{M}} - 2.
+    \end{split}
+    \label{eq:n-hat}
+\end{align}
+
+Note that $M$ is a function of $z$.
+TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link.
+Using $M = (b + 1) / 2 = (z + 2) / 2$, the expected value $\mbox{E}(n~|~z)$ can be rewritten as a function of $z$:
+
+\begin{equation}
+    \mbox{E}(n~|~z) = \hat{n}(z) = 
+    \frac{2^{z + 1}}{\binom{z + 1}{\frac{z + 2}{2}}} - 2.
+\end{equation}
+
+In sum, we obtain $\mbox{E}(u' ~|~ z)$ as:
+
+\begin{align}
+    \begin{split}
+        \mbox{E}(u' ~|~ z) &= \mbox{E}(\hat{l}n ~|~ z)\\
+                           &= \mbox{E}(\hat{l} ~|~ z)\mbox{E}(n ~|~ z)\\
+                           &= \frac{L \hat{n}(z)}{z + 1}.
+    \end{split}
+\end{align}
+
+We used $\mbox{E}(\hat{l}n ~|~ z) = \mbox{E}(\hat{l} ~|~ z)\mbox{E}(n ~|~ z)$ in light of the lack of covariance between $\hat{l}$ and $n$.
+
+The derivation of $\mbox{E}(l'~|~z)$ is straightforward.
+We assume that habitat patches are randomly distributed along the river, following a Poisson process.
+As such, the distance to habitat patch $i$ in link $s$, $l'_{s(i)}$, follows a uniform distribution as $l'_{s(i)}~|~z \sim \mbox{Unif}(0, l_s)$ with $\mbox{E}(l'_{s(i)}~|~z) = 2^{-1} l_s$.
+Taking the expectation across links yields:
+
+\begin{align}
+    \begin{split}
+        \mbox{E}(l'~|~z) &= \mbox{E}(\mbox{E}(l'_{s(i)}~|~z))\\
+                     &= \frac{\mbox{E}(l_s~|~z)}{2}\\
+                     &= \frac{L}{2(z + 1)}.
+    \end{split}
+\end{align}
+
+Summing $\mbox{E}(u' ~|~ z)$ and $\mbox{E}(l'~|~z)$ for a network with a given value of $z$ yields:
+
+\begin{align}
+    \begin{split}
+        \mbox{E}(u ~|~ z) &= \mbox{E}(u' ~|~ z) + \mbox{E}(l'~|~z)\\
+                          &= \frac{L}{z+1} \left[ \hat{n}(z) + \frac{1}{2} \right].
+    \end{split}
+    \label{eq:cu}
+\end{align}
+
+Lastly, we account for the probabilistic nature of the random variable $Z$ by summing $z$ out from Equation \ref{eq:cu}.
+In a bifurcating network, $Z$ must be even so that the total number of links $B$ is odd.
+As such, we must consider a truncated Poisson distribution for $Z$ with zero probabilities for odd numbers.
+The probability mass function (PMF) of the truncated Poisson distribution, denoted as $g_{t}(z; L, \lambda_b)$, is defined as:
+
+\begin{align}
+    \begin{split}
+    g_{t}(z; L, \lambda_b) &= \frac{g(z; L, \lambda_b)}{\Pr(Z = \text{even})} \times \frac{1 + (-1)^{z}}{2}\\
+                           &= g(z; L, \lambda_b) \times \frac{1 + (-1)^{z}}{1 + e^{-2\lambda_b L}}
+    \end{split}
+    \label{eq:tpois}
+\end{align}
+
+where $g(z; L, \lambda_b)$ is a PMF of a Poisson distribution:
+
+\begin{equation}
+    g(z; L, \lambda_b) = \Pr(Z = z) = \frac{(\lambda_b L)^{z} e^{-\lambda_b L}}{z!},
+\end{equation}
+
+and
+
+\begin{equation}
+    \frac{1 + (-1)^{z}}{2} =
+    \begin{cases}
+        1 & \text{if $z$ is even,}\\
+        0 & \text{if $z$ is odd.}
+    \end{cases}
+\end{equation}
+
+In Equation \ref{eq:tpois}, $g(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even numbers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} g_t(z; L, \lambda_b) = 1$.
+$\Pr(Z = \text{even})$ is given as:
+
+\begin{align}
+    \begin{split}
+        \Pr(Z = \text{even}) &= \sum_{z = 0}^{\infty} \left[ \frac{(\lambda_b L)^{z} e^{-\lambda_b L}}{z!} \times \frac{1 + (-1)^{z}}{2} \right]\\
+                         &= \frac{e^{-\lambda_b L}}{2} \left[ \sum_{z = 0}^{\infty} \frac{(\lambda_b L)^{z}}{z!} + \sum_{z = 0}^{\infty} \frac{(-\lambda_b L)^{z}}{z!}\right]\\
+                         &= \frac{e^{-\lambda_b L}}{2} (e^{\lambda_b L} + e^{-\lambda_b L})\\
+                         &= \frac{1 + e^{- 2 \lambda_b L}}{2}    
+    \end{split}
+\end{align}
+
+
+Following the definition of expected value, we obtain $\mbox{E}(u)$ as a function of $L$ and $\lambda_b$:
+
+\begin{align}
+    \begin{split}
+        \mbox{E}(u) = \hat{u}(L, \lambda_b) 
+                    &= \sum_{z = 0}^{\infty} \left[ \frac{L}{z + 1} \left(\hat{n}(z) + \frac{1}{2}\right) g_t(z; L, \lambda_b) \right]\\
+                    &= L \sum_{z = 0}^{\infty} \left[ \frac{\hat{n}(z)}{z + 1} g_t(z; L, \lambda_b)\right] + 
+                    \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})}.
+    \end{split}
+\end{align}
+
+
+\end{document}
