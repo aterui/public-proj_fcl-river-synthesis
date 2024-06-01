@@ -26,7 +26,8 @@ df_plot <- df_fcl_sim %>%
                            sprintf("mu^{(c)}==%.2f~(no~predation)", mu_c)))
 
 df_parms <- df_plot %>% 
-  distinct(rho, g, theta)
+  distinct(rho, g, theta) %>% 
+  arrange(desc(rho))
 
 # figure ------------------------------------------------------------------
 
