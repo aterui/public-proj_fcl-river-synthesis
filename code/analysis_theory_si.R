@@ -44,7 +44,7 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 parms <- expand.grid(rl = seq(10, 100, length = 20),
                      lambda = seq(0.1, 1, length = 20),
                      h = 1,
-                     delta0 = 1,
+                     delta0 = 0.5,
                      rsrc = c(0.25, 2.5),
                      g = c(25, 50, 100),
                      mu0 = c(0.25, 2.5),
