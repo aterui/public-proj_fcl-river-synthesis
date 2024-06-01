@@ -41,8 +41,8 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - mu_c, predator-induced extinction rate
 ## - rho, synchrony prob.
 ## - fw, foodweb index
-parms <- expand.grid(rl = seq(10, 100, length = 15),
-                     lambda = seq(0.1, 1, length = 15),
+parms <- expand.grid(rl = seq(10, 100, length = 20),
+                     lambda = seq(0.1, 1, length = 20),
                      h = 1,
                      delta0 = 1,
                      rsrc = c(0.25, 2.5),
