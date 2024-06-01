@@ -16,18 +16,20 @@ df_plot <- df_fcl_sim %>%
   group_by(rl, lambda, h, delta0, rsrc, g, mu0, mu_p, mu_c, rho, theta) %>% 
   summarize(fcl = mean(fcl)) %>% 
   ungroup() %>% 
-  mutate(lab_mu_p = sprintf("mu^{(p)}==%.2f", mu_p),
-         lab_mu0 = sprintf("mu[0]==%.2f", mu0),
-         lab_mu_c = sprintf("mu^{(c)}==%.2f", mu_c),
-         lab_rsrc = sprintf("r[0]==%.2f", rsrc))
+  mutate(lab_mu0 = sprintf("mu[0]==%.2f", mu0),
+         lab_rsrc = sprintf("italic(r[0])==%.2f", rsrc),
+         lab_mu_p = ifelse(mu_p > min(mu_p),
+                           sprintf("mu^{(p)}==%.2f~(strong~prey~effect)", mu_p),
+                           sprintf("mu^{(p)}==%.2f~(weak~prey~effect)", mu_p)),
+         lab_mu_c = ifelse(mu_c > 0,
+                           sprintf("mu^{(c)}==%.2f~(predation)", mu_c),
+                           sprintf("mu^{(c)}==%.2f~(no~predation)", mu_c)))
 
 df_parms <- df_plot %>% 
-  distinct(rho, g, theta)
+  distinct(rho, g, theta) %>% 
+  arrange(desc(rho))
 
 # figure ------------------------------------------------------------------
-
-with(df_parms,
-     )
 
 list_g <- foreach(i = 1:nrow(df_parms)) %do% {
   
@@ -39,9 +41,10 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
                x = lambda,
                fill = fcl)) +
     geom_raster(alpha = 1) +
-    facet_grid(rows = vars(lab_mu_p, lab_mu0),
-               cols = vars(lab_mu_c, lab_rsrc),
-               labeller = label_parsed) +
+    ggh4x::facet_nested(rows = vars(lab_mu_p, lab_mu0),
+                        cols = vars(lab_mu_c, lab_rsrc),
+                        labeller = label_parsed,
+                        nest_line = element_line(linetype = 3)) +
     MetBrewer::scale_fill_met_c("Hiroshige",
                                 direction = -1) +
     labs(x = expression("Branching rate"~lambda[b]),
