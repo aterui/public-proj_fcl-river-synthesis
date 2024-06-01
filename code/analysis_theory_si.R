@@ -48,7 +48,7 @@ parms <- expand.grid(rl = seq(10, 100, length = 15),
                      rsrc = c(0.25, 2.5),
                      g = c(25, 50, 100),
                      mu0 = c(0.25, 2.5),
-                     mu_p = c(0, 1),
+                     mu_p = c(1, 2),
                      mu_c = c(0, 1),
                      rho = c(0, 0.5),
                      fw = seq_len(length(list_fw))) %>% 
