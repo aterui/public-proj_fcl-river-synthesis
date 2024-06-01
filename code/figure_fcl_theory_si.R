@@ -33,7 +33,7 @@ df_parms <- df_plot %>%
 
 list_g <- foreach(i = 1:nrow(df_parms)) %do% {
   
-  df_plot %>% 
+  g <- df_plot %>% 
     filter(rho == df_parms$rho[i],
            g == df_parms$g[i],
            theta == df_parms$theta[i]) %>% 
@@ -53,4 +53,17 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
     theme_classic() +
     theme(strip.background = element_blank())
   
+  filename <- with(df_parms[i, ],
+                   paste0("output/figure_",
+                          "rho", rho,
+                          "_g", g,
+                          "_theta", theta)) %>% 
+    str_remove_all("\\.") %>% 
+    paste0(".pdf")
+  
+  ggsave(g, filename = filename,
+         height = 6,
+         width = 7.5)
+  
+  return(g)
 }
