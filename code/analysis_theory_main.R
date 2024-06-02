@@ -8,32 +8,30 @@ source("code/set_library.R")
 # set parameters ----------------------------------------------------------
 
 ## generate food webs
-## - set seed for reproducibility
-set.seed(123)
-
-## - generate food web matrix
 ## - S: number of nodes/species in a community
+## - theta: degree of omnivory
 S <- 32
-list_fw <- replicate(10, {
-  fw <- ppm(n_species = S,
-            n_basal = round(S * 0.18),
-            l = round(S^2 * 0.11),
-            theta = 0.25)},
-  simplify = FALSE)
+n_rep <- 10
 
-## other parameters
-rsrc <- c(0.25, 2.5)
-mu0 <- c(0.25, 2.5)
-mu_p <- 0.1
-rho <- 0.5
-g <- 10
-delta <- 1.5
-fw <- seq_len(length(list_fw))
+set.seed(10)
+v_theta <- rep(0.25, each = n_rep)
+v_n_base <- rpois(length(v_theta), lambda = S * 0.18)
+v_l <- rpois(length(v_theta), lambda = S^2 * 0.11)
+
+list_fw <- lapply(seq_len(length(v_theta)), function(i) {
+  ## - set seed for reproducibility
+  set.seed(i * 10)
+  
+  mcbrnet::ppm(n_species = S,
+               n_basal = v_n_base[i],
+               l = v_l[i],
+               theta = v_theta[i])
+})
 
 ## parms data frame
 ## - get vectors for lambda and river length
 x_lambda <- seq(0.1, 1, length = 100)
-x_rl <- seq(1, 100, length = 100)
+x_rl <- seq(10, 100, length = 100)
 
 ## - fix values when varying another
 lambda <- c(x_lambda, rep(0.5, length(x_lambda)))
@@ -48,13 +46,15 @@ df_x <- tibble(lambda,
 
 ## - combine with other parameters
 parms <- expand.grid(id = seq_len(length(lambda)),
-                     rsrc = rsrc,
-                     mu0 = mu0,
-                     mu_p = mu_p,
-                     rho = rho,
-                     g = g,
-                     delta = delta,
-                     fw = fw) %>% 
+                     rsrc = c(0.25, 0.5),
+                     mu0 = c(0.25, 2.5),
+                     mu_p = 2.5,
+                     delta = 0.05,
+                     h = 10,
+                     g = 150,
+                     rho = 0.5,
+                     z = 0.5,
+                     fw = seq_len(length(list_fw))) %>% 
   left_join(df_x)
 
 
@@ -69,16 +69,24 @@ y <- foreach(i = seq_len(nrow(parms)),
              .combine = c) %do% {
                
                setTxtProgressBar(pb, i)
-               y <- with(parms, 
-                         fcl(foodweb = list_fw[[fw[i]]],
-                             lambda = lambda[i],
-                             size = rl[i],
-                             rsrc = rsrc[i],
-                             mu0 = mu0[i],
-                             mu_p = mu_p[i],
-                             delta = delta[i],
-                             g = g[i],
-                             rho = rho[i]))
+               
+               y <- with(parms, {
+                 
+                 v_tp <- attr(list_fw[[fw[i]]], "tp")
+                 
+                 y0 <- fcl(foodweb = list_fw[[fw[i]]],
+                           lambda = lambda[i],
+                           size = rl[i],
+                           rsrc = rsrc[i],
+                           mu0 = mu0[i],
+                           mu_p = mu_p[i],
+                           delta = delta[i] * v_tp^z[i],
+                           h = h[i],
+                           g = g[i] * v_tp^(-z[i]),
+                           rho = rho[i])
+                 
+                 return(y0)
+               })
                
                return(y)
              }

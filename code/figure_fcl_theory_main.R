@@ -11,7 +11,7 @@ source("code/set_function.R")
 # fcl vs size or p_branch plot --------------------------------------------
 
 ## read data
-df_fcl_mu <- readRDS("data_fmt/sim_fcl_analytical.rds") %>% 
+df_fcl_mu <- readRDS("data_fmt/sim_fcl_main.rds") %>% 
   group_by(focus, lambda, rl, rsrc, mu0) %>% 
   summarize(mu_fcl = mean(fcl),
             min_fcl = min(fcl),
@@ -23,11 +23,13 @@ source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
 ## label mapper
-lab_mu <- c(`0.25` = "Stable",
-            `2.5` = "Disturbed")
+lab_mu <- c("Stable", "Unstable")
+names(lab_mu) <- sort(unique(df_fcl_mu$mu0)) %>% 
+  as.character()
 
-lab_r <- c(`0.25` = "Unproductive",
-           `2.5` = "Productive")
+lab_r <- c("Unproductive", "Productive")
+names(lab_r) <- sort(unique(df_fcl_mu$rsrc)) %>% 
+  as.character()
 
 ## food chain length vs. branching
 g1 <- df_fcl_mu %>% 
