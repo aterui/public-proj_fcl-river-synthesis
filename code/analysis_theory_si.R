@@ -43,12 +43,12 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - fw, foodweb index
 parms <- expand.grid(rl = seq(10, 100, length = 20),
                      lambda = seq(0.1, 1, length = 20),
-                     h = 1,
-                     delta0 = 0.5,
-                     rsrc = c(0.25, 2.5),
-                     g = c(25, 50, 100),
+                     h = 5,
+                     delta0 = 0.1,
+                     rsrc = c(0.5, 1.0),
+                     g = c(100, 1000),
                      mu0 = c(0.25, 2.5),
-                     mu_p = c(1, 2),
+                     mu_p = c(2.5, 5),
                      mu_c = c(0, 1),
                      rho = c(0, 0.5),
                      fw = seq_len(length(list_fw))) %>% 
@@ -62,8 +62,8 @@ parms <- expand.grid(rl = seq(10, 100, length = 20),
 ## - p_th, absorbing condition for p
 nt0 <- 50
 max_nt <- 1000
-tol <- 1e-4
-p_th <- 1e-4
+tol <- 1e-5
+p_th <- 1e-5
 
 # run ---------------------------------------------------------------------
 
