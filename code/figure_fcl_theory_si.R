@@ -16,7 +16,7 @@ df_plot <- df_fcl_sim %>%
   group_by(rl, lambda, h, delta0, rsrc, g, mu0, mu_p, mu_c, rho, theta) %>% 
   summarize(fcl = mean(fcl)) %>% 
   ungroup() %>% 
-  mutate(lab_mu0 = sprintf("mu[0]==%.2f", mu0),
+  mutate(lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
          lab_rsrc = sprintf("italic(r[0])==%.2f", rsrc),
          lab_mu_p = ifelse(mu_p > min(mu_p),
                            sprintf("mu^{(p)}==%.2f~(strong~prey~effect)", mu_p),
