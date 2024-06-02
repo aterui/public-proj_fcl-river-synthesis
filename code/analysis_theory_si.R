@@ -43,14 +43,15 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - fw, foodweb index
 parms <- expand.grid(rl = seq(10, 100, length = 20),
                      lambda = seq(0.1, 1, length = 20),
-                     h = 1,
-                     delta0 = 0.5,
-                     rsrc = c(0.5, 1.0),
-                     g = c(50, 100),
+                     h = 10,
+                     delta0 = 0.05,
+                     rsrc = c(0.25, 0.5),
+                     g = c(150, 300),
                      mu0 = c(0.25, 2.5),
                      mu_p = c(2.5, 5),
                      mu_c = c(0, 1),
                      rho = c(0, 0.5),
+                     z = 0.5,
                      fw = seq_len(length(list_fw))) %>% 
   mutate(theta = v_theta[fw],
          n_base = v_n_base[fw],
@@ -96,9 +97,9 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                                       lambda = lambda[i],
                                       size = rl[i],
                                       h = h[i],
-                                      delta = delta0[i] * sqrt(v_tp),
+                                      delta = delta0[i] * v_tp^z[i],
                                       rsrc = rsrc[i],
-                                      g = g[i],
+                                      g = g[i] * v_tp^z[i],
                                       mu0 = mu0[i],
                                       mu_p = mu_p[i],
                                       rho = rho[i],
@@ -106,40 +107,21 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                     } else {
                       ## w/ predation effect
                       
+                      ## - initialize
+                      y0 <- NA
+                      attr(y0, "p_hat") <- 0.5
+                      attr(y0, "convergence") <- 1
+                      nt <- 0
+                      
                       ## - numerical equilibrium with rpom::nfcl()
-                      y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
-                                       lambda = lambda[i],
-                                       size = rl[i],
-                                       h = h[i],
-                                       delta = delta0[i] * sqrt(v_tp),
-                                       rsrc = rsrc[i],
-                                       g = g[i],
-                                       mu0 = mu0[i],
-                                       mu_p = mu_p[i],
-                                       mu_c = mu_c[i],
-                                       rho = rho[i],
-                                       x0 = 0.5,
-                                       n_timestep = nt0,
-                                       interval = 0.01,
-                                       threshold = p_th,
-                                       n_plus = 10,
-                                       weight = TRUE,
-                                       tol = tol)
-                      
-                      ## - # time steps used
-                      nt <- nt0
-                      attr(y0, "nt") <- nt
-                      
-                      ## - update initial values x0
-                      ## - repeat numerical runs if not converged
                       while (attr(y0, "convergence") > 0) {
                         y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
                                          lambda = lambda[i],
                                          size = rl[i],
                                          h = h[i],
-                                         delta = delta0[i] * sqrt(v_tp),
+                                         delta = delta0[i] * v_tp^z[i],
                                          rsrc = rsrc[i],
-                                         g = g[i],
+                                         g = g[i] * v_tp^z[i],
                                          mu0 = mu0[i],
                                          mu_p = mu_p[i],
                                          mu_c = mu_c[i],
@@ -155,7 +137,6 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                         ## - # time steps updated
                         nt <- nt + nt0
                         attr(y0, "nt") <- nt
-                        
                         if (nt >= max_nt) break
                       }
                       
@@ -168,13 +149,13 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                                NA,
                                attr(y, "nt")) 
                   
-                  z <- ifelse(is.null(attr(y, "convergence")),
-                              NA,
-                              attr(y, "convergence"))
+                  zo <- ifelse(is.null(attr(y, "convergence")),
+                               NA,
+                               attr(y, "convergence"))
                   
                   return(dplyr::tibble(fcl = y,
                                        nt = nt,
-                                       converge = z))
+                                       converge = zo))
                 }
 tictoc::toc()
 
