@@ -40,9 +40,9 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - mu_p, prey-induced extinction rate
 ## - mu_c, predator-induced extinction rate
 ## - rho, synchrony prob.
-## - scaling exponent for delta and g
+## - z, scaling exponent for delta and g
 ## - fw, foodweb index
-parms <- expand.grid(rl = seq(10, 100, length = 20),
+parms <- expand.grid(rl = seq(1, 100, length = 20),
                      lambda = seq(0.1, 1, length = 20),
                      h = 10,
                      delta0 = 0.05,
