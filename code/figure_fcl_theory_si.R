@@ -54,7 +54,7 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
     theme(strip.background = element_blank())
   
   filename <- with(df_parms[i, ],
-                   paste0("output/figure_",
+                   paste0("output/fig_",
                           "rho", rho,
                           "_g", g,
                           "_theta", theta)) %>% 

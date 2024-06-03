@@ -132,9 +132,9 @@ ug <- df_u %>%
 
 ## export
 ggsave(ug0, 
-       filename = "output/figure_ud0.pdf",
+       filename = "output/fig_ud0.pdf",
        width = 6, height = 5)
 
 ggsave(ug, 
-       filename = "output/figure_ud.pdf",
+       filename = "output/fig_ud.pdf",
        width = 6, height = 5)
