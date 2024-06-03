@@ -31,7 +31,7 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## parms data frame
 ## - get vectors for lambda and river length
 x_lambda <- seq(0.1, 1, length = 100)
-x_rl <- seq(1, 100, length = 100)
+x_rl <- seq(10, 100, length = 100)
 
 ## - fix values when varying another
 lambda <- c(x_lambda, rep(0.5, length(x_lambda)))
@@ -46,11 +46,11 @@ df_x <- tibble(lambda,
 
 ## - combine with other parameters
 parms <- expand.grid(id = seq_len(length(lambda)),
-                     rsrc = c(0.25, 0.5),
+                     rsrc = c(0.4, 0.8),
                      mu0 = c(0.25, 2.5),
                      mu_p = 2.5,
-                     delta = 0.05,
-                     h = 10,
+                     delta = 0.1,
+                     h = 5,
                      g = 150,
                      rho = 0.5,
                      z = 0.5,
