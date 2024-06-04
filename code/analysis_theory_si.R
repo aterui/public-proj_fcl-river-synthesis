@@ -42,16 +42,16 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - rho, synchrony prob.
 ## - z, scaling exponent for delta and g
 ## - fw, foodweb index
-parms <- expand.grid(rl = seq(1, 100, length = 20),
+parms <- expand.grid(rl = seq(10, 100, length = 20),
                      lambda = seq(0.1, 1, length = 20),
-                     h = 10,
-                     delta0 = 0.05,
-                     rsrc = c(0.25, 0.5),
-                     g = c(150, 300),
-                     mu0 = c(0.25, 2.5),
+                     h = 2.5,
+                     delta0 = 0.5,
+                     rsrc = c(0.4, 0.8),
+                     g = c(75, 150),
+                     mu0 = c(2.5, 5),
                      mu_p = c(2.5, 5),
-                     mu_c = c(0, 1),
-                     rho = c(0, 0.5),
+                     mu_c = c(0, 2.5),
+                     rho = c(0.25, 0.5),
                      z = 0.5,
                      fw = seq_len(length(list_fw))) %>% 
   mutate(theta = v_theta[fw],
