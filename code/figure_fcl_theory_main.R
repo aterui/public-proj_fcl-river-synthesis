@@ -7,8 +7,7 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-
-# fcl vs size or p_branch plot --------------------------------------------
+# data --------------------------------------------------------------------
 
 ## read data
 df_fcl_mu <- readRDS("data_fmt/sim_fcl_main.rds") %>% 
@@ -16,80 +15,83 @@ df_fcl_mu <- readRDS("data_fmt/sim_fcl_main.rds") %>%
   summarize(mu_fcl = mean(fcl),
             min_fcl = min(fcl),
             max_fcl = max(fcl)) %>% 
-  ungroup()
+  ungroup() %>% 
+  mutate(lab_r = ifelse(rsrc == min(rsrc),
+                        sprintf("italic(r)[0]==%.2f~~Resource~low", rsrc),
+                        sprintf("italic(r)[0]==%.2f~~Resource~high", rsrc)),
+         lab_mu = ifelse(mu0 == min(mu0),
+                         sprintf("mu^{(0)}==%.2f~~Disturbance~infreq.", mu0),
+                         sprintf("mu^{(0)}==%.2f~~Disturbance~freq.", mu0)))
+
+# fcl vs size or p_branch plot --------------------------------------------
 
 ## set plot theme
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
-## label mapper
-lab_mu <- c("Stable", "Unstable")
-names(lab_mu) <- sort(unique(df_fcl_mu$mu0)) %>% 
-  as.character()
-
-lab_r <- c("Unproductive", "Productive")
-names(lab_r) <- sort(unique(df_fcl_mu$rsrc)) %>% 
-  as.character()
-
 ## food chain length vs. branching
 g1 <- df_fcl_mu %>% 
   filter(focus == "branch") %>% 
   ggplot(aes(x = lambda,
-             y = mu_fcl)) + 
+             y = mu_fcl,
+             color = factor(rl),
+             fill = factor(rl))) + 
   geom_line(linewidth = 1,
-            alpha = 0.8,
-            color = "steelblue") +
+            alpha = 0.8) +
   geom_ribbon(aes(ymax = max_fcl,
                   ymin = min_fcl),
-              fill = "steelblue",
               alpha = 0.1,
               col = NA) +
-  facet_grid(rows = vars(mu0),
-             cols = vars(rsrc),
-             labeller = labeller(mu0 = lab_mu,
-                                 rsrc = lab_r)) +
-  labs(x = "Ecosystem complexity (branching rate)",
+  facet_grid(rows = vars(lab_mu),
+             cols = vars(lab_r),
+             labeller = label_parsed) +
+  labs(x = expression("Branching rate"~lambda[b]),
        y = "Food chain length",
-       color = "Ecosystem size") +
+       color = expression("Ecosystem size"~italic(L)),
+       fill = expression("Ecosystem size"~italic(L))) +
   MetBrewer::scale_color_met_d("Hiroshige") +
+  MetBrewer::scale_fill_met_d("Hiroshige") +
   theme(strip.background = element_blank(),
-        strip.text = element_text(size = 16)) +
-  guides(color = "none")
+        strip.text = element_text(size = 16),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14))
 
 ## food chain length vs. size
 g2 <- df_fcl_mu %>% 
   filter(focus == "size") %>% 
   ggplot(aes(x = rl,
-             y = mu_fcl)) + 
+             y = mu_fcl,
+             color = factor(lambda),
+             fill = factor(lambda))) + 
   geom_line(linewidth = 1,
-            alpha = 0.8,
-            color = "steelblue") +
+            alpha = 0.8) +
   geom_ribbon(aes(ymax = max_fcl,
                   ymin = min_fcl),
-              fill = "steelblue",
               alpha = 0.1,
               col = NA) +
-  facet_grid(rows = vars(mu0),
-             cols = vars(rsrc),
-             labeller = labeller(mu0 = lab_mu,
-                                 rsrc = lab_r)) +
-  labs(x = "Ecosystem size (river length)",
-       y = "Food chain length") +
+  facet_grid(rows = vars(lab_mu),
+             cols = vars(lab_r),
+             labeller = label_parsed) +
+  labs(x = expression("River length"~italic(L)),
+       y = "Food chain length",
+       color = expression("Branching rate"~lambda[b]),
+       fill = expression("Branching rate"~lambda[b])) +
   MetBrewer::scale_color_met_d("Hiroshige") +
+  MetBrewer::scale_fill_met_d("Hiroshige") +
   theme(strip.background = element_blank(),
-        strip.text = element_text(size = 16)) +
-  guides(color = "none")
+        strip.text = element_text(size = 16),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 14))
 
 
 ## export 
-
 ggsave(g1, filename = "output/fig_theory_branch.pdf",
-       width = 7.25,
-       height = 6)
+       width = 10,
+       height = 7.5)
 
 ggsave(g2, filename = "output/fig_theory_size.pdf",
-       width = 7.25,
-       height = 6)
+       width = 10,
+       height = 7.5)
 
 
 # upstream distance function ----------------------------------------------
