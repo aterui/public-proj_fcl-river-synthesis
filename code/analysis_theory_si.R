@@ -88,7 +88,7 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                   y <- with(parms, {
                     
                     ## vector of binary trophic positions if all present
-                    v_tp <- attr(list_fw[[parms$fw[i]]], "tp")
+                    v_tp <- attr(list_fw[[fw[i]]], "tp")
                     
                     if (mu_c[i] == 0) {
                       ## w/o predation effect
@@ -155,6 +155,8 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                                attr(y, "convergence"))
                   
                   return(dplyr::tibble(fcl = y,
+                                       s_alpha = sum(attr(y, "p_hat")),
+                                       s_gamma = sum(attr(y, "p_hat") > 0),
                                        nt = nt,
                                        converge = zo))
                 }
