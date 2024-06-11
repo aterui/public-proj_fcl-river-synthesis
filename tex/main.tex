@@ -1,0 +1,68 @@
+\documentclass[11pt, class=article, crop=false]{standalone}
+\usepackage[subpreambles=true]{standalone}
+\usepackage[T1]{fontenc} % for font setting
+\usepackage{tgtermes} % for font setting
+\usepackage{import,
+            graphicx,
+            parskip,
+            url,
+            amsmath,
+            wrapfig,
+            fancyhdr,
+            soul,
+            tabularx}
+
+% side caption figure
+\usepackage{sidecap}
+\sidecaptionvpos{figure}{t}
+
+% for special characters in bibliography            
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% citation setup
+\usepackage[euler]{textgreek}
+\usepackage[sort&compress]{natbib}
+\setcitestyle{square}
+\setcitestyle{comma}
+\bibliographystyle{bibstyle}
+
+% caption setup
+\usepackage[font={f, small}, labelfont={bf, small}]{caption}
+           
+% color box
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable}
+
+% margin
+\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
+
+% \pagenumbering{gobble}
+
+\begin{document}
+
+\section{Maintext}
+
+The vertical structure of food webs, often quantified as food chain length (FCL), has important implications for trophic dynamics, energy flow, and contaminant concentrations in top predators that humans consume.
+Elton first documented its variation in natural systems in the early XXX.
+Since then, controls of FCL have been a central topic in ecology with a diverse array of hypotheses spawned over the past century.
+
+Hypotheses regarding controls of food chain length can be organized into three broad categories: resource availability, disturbance (or dynamic stability), and ecosystem size.
+Ecological theory predicts that FCL should increase with resource availability and environmental stability because such conditions may increase the persistence of constituent species, particularly those of higher trophic levels.
+A sizable amount of research has reported results contradicting these theoretical predictions.
+In contrast, a meta-analysis provided consistent support for the ecosystem size hypothesis, in which larger ecosystems are predicted to support longer food chains.
+Recent theory suggests multiple mechanisms behind the positive association between FCL and ecosystem size, such as weakened intraguild predation and increased colonization.
+This multifaceted nature may underlie the consistency of the positive relationship.
+
+XXX proposed the resource availability with the longest history of research.
+FCL is ultimately controlled by basal resources because inefficient energy transfer through food webs limits energy available to higher trophic levels.
+
+
+Second, the disturbance hypothesis (or the dynamical stability hypothesis) emerges from classic theoretical predictions: longer food chains are less resilient to environmental perturbations (i.e., the dynamical constraint) and unlikely to persist in habitats with frequent or severe disturbance.
+Lastly, the ecosystem size hypothesis predicts that larger ecosystems, or larger networks of local habitats coupled via dispersal, should support longer food chains through a suite of mechanisms, including enhanced colonization rates and weakened intraguild predation.
+
+\section{Results and Discussion}
+\section{Methods}
+
+
+\end{document}
