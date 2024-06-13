@@ -99,30 +99,31 @@ Specifically, we define $c_{ik}$ as follows:
     \label{eq:clnz}
 \end{equation}
 
-where $r_{ik}$ is the scaling factor related to resource supply rate or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem.
+where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit distance) .
 The term $\sum_{j \ne i}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
 We scaled $\sum_{j \ne i}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
 For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} \equiv c_{0, k}$).
-We also use the approximation for the proportion of patches occupied $p_k$ as $p_k \approx N^{-1}\sum_{j \ne i}^N \pi_{jk}$, assuming that $N$ is sufficiently large.
+We also use the approximation for the proportion of patches occupied $p_k$ as $p_k = N^{-1}\sum_{j}^N \pi_{jk} \approx N^{-1}\sum_{j \ne i}^N \pi_{jk}$, assuming that $N$ is sufficiently large.
 These simplifying assumptions, without loss of generality, yield:
 
 \begin{equation}
      c_{ik} \approx r_{ik} c_{0, k} p_k
 \end{equation}
 
-The scaling factor $r_{ik}$ ($\ge 0$) represents different quantities for producers and consumers:
+The establishment probability $r_{ik}$ ($\ge 0$) represents different quantities for producers and consumers:
 
 \begin{equation}
     r_{ik} =
     \begin{cases}
     r_{0} & \text{if $k~\in~\text{producer}$,}\\
-    \sum_{q~\in~\text{prey}} \pi_{iq} & \text{if $k~\in~\text{consumer}$,}
+    \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} & \text{if $k~\in~\text{consumer}$,}
     \end{cases}
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ is the resource supply rate and $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$.
-The resource supply rate $r_0$ is assumed to be constant over space and across producer species.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$, and $S_{p, k}$ is the number of possible prey species for consumer $k$.
+This formulation assumes that resource or proportional prey availability increases species' establishment.
+The resource supply $r_0$ is assumed to be constant over space.
 
 The number of effective propagules produced by a single occupied patch $c_{0, k}$ is the product of the gross number of propagules $g_{k}$ and the survival probability during dispersal $\phi_k$.
 For producers, however, we constrain $c_{0, k}$ by the number of habitat patches $N$ since $N$ is the maximum number of patches that effective propagules can colonize:
@@ -143,7 +144,7 @@ For producers, however, we constrain $c_{0, k}$ by the number of habitat patches
 \end{equation}
 
 The $N$-constraint propagates naturally from lower to higher trophic levels because consumer colonization is limited by their prey availability (see Equation \ref{eq:r-eq}).
-The survival probability during dispersal $\phi_k$ is a function of the species' dispersal capability $\delta_k$ and habitat density $h$:
+The survival probability during dispersal $\phi_k$ is a function of the species-specific dispersal capability $\delta_k$ and the habitat density $h$:
 
 \begin{equation}
     \phi_k = 1 - e^{-\delta_k h}.
@@ -157,14 +158,15 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey ava
 
 \begin{equation}
     \mu_{ik} = 
-        \underbrace{\mu_{k}^{(0)} + \mu_{k}^{(u)} \rho u_i}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey}} + 
+        \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey availability}} + 
         \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} \pi_{iq}}_{\text{Predation}}.
     \label{eq:extn}
 \end{equation}
 
-The disturbance term is composed of two sources. The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
-The second component is the influence of downstream cascade ($\mu_{k}^{(u)} \rho u_i$), where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively.
+The disturbance term is composed of two sources.
+The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
+The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$), where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively.
 In rivers, any disturbance can cascade downstream as water flows downstream.
 For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement.
 Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches, likely causing synchronized extirpation of organisms across space.
@@ -201,8 +203,7 @@ and
 
 \begin{equation}
     \mu_{k} = 
-        \mu_{k}^{(0)} + 
-        \mu_{k}^{(u)} \rho \hat{u} + 
+        \mu_{k}^{(0)} (1 + \rho \hat{u}) + 
         \mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right) + 
         \mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}.
     \label{eq:extn}    
@@ -272,18 +273,18 @@ Here, our approach leverages the known properties of Shreve's topologically dist
 Specifically, the probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $w(m; M)$, is described as:
 
 \begin{equation}
-    w(m; M) = \frac{1}{2m - 1} \frac{\binom{2m}{m} \binom{2(M - m)}{M - m}}{\binom{2M}{M}}.
+    w(m; M) = \frac{1}{2m - 1} \binom{2m}{m} \binom{2(M - m)}{M - m} \binom{2M}{M}^{-1}.
 \end{equation}
 
-The notation $\binom{\cdot}{\cdot}$ denotes a binomial coefficient.
+The notation $\binom{\cdot}{\cdot}$ and $\binom{\cdot}{\cdot}^{-1}$ denote a binomial coefficient and its inverse.
 The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of TDCNs, leading to the expected number of upstream links $\mbox{E}(n~|~z)$ as:
 
 \begin{align}
     \begin{split}
     \mbox{E}(n~|~z) &= \sum_{m=1}^{M} (2m - 2) w(m; M)\\
                     &= 2 \sum_{m=1}^{M} m~w(m; M) - 2\\
-                    &= 2 \times \frac{4^{M-1}}{\binom{2M-1}{M}} - 2\\
-                    &= \frac{2^{2M-1}}{\binom{2M-1}{M}} - 2.
+                    &= 2 \times 4^{M-1} \binom{2M-1}{M}^{-1} - 2\\
+                    &= 2^{2M-1} \binom{2M-1}{M}^{-1} - 2.
     \end{split}
     \label{eq:n-hat}
 \end{align}
@@ -294,7 +295,7 @@ Using $M = (b + 1) / 2 = (z + 2) / 2$, the expected value $\mbox{E}(n~|~z)$ can 
 
 \begin{equation}
     \mbox{E}(n~|~z) = \hat{n}(z) = 
-    \frac{2^{z + 1}}{\binom{z + 1}{\frac{z + 2}{2}}} - 2.
+    2^{z + 1} \binom{z + 1}{\frac{z + 2}{2}}^{-1} - 2.
 \end{equation}
 
 In sum, we obtain $\mbox{E}(u' ~|~ z)$ as:
@@ -334,7 +335,7 @@ Summing $\mbox{E}(u' ~|~ z)$ and $\mbox{E}(l'~|~z)$ for a network with a given v
 
 Lastly, we account for the probabilistic nature of the random variable $Z$ by summing $z$ out from Equation \ref{eq:cu}.
 In a bifurcating network, $Z$ must be even so that the total number of links $B$ is odd.
-As such, we must consider a truncated Poisson distribution for $Z$ with zero probabilities for odd numbers.
+As such, we must consider a truncated Poisson distribution for $Z$ with zero probabilities for odd integers.
 The probability mass function (PMF) of the truncated Poisson distribution, denoted as $g_{t}(z; L, \lambda_b)$, is defined as:
 
 \begin{align}
@@ -345,7 +346,7 @@ The probability mass function (PMF) of the truncated Poisson distribution, denot
     \label{eq:tpois}
 \end{align}
 
-where $g(z; L, \lambda_b)$ is a PMF of a Poisson distribution:
+where $g(z; L, \lambda_b)$ is the PMF of a Poisson distribution:
 
 \begin{equation}
     g(z; L, \lambda_b) = \Pr(Z = z) = \frac{(\lambda_b L)^{z} e^{-\lambda_b L}}{z!},
@@ -361,7 +362,7 @@ and
     \end{cases}
 \end{equation}
 
-In Equation \ref{eq:tpois}, $g(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even numbers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} g_t(z; L, \lambda_b) = 1$.
+In Equation \ref{eq:tpois}, $g(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even integers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} g_t(z; L, \lambda_b) = 1$.
 $\Pr(Z = \text{even})$ is given as:
 
 \begin{align}
