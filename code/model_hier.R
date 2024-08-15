@@ -1,7 +1,8 @@
 model {
   
-  tau0 <- 0.1
-  df_tau <- 6
+  sd0 <- 1
+  tau0 <- pow(sd0, -2)
+  df_tau <- 10
   
   # prior -------------------------------------------------------------------
   
@@ -23,19 +24,17 @@ model {
   ## watershed level
   ## - intercept
   b0 ~ dnorm(0, tau0)
-  
+
   ## - coefficients
   for (m in 1:K2) {
     b[m] ~ dnorm(0, tau0)
   }
   
   ## weight scaling exponent
-  for (k in 1:2) {
-    z[k] ~ dnorm(0, tau0)T(0, )
-  }
+  z ~ dnorm(0, tau0)T(0, )
   
   ## degree of freedom
-  nu ~ dexp(0.01)T(2, )
+  nu ~ dexp(0.1)T(2, )
   
   # likelihood --------------------------------------------------------------
   
@@ -60,18 +59,12 @@ model {
     ## - "xi[j]", squared deviation from the random samples
     ## - "N_site[j]" is the number of sites within a watershed
     scl_w[j] <- w[j] / max(w[])
-    log(w[j]) <- z[1] * log(N_site[j]) - z[2] * xi[j]
+    log(w[j]) <- z * (log(N_site[j]) - xi[j])
     xi[j] <- pow((Ratio[j] - 1), 2)
   }
   
   for (h in 1:Nh) {
     r[h] ~ dnorm(b0, tau[3])
   }
-  
 
-  # transformed parameter ---------------------------------------------------
-  
-  ## log_r_length and log_lambda are not centered
-  ## b0_c is a constant term when all predictors are centered
-  b0_c <- b0 + (b[1] * mean(X2[, 1]) + b[2] * mean(X2[, 2]))  
 }

@@ -12,16 +12,17 @@ source("code/format_data4jags.R")
 ## set data for JAGS
 ## - local level data
 X1 <- df_fcl %>% 
-  mutate(log_area = log(local_area) %>% 
-           scale(scale = FALSE) %>% 
-           c()) %>% 
+  mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
   dplyr::select(log_area,
                 forest_b1km,
-                fsd,
+                #fsd,
                 elev) %>% 
   mutate(across(.cols = -log_area,
                 .fns = function(x) c(scale(x)))) %>% 
-  relocate(log_area, fsd, elev, forest_b1km) %>% 
+  relocate(log_area,
+           #fsd,
+           elev,
+           forest_b1km) %>% 
   data.matrix()
 
 list_local <- with(df_fcl,
@@ -38,18 +39,15 @@ list_local <- with(df_fcl,
 
 ## - watershed level data
 X2 <- df_g %>% 
-  mutate(log_r_length = log(r_length),
-         log_lambda = log(lambda)) %>% 
-  dplyr::select(log_r_length,
-                log_lambda,
+  dplyr::select(r_length,
+                lambda,
                 mean.prec,
                 mean.temp,
                 hfp) %>% 
-  mutate(across(.cols = -c(log_r_length, log_lambda),
+  mutate(across(.cols = everything(),
                 .fns = function(x) c(scale(x)))) %>% 
-  relocate(log_r_length, log_lambda) %>% 
   data.matrix()
-  
+
 list_wsd <- with(df_g,
                  list(X2 = X2,
                       K2 = ncol(X2),
@@ -81,7 +79,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- j * 100
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "b0_c", "sigma", "z", "nu", "r", "a0")
+parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
