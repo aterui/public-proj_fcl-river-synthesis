@@ -36,6 +36,7 @@ df_env_local <- left_join(df_env_local0, df_env_flow_var)
 
 ## network properties
 df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
+
 df_channel <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
   lapply(function(x) {
     if(!is.null(x)) {
@@ -66,11 +67,13 @@ df_weight <- readRDS("data_fmt/data_weight.rds")
 ## watershed-level data frame
 ## - join `df_weight` for weighted regression
 ## - remove watersheds with less than 5 links; unreliable estimates of p_branch
+## - remove watersheds with no human footprint
 df_g <- df_env_wsd %>% 
   mutate(uid = paste0(huid,
                       str_pad(wid, width = 5, pad = "0"))) %>% 
   left_join(df_weight) %>% 
-  filter(n_link > 4)
+  filter(n_link > 4) %>% 
+  drop_na(hfp)
 
 ## - uid for those included
 uid_incl <- df_g %>% 
