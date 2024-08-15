@@ -30,6 +30,7 @@ sf_fcl_point <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
 
 v_uid <- unique(sf_str$uid)
 
+tictoc::tic()
 df_ratio <- foreach(i = 1:length(v_uid),
                     .combine = bind_rows) %do% {
                       
@@ -62,6 +63,7 @@ df_ratio <- foreach(i = 1:length(v_uid),
                                     d_ratio = cout,
                                     n_site = n_distinct(p$sid)))
                     }
+tictoc::toc()
 
 
 # score -------------------------------------------------------------------
