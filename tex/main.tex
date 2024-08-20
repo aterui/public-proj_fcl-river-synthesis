@@ -43,26 +43,66 @@
 
 \section{Maintext}
 
-The vertical structure of food webs, often quantified as food chain length (FCL), has important implications for trophic dynamics, energy flow, and contaminant concentrations in top predators that humans consume.
+The vertical structure of food webs, often quantified as food chain length (FCL), has important implications for trophic dynamics, energy flow, and biomagnification of environmental pollutants.
 Elton first documented its variation in natural systems in the early XXX.
 Since then, controls of FCL have been a central topic in ecology with a diverse array of hypotheses spawned over the past century.
 
-Hypotheses regarding controls of food chain length can be organized into three broad categories: resource availability, disturbance (or dynamic stability), and ecosystem size.
-Ecological theory predicts that FCL should increase with resource availability and environmental stability because such conditions may increase the persistence of constituent species, particularly those of higher trophic levels.
-A sizable amount of research has reported results contradicting these theoretical predictions.
-In contrast, a meta-analysis provided consistent support for the ecosystem size hypothesis, in which larger ecosystems are predicted to support longer food chains.
-Recent theory suggests multiple mechanisms behind the positive association between FCL and ecosystem size, such as weakened intraguild predation and increased colonization.
-This multifaceted nature may underlie the consistency of the positive relationship.
+Hypothetical controls of FCL can be organized into three broad categories: resource availability, disturbance (or dynamic stability), and ecosystem size.
+FCL should increase with resource availability and environmental stability because such conditions may increase the persistence of constituent species, particularly those of higher trophic levels.
+A sizable amount of research, however, has reported results contradicting these theoretical predictions, implying complex interactions between internal food web structure and environmental drivers.
+In contrast, several meta-analyses revealed consistent support for the ecosystem size hypothesis, in which larger ecosystems are predicted to support longer food chains.
+Recent theory suggests multiple mechanisms, such as weakened intraguild predation and enhanced colonization, which are hypothesized to underlie the consistency of the positive association between FCL and ecosystem size.
 
-XXX proposed the resource availability with the longest history of research.
-FCL is ultimately controlled by basal resources because inefficient energy transfer through food webs limits energy available to higher trophic levels.
-
-
-Second, the disturbance hypothesis (or the dynamical stability hypothesis) emerges from classic theoretical predictions: longer food chains are less resilient to environmental perturbations (i.e., the dynamical constraint) and unlikely to persist in habitats with frequent or severe disturbance.
-Lastly, the ecosystem size hypothesis predicts that larger ecosystems, or larger networks of local habitats coupled via dispersal, should support longer food chains through a suite of mechanisms, including enhanced colonization rates and weakened intraguild predation.
 
 \section{Results and Discussion}
+
 \section{Methods}
+
+\subsection{Theory}
+In our modeling framework, we assume a branching system of total river length $L$ and branching rate $\lambda_b$ (the average number of branches per unit river length), in which $N$ habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river ($N = Lh$).
+We extend the Levins metapopulation model to dictate the patch occupancy dynamics of multiple species within the branching river network.
+
+Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
+We describe the patch occupancy dynamics as:
+
+\begin{equation}
+    \frac{dp_k}{dt} = \gamma_{k} p_k (1 - p_k) - \mu_k p_k
+\end{equation}
+
+where $\gamma_k$ and $\mu_k$ denote colonization and extinction rates, respectively.
+Here, we express the colonization and extinction rates as functions of ecological processes and spatial ecosystem structure.
+The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
+We assumed that the establishment probability is proportional to resource supply $r_0$ ($0 \le r_0 \le 1$) for producers or prey availability $\sum_{q~\in~\text{prey}} p_{q}$ for consumers:
+
+\begin{equation}
+    r_{k} = 
+    \begin{cases}
+        r_0 & \text{for producers,}\\
+        \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p,k}} & \text{for consumers,}
+    \end{cases}
+\end{equation}
+
+where $S_{p,k}$ is the number of possible prey species for species $k$.
+
+
+\subsection{Meta-analysis}
+
+We performed a meta-analysis of empirical studies to examine environmental drivers of food chain length in rivers.
+We assembled data for our meta-analysis from three sources.
+First, we used a systematic search. 
+Our search was conducted on January 28, 2021, with the search term ``("food chain length")AND (stream* OR watershed* OR river*) AND ("stable isotope*")'' in Scopus.
+Second, we examined studies used in the previous meta-analysis by Vander Zanden and Fetzer.
+Lastly, we reviewed peer-reviewed articles identified as potentially relevant \textit{via} non-systematic reviews to include important research not captured by our systematic search.
+Our initial review identified 122 studies.
+
+We used the following inclusion criteria to choose sites with sufficient information for our statistical analysis.
+Each site (i) must contain either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (primary producer or consumer) or an estimate of the maximum trophic position; 
+(ii) must contain reliable spatial coordinates for geospatial analysis; 
+(iii) must be located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes), and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); and (iv) can be associated with potential environmental drivers.
+We also obtained information on whether stable isotope data at each site included the isotopic signature of the top predator in the system.
+We categorized the site as ``the top predator collected'' if the study explicitly stated so or targeted the entire fish community for stable isotope analysis.
+We used this information to properly account for the imperfect sampling of top predators in our statistical analysis.
+After this screening process, we retained XXX sites located in XXX watersheds from XXX studies. 
 
 
 \end{document}
