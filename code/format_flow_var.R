@@ -23,8 +23,13 @@ df_flow <- readRDS("data_fmt/data_env_flow.rds") %>%
 
 v_sid <- sort(unique(df_flow$sid))
 
+cl <- makeCluster(detectCores() - 2)
+registerDoSNOW(cl)
+
 df_fsd <- foreach(i = seq_len(length(v_sid)),
-                  .combine = bind_rows) %do% {
+                  .combine = bind_rows,
+                  .packages = c("tidyverse",
+                                "mgcv")) %dopar% {
                     
                     print(i)
                     
@@ -32,26 +37,31 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
                     df_i <- df_flow %>% 
                       filter(sid == v_sid[i])
                     
-                    ## gam fitting for seasonality
-                    ## error structure student-t, with minimum d.f. = 2
                     fit <- mgcv::gam(norm_log_flow ~ s(julian),
-                                     family = mgcv::scat(min.df = 2),
                                      data = df_i)
                     
-                    ## degree of freedom in student-t
-                    nu <- with(family(fit), getTheta(trans = TRUE))[1]
+                    sigma0 <- sqrt(fit$sig2)
                     
-                    ## SD in student-t
-                    sigma0 <- with(family(fit), getTheta(trans = TRUE))[2]
+                    # ## gam fitting for seasonality
+                    # ## error structure student-t, with minimum d.f. = 2
+                    # fit <- mgcv::gam(norm_log_flow ~ s(julian),
+                    #                  family = mgcv::scat(min.df = 2),
+                    #                  data = df_i)
+                    # 
+                    # ## degree of freedom in student-t
+                    # nu <- with(family(fit), getTheta(trans = TRUE))[1]
+                    # 
+                    # ## SD in student-t
+                    # sigma0 <- with(family(fit), getTheta(trans = TRUE))[2]
                     
                     ## output set
                     cout <- tibble(sid = v_sid[i],
-                                   fsd = sigma0,
-                                   fnu = nu)
+                                   fsd = sigma0)
                     
                     return(cout)
                   }
 
+stopCluster(cl)
 
 # visualization for error check -------------------------------------------
 
