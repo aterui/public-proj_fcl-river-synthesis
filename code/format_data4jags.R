@@ -31,48 +31,33 @@ df_fcl0 <- readRDS("data_fmt/data_fcl.rds")
 ## local environment
 df_env_local0 <- readRDS("data_fmt/data_env_local.rds")
 df_env_flow_var <- readRDS("data_fmt/data_env_flow_var.rds")
-
 df_env_local <- left_join(df_env_local0, df_env_flow_var)
 
 ## network properties
 df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
 
-df_channel <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
-  lapply(function(x) {
-    if(!is.null(x)) {
-      x %>% 
-        mutate(uid = paste0(huid,
-                            str_pad(wid,
-                                    width = 5,
-                                    pad = "0")),
-               length = units::set_units(length(.), "km")) %>% 
-        group_by(uid) %>% 
-        summarize(r_length = sum(length)) %>% 
-        as_tibble() %>% 
-        transmute(uid,
-                  r_length = units::drop_units(r_length),
-                  unit_length = "km")
-    }
-  }) %>% 
-  bind_rows()
-
-df_env_wsd <- left_join(df_env_wsd,
-                        df_channel)
-
 ## weight information for each watershed
 df_weight <- readRDS("data_fmt/data_weight.rds")
+
+## flag watersheds with no flow data
+df_flag <- df_env_local %>%
+  left_join(df_fcl0 %>% 
+              select(sid, uid)) %>% 
+  group_by(uid) %>% 
+  summarize(flag_flow = ifelse(any(is.na(fsd)), "Y", "N"))
 
 # format ------------------------------------------------------------------
 
 ## watershed-level data frame
 ## - join `df_weight` for weighted regression
 ## - remove watersheds with less than 5 links; unreliable estimates of p_branch
+## - remove watersheds with no flow data
 ## - remove watersheds with no human footprint
 df_g <- df_env_wsd %>% 
-  mutate(uid = paste0(huid,
-                      str_pad(wid, width = 5, pad = "0"))) %>% 
   left_join(df_weight) %>% 
-  filter(n_link > 4) %>% 
+  left_join(df_flag) %>% 
+  filter(n_link > 4,
+         flag_flow == "N") %>% 
   drop_na(hfp)
 
 ## - uid for those included
@@ -108,3 +93,32 @@ df_g <- df_g %>%
 ## check g has a proper vector
 z <- mean(df_g$g == seq_len(nrow(df_g)))
 if (z != 1) stop("Error in data formatting")
+
+
+# for visual check (not for analysis) -------------------------------------
+
+df_viz <- df_fcl %>%
+  group_by(uid) %>%
+  summarize(fcl = mean(fcl)) %>%
+  left_join(df_g)
+
+df_viz %>%
+  ggplot(aes(y = fcl,
+             x = lambda)) +
+  geom_point() +
+  facet_wrap(facets =~ h) +
+  scale_y_continuous(trans = "log10")
+
+df_viz %>%
+  ggplot(aes(y = fcl,
+             x = r_length)) +
+  geom_point() +
+  facet_wrap(facets =~ h)
+
+df_fcl %>%
+  ggplot(aes(y = fcl,
+             x = local_area,
+             color = factor(tpc))) +
+  geom_point() +
+  facet_wrap(facets =~ h) +
+  coord_trans(x = "log10", y = "log10")
