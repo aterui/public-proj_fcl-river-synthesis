@@ -15,13 +15,11 @@ X1 <- df_fcl %>%
   mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
   dplyr::select(log_area,
                 forest_b1km,
-                #fsd,
-                elev) %>% 
+                fsd) %>% 
   mutate(across(.cols = -log_area,
                 .fns = function(x) c(scale(x)))) %>% 
   relocate(log_area,
-           #fsd,
-           elev,
+           fsd,
            forest_b1km) %>% 
   data.matrix()
 
@@ -38,15 +36,17 @@ list_local <- with(df_fcl,
                         Nw = n_distinct(g)))
 
 ## - watershed level data
-X2 <- df_g %>% 
+df_x2 <- df_g %>% 
   dplyr::select(r_length,
                 lambda,
                 mean.prec,
                 mean.temp,
                 hfp) %>% 
   mutate(across(.cols = everything(),
-                .fns = function(x) c(scale(x)))) %>% 
-  data.matrix()
+                .fns = function(x) c(scale(x))))
+  
+
+X2 <- model.matrix(~ ., df_x2)
 
 list_wsd <- with(df_g,
                  list(X2 = X2,
@@ -79,7 +79,7 @@ inits <- replicate(n_chain,
 for (j in 1:n_chain) inits[[j]]$.RNG.seed <- j * 100
 
 ## - parameters to be monitored
-parms <- c("a", "b0", "b", "sigma", "z", "nu", "r", "a0")
+parms <- c("a", "b", "b0", "sigma", "z", "nu", "r", "a0")
 
 ## model files
 m <- runjags::read.jagsfile("code/model_hier.R")
@@ -118,7 +118,7 @@ df_est <- MCMCvis::MCMCsummary(post$mcmc) %>%
   relocate(pr_neg, pr_pos, .before = rhat)
 
 ## - assign variable names
-vn <- c(colnames(X1), "const", colnames(X2))
+vn <- c(colnames(X1), colnames(X2))
 varname <- c(vn, rep(NA, nrow(df_est) - length(vn)))
 
 df_est <- df_est %>% 
