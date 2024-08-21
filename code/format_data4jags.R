@@ -9,7 +9,7 @@ source("code/set_function.R")
 # preformat ---------------------------------------------------------------
 # update as needed
 # FCL data selected
-# - join level01 group id
+# - join level01 group id; continental hydrological units
 sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
   st_make_valid()
 
@@ -20,13 +20,8 @@ df_fcl0 <- sf_fcl0 %>%
   as_tibble() %>%
   dplyr::select(-geometry)
 
-saveRDS(df_fcl0, "data_fmt/data_fcl.rds")
-
 
 # read data ---------------------------------------------------------------
-
-## local environment
-df_fcl0 <- readRDS("data_fmt/data_fcl.rds")
 
 ## local environment
 df_env_local0 <- readRDS("data_fmt/data_env_local.rds")
@@ -46,6 +41,7 @@ df_flag <- df_env_local %>%
   group_by(uid) %>% 
   summarize(flag_flow = ifelse(any(is.na(fsd)), "Y", "N"))
 
+
 # format ------------------------------------------------------------------
 
 ## watershed-level data frame
@@ -64,10 +60,11 @@ df_g <- df_env_wsd %>%
 uid_incl <- df_g %>% 
   pull(uid)
 
-## remove within-site replicates
+## local-level data
+## - remove within-site replicates
 ## - take an average across seasons or years
 ## - censoring = 1 if top predator not collected (i.e., tpc == "N")
-df_fcl <- df_fcl0 %>% 
+df_fcl_local <- df_fcl0 %>% 
   group_by(sid, wid, huid, id_lev01) %>% 
   summarize(fcl = mean(fcl),
             tpc = unique(top_predator_collected)) %>% 
@@ -83,42 +80,52 @@ df_fcl <- df_fcl0 %>%
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
   relocate(uid, h, g, sid, fcl, fcl_obs, fcl_min, tpc, censoring)
 
+## watershed-level data
 ## - left join `distinct(df_fcl, uid, g)` to align group id `g` between the two data frames
 ## - CAUTION! Don't forget `arrange(g)`
-df_g <- df_g %>% 
-  left_join(distinct(df_fcl, uid, g, h)) %>%
+df_fcl_wsd <- df_g %>% 
+  left_join(distinct(df_fcl_local, uid, g, h)) %>%
   arrange(g) %>%
   relocate(uid, g)
 
 ## check g has a proper vector
-z <- mean(df_g$g == seq_len(nrow(df_g)))
+z <- mean(df_fcl_wsd$g == seq_len(nrow(df_fcl_wsd)))
 if (z != 1) stop("Error in data formatting")
 
 
-# for visual check (not for analysis) -------------------------------------
+# export ------------------------------------------------------------------
 
-df_viz <- df_fcl %>%
-  group_by(uid) %>%
-  summarize(fcl = mean(fcl)) %>%
-  left_join(df_g)
+list_fcl <- list(df_fcl_local, df_fcl_wsd)
+saveRDS(list_fcl, "data_fmt/data_fcl_reg.rds")
 
-df_viz %>%
-  ggplot(aes(y = fcl,
-             x = lambda)) +
-  geom_point() +
-  facet_wrap(facets =~ h) +
-  scale_y_continuous(trans = "log10")
 
-df_viz %>%
-  ggplot(aes(y = fcl,
-             x = r_length)) +
-  geom_point() +
-  facet_wrap(facets =~ h)
-
-df_fcl %>%
-  ggplot(aes(y = fcl,
-             x = local_area,
-             color = factor(tpc))) +
-  geom_point() +
-  facet_wrap(facets =~ h) +
-  coord_trans(x = "log10", y = "log10")
+# # for visual check (not for analysis) -------------------------------------
+# 
+# df_viz <- df_fcl %>%
+#   left_join(df_g %>% 
+#               select(uid, lambda, r_length))
+# 
+# df_viz %>%
+#   ggplot(aes(y = fcl,
+#              x = lambda,
+#              color = tpc)) +
+#   geom_point() +
+#   facet_wrap(facets =~ h) +
+#   scale_y_continuous(trans = "log10")
+# 
+# df_viz %>%
+#   ggplot(aes(y = fcl,
+#              x = hfp,
+#              color = tpc)) +
+#   geom_point() +
+#   facet_wrap(facets =~ h)
+# 
+# df_fcl %>%
+#   ggplot(aes(y = fcl,
+#              x = local_area,
+#              color = factor(tpc))) +
+#   geom_point() +
+#   facet_wrap(facets =~ h) +
+#   scale_x_continuous(trans = "log10") +
+#   scale_y_continuous(trans = "log10")
+#   
