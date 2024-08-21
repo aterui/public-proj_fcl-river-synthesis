@@ -37,9 +37,12 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
                     df_i <- df_flow %>% 
                       filter(sid == v_sid[i])
                     
+                    ## gam fitting for seasonality
+                    ## error normal
                     fit <- mgcv::gam(norm_log_flow ~ s(julian),
                                      data = df_i)
                     
+                    ## get residual SD
                     sigma0 <- sqrt(fit$sig2)
                     
                     # ## gam fitting for seasonality
