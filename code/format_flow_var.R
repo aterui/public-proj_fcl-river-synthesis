@@ -11,7 +11,7 @@ source("code/set_function.R")
 ## - discharge values contain negative - this represents down to upstream flow
 ## - take absolute() to represent "habitat size" or similar
 
-df_flow <- readRDS("data_fmt/data_env_flow.rds") %>% 
+df_flow <- readRDS("data_raw/data_env_flow.rds") %>% 
   mutate(month = month(date),
          flow = abs(discharge) + 1,
          log_flow = log(flow, 10),
@@ -87,4 +87,4 @@ stopCluster(cl)
 
 # export ------------------------------------------------------------------
 
-saveRDS(df_fsd, "data_fmt/data_env_flow_var.rds")
+saveRDS(df_fsd, "data_fmt/data_env_fsd.rds")

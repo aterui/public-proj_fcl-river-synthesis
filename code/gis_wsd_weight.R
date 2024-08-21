@@ -8,14 +8,14 @@ source("code/set_function.R")
 
 # read data ---------------------------------------------------------------
 
-sf_str <- readRDS("data_fmt/wgs84_str_sub.rds") %>% 
+sf_str <- readRDS("data_raw/wgs84_str_sub.rds") %>% 
   bind_rows() %>% 
   mutate(wid = str_pad(wid, width = 5, pad = "0"),
          uid = paste0(huid, wid)) %>% 
   dplyr::select(uid) %>% 
   arrange(uid)
 
-sf_fcl_point <- readRDS("data_fmt/wgs84_fcl_site.rds") %>% 
+sf_fcl_point <- readRDS("data_raw/wgs84_fcl_site.rds") %>% 
   group_by(sid) %>% 
   slice(1) %>% # some sites (`sid`) has seasonal replicates
   ungroup() %>% 

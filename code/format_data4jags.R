@@ -10,10 +10,10 @@ source("code/set_function.R")
 # update as needed
 # FCL data selected
 # - join level01 group id; continental hydrological units
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
+sf_lev01 <- readRDS("data_raw/wgs84_region_lev01.rds") %>% 
   st_make_valid()
 
-sf_fcl0 <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
+sf_fcl0 <- readRDS("data_raw/wgs84_fcl_site.rds") %>%
   st_join(sf_lev01)
 
 df_fcl0 <- sf_fcl0 %>%
@@ -24,12 +24,12 @@ df_fcl0 <- sf_fcl0 %>%
 # read data ---------------------------------------------------------------
 
 ## local environment
-df_env_local0 <- readRDS("data_fmt/data_env_local.rds")
-df_env_flow_var <- readRDS("data_fmt/data_env_flow_var.rds")
-df_env_local <- left_join(df_env_local0, df_env_flow_var)
+df_env_local0 <- readRDS("data_raw/data_env_local.rds")
+df_env_fsd <- readRDS("data_fmt/data_env_fsd.rds")
+df_env_local <- left_join(df_env_local0, df_env_fsd)
 
 ## network properties
-df_env_wsd <- readRDS("data_fmt/data_env_wsd.rds")
+df_env_wsd <- readRDS("data_raw/data_env_wsd.rds")
 
 ## weight information for each watershed
 df_weight <- readRDS("data_fmt/data_weight.rds")
@@ -128,4 +128,3 @@ saveRDS(list_fcl, "data_fmt/data_fcl_reg.rds")
 #   facet_wrap(facets =~ h) +
 #   scale_x_continuous(trans = "log10") +
 #   scale_y_continuous(trans = "log10")
-#   
