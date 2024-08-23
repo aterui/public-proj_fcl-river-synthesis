@@ -76,9 +76,9 @@ df_fcl_local <- df_fcl0 %>%
   mutate(g = as.numeric(factor(uid)),
          h = as.numeric(factor(id_lev01)),
          censoring = ifelse(tpc == "N", 1, 0),
-         fcl_min = ifelse(tpc == "N", fcl, NA)) %>% 
+         cut = ifelse(tpc == "N", fcl, max(fcl))) %>% 
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
-  relocate(uid, h, g, sid, fcl, fcl_obs, fcl_min, tpc, censoring)
+  relocate(uid, h, g, sid, fcl, fcl_obs, cut, tpc, censoring)
 
 ## watershed-level data
 ## - left join `distinct(df_fcl, uid, g)` to align group id `g` between the two data frames

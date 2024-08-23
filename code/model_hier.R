@@ -38,7 +38,7 @@ model {
   ## local level
   for (i in 1:Ns) {
     ## - censoring
-    C[i] ~ dinterval(logY[i], logY_min[i])
+    C[i] ~ dinterval(logY[i], logCut[i])
     logY[i] ~ dt(mu[i], tau[1], nu)
     
     mu[i] <- a0[G[i]] + inprod(a[], X1[i, ])
