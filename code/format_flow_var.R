@@ -37,9 +37,12 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
                     df_i <- df_flow %>% 
                       filter(sid == v_sid[i])
                     
+                    ## gam fitting for seasonality
+                    ## error normal
                     fit <- mgcv::gam(norm_log_flow ~ s(julian),
                                      data = df_i)
                     
+                    ## get residual SD
                     sigma0 <- sqrt(fit$sig2)
                     
                     # ## gam fitting for seasonality
@@ -65,24 +68,24 @@ stopCluster(cl)
 
 # visualization for error check -------------------------------------------
 
-# for (i in seq_len(length(v_sid))) {
-# 
-#   print(i)
-# 
-#   g_i <- df_flow %>%
-#     filter(sid == "003_jackson_s007") %>%
-#     ggplot(aes(x = julian,
-#                y = log_flow)) +
-#     geom_point(alpha = 0.1,
-#                size = 1) +
-#     geom_smooth(color = "black") +
-#     theme_classic() +
-#     labs(y = "Normalized flow (Y / mean(Y))",
-#          x = "Julian date")
-# 
-#   ggsave(g_i, width = 5, height = 4,
-#          filename = paste0("output/figure_flow/", v_sid[i], ".pdf"))
-# }
+for (i in seq_len(length(v_sid))) {
+
+  print(i)
+
+  g_i <- df_flow %>%
+    filter(sid == v_sid[i]) %>%
+    ggplot(aes(x = julian,
+               y = norm_log_flow)) +
+    geom_point(alpha = 0.1,
+               size = 1) +
+    geom_smooth(color = "black") +
+    theme_classic() +
+    labs(y = "Normalized flow (Y / mean(Y))",
+         x = "Julian date")
+
+  ggsave(g_i, width = 5, height = 4,
+         filename = paste0("tools/figure_flow/", v_sid[i], ".pdf"))
+}
 
 
 # export ------------------------------------------------------------------
