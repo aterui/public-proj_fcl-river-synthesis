@@ -1,7 +1,7 @@
 \documentclass[11pt, class=article, crop=false]{standalone}
 \usepackage[subpreambles=true]{standalone}
 \usepackage[T1]{fontenc} % for font setting
-\usepackage{tgtermes} % for font setting
+\usepackage{newtxtext,newtxmath}
 \usepackage{import,
             graphicx,
             parskip,
@@ -59,20 +59,28 @@ Recent theory suggests multiple mechanisms, such as weakened intraguild predatio
 \section{Methods}
 
 \subsection{Theory}
-In our modeling framework, we assume a branching system of total river length $L$ and branching rate $\lambda_b$ (the average number of branches per unit river length), in which $N$ habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river ($N = Lh$).
-We extend the Levins metapopulation model to dictate the patch occupancy dynamics of multiple species within the branching river network.
 
+\subsubsection{The model}
+
+We consider a bifurcating branching ecosystem of total river length $L$ and branching rate $\lambda_b$, in which $N$ habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river (i.e., $N = Lh$).
+In this system, the branching rate is a statistical parameter controlling the length of an individual ``link'' (or branch), which refers to a river segment from one confluence to another or a terminal point of the river (the upstream origin or the mouth).
+Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$, but is conditional on $\sum_s l_s = L$.
+As $\lambda_b L \rightarrow \infty$, the average link length approaches $\lambda_b^{-1}$.
+As such, an ecosystem with a higher branching rate has more confluences (i.e., branching) with a shorter average link length.
+
+Here, we extend the Levins metapopulation model to dictate the patch occupancy dynamics of multiple species within the branching river network.
 Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
 We describe the patch occupancy dynamics as:
 
 \begin{equation}
-    \frac{dp_k}{dt} = \gamma_{k} p_k (1 - p_k) - \mu_k p_k
+    \frac{dp_k}{dt} = \gamma_{k} p_k (1 - p_k) - \mu_k p_k,
 \end{equation}
 
 where $\gamma_k$ and $\mu_k$ denote colonization and extinction rates, respectively.
-Here, we express the colonization and extinction rates as functions of ecological processes and spatial ecosystem structure.
-The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
-We assumed that the establishment probability is proportional to resource supply $r_0$ ($0 \le r_0 \le 1$) for producers or prey availability $\sum_{q~\in~\text{prey}} p_{q}$ for consumers:
+We express these parameters as functions of ecological processes and spatial ecosystem structure.
+
+\textit{Colonization}. The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
+We assumed that the establishment probability is proportional to resource supply for producers or prey availability for consumers:
 
 \begin{equation}
     r_{k} = 
@@ -82,27 +90,139 @@ We assumed that the establishment probability is proportional to resource supply
     \end{cases}
 \end{equation}
 
-where $S_{p,k}$ is the number of possible prey species for species $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $\sum_{q~\in~\text{prey}} p_{q}$ ($q \ne k$) is the expected species richness of prey, and $S_{p,k}$ is the number of prey species consumable for species $k$.
 
+The number of effective propagules $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
+We impose an additional constraint on $c_{0,k}$ to realize $N$ is the maximum number of patches that effective propagules can colonize:
+
+\begin{equation}
+    c_{0, k} = 
+    \begin{cases}
+        g_k \phi_k & \text{if $g_k \phi_k < N$},\\
+        N & \text{if $g_k \phi_k \ge N$}.
+    \end{cases}
+    \label{eq:c0-prod}
+\end{equation}
+
+The survival probability is described as $\phi_k = 1 - e^{-\delta_k h}$, in which dispersal capability $\delta_k$ and habitat density $h$ increase the survival during dispersal.
+This assumption makes biological sense because habitat density dictates the mean distance between a pair of habitat patches.
+
+\textit{Extinction}. We express the extinction rate $\mu_k$ as a function of disturbance, prey availability, and predation:
+
+\begin{equation}
+    \mu_{k} = 
+        \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right)}_{\text{Prey availability}} + 
+        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}}_{\text{Predation}}.
+    \label{eq:extn}    
+\end{equation}
+
+The disturbance term comprises two potential sources, $\mu^{(0)}_k$ and $\mu^{(0)}_k \rho \hat{u}$.
+The first component $\mu^{(0)}_k$ is the stochastic disturbance occurring at the patch of interest.
+The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstream disturbance cascade, where $\rho$ and $\hat{u}$ denote the disturbance synchrony probability and the expected upstream river length from a given habitat patch, respectively.
+In rivers, any disturbance can cascade downstream as water flows downstream.
+For example, the impact of environmental pollutants may propagate downstream through water movement.
+Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches, causing synchronized population dynamics of flow-connected sites.
+Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u$ from a given habitat patch, whose expected value $\hat{u}$ can be expressed as a function of $L$ and $\lambda_b$.
+The parameter ρ independently controls the strength of up and
+downstream synchronization.
+
+In the prey term, we assume that the extinction rate decreases with increasing species richness of available prey.
+Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of prey species.
+The extinction risk caused by the lack of prey is reduced by the factor $S_{p, k}^{-1} \sum_{q~\in~\text{prey}} p_{q}$ ($\le 1$).
+Note that $\mu_{k}^{(p)} = 0$ for producers.
+
+The extinction risk caused by predation is assumed to increase linearly with the species richness of predators.
+The parameter $\mu_{k}^{(c)}$ defines how quickly the extinction rate increases with the expected species richness of predators $\sum_{q~\in~\text{predator}} p_{q}$.
+
+\subsubsection{Food web construction}
+
+We used the preferential prey model to generate initial food webs.
+We chose this method because it generates (i) food web structures comparable to those observed in nature and (ii) acyclic food webs, a prerequisite for defining food chain length.
+Although the niche model is used widely in food web research, this algorithm is unsuitable for our study because it may create loops in a food web.
+
+The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $B$, the expected number of trophic links $\iota$, and trophic omnivory $\theta$ ($\theta > 0$).
+In this model, a food web begins with $B$ primary producers, indexed as species $i = 1, 2, ..., B$.
+Then, consumer species with index $i = B + 1, B + 2, ..., S$ are sequentially introduced and given their first prey $j$ randomly from those introduced earlier.
+Consumer species $i$ choose, if any, additional prey $j'$ ($j' \ne j$) but the prey selection is dependent on the trophic position of the first prey.
+The probability of choosing prey $j'$, $P_{j'}$, is defined as:
+
+\begin{equation}
+    P_{j'} = \frac{1}{Q} \exp(-\frac{|\mbox{TP}_{j'} - \mbox{TP}_j|}{\theta}),
+\end{equation}
+
+where $\mbox{TP}$ is the trophic position and $Q$ is the scaling constant ($\sum_{j'} \theta^{-1} \exp(-|\mbox{TP}_{j'} - \mbox{TP}_j|)$).
+Full details are provided in Supporting Information.
+
+\subsubsection{Model analysis}
+
+Our sensitivity analysis considered $10$ food web structures with a fixed value of $S = 32$.
+Five food webs were generated with $\theta = 0.25$ (weak omnivory) and the rest with $\theta = 0.50$ (strong omnivory).
+The number of producer species was determined to reflect the proportion of producers observed in nature ($0.18$) while allowing some variation through a Poisson distribution as $B \sim \mbox{Pois}(0.18 \times S)$.
+Similarly, the expected number of trophic links $\iota$ was sampled as $\iota \sim \mbox{Pois}(0.11 \times S^2)$ to meet the observed connectance $\iota / S^2 \approx 0.11$.
+We crossed these ten food web structures with $64$ parameter combinations to explore possible outcomes in broad ecological contexts (Table XX), resulting in $10 \times 64 = 640$ simulation scenarios.
+
+In each simulation scenario, we systematically varied ecosystem size $L$ and branching rate $\lambda_b$ as $L \in [10, 100]$ and $\lambda_b \in [0.1, 1.0]$ (interval = $(\text{max} - \text{min}) / 200$) to assess the influences of the ecosystem properties.
+With a given environmental context, we analytically (without predation effects, $\mu^{(c)} = 0$) or numerically (with predation effects, $\mu^{(c)} > 0$)  solved our model for the equilibrium occupancy of constituent species.
+
+We define the trophic position for species $k$ ($\text{TP}_k$) as follows.
+Primary producers and consumers have trophic positions of $1.0$ and $2.0$, respectively.
+Trophic positions for other consumers are estimated as the weighted average of the prey's trophic positions plus one:
+
+\begin{equation}
+    \mbox{TP}_k = \frac{\sum_{q~\in~\text{prey}} p_{q} \mbox{TP}_q}{\sum_{q~\in~\text{prey}} p_{q}} + 1
+\end{equation}
+
+We report the maximum trophic position of persistent species ($p_k > 10^{-5}$ at equilibrium) as the food chain length in a given environmental context.
 
 \subsection{Meta-analysis}
 
+\subsubsection{Stable isotope data}
+
 We performed a meta-analysis of empirical studies to examine environmental drivers of food chain length in rivers.
-We assembled data for our meta-analysis from three sources.
+We assembled stable isotope data on $\delta^{15} N$ from three sources.
 First, we used a systematic search. 
 Our search was conducted on January 28, 2021, with the search term ``("food chain length")AND (stream* OR watershed* OR river*) AND ("stable isotope*")'' in Scopus.
 Second, we examined studies used in the previous meta-analysis by Vander Zanden and Fetzer.
-Lastly, we reviewed peer-reviewed articles identified as potentially relevant \textit{via} non-systematic reviews to include important research not captured by our systematic search.
+Lastly, we included peer-reviewed articles identified as potentially relevant \textit{via} non-systematic reviews to encompass important research not captured by our systematic search.
 Our initial review identified 122 studies.
 
 We used the following inclusion criteria to choose sites with sufficient information for our statistical analysis.
 Each site (i) must contain either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (primary producer or consumer) or an estimate of the maximum trophic position; 
 (ii) must contain reliable spatial coordinates for geospatial analysis; 
-(iii) must be located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes), and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); and (iv) can be associated with potential environmental drivers.
-We also obtained information on whether stable isotope data at each site included the isotopic signature of the top predator in the system.
-We categorized the site as ``the top predator collected'' if the study explicitly stated so or targeted the entire fish community for stable isotope analysis.
+(iii) must be located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes) and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); and (iv) can be associated with potential environmental drivers in GIS.
+We also obtained information on whether stable isotope data at each site included the isotopic signature of a suitable top predator in the system.
+We categorized the site as ``a suitable top predator collected'' if the study explicitly stated so or targeted the entire fish community for stable isotope analysis.
 We used this information to properly account for the imperfect sampling of top predators in our statistical analysis.
-After this screening process, we retained XXX sites located in XXX watersheds from XXX studies. 
+After this screening process, we retained XX sites located in XX watersheds from XX studies. 
 
+\subsubsection{Environmental variables}
+
+\subsubsection{Statistical analysis}
+
+We used a hierarchical linear model to assess the influences of environmental variables on food chain length in rivers.
+Our isotope data provides suitable estimates of food chain length only when top predators are included.
+Otherwise, the estimates are imperfect and represent only a possible minimum at the site (i.e., right censored).
+We account for this imperfect sampling with censored regression.
+Let $y_i$ denote the suitable estimate of food chain length at site $i$.
+After log-transformation, our observation $Y_i$ is linked to $y_i$ as:
+
+\begin{equation}
+    \ln y_i 
+    \begin{cases}
+        = \ln Y_i~\text{if top predators included (observed)},\\
+        > \ln Y_i~\text{if top predators not included (censored).}
+    \end{cases}
+\end{equation}
+
+Writing $p(\cdot~|~\Theta)$ as the probability density or mass of a specified model with a parameter vector $\Theta$, each observed data point contributes $p(\ln Y_i~|~\Theta)$ to the likelihood of $\Theta$ whereas a censored data point provides a contribution of $\Pr(\ln y_i > \ln Y_i~|~\Theta)$.
+Our model assumes that $\ln y_i$ follows a Student's t distribution as $\ln y_i \sim \mbox{t}(\mu_{y,i}, \sigma^2, \nu)$, whose expected value $\mu_{y,i}$ is related to site-level linear predictors as:
+
+\begin{equation}
+    \mu_{y,i} = \alpha_{0, w[i]} + \sum_m \alpha_m x_{m,i},
+\end{equation}
+
+where $\alpha_{0, w[i]}$ is the watershed specific intercept and $\alpha_m$ is the coefficient for the predictor $x_m$.
+We considered the following variables as predictors at this level: upstream watershed area [km$^2$], 
 
 \end{document}
