@@ -1,8 +1,8 @@
 model {
   
-  sd0 <- 1
+  sd0 <- 10
   tau0 <- pow(sd0, -2)
-  df_tau <- 10
+  df_tau <- 15
   
   # prior -------------------------------------------------------------------
   
@@ -22,10 +22,7 @@ model {
   }
   
   ## watershed level
-  ## - intercept
-  b0 ~ dnorm(0, tau0)
-
-  ## - coefficients
+  ## - intercept/coefficients
   for (m in 1:K2) {
     b[m] ~ dnorm(0, tau0)
   }
@@ -52,7 +49,7 @@ model {
     
     ## - watershed regression
     a0[j] ~ dnorm(a0_hat[j], tau[2] * scl_w[j])
-    a0_hat[j] <- r[H[j]] + inprod(b[], X2[j, ])
+    a0_hat[j] <- inprod(b[], X2[j, ]) + r[H[j]]
     
     ## - "scl_w[j]" scaled weight
     ## - "Ratio[j]" is the distance ratio to randomly-generated sites
@@ -64,7 +61,8 @@ model {
   }
   
   for (h in 1:Nh) {
-    r[h] ~ dnorm(b0, tau[3])
+    r[h] ~ dnorm(0, tau[3])
+    b0[h] <- b[1] + r[h]
   }
 
 }

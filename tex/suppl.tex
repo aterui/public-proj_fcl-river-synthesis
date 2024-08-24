@@ -121,29 +121,22 @@ The establishment probability $r_{ik}$ ($\ge 0$) represents different quantities
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$, and $S_{p, k}$ is the number of possible prey species for consumer $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$, and $S_{p, k}$ is the number of prey species consumable for consumer $k$.
 This formulation assumes that resource or proportional prey availability increases species' establishment.
 The resource supply $r_0$ is assumed to be constant over space.
 
 The number of effective propagules produced by a single occupied patch $c_{0, k}$ is the product of the gross number of propagules $g_{k}$ and the survival probability during dispersal $\phi_k$.
-For producers, however, we constrain $c_{0, k}$ by the number of habitat patches $N$ since $N$ is the maximum number of patches that effective propagules can colonize:
+However, we constrain $c_{0, k}$ by the number of habitat patches $N$ since $N$ is the maximum number of patches that effective propagules can colonize:
 
 \begin{equation}
-    c_{0, k~\in~\text{producer}} = 
+    c_{0, k} = 
     \begin{cases}
-        g_k \phi_k & \text{if $g_k \phi_k \le N$},\\
-        N & \text{if $g_k \phi_k > N$}.
+        g_k \phi_k & \text{if $g_k \phi_k < N$},\\
+        N & \text{if $g_k \phi_k \ge N$}.
     \end{cases}
     \label{eq:c0-prod}
 \end{equation}
 
-
-\begin{equation}
-    c_{0, k~\in~\text{consumer}} = g_k \phi_k
-    \label{eq:c0-con}
-\end{equation}
-
-The $N$-constraint propagates naturally from lower to higher trophic levels because consumer colonization is limited by their prey availability (see Equation \ref{eq:r-eq}).
 The survival probability during dispersal $\phi_k$ is a function of the species-specific dispersal capability $\delta_k$ and the habitat density $h$:
 
 \begin{equation}
