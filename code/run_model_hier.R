@@ -21,7 +21,7 @@ df_fcl_wsd <- list_fcl[[2]]
 X1 <- df_fcl_local %>% 
   mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
   dplyr::select(log_area,
-                elev,
+                local_elev,
                 forest_b1km,
                 fsd) %>% 
   mutate(across(.cols = -log_area,
@@ -44,8 +44,8 @@ df_x2 <- df_fcl_wsd %>%
          log_lambda = log(lambda) - mean(log(lambda))) %>% 
   dplyr::select(log_rl,
                 log_lambda,
-                mean.prec,
-                mean.temp,
+                prec,
+                temp,
                 hfp) %>% 
   mutate(across(.cols = -c(log_rl, log_lambda),
                 .fns = function(x) c(scale(x))))
