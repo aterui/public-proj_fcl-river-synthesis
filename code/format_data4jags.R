@@ -99,32 +99,9 @@ list_fcl <- list(df_fcl_local, df_fcl_wsd)
 saveRDS(list_fcl, "data_fmt/data_fcl_reg.rds")
 
 
-# # for visual check (not for analysis) -------------------------------------
-# 
-# df_viz <- df_fcl %>%
-#   left_join(df_g %>% 
-#               select(uid, lambda, r_length))
-# 
-# df_viz %>%
-#   ggplot(aes(y = fcl,
-#              x = lambda,
-#              color = tpc)) +
-#   geom_point() +
-#   facet_wrap(facets =~ h) +
-#   scale_y_continuous(trans = "log10")
-# 
-# df_viz %>%
-#   ggplot(aes(y = fcl,
-#              x = hfp,
-#              color = tpc)) +
-#   geom_point() +
-#   facet_wrap(facets =~ h)
-# 
-# df_fcl %>%
-#   ggplot(aes(y = fcl,
-#              x = local_area,
-#              color = factor(tpc))) +
-#   geom_point() +
-#   facet_wrap(facets =~ h) +
-#   scale_x_continuous(trans = "log10") +
-#   scale_y_continuous(trans = "log10")
+# for visual check (not for analysis) -------------------------------------
+
+# df_viz <- df_fcl_local %>%
+#   left_join(df_g %>%
+#               select(uid, lambda, r_length, prec, temp)) %>% 
+#   mutate(y = ifelse(fnu > 100, 0, 1))

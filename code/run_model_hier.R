@@ -4,7 +4,7 @@
 rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
-#source("code/format_data4jags.R")
+# source("code/format_data4jags.R")
 
 
 # set data ----------------------------------------------------------------
@@ -22,9 +22,8 @@ X1 <- df_fcl_local %>%
   mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
   dplyr::select(log_area,
                 local_elev,
-                forest_b1km,
-                fsd) %>% 
-  mutate(across(.cols = -log_area,
+                forest_b1km) %>% 
+  mutate(across(.cols = -starts_with("log"),
                 .fns = function(x) c(scale(x)))) %>% 
   data.matrix()
 
@@ -44,12 +43,12 @@ df_x2 <- df_fcl_wsd %>%
          log_lambda = log(lambda) - mean(log(lambda))) %>% 
   dplyr::select(log_rl,
                 log_lambda,
-                prec,
                 temp,
+                prec,
                 hfp) %>% 
-  mutate(across(.cols = -c(log_rl, log_lambda),
+  mutate(across(.cols = -starts_with("log"),
                 .fns = function(x) c(scale(x))))
-  
+
 
 X2 <- model.matrix(~ ., df_x2)
 
@@ -131,7 +130,7 @@ df_est <- df_est %>%
 
 ## - check convergence: rhat < 1.1
 print(max(df_est$rhat))
-  
+
 df_summary <- df_est %>% 
   filter(!str_detect(parms, "a0")) %>% 
   mutate(parms_gr = str_remove_all(parms, "\\[.\\]|\\d{1,}"),

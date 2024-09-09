@@ -28,7 +28,8 @@ model {
   }
   
   ## weight scaling exponent
-  z ~ dnorm(0, tau0)T(0, )
+  z[1] ~ dnorm(0, pow(1, -2))T(0, )
+  z[2] ~ dnorm(0, pow(1, -2))T(0, )
   
   ## degree of freedom
   nu ~ dexp(0.1)T(2, )
@@ -56,7 +57,7 @@ model {
     ## - "xi[j]", squared deviation from the random samples
     ## - "N_site[j]" is the number of sites within a watershed
     scl_w[j] <- w[j] / max(w[])
-    log(w[j]) <- z * (log(N_site[j]) - xi[j])
+    log(w[j]) <- z[1] * log(N_site[j]) - z[2] * xi[j]
     xi[j] <- pow((Ratio[j] - 1), 2)
   }
   
