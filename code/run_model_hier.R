@@ -13,16 +13,20 @@ source("code/set_function.R")
 ## - df_fcl_local, local level data
 ## - df_fcl_wsd, watershed level data
 list_fcl <- readRDS("data_fmt/data_fcl_reg.rds")
-df_fcl_local <- list_fcl[[1]]
+df_fcl_local <- list_fcl[[1]] %>% 
+  rename(local_hfp = hfp) %>% 
+  left_join(list_fcl[[2]] %>% 
+              dplyr::select(uid, r_length, lambda, prec, temp, hfp)) %>% 
+  mutate(resid_elev = resid(lm(log(local_elev) ~ prec, .)),
+         resid_temp = resid(lm(temp ~ prec, .)))
+
 df_fcl_wsd <- list_fcl[[2]]
 
 ## set data for JAGS
 ## - local level data
 X1 <- df_fcl_local %>% 
   mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
-  dplyr::select(log_area,
-                local_elev,
-                forest_b1km) %>% 
+  dplyr::select(local_elev) %>% 
   mutate(across(.cols = -starts_with("log"),
                 .fns = function(x) c(scale(x)))) %>% 
   data.matrix()

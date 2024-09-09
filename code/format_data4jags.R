@@ -52,8 +52,7 @@ df_flag <- df_env_local %>%
 df_g <- df_env_wsd %>% 
   left_join(df_weight) %>% 
   left_join(df_flag) %>% 
-  filter(n_link > 4,
-         flag_flow == "N") %>% 
+  filter(n_link > 4) %>% 
   drop_na(hfp)
 
 ## - uid for those included
@@ -103,5 +102,18 @@ saveRDS(list_fcl, "data_fmt/data_fcl_reg.rds")
 
 # df_viz <- df_fcl_local %>%
 #   left_join(df_g %>%
-#               select(uid, lambda, r_length, prec, temp)) %>% 
+#               select(uid, lambda, r_length, prec, temp)) %>%
 #   mutate(y = ifelse(fnu > 100, 0, 1))
+# 
+# 
+# df_viz %>%
+#   group_by(uid) %>% 
+#   mutate(n = n()) %>% 
+#   ungroup() %>% 
+#   filter(n >= 5) %>% 
+#   ggplot(aes(y = local_area,
+#              x = local_elev,
+#              color = tpc)) +
+#   geom_point() +
+#   facet_wrap(facets =~ uid,
+#              scales = "free")
