@@ -21,9 +21,9 @@ df_plot <- df_fcl_sim %>%
          lab_mu_p = ifelse(mu_p > min(mu_p),
                            sprintf("mu^{(p)}==%.2f~(strong~prey~effect)", mu_p),
                            sprintf("mu^{(p)}==%.2f~(weak~prey~effect)", mu_p)),
-         lab_mu_c = ifelse(mu_c > 0,
-                           sprintf("mu^{(c)}==%.2f~(predation)", mu_c),
-                           sprintf("mu^{(c)}==%.2f~(no~predation)", mu_c)))
+         lab_mu_c = ifelse(mu_c == min(mu_c),
+                           sprintf("mu^{(c)}==%.2f~(weak~predation)", mu_c),
+                           sprintf("mu^{(c)}==%.2f~(strong~predation)", mu_c)))
 
 df_parms <- df_plot %>% 
   distinct(rho, g, theta) %>% 
