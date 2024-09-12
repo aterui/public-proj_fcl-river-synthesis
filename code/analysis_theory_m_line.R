@@ -11,7 +11,7 @@ source("code/set_library.R")
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
 S <- 32
-n_rep <- 10
+n_rep <- 20
 
 set.seed(10)
 v_theta <- rep(0.25, each = n_rep)
@@ -32,9 +32,9 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - get vectors for lambda and river length
 n0 <- 200
 x_lambda <- seq(0.1, 1, length = n0)
-c_lambda <- c(0.4, 0.7)
+c_lambda <- mean(c(0.1, 1))
 x_rl <- seq(10, 100, length = n0)
-c_rl <- c(40, 70)
+c_rl <- mean(c(10, 100))
 
 ## - fix values when varying another
 lambda <- c(rep(x_lambda, 2),
@@ -115,4 +115,4 @@ stopCluster(cl)
 df_fcl <- parms %>% 
   mutate(fcl = y)
 
-saveRDS(df_fcl, file = "data_fmt/sim_fcl_main.rds")
+saveRDS(df_fcl, file = "data_fmt/sim_fcl_m_line.rds")
