@@ -16,8 +16,8 @@ S <- 32
 n_rep <- 20
 
 set.seed(10)
-v_theta <- rep(c(0.25, 0.50), each = n_rep)
-v_n_base <- rpois(length(v_theta), lambda = S * 0.18)
+v_theta <- rep(0.25, each = n_rep)
+v_n_base <- rpois(length(v_theta), lambda = S * 0.19)
 v_l <- rpois(length(v_theta), lambda = S^2 * 0.11)
 
 list_fw <- lapply(seq_len(length(v_theta)), function(i) {
