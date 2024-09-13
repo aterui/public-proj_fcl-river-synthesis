@@ -31,7 +31,7 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 })
 
 ## other parameters
-## - rl, ecoystem size
+## - rl, ecosystem size
 ## - lambda, branching rate
 ## - h, habitat density
 ## - delta0, dispersal capability for basal
@@ -60,6 +60,16 @@ parms <- expand.grid(rl = seq(10, 100, length = 50),
          link = v_l[fw]) %>% 
   as_tibble()
 
+## - v, scaling factor for non-spatial disturbance
+## - mu0 is multiplied by v to make it comparable with spatial case
+## - mu0_scl = mu0 * (1 + rho * u_hat(lambda_mid, rl_mid))
+v <- with(parms, 
+          1 + max(rho) * rpom::u_length(mean(range(lambda)), mean(range(rl))))
+
+parms <- parms %>% 
+  mutate(mu0_scl = ifelse(rho == 0,
+                          mu0 * v,
+                          mu0))
 
 # run ---------------------------------------------------------------------
 
@@ -91,7 +101,7 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                                     delta = delta0[i] * v_tp^z[i],
                                     rsrc = rsrc[i],
                                     g = g[i] * v_tp^(-z[i]),
-                                    mu0 = mu0[i],
+                                    mu0 = mu0_scl[i],
                                     mu_p = mu_p[i],
                                     rho = rho[i],
                                     weight = TRUE)

@@ -56,9 +56,9 @@ df_x <- tibble(lambda,
                            each = length(lambda) * 0.5)) %>% 
   mutate(id = row_number())
 
-## - scaling factor for non-spatial disturbance
-## - mu0 is multiplied by this value to make it comparable with spatial case
-## - mu0 = mu0 * (1 + rho * u_hat(lambda_mid, rl_mid))
+## - v, scaling factor for non-spatial disturbance
+## - mu0 is multiplied by v to make it comparable with spatial case
+## - mu0_scl = mu0 * (1 + rho * u_hat(lambda_mid, rl_mid))
 v <- 1 + max(rho0) * rpom::u_length(unique(c_lambda), unique(c_rl))
 
 ## - combine with other parameters
@@ -73,9 +73,9 @@ parms <- expand.grid(id = seq_len(length(lambda)),
                      z = 0.5,
                      fw = seq_len(length(list_fw))) %>% 
   left_join(df_x) %>% 
-  mutate(mu0 = ifelse(rho == 0,
-                      mu0 * v,
-                      mu0))
+  mutate(mu0_scl = ifelse(rho == 0,
+                          mu0 * v,
+                          mu0))
 
 # prediction --------------------------------------------------------------
 
@@ -107,7 +107,7 @@ y <- foreach(i = seq_len(nrow(parms)),
                                  lambda = lambda[i],
                                  size = rl[i],
                                  rsrc = rsrc[i],
-                                 mu0 = mu0[i],
+                                 mu0 = mu0_scl[i],
                                  mu_p = mu_p[i],
                                  delta = delta[i] * v_tp^z[i],
                                  h = h[i],
