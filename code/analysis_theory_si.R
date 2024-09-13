@@ -13,9 +13,10 @@ source("code/set_library.R")
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
 S <- 32
+n_rep <- 5
 
 set.seed(10)
-v_theta <- rep(c(0.25, 0.50), each = 5)
+v_theta <- rep(c(0.25, 0.50), each = n_rep)
 v_n_base <- rpois(length(v_theta), lambda = S * 0.18)
 v_l <- rpois(length(v_theta), lambda = S^2 * 0.11)
 
@@ -51,7 +52,7 @@ parms <- expand.grid(rl = seq(10, 100, length = 20),
                      mu0 = c(2.5, 5),
                      mu_p = c(2.5, 5),
                      mu_c = c(1.25, 2.5),
-                     rho = c(0, 0.5),
+                     rho = c(0.25, 0.5),
                      z = 0.5,
                      fw = seq_len(length(list_fw))) %>% 
   mutate(theta = v_theta[fw],
