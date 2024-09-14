@@ -47,7 +47,7 @@ heatmap <- function(data) {
     ggh4x::facet_nested(rows = vars(lab_d, lab_mu0),
                         cols = vars(lab_r, lab_rsrc),
                         labeller = label_parsed,
-                        nest_line = element_line(linetype = 3)) +
+                        nest_line = element_line(linetype = 2)) +
     MetBrewer::scale_fill_met_c("Hiroshige",
                                 direction = -1) +
     geom_vline(aes(xintercept = lambda_mid),
