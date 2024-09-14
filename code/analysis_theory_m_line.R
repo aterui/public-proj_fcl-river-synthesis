@@ -1,3 +1,7 @@
+#' DESCRIPTION:
+#' This script draw representative prediction for some parameter combos
+#' Dotted lines in the heatmap, `figure_fcl_theory_main.R`
+#' No predation and analytical
 
 # setup -------------------------------------------------------------------
 
@@ -11,11 +15,11 @@ source("code/set_library.R")
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
 S <- 32
-n_rep <- 10
+n_rep <- 20
 
 set.seed(10)
 v_theta <- rep(0.25, each = n_rep)
-v_n_base <- rpois(length(v_theta), lambda = S * 0.18)
+v_n_base <- rpois(length(v_theta), lambda = S * 0.19)
 v_l <- rpois(length(v_theta), lambda = S^2 * 0.11)
 
 list_fw <- lapply(seq_len(length(v_theta)), function(i) {
@@ -31,25 +35,31 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## parms data frame
 ## - get vectors for lambda and river length
 n0 <- 200
-x_lambda <- seq(0.1, 1, length = n0)
-c_lambda <- c(0.4, 0.7)
-x_rl <- seq(10, 100, length = n0)
-c_rl <- c(40, 70)
+rho0 <- c(0, 0.5)
+x_lambda <- rep(seq(0.1, 1, length = n0),
+                times = length(rho0))
+x_rl <- rep(seq(10, 100, length = n0), 
+            times = length(rho0))
+c_lambda <- rep(mean(range(x_lambda)),
+                times = length(x_lambda))
+c_rl <- rep(mean(range(x_rl)),
+            times = length(x_rl))
 
 ## - fix values when varying another
-lambda <- c(rep(x_lambda, 2),
-            rep(c_lambda, each = length(x_lambda)))
-rl <- c(rep(c_rl, each = length(x_rl)),
-        rep(x_rl, 2))
+lambda <- c(x_lambda, c_lambda)
+rl <- c(c_rl, x_rl)
 
 ## - assemble x values along with `focus` and `id`
 df_x <- tibble(lambda,
                rl,
                focus = rep(c("branch", "size"),
-                           each = 
-                             length(c_lambda) * 
-                             length(x_lambda))) %>% 
+                           each = length(lambda) * 0.5)) %>% 
   mutate(id = row_number())
+
+## - v, scaling factor for non-spatial disturbance
+## - mu0 is multiplied by v to make it comparable with spatial case
+## - mu0_scl = mu0 * (1 + rho * u_hat(lambda_mid, rl_mid))
+v <- 1 + max(rho0) * rpom::u_length(unique(c_lambda), unique(c_rl))
 
 ## - combine with other parameters
 parms <- expand.grid(id = seq_len(length(lambda)),
@@ -59,10 +69,13 @@ parms <- expand.grid(id = seq_len(length(lambda)),
                      delta = 0.5,
                      h = 2.5,
                      g = 150,
-                     rho = 0.5,
+                     rho = rho0,
                      z = 0.5,
                      fw = seq_len(length(list_fw))) %>% 
-  left_join(df_x)
+  left_join(df_x) %>% 
+  mutate(mu0_scl = ifelse(rho == 0,
+                          mu0 * v,
+                          mu0))
 
 # prediction --------------------------------------------------------------
 
@@ -94,7 +107,7 @@ y <- foreach(i = seq_len(nrow(parms)),
                                  lambda = lambda[i],
                                  size = rl[i],
                                  rsrc = rsrc[i],
-                                 mu0 = mu0[i],
+                                 mu0 = mu0_scl[i],
                                  mu_p = mu_p[i],
                                  delta = delta[i] * v_tp^z[i],
                                  h = h[i],
@@ -115,4 +128,4 @@ stopCluster(cl)
 df_fcl <- parms %>% 
   mutate(fcl = y)
 
-saveRDS(df_fcl, file = "data_fmt/sim_fcl_main.rds")
+saveRDS(df_fcl, file = "data_fmt/sim_fcl_m_line.rds")
