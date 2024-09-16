@@ -7,6 +7,67 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
+## set plot theme
+source("code/set_theme.R")
+ggplot2::theme_set(default_theme)
+
+# figure 1 ----------------------------------------------------------------
+
+## draw scheme
+#img <- image_read("output/subfig_scheme.png")
+img <- image_read_pdf("output/subfig_scheme.pdf")
+
+g_subsch <- ggdraw() +
+  draw_image(img)
+
+## upstream length function
+## set parameters
+rl <- 1:100
+lambda <- seq(0.1, 0.9, by = 0.2)
+x_values <- expand.grid(rl = rl, lambda = lambda)
+
+u <- sapply(seq_len(nrow(x_values)), function(i) {
+  with(x_values,
+       u_length(size = rl[i], lambda = lambda[i]))
+})
+
+## get data frame for upstream distance
+df_u <- bind_cols(x_values, y = u) %>% 
+  as_tibble() %>% 
+  setNames(c("rl", "lambda", "u"))
+
+# ug0 <- df_u %>% 
+#   filter(lambda == 0.1) %>% 
+#   ggplot(aes(x = rl,
+#              y = u)) +
+#   geom_line(linewidth = 1.5,
+#             color = grey(0.3)) +
+#   labs(y = "E(Upstream length)",
+#        x = "River length") +
+#   guides(color = "none")
+
+g_uhat <- df_u %>% 
+  ggplot(aes(x = rl,
+             y = u,
+             color = factor(lambda))) +
+  geom_line(linewidth = 1.5) +
+  MetBrewer::scale_color_met_d("Hiroshige",
+                               direction = -1) +
+  labs(y = expression("Upstream river length"~~hat(italic(u))),
+       x = expression("River length"~italic(L)),
+       color = expression("Branching rate"~lambda[b])) + 
+  theme(legend.position = "inside",
+        legend.position.inside = c(0.2, 0.7),
+        legend.background = element_blank())
+
+## layout ####
+(g_scheme <- g_subsch + g_uhat +
+  plot_annotation(tag_levels = "A"))
+
+ggsave(g_scheme,
+       filename = "output/fig_scheme.pdf",
+       width = 8,
+       height = 4)
 
 # figure 2 ----------------------------------------------------------------
 
@@ -81,10 +142,6 @@ df_fcl_mu <- df_fcl_line %>%
             max_fcl = max(fcl)) %>% 
   ungroup()
 
-## set plot theme
-source("code/set_theme.R")
-ggplot2::theme_set(default_theme)
-
 lineart <- function(data1, data2,
                     x,
                     x_axis) {
@@ -147,49 +204,3 @@ ggsave(g_sim_main,
        width = 9,
        height = 10)
 
-# upstream distance function ----------------------------------------------
-
-## set parameters
-rl <- 1:100
-lambda <- seq(0.1, 0.9, by = 0.2)
-x_values <- expand.grid(rl = rl, lambda = lambda)
-
-u <- sapply(seq_len(nrow(x_values)), function(i) {
-  with(x_values,
-       u_length(size = rl[i], lambda = lambda[i]))
-})
-
-## get data frame for upstream distance
-df_u <- bind_cols(x_values, y = u) %>% 
-  as_tibble() %>% 
-  setNames(c("rl", "lambda", "u"))
-
-ug0 <- df_u %>% 
-  filter(lambda == 0.1) %>% 
-  ggplot(aes(x = rl,
-             y = u)) +
-  geom_line(linewidth = 1.5,
-            color = grey(0.3)) +
-  labs(y = "E(Upstream length)",
-       x = "River length") +
-  guides(color = "none")
-
-ug <- df_u %>% 
-  ggplot(aes(x = rl,
-             y = u,
-             color = factor(lambda))) +
-  geom_line(linewidth = 1.5) +
-  MetBrewer::scale_color_met_d("Hiroshige",
-                               direction = -1) +
-  labs(y = "E(Upstream length)",
-       x = "River length") +
-  guides(color = "none")
-
-## export
-ggsave(ug0, 
-       filename = "output/fig_ud0.pdf",
-       width = 6, height = 5)
-
-ggsave(ug, 
-       filename = "output/fig_ud.pdf",
-       width = 6, height = 5)
