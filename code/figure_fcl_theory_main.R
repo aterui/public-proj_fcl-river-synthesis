@@ -62,11 +62,12 @@ g_uhat <- df_u %>%
 
 ## layout ####
 (g_scheme <- g_subsch + g_uhat +
+  plot_layout(width = c(1.5, 1)) +
   plot_annotation(tag_levels = "A"))
 
 ggsave(g_scheme,
        filename = "output/fig_scheme.pdf",
-       width = 8,
+       width = 9,
        height = 4)
 
 # figure 2 ----------------------------------------------------------------
