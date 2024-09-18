@@ -4,6 +4,9 @@ pacman::p_load(
   patchwork,
   sf,
   terra,
+  igraph,
+  magick,
+  cowplot,
   ## simulation
   foreach,
   mcbrnet,
