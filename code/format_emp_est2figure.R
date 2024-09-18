@@ -10,7 +10,7 @@ source("code/set_library.R")
 # read data ---------------------------------------------------------------
 
 ## data for predictors: df_g
-source("code/format_data4jags.R")
+source("code/format_emp_data4jags.R")
 
 df_g <- df_g %>% 
   mutate(log_r_length = log(r_length),

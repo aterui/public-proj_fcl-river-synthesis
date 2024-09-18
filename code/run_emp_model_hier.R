@@ -4,7 +4,7 @@
 rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
-source("code/format_data4jags.R")
+source("code/format_emp_data4jags.R")
 
 
 # set data ----------------------------------------------------------------

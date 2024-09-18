@@ -7,7 +7,7 @@ rm(list = ls())
 source("code/set_library.R")
 
 ## - sourced `format_data4jags.R` in the following script
-source("code/format_est2figure.R")
+source("code/format_emp_est2figure.R")
 
 # format data -------------------------------------------------------------
 
