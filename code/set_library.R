@@ -7,6 +7,7 @@ pacman::p_load(
   igraph,
   magick,
   cowplot,
+  nimble,
   ## simulation
   foreach,
   mcbrnet,
