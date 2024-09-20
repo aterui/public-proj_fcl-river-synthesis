@@ -90,7 +90,7 @@ for (j in 1:n_chain) inits[[j]]$.RNG.seed <- j * 100
 parms <- c("a", "b", "b0", "sigma", "z", "nu", "r", "a0")
 
 ## model files
-m <- runjags::read.jagsfile("code/model_hier.R")
+m <- runjags::read.jagsfile("code/model_hier_jags.R")
 
 ## run model
 post <- runjags::run.jags(model = m$model,
