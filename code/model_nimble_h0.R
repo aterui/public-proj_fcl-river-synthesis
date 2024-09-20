@@ -1,4 +1,4 @@
-m <- nimble::nimbleCode({
+m0 <- nimble::nimbleCode({
   
   sigma0 <- 10
   df_sigma <- 15

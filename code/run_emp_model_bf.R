@@ -70,67 +70,145 @@ list_data <- with(df_fcl_local,
 list_const <- c(list_const_local, list_const_wsd)
 
 
-# model setup -------------------------------------------------------------
+# mcmc setup --------------------------------------------------------------
+
+n_iter <- 5e+4
+n_sample <- 5000
+n_burn <- floor(n_iter / 2)
+n_thin <- floor((n_iter - n_burn) / n_sample)
+n_chain <- 4
+s0 <- 0.01
+
+# model 0 -----------------------------------------------------------------
 
 ## model object `m`
-source("code/model_hier_nimble.R")
+source("code/model_nimble_h0.R")
 
 ## initial value
-list_inits <- with(df_fcl_local,
-                   list(z = rep(0.5, 2),
-                        nu = 5,
-                        a = 0,
-                        b = rep(0, 6),
-                        sigma = rep(0.25, 3),
-                        r = rep(0, n_distinct(h)),
-                        a0 = rep(mean(fcl_obs, na.rm = TRUE),
-                                 n_distinct(uid)),
-                        logY = ifelse(censoring == 1,
-                                      log(cut) + 1,
-                                      NA)
-                   )
+list_inits_h0 <- with(df_fcl_local,
+                      list(z = runif(2, min = 0, max = 1),
+                           nu = runif(1, min = 4, max = 5),
+                           a = rnorm(1, sd = s0),
+                           b = rnorm(ncol(X2), sd = s0),
+                           sigma = runif(3, min = 0.1, max = 0.5),
+                           r = rnorm(n_distinct(h), sd = s0),
+                           a0 = rnorm(n_distinct(uid),
+                                      mean = mean(log(fcl_obs),
+                                                  na.rm = TRUE),
+                                      sd = s0),
+                           logY = ifelse(censoring == 1,
+                                         log(cut + 1),
+                                         NA))
 )
 
 ## model setup as nimbleModel
-nm <- nimbleModel(code = m,
-                  constants = list_const,
-                  data = list_data,
-                  inits = list_inits)
-
-## compile model
-cnm <- compileNimble(nm) # make compiled version from generated C++
+cnm0 <- nimbleModel(code = m0,
+                    constants = list_const,
+                    data = list_data,
+                    inits = list_inits_h0) %>% 
+  compileNimble()
 
 ## build MCMC function
-f_mcmc <- buildMCMC(nm,
-                    monitors = c("a", "b", "sigma", "z", "nu"))
-# f_mcmc <- buildMCMC(nm,
-#                     monitors = nm$getNodeNames(stochOnly = TRUE,
-#                                                includeData = FALSE))
-
-cf_mcmc <- compileNimble(f_mcmc, project = nm)
+cf_mcmc0 <- buildMCMC(cnm0,
+                      monitors = cnm0$getNodeNames(stochOnly = TRUE,
+                                                   includeData = FALSE)) %>% 
+  compileNimble(project = cnm0)
 
 ## run MCMC
-post <- runMCMC(cf_mcmc,
-                niter = 2e+4,
-                nburnin = 1e+4,
-                thin = 20,
-                nchains = 4,
-                progressBar = TRUE,
-                samplesAsCodaMCMC = TRUE,
-                summary = TRUE)
+post0 <- runMCMC(cf_mcmc0,
+                 niter = n_iter,
+                 nburnin = n_burn,
+                 thin = n_thin,
+                 nchains = n_chain,
+                 progressBar = TRUE,
+                 samplesAsCodaMCMC = TRUE,
+                 summary = TRUE,
+                 setSeed = TRUE)
 
-pr_neg <- MCMCvis::MCMCpstr(post$samples,
-                            func = function(x) mean(x < 0)) %>% 
-  unlist()
+df_est_m0 <- MCMCvis::MCMCsummary(post0$samples) %>% 
+  as_tibble(rownames = "parms") %>% 
+  transmute(parms,
+            median = `50%`,
+            low = `2.5%`,
+            high = `97.5%`,
+            rhat = Rhat)
 
-(df_est <- MCMCvis::MCMCsummary(post$samples) %>% 
-    as_tibble(rownames = "parms") %>% 
-    transmute(parms,
-              median = `50%`,
-              low = `2.5%`,
-              high = `97.5%`,
-              rhat = Rhat,
-              pr_neg = pr_neg,
-              pr_pos = 1 - pr_neg) %>% 
-    relocate(pr_neg, pr_pos,
-             .before = rhat))
+max_rhat_m0 <- df_est_m0 %>% 
+  pull(rhat) %>% 
+  max(na.rm = TRUE)
+
+
+# model 1 -----------------------------------------------------------------
+
+## model object `m`
+source("code/model_nimble_h1.R")
+
+## initial value
+list_inits_h1 <- with(df_fcl_local,
+                      list(z = runif(2, min = 0, max = 1),
+                           nu = runif(1, min = 4, max = 5),
+                           a = rnorm(1, sd = s0),
+                           b = matrix(rnorm(n_distinct(h) * ncol(X2),
+                                            sd = s0),
+                                      nrow = n_distinct(h),
+                                      ncol = ncol(X2)),
+                           sigma = runif(2),
+                           v_mu_b = rnorm(ncol(X2), sd = s0),
+                           v_sigma_b = runif(ncol(X2), min = 0, max = 1),
+                           Ustar = diag(ncol(X2)),
+                           a0 = rnorm(n_distinct(uid),
+                                      mean = mean(log(fcl_obs),
+                                                  na.rm = TRUE),
+                                      sd = s0),
+                           logY = ifelse(censoring == 1,
+                                         log(cut + 1),
+                                         NA))
+)
+
+## model setup as nimbleModel
+cnm1 <- nimbleModel(code = m1,
+                    constants = list_const,
+                    data = list_data,
+                    inits = list_inits_h1) %>% 
+  compileNimble()
+
+## build MCMC function
+cf_mcmc1 <- buildMCMC(cnm1,
+                      monitors = cnm1$getNodeNames(stochOnly = TRUE,
+                                                   includeData = FALSE)) %>% 
+  compileNimble(project = cnm1)
+
+## run MCMC
+post1 <- runMCMC(cf_mcmc1,
+                 niter = n_iter,
+                 nburnin = n_burn,
+                 thin = n_thin,
+                 nchains = n_chain,
+                 progressBar = TRUE,
+                 samplesAsCodaMCMC = TRUE,
+                 summary = TRUE)
+
+df_est_m1 <- MCMCvis::MCMCsummary(post1$samples) %>% 
+  as_tibble(rownames = "parms") %>% 
+  transmute(parms,
+            median = `50%`,
+            low = `2.5%`,
+            high = `97.5%`,
+            rhat = Rhat)
+
+max_rhat_m1 <- df_est_m1 %>% 
+  pull(rhat) %>% 
+  max(na.rm = TRUE)
+
+
+# check convergence -------------------------------------------------------
+
+c(max_rhat_m0, max_rhat_m1)
+
+
+# bayes factor ------------------------------------------------------------
+
+bridge_m0 <- bridgesampling::bridge_sampler(cf_mcmc0, silent = TRUE)
+bridge_m1 <- bridgesampling::bridge_sampler(cf_mcmc1, silent = TRUE)
+
+bridgesampling::bf(bridge_m0, bridge_m1)
