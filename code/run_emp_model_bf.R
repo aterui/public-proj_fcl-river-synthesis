@@ -208,7 +208,12 @@ c(max_rhat_m0, max_rhat_m1)
 
 # bayes factor ------------------------------------------------------------
 
-bridge_m0 <- bridgesampling::bridge_sampler(cf_mcmc0, silent = TRUE)
-bridge_m1 <- bridgesampling::bridge_sampler(cf_mcmc1, silent = TRUE)
+bridge_m0 <- bridgesampling::bridge_sampler(cf_mcmc0,
+                                            silent = TRUE,
+                                            method = "warp3")
+
+bridge_m1 <- bridgesampling::bridge_sampler(cf_mcmc1,
+                                            silent = TRUE,
+                                            method = "warp3")
 
 bridgesampling::bf(bridge_m0, bridge_m1)
