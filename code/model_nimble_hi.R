@@ -1,7 +1,14 @@
+#' DESCRIPTION:
+#' model code for a random intercept model
+
 m0 <- nimble::nimbleCode({
   
-  sigma0 <- 10
-  df_sigma <- 15
+  ## sd for coef prior
+  sigma0 <- 5
+  
+  ## sd and degrees of freedom for residual/random effects
+  sigma_r <- 1
+  df_sigma <- 10
   
   # prior -------------------------------------------------------------------
   
@@ -10,7 +17,7 @@ m0 <- nimble::nimbleCode({
   ## - watershed random SD, sigma[2]
   ## - region random SD, sigma[3]
   for (k in 1:3) {
-    sigma[k] ~ T(dt(0, sigma = 2.5, df = df_sigma), 0, )
+    sigma[k] ~ T(dt(0, sigma = sigma_r, df = df_sigma), 0, )
   }
   
   ## local level

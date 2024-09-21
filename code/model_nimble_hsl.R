@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' model code for a random intercept-slope model
 
 ## define function
 uppertri_mult_diag <- nimbleFunction(
@@ -12,8 +14,12 @@ uppertri_mult_diag <- nimbleFunction(
 
 m1 <- nimble::nimbleCode({
   
-  sigma0 <- 10
-  df_sigma <- 15
+  ## sd for coef prior
+  sigma0 <- 5
+  
+  ## sd and degrees of freedom for residual/random effects
+  sigma_r <- 1
+  df_sigma <- 10
   
   # prior -------------------------------------------------------------------
   
@@ -21,7 +27,7 @@ m1 <- nimble::nimbleCode({
   ## - residual SD, sigma[1]
   ## - watershed random SD, sigma[2]
   for (k in 1:2) {
-    sigma[k] ~ T(dt(0, sigma = 2.5, df = df_sigma), 0, )
+    sigma[k] ~ T(dt(0, sigma = sigma_r, df = df_sigma), 0, )
   }
   
   ## local level
@@ -32,14 +38,14 @@ m1 <- nimble::nimbleCode({
   
   ## watershed level
   ## - intercept/coefficients
-  ## - intercept, length, branch
+  ## - intercept, length and/or branch
   for (h in 1:Nh) {
     b[h, 1:R] ~ dmnorm(b_mu[1:R], cholesky = U[1:R, 1:R], prec_param = 0)
   }
   
   for (k in 1:R) {
     b_mu[k] ~ dnorm(0, sd = sigma0)
-    sigma_b[k] ~ T(dt(0, sigma = 2.5, df = df_sigma), 0, )
+    sigma_b[k] ~ T(dt(0, sigma = sigma_r, df = df_sigma), 0, )
   }
   
   Ustar[1:R, 1:R] ~ dlkj_corr_cholesky(2, R)
@@ -73,7 +79,8 @@ m1 <- nimble::nimbleCode({
   for (j in 1:Nw) {
     
     ## - watershed regression
-    ## - 
+    ## - 1:R, random slope
+    ## - R:K2, fixed slope
     a0[j] ~ dnorm(a0_hat[j], tau = tau_w[j])
     a0_hat[j] <- 
       sum(b[H[j], 1:R] * X2[j, 1:R]) + 
