@@ -32,18 +32,24 @@ m1 <- nimble::nimbleCode({
   
   ## watershed level
   ## - intercept/coefficients
+  ## - intercept, length, branch
   for (h in 1:Nh) {
-    b[h, 1:K2] ~ dmnorm(v_mu_b[1:K2], cholesky = U[1:K2, 1:K2], prec_param = 0)
+    b[h, 1:R] ~ dmnorm(b_mu[1:R], cholesky = U[1:R, 1:R], prec_param = 0)
   }
   
-  for (k in 1:K2) {
-    v_mu_b[k] ~ dnorm(0, sd = sigma0)
-    v_sigma_b[k] ~ T(dt(0, sigma = 2.5, df = df_sigma), 0, )
+  for (k in 1:R) {
+    b_mu[k] ~ dnorm(0, sd = sigma0)
+    sigma_b[k] ~ T(dt(0, sigma = 2.5, df = df_sigma), 0, )
   }
   
-  Ustar[1:K2, 1:K2] ~ dlkj_corr_cholesky(2, K2)
-  U[1:K2,1:K2] <- uppertri_mult_diag(Ustar[1:K2, 1:K2], v_sigma_b[1:K2]) 
-  rho[1:K2, 1:K2] <- t(Ustar[1:K2, 1:K2]) %*% Ustar[1:K2, 1:K2]
+  Ustar[1:R, 1:R] ~ dlkj_corr_cholesky(2, R)
+  U[1:R,1:R] <- uppertri_mult_diag(Ustar[1:R, 1:R], sigma_b[1:R]) 
+  rho[1:R, 1:R] <- t(Ustar[1:R, 1:R]) %*% Ustar[1:R, 1:R]
+  
+  ## - other covariates
+  for (k in 1:(K2 - R)) {
+    b_prime[k] ~ dnorm(0, sd = sigma0)
+  }
   
   ## weight scaling exponent
   z[1] ~ T(dnorm(0, sd = 1), 0, )
@@ -67,8 +73,11 @@ m1 <- nimble::nimbleCode({
   for (j in 1:Nw) {
     
     ## - watershed regression
+    ## - 
     a0[j] ~ dnorm(a0_hat[j], tau = tau_w[j])
-    a0_hat[j] <- sum(b[H[j], 1:K2] * X2[j, 1:K2])
+    a0_hat[j] <- 
+      sum(b[H[j], 1:R] * X2[j, 1:R]) + 
+      sum(b_prime[1:(K2 - R)] * X2[j, (R + 1):K2])
     
     ## - "scl_w[j]" scaled weight
     ## - "Ratio[j]" is the distance ratio to randomly-generated sites
