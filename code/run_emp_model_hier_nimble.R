@@ -4,7 +4,7 @@
 rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
-source("code/format_emp_data4jags.R")
+source("code/format_emp_data4nimble.R")
 
 
 # set data ----------------------------------------------------------------
@@ -51,7 +51,6 @@ df_x2 <- df_fcl_wsd %>%
   mutate(across(.cols = -starts_with("log"),
                 .fns = function(x) c(scale(x))))
 
-
 X2 <- model.matrix(~ ., df_x2)
 
 list_const_wsd <- with(df_fcl_wsd,
@@ -72,20 +71,20 @@ list_const <- c(list_const_local, list_const_wsd)
 
 # mcmc setup --------------------------------------------------------------
 
-n_iter <- 3e+4
-n_sample <- 1000
+n_iter <- 6e+4
+n_sample <- 500
 n_burn <- floor(n_iter / 2)
-n_thin <- (n_iter - n_burn) / n_sample
-n_chain <- 3
+n_thin <- floor((n_iter - n_burn) / n_sample)
+n_chain <- 4
 s0 <- 0.01
 
 
 # model run ---------------------------------------------------------------
 
-## random-intercept model ####
+## h0: random-intercept ###################################################
 
 ## model object `m0`
-source("code/model_nimble_h0.R")
+source("code/model_nimble_hi.R")
 
 ## initial value
 list_inits_h0 <- with(df_fcl_local,
@@ -104,6 +103,13 @@ list_inits_h0 <- with(df_fcl_local,
                                          NA))
 )
 
+parms <- c("a",
+           "b",
+           "b0",
+           "nu",
+           "sigma",
+           "z")
+
 ## model setup as nimbleModel
 post_h0 <- nimbleMCMC(code = m0,
                       constants = list_const,
@@ -113,15 +119,15 @@ post_h0 <- nimbleMCMC(code = m0,
                       nburnin = n_burn,
                       thin = n_thin,
                       nchains = n_chain,
+                      monitors = parms,
                       progressBar = TRUE,
                       samplesAsCodaMCMC = TRUE,
-                      WAIC = TRUE)
+                      WAIC = TRUE,
+                      setSeed = TRUE)
 
-pr_neg <- MCMCvis::MCMCpstr(post_h0$samples,
-                            func = function(x) mean(x < 0)) %>% 
-  unlist()
-
-(df_est_h0 <- MCMCvis::MCMCsummary(post_h0$samples) %>% 
+(df_est_h0 <- MCMCvis::MCMCsummary(post_h0$samples,
+                                   func = function(x) mean(x < 0),
+                                   func_name = "pr_neg") %>%  
     as_tibble(rownames = "parms") %>% 
     transmute(parms,
               median = `50%`,
@@ -133,24 +139,51 @@ pr_neg <- MCMCvis::MCMCpstr(post_h0$samples,
     relocate(pr_neg, pr_pos,
              .before = rhat))
 
+## append variable names
+vn <- c(colnames(X1), colnames(X2))
 
-## random-slope model ####
+df_est_h0 <- df_est_h0 %>% 
+  mutate(varname = c(vn,
+                     rep(NA, nrow(df_est_h0) - length(vn))))
+
+## export
+if(max(df_est_h0$rhat, na.rm = TRUE) < 1.1) {
+  print("yes, converged!")
+  
+  saveRDS(list(est = df_est_h0,
+               waic = post_h0$WAIC,
+               mcmc = post_h0$samples,
+               setup = c(iter = n_iter,
+                         burn = n_burn,
+                         thin = n_thin)),
+          file = "data_fmt/output_model_h0.rds")
+  
+} else {
+  print(paste("f*ck",
+              max(df_est_h0$rhat, na.rm = TRUE))
+  )
+}
+
+
+## h1: random-slope, length and branch ####################################
 
 ## model object `m1`
-source("code/model_nimble_h1.R")
+source("code/model_nimble_hsl.R")
+R <- 3
 
 ## initial value
 list_inits_h1 <- with(df_fcl_local,
                       list(z = runif(2, min = 0, max = 1),
                            nu = runif(1, min = 4, max = 5),
                            a = rnorm(1, sd = s0),
-                           b = matrix(rnorm(n_distinct(h) * ncol(X2),
+                           b = matrix(rnorm(n_distinct(h) * R,
                                             sd = s0),
                                       nrow = n_distinct(h),
                                       ncol = ncol(X2)),
+                           b_mu = rnorm(R, sd = s0),
+                           b_prime = rnorm(ncol(X2) - R, sd = s0),
                            sigma = runif(2),
-                           v_mu_b = rnorm(ncol(X2), sd = s0),
-                           v_sigma_b = runif(ncol(X2), min = 0, max = 1),
+                           sigma_b = runif(R, min = 0, max = 1),
                            Ustar = diag(ncol(X2)),
                            a0 = rnorm(n_distinct(uid),
                                       mean = mean(log(fcl_obs),
@@ -161,7 +194,18 @@ list_inits_h1 <- with(df_fcl_local,
                                          NA))
 )
 
+parms <- c("a",
+           "b_mu",
+           "b_prime", 
+           "z",
+           "nu",
+           "sigma",       
+           "sigma_b",
+           "rho")
+
 ## model setup as nimbleModel
+list_const$R <- R
+
 post_h1 <- nimbleMCMC(code = m1,
                       constants = list_const,
                       data = list_data,
@@ -170,15 +214,15 @@ post_h1 <- nimbleMCMC(code = m1,
                       nburnin = n_burn,
                       thin = n_thin,
                       nchains = n_chain,
+                      monitors = parms,
                       progressBar = TRUE,
                       samplesAsCodaMCMC = TRUE,
-                      WAIC = TRUE)
+                      WAIC = TRUE,
+                      setSeed = TRUE)
 
-pr_neg <- MCMCvis::MCMCpstr(post_h1$samples,
-                            func = function(x) mean(x < 0)) %>% 
-  unlist()
-
-(df_est_h1 <- MCMCvis::MCMCsummary(post_h1$samples) %>% 
+(df_est_h1 <- MCMCvis::MCMCsummary(post_h1$samples,
+                                   func = function(x) mean(x < 0),
+                                   func_name = "pr_neg") %>% 
     as_tibble(rownames = "parms") %>% 
     transmute(parms,
               median = `50%`,
@@ -189,3 +233,227 @@ pr_neg <- MCMCvis::MCMCpstr(post_h1$samples,
               pr_pos = 1 - pr_neg) %>% 
     relocate(pr_neg, pr_pos,
              .before = rhat))
+
+## append variable names
+vn <- c(colnames(X1), colnames(X2))
+
+df_est_h1 <- df_est_h1 %>% 
+  mutate(varname = c(vn,
+                     rep(NA, nrow(df_est_h1) - length(vn))))
+
+## export
+if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {
+  print("yes, converged!")
+  
+  saveRDS(list(est = df_est_h1,
+               waic = post_h1$WAIC,
+               mcmc = post_h1$samples,
+               setup = c(iter = n_iter,
+                         burn = n_burn,
+                         thin = n_thin)),
+          file = "data_fmt/output_model_h1.rds")
+} else {
+  print(paste("f*ck",
+              max(df_est_h1$rhat, na.rm = TRUE))
+  )
+}
+
+# ## h2: random-slope, length ###############################################
+# 
+# ## model object `m1`
+# source("code/model_nimble_hsl.R")
+# R <- 2
+# 
+# ## initial value
+# list_inits_h2 <- with(df_fcl_local,
+#                       list(z = runif(2, min = 0, max = 1),
+#                            nu = runif(1, min = 4, max = 5),
+#                            a = rnorm(1, sd = s0),
+#                            b = matrix(rnorm(n_distinct(h) * R,
+#                                             sd = s0),
+#                                       nrow = n_distinct(h),
+#                                       ncol = ncol(X2)),
+#                            b_mu = rnorm(R, sd = s0),
+#                            b_prime = rnorm(ncol(X2) - R, sd = s0),
+#                            sigma = runif(2),
+#                            sigma_b = runif(R, min = 0, max = 1),
+#                            Ustar = diag(ncol(X2)),
+#                            a0 = rnorm(n_distinct(uid),
+#                                       mean = mean(log(fcl_obs),
+#                                                   na.rm = TRUE),
+#                                       sd = s0),
+#                            logY = ifelse(censoring == 1,
+#                                          log(cut + 1),
+#                                          NA))
+# )
+# 
+# parms <- c("a",
+#            "b_mu",
+#            "b_prime", 
+#            "z",
+#            "nu",
+#            "sigma",       
+#            "sigma_b",
+#            "rho")
+# 
+# ## model setup as nimbleModel
+# list_const$R <- R
+# 
+# post_h2 <- nimbleMCMC(code = m1,
+#                       constants = list_const,
+#                       data = list_data,
+#                       inits = list_inits_h2,
+#                       niter = n_iter, 
+#                       nburnin = n_burn,
+#                       thin = n_thin,
+#                       nchains = n_chain,
+#                       monitors = parms,
+#                       progressBar = TRUE,
+#                       samplesAsCodaMCMC = TRUE,
+#                       WAIC = TRUE,
+#                       setSeed = TRUE)
+# 
+# (df_est_h2 <- MCMCvis::MCMCsummary(post_h2$samples,
+#                                    func = function(x) mean(x < 0),
+#                                    func_name = "pr_neg") %>% 
+#     as_tibble(rownames = "parms") %>% 
+#     transmute(parms,
+#               median = `50%`,
+#               low = `2.5%`,
+#               high = `97.5%`,
+#               rhat = Rhat,
+#               pr_neg = pr_neg,
+#               pr_pos = 1 - pr_neg) %>% 
+#     relocate(pr_neg, pr_pos,
+#              .before = rhat))
+# 
+# ## append variable names
+# vn <- c(colnames(X1), colnames(X2))
+# 
+# df_est_h2 <- df_est_h2 %>% 
+#   mutate(varname = c(vn,
+#                      rep(NA, nrow(df_est_h2) - length(vn))))
+# 
+# ## export
+# if(max(df_est_h2$rhat, na.rm = TRUE) < 1.1) {
+#   print("yes, converged!")
+#   
+#   saveRDS(list(est = df_est_h2,
+#                waic = post_h2$WAIC,
+#                mcmc = post_h2$samples,
+#                setup = c(iter = n_iter,
+#                          burn = n_burn,
+#                          thin = n_thin)),
+#           file = "data_fmt/output_model_h2.rds")
+# } else {
+#   print(paste("f*ck",
+#               max(df_est_h2$rhat, na.rm = TRUE))
+#   )
+# }
+# 
+# 
+# ## h3: random-slope, branch ###############################################
+# 
+# ## model object `m1`
+# source("code/model_nimble_hsl.R")
+# R <- 2
+# list_const$X2 <- X2 %>% 
+#   as_tibble() %>% 
+#   relocate(log_lambda, .before = log_rl) %>% 
+#   data.matrix()
+# 
+# ## initial value
+# list_inits_h3 <- with(df_fcl_local,
+#                       list(z = runif(2, min = 0, max = 1),
+#                            nu = runif(1, min = 4, max = 5),
+#                            a = rnorm(1, sd = s0),
+#                            b = matrix(rnorm(n_distinct(h) * R,
+#                                             sd = s0),
+#                                       nrow = n_distinct(h),
+#                                       ncol = ncol(X2)),
+#                            b_mu = rnorm(R, sd = s0),
+#                            b_prime = rnorm(ncol(X2) - R, sd = s0),
+#                            sigma = runif(2),
+#                            sigma_b = runif(R, min = 0, max = 1),
+#                            Ustar = diag(ncol(X2)),
+#                            a0 = rnorm(n_distinct(uid),
+#                                       mean = mean(log(fcl_obs),
+#                                                   na.rm = TRUE),
+#                                       sd = s0),
+#                            logY = ifelse(censoring == 1,
+#                                          log(cut + 1),
+#                                          NA))
+# )
+# 
+# parms <- c("a",
+#            "b_mu",
+#            "b_prime", 
+#            "z",
+#            "nu",
+#            "sigma",       
+#            "sigma_b",
+#            "rho")
+# 
+# ## model setup as nimbleModel
+# list_const$R <- R
+# 
+# post_h3 <- nimbleMCMC(code = m1,
+#                       constants = list_const,
+#                       data = list_data,
+#                       inits = list_inits_h3,
+#                       niter = n_iter, 
+#                       nburnin = n_burn,
+#                       thin = n_thin,
+#                       nchains = n_chain,
+#                       monitors = parms,
+#                       progressBar = TRUE,
+#                       samplesAsCodaMCMC = TRUE,
+#                       WAIC = TRUE,
+#                       setSeed = TRUE)
+# 
+# (df_est_h3 <- MCMCvis::MCMCsummary(post_h3$samples,
+#                                    func = function(x) mean(x < 0),
+#                                    func_name = "pr_neg") %>% 
+#     as_tibble(rownames = "parms") %>% 
+#     transmute(parms,
+#               median = `50%`,
+#               low = `2.5%`,
+#               high = `97.5%`,
+#               rhat = Rhat,
+#               pr_neg = pr_neg,
+#               pr_pos = 1 - pr_neg) %>% 
+#     relocate(pr_neg, pr_pos,
+#              .before = rhat))
+# 
+# ## append variable names
+# vn <- c(colnames(X1), colnames(X2))
+# 
+# df_est_h3 <- df_est_h3 %>% 
+#   mutate(varname = c(vn,
+#                      rep(NA, nrow(df_est_h3) - length(vn))))
+# 
+# ## export
+# if(max(df_est_h3$rhat, na.rm = TRUE) < 1.1) {
+#   print("yes, converged!")
+#   
+#   saveRDS(list(est = df_est_h3,
+#                waic = post_h3$WAIC,
+#                mcmc = post_h3$samples,
+#                setup = c(iter = n_iter,
+#                          burn = n_burn,
+#                          thin = n_thin)),
+#           file = "data_fmt/output_model_h3.rds")
+# } else {
+#   print(paste("f*ck",
+#               max(df_est_h3$rhat, na.rm = TRUE))
+#   )
+# }
+# 
+# 
+# # WAIC compare ------------------------------------------------------------
+# 
+# c(h0 = post_h0$WAIC$WAIC,
+#   h1 = post_h1$WAIC$WAIC,
+#   h2 = post_h2$WAIC$WAIC,
+#   h3 = post_h3$WAIC$WAIC) %>% 
+#   sort()
