@@ -73,10 +73,10 @@ list_const <- c(list_const_local, list_const_wsd)
 # mcmc setup --------------------------------------------------------------
 
 n_iter <- 5e+4
-n_sample <- 5000
-n_burn <- floor(n_iter / 2)
-n_thin <- floor((n_iter - n_burn) / n_sample)
-n_chain <- 4
+n_sample <- 5e+4
+n_burn <- 10000
+n_thin <- 1
+n_chain <- 2
 s0 <- 0.01
 
 # model 0 -----------------------------------------------------------------
@@ -121,21 +121,19 @@ post0 <- runMCMC(cf_mcmc0,
                  thin = n_thin,
                  nchains = n_chain,
                  progressBar = TRUE,
-                 samplesAsCodaMCMC = TRUE,
-                 summary = TRUE,
                  setSeed = TRUE)
 
-df_est_m0 <- MCMCvis::MCMCsummary(post0$samples) %>% 
-  as_tibble(rownames = "parms") %>% 
-  transmute(parms,
-            median = `50%`,
-            low = `2.5%`,
-            high = `97.5%`,
-            rhat = Rhat)
-
-max_rhat_m0 <- df_est_m0 %>% 
-  pull(rhat) %>% 
-  max(na.rm = TRUE)
+# df_est_m0 <- MCMCvis::MCMCsummary(post0$samples) %>% 
+#   as_tibble(rownames = "parms") %>% 
+#   transmute(parms,
+#             median = `50%`,
+#             low = `2.5%`,
+#             high = `97.5%`,
+#             rhat = Rhat)
+# 
+# max_rhat_m0 <- df_est_m0 %>% 
+#   pull(rhat) %>% 
+#   max(na.rm = TRUE)
 
 
 # model 1 -----------------------------------------------------------------
@@ -184,26 +182,19 @@ post1 <- runMCMC(cf_mcmc1,
                  nburnin = n_burn,
                  thin = n_thin,
                  nchains = n_chain,
-                 progressBar = TRUE,
-                 samplesAsCodaMCMC = TRUE,
-                 summary = TRUE)
+                 progressBar = TRUE)
 
-df_est_m1 <- MCMCvis::MCMCsummary(post1$samples) %>% 
-  as_tibble(rownames = "parms") %>% 
-  transmute(parms,
-            median = `50%`,
-            low = `2.5%`,
-            high = `97.5%`,
-            rhat = Rhat)
-
-max_rhat_m1 <- df_est_m1 %>% 
-  pull(rhat) %>% 
-  max(na.rm = TRUE)
-
-
-# check convergence -------------------------------------------------------
-
-c(max_rhat_m0, max_rhat_m1)
+# df_est_m1 <- MCMCvis::MCMCsummary(post1$samples) %>% 
+#   as_tibble(rownames = "parms") %>% 
+#   transmute(parms,
+#             median = `50%`,
+#             low = `2.5%`,
+#             high = `97.5%`,
+#             rhat = Rhat)
+# 
+# max_rhat_m1 <- df_est_m1 %>% 
+#   pull(rhat) %>% 
+#   max(na.rm = TRUE)
 
 
 # bayes factor ------------------------------------------------------------
