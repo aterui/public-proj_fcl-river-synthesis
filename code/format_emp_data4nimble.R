@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Format data for data analysis with nimble models
 
 # setup -------------------------------------------------------------------
 

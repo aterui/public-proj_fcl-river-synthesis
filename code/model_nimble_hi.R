@@ -1,5 +1,5 @@
 #' DESCRIPTION:
-#' model code for a random intercept model
+#' Model code for a random intercept model
 
 m0 <- nimble::nimbleCode({
   
