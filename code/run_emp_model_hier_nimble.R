@@ -71,7 +71,7 @@ list_const <- c(list_const_local, list_const_wsd)
 
 # mcmc setup --------------------------------------------------------------
 
-n_iter <- 5e+4
+n_iter <- 6e+4
 n_sample <- 500
 n_burn <- floor(n_iter / 2)
 n_thin <- floor((n_iter - n_burn) / n_sample)
@@ -87,21 +87,23 @@ s0 <- 0.01
 source("code/model_nimble_hi.R")
 
 ## initial value
-list_inits_h0 <- with(df_fcl_local,
-                      list(z = runif(2, min = 0.5, max = 0.55),
-                           nu = runif(1, min = 4, max = 5),
-                           a = rnorm(1, sd = s0),
-                           b = rnorm(ncol(X2), sd = s0),
-                           sigma = runif(3, min = 0.1, max = 0.5),
-                           r = rnorm(n_distinct(h), sd = s0),
-                           a0 = rnorm(n_distinct(uid),
-                                      mean = mean(log(fcl_obs),
-                                                  na.rm = TRUE),
-                                      sd = s0),
-                           logY = ifelse(censoring == 1,
-                                         log(cut + 1),
-                                         NA))
-)
+f_inits_h0 <- function() {
+  with(df_fcl_local,
+       list(z = runif(2, min = 0.5, max = 0.55),
+            nu = runif(1, min = 4, max = 5),
+            a = rnorm(1, sd = s0),
+            b = rnorm(ncol(X2), sd = s0),
+            sigma = runif(3, min = 0.05, max = 0.1),
+            r = rnorm(n_distinct(h), sd = s0),
+            a0 = rnorm(n_distinct(uid),
+                       mean = mean(log(fcl_obs),
+                                   na.rm = TRUE),
+                       sd = s0),
+            logY = ifelse(censoring == 1,
+                          log(cut + 1),
+                          NA))
+  ) 
+}
 
 parms <- c("a",
            "b",
@@ -114,7 +116,7 @@ parms <- c("a",
 post_h0 <- nimbleMCMC(code = m0,
                       constants = list_const,
                       data = list_data,
-                      inits = list_inits_h0,
+                      inits = f_inits_h0,
                       niter = n_iter, 
                       nburnin = n_burn,
                       thin = n_thin,
@@ -172,27 +174,29 @@ source("code/model_nimble_hsl.R")
 R <- 3
 
 ## initial value
-list_inits_h1 <- with(df_fcl_local,
-                      list(z = runif(2, min = 0.5, max = 0.55),
-                           nu = runif(1, min = 4, max = 5),
-                           a = rnorm(1, sd = s0),
-                           b = matrix(rnorm(n_distinct(h) * R,
-                                            sd = s0),
-                                      nrow = n_distinct(h),
-                                      ncol = ncol(X2)),
-                           b_mu = rnorm(R, sd = s0),
-                           b_prime = rnorm(ncol(X2) - R, sd = s0),
-                           sigma = runif(2),
-                           sigma_b = runif(R, min = 0, max = 1),
-                           Ustar = diag(ncol(X2)),
-                           a0 = rnorm(n_distinct(uid),
-                                      mean = mean(log(fcl_obs),
-                                                  na.rm = TRUE),
-                                      sd = s0),
-                           logY = ifelse(censoring == 1,
-                                         log(cut + 1),
-                                         NA))
-)
+f_inits_h1 <- function() {
+  with(df_fcl_local,
+       list(z = runif(2, min = 0.5, max = 0.55),
+            nu = runif(1, min = 4, max = 5),
+            a = rnorm(1, sd = s0),
+            b = matrix(rnorm(n_distinct(h) * R,
+                             sd = s0),
+                       nrow = n_distinct(h),
+                       ncol = ncol(X2)),
+            b_mu = rnorm(R, sd = s0),
+            b_prime = rnorm(ncol(X2) - R, sd = s0),
+            sigma = runif(2, min = 0.05, max = 0.1),
+            sigma_b = runif(R, min = 0.05, max = 0.1),
+            Ustar = diag(ncol(X2)),
+            a0 = rnorm(n_distinct(uid),
+                       mean = mean(log(fcl_obs),
+                                   na.rm = TRUE),
+                       sd = s0),
+            logY = ifelse(censoring == 1,
+                          log(cut + 1),
+                          NA))
+  )
+}
 
 parms <- c("a",
            "b_mu",
@@ -209,7 +213,7 @@ list_const$R <- R
 post_h1 <- nimbleMCMC(code = m1,
                       constants = list_const,
                       data = list_data,
-                      inits = list_inits_h1,
+                      inits = f_inits_h1,
                       niter = n_iter, 
                       nburnin = n_burn,
                       thin = n_thin,
@@ -263,29 +267,32 @@ if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {
 ## model object `m1`
 source("code/model_nimble_hsl.R")
 R <- 2
+list_const$X2 <- X2
 
 ## initial value
-list_inits_h2 <- with(df_fcl_local,
-                      list(z = runif(2, min = 0.5, max = 0.55),
-                           nu = runif(1, min = 4, max = 5),
-                           a = rnorm(1, sd = s0),
-                           b = matrix(rnorm(n_distinct(h) * R,
-                                            sd = s0),
-                                      nrow = n_distinct(h),
-                                      ncol = ncol(X2)),
-                           b_mu = rnorm(R, sd = s0),
-                           b_prime = rnorm(ncol(X2) - R, sd = s0),
-                           sigma = runif(2),
-                           sigma_b = runif(R, min = 0, max = 1),
-                           Ustar = diag(ncol(X2)),
-                           a0 = rnorm(n_distinct(uid),
-                                      mean = mean(log(fcl_obs),
-                                                  na.rm = TRUE),
-                                      sd = s0),
-                           logY = ifelse(censoring == 1,
-                                         log(cut + 1),
-                                         NA))
-)
+f_inits_h2 <- function() {
+  with(df_fcl_local,
+       list(z = runif(2, min = 0.5, max = 0.55),
+            nu = runif(1, min = 4.5, max = 5),
+            a = rnorm(1, sd = s0),
+            b = matrix(rnorm(n_distinct(h) * R,
+                             sd = s0),
+                       nrow = n_distinct(h),
+                       ncol = ncol(X2)),
+            b_mu = rnorm(R, sd = s0),
+            b_prime = rnorm(ncol(X2) - R, sd = s0),
+            sigma = runif(2, min = 0.05, max = 0.1),
+            sigma_b = runif(R, min = 0.05, max = 0.1),
+            Ustar = diag(ncol(X2)),
+            a0 = rnorm(n_distinct(uid),
+                       mean = mean(log(fcl_obs),
+                                   na.rm = TRUE),
+                       sd = s0),
+            logY = ifelse(censoring == 1,
+                          log(cut + 1),
+                          NA))
+  ) 
+}
 
 parms <- c("a",
            "b_mu",
@@ -302,7 +309,7 @@ list_const$R <- R
 post_h2 <- nimbleMCMC(code = m1,
                       constants = list_const,
                       data = list_data,
-                      inits = list_inits_h2,
+                      inits = f_inits_h2,
                       niter = n_iter,
                       nburnin = n_burn,
                       thin = n_thin,
@@ -363,27 +370,29 @@ list_const$X2 <- X2 %>%
   data.matrix()
 
 ## initial value
-list_inits_h3 <- with(df_fcl_local,
-                      list(z = runif(2, min = 0.5, max = 0.55),
-                           nu = runif(1, min = 4, max = 5),
-                           a = rnorm(1, sd = s0),
-                           b = matrix(rnorm(n_distinct(h) * R,
-                                            sd = s0),
-                                      nrow = n_distinct(h),
-                                      ncol = ncol(X2)),
-                           b_mu = rnorm(R, sd = s0),
-                           b_prime = rnorm(ncol(X2) - R, sd = s0),
-                           sigma = runif(2),
-                           sigma_b = runif(R, min = 0, max = 1),
-                           Ustar = diag(ncol(X2)),
-                           a0 = rnorm(n_distinct(uid),
-                                      mean = mean(log(fcl_obs),
-                                                  na.rm = TRUE),
-                                      sd = s0),
-                           logY = ifelse(censoring == 1,
-                                         log(cut + 1),
-                                         NA))
-)
+f_inits_h3 <- function() {
+  with(df_fcl_local,
+       list(z = runif(2, min = 0.5, max = 0.55),
+            nu = runif(1, min = 4, max = 5),
+            a = rnorm(1, sd = s0),
+            b = matrix(rnorm(n_distinct(h) * R,
+                             sd = s0),
+                       nrow = n_distinct(h),
+                       ncol = ncol(X2)),
+            b_mu = rnorm(R, sd = s0),
+            b_prime = rnorm(ncol(X2) - R, sd = s0),
+            sigma = runif(2, min = 0.05, max = 0.1),
+            sigma_b = runif(R, min = 0.05, max = 0.1),
+            Ustar = diag(ncol(X2)),
+            a0 = rnorm(n_distinct(uid),
+                       mean = mean(log(fcl_obs),
+                                   na.rm = TRUE),
+                       sd = s0),
+            logY = ifelse(censoring == 1,
+                          log(cut + 1),
+                          NA))
+  )
+}
 
 parms <- c("a",
            "b_mu",
@@ -400,7 +409,7 @@ list_const$R <- R
 post_h3 <- nimbleMCMC(code = m1,
                       constants = list_const,
                       data = list_data,
-                      inits = list_inits_h3,
+                      inits = f_inits_h3,
                       niter = n_iter,
                       nburnin = n_burn,
                       thin = n_thin,
@@ -452,8 +461,8 @@ if(max(df_est_h3$rhat, na.rm = TRUE) < 1.1) {
 
 # WAIC compare ------------------------------------------------------------
 
-c(h0 = post_h0$WAIC$WAIC,
-  h1 = post_h1$WAIC$WAIC,
-  h2 = post_h2$WAIC$WAIC,
-  h3 = post_h3$WAIC$WAIC) %>%
-  sort()
+print(c(h0 = post_h0$WAIC$WAIC,
+        h1 = post_h1$WAIC$WAIC,
+        h2 = post_h2$WAIC$WAIC,
+        h3 = post_h3$WAIC$WAIC) %>%
+        sort())
