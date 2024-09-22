@@ -1,5 +1,5 @@
 #' DESCRIOTION:
-#' xxx
+#' Format model estimates for visualization
 
 # setup -------------------------------------------------------------------
 
@@ -9,32 +9,47 @@ source("code/set_library.R")
 
 # read data ---------------------------------------------------------------
 
-## data for predictors: df_g
-source("code/format_emp_data4jags.R")
+## data for predictors: df_fcl_wsd
+source("code/format_emp_data4nimble.R")
 
-df_g <- df_g %>% 
-  mutate(log_r_length = log(r_length),
-         log_lambda = log(lambda),
-         scl_prec = c(scale(mean.prec)),
-         scl_temp = c(scale(mean.temp)),
+df_fcl_wsd <- df_fcl_wsd %>% 
+  mutate(log_r_length = log(r_length) - mean(log(r_length)),
+         log_lambda = log(lambda) - mean(log(lambda)),
+         scl_prec = c(scale(prec)),
+         scl_temp = c(scale(temp)),
          scl_hfp = c(scale(hfp)))
 
 ## read data
-df_est <- readRDS("data_fmt/output_model_summary.rds")
-mcmc <- readRDS("data_fmt/output_model_mcmc.rds")
+list_est <- list.files("data_fmt",
+                       pattern = "output_.{1,}_h0|output_.{1,}_h1",
+                       full.names = TRUE) %>% 
+  lapply(FUN = function(x) {
+    readRDS(x)
+  })
 
+## select the model with the lowest WAIC
+id_best <- sapply(list_est, FUN = function(data) data$waic$WAIC) %>% 
+  which.min()
+
+## get estimates
+df_est <- list_est[[id_best]]$est %>% 
+  mutate(parms_gr = str_remove_all(parms, "\\[.\\]"),
+         parms_num = str_extract(parms, "\\[\\d{1,}\\]") %>% 
+           str_remove_all("\\[|\\]") %>% 
+           as.numeric()) %>% 
+  relocate(parms, parms_gr, parms_num)
 
 # region specific prediction ----------------------------------------------
 
 ## parameters
 ## - region-specific intercept
 v_r <- df_est %>% 
-  filter(parms_gr == "r") %>% 
+  filter(parms_gr == "b0") %>% 
   pull(median)
 
 ## - fixed effects
 m_b <- df_est %>% 
-  filter(parms_gr == "b", parms_num > 0) %>% 
+  filter(parms_gr == "b", parms_num > 1) %>% 
   pull(median) %>% 
   matrix(nrow = length(.), ncol = length(v_r))
 
@@ -47,17 +62,17 @@ cnm <- c("log_r_length", "log_lambda", "scl_prec", "scl_temp", "scl_hfp")
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
                     
-                    ## set mean values for each predictor
-                    df_x <- df_g %>% 
+                    ## set group-specific means for each predictor
+                    df_x <- df_fcl_wsd %>% 
                       dplyr::select(all_of(c("h", cnm))) %>% 
                       group_by(h) %>% 
                       reframe(across(all_of(cnm),
                                      .fns = function(x) rep(mean(x), 100)))
                     
                     ## get min-max range for a focus predictor
-                    cid <- which(colnames(df_g) %in% c("h", cnm[j]))
+                    cid <- which(colnames(df_fcl_wsd) %in% c("h", cnm[j]))
                     
-                    x <- df_g %>% 
+                    x <- df_fcl_wsd %>% 
                       dplyr::select(all_of(cid)) %>% 
                       rename_with(.fn = function(z) ifelse(z %in% cnm, "x", z)) %>% 
                       group_by(h) %>% 
@@ -96,21 +111,21 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 
 ## get unscaled values
 df_yh <- df_yh0 %>% 
-  mutate(r_length = exp(log_r_length),
-         lambda = exp(log_lambda),
-         prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
-         temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
-         hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp))
+  mutate(r_length = exp(log_r_length + mean(log(df_fcl_wsd$r_length))),
+         lambda = exp(log_lambda + mean(log(df_fcl_wsd$lambda))),
+         prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
+         temp = scl_temp * sd(df_fcl_wsd$temp) + mean(df_fcl_wsd$temp),
+         hfp = scl_hfp * sd(df_fcl_wsd$hfp) + mean(df_fcl_wsd$hfp))
 
 
 # overall prediction ------------------------------------------------------
 
-x <- with(df_g,
+x <- with(df_fcl_wsd,
           seq(min(log(lambda)),
               max(log(lambda)),
               length = 100))
 
-X <- with(df_g,
+X <- with(df_fcl_wsd,
           cbind(1,
                 mean(log(r_length)),
                 x))
@@ -120,21 +135,21 @@ mcmc_b <- mcmc[, str_detect(colnames(mcmc), "b0$|b\\[.{1,}\\]")]
 df_y <- foreach(j = seq_len(length(cnm)),
                 .combine = bind_rows) %do% {
                   ## set mean values for each predictor
-                  df_x <- df_g %>% 
+                  df_x <- df_fcl_wsd %>% 
                     dplyr::select(all_of(c("h", cnm))) %>% 
                     reframe(across(all_of(cnm),
                                    .fns = function(x) rep(mean(x), 100)))
                   
                   ## get min-max range for a focus predictor
-                  cid <- which(colnames(df_g) %in% c("h", cnm[j]))
+                  cid <- which(colnames(df_fcl_wsd) %in% c("h", cnm[j]))
                   
-                  x <- df_g %>% 
+                  x <- df_fcl_wsd %>% 
                     select(all_of(cid)) %>% 
                     rename_with(.fn = function(z) ifelse(z %in% cnm, "x", z)) %>% 
                     reframe(x = seq(min(x),
                                     max(x),
                                     length = 100)
-                            ) %>% 
+                    ) %>% 
                     pull(x)
                   
                   ## replace the mean with the range of the focus variable
@@ -164,8 +179,8 @@ df_y <- foreach(j = seq_len(length(cnm)),
                     bind_cols(df_x) %>% 
                     mutate(r_length = exp(log_r_length),
                            lambda = exp(log_lambda),
-                           prec = scl_prec * sd(df_g$mean.prec) + mean(df_g$mean.prec),
-                           temp = scl_temp * sd(df_g$mean.temp) + mean(df_g$mean.temp),
-                           hfp = scl_hfp * sd(df_g$hfp) + mean(df_g$hfp)) %>% 
+                           prec = scl_prec * sd(df_fcl_wsd$mean.prec) + mean(df_fcl_wsd$mean.prec),
+                           temp = scl_temp * sd(df_fcl_wsd$mean.temp) + mean(df_fcl_wsd$mean.temp),
+                           hfp = scl_hfp * sd(df_fcl_wsd$hfp) + mean(df_fcl_wsd$hfp)) %>% 
                     relocate(focus)
                 }
