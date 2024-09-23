@@ -57,7 +57,8 @@ B <- rbind(v_r, m_b)
 
 ## prepare predictors
 ## - predictor columns
-cnm <- c("log_r_length", "log_lambda", "scl_prec", "scl_temp", "scl_hfp")
+## - NOTE: sensitive the order of the columns
+cnm <- c("log_r_length", "log_lambda", "scl_temp", "scl_prec", "scl_hfp")
 
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
@@ -130,7 +131,9 @@ X <- with(df_fcl_wsd,
                 mean(log(r_length)),
                 x))
 
-mcmc_b <- mcmc[, str_detect(colnames(mcmc), "b0$|b\\[.{1,}\\]")]
+mcmc_b <- with(list_est[[id_best]],
+               MCMCvis::MCMCchains(mcmc) %>% 
+                 .[, str_detect(colnames(.), "b\\[.{1,}\\]")])
 
 df_y <- foreach(j = seq_len(length(cnm)),
                 .combine = bind_rows) %do% {
@@ -148,8 +151,7 @@ df_y <- foreach(j = seq_len(length(cnm)),
                     rename_with(.fn = function(z) ifelse(z %in% cnm, "x", z)) %>% 
                     reframe(x = seq(min(x),
                                     max(x),
-                                    length = 100)
-                    ) %>% 
+                                    length = 100)) %>% 
                     pull(x)
                   
                   ## replace the mean with the range of the focus variable
@@ -177,10 +179,10 @@ df_y <- foreach(j = seq_len(length(cnm)),
                            y_low = exp(log_y_low),
                            y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
-                    mutate(r_length = exp(log_r_length),
-                           lambda = exp(log_lambda),
-                           prec = scl_prec * sd(df_fcl_wsd$mean.prec) + mean(df_fcl_wsd$mean.prec),
-                           temp = scl_temp * sd(df_fcl_wsd$mean.temp) + mean(df_fcl_wsd$mean.temp),
+                    mutate(r_length = exp(log_r_length + mean(log(df_fcl_wsd$r_length))),
+                           lambda = exp(log_lambda + mean(log(df_fcl_wsd$lambda))),
+                           prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
+                           temp = scl_temp * sd(df_fcl_wsd$temp) + mean(df_fcl_wsd$temp),
                            hfp = scl_hfp * sd(df_fcl_wsd$hfp) + mean(df_fcl_wsd$hfp)) %>% 
                     relocate(focus)
                 }

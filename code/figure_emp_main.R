@@ -16,21 +16,32 @@ z <- df_est %>%
   filter(str_detect(parms, "z\\[.\\]")) %>% 
   pull(median)
 
-df_mu_est <- readRDS("data_fmt/output_model_mu_est.rds") %>% 
-  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2)))
+df_mu_est <- list_est[[id_best]]$mcmc %>% 
+  ggmcmc::ggs() %>% 
+  filter(str_detect(Parameter, "a0\\[.{1,}\\]")) %>% 
+  group_by(Parameter) %>% 
+  summarize(fcl_est = exp(median(value))) %>% 
+  mutate(g = str_extract(Parameter, "\\[.{1,}\\]") %>% 
+           str_remove_all("\\[|\\]") %>% 
+           as.numeric()) %>% 
+  right_join(df_fcl_wsd) %>% 
+  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2)),
+         scl_w = w / max(w))
 
 
 # map ---------------------------------------------------------------------
 
 ## map layer
-sf_lev01 <- readRDS("data_fmt/wgs84_region_lev01.rds") %>% 
+sf_lev01 <- readRDS("data_raw/wgs84_region_lev01.rds") %>% 
   st_make_valid()
 
 ## site layer
-sf_site <- readRDS("data_fmt/wgs84_fcl_site.rds") %>%
+sf_site <- readRDS("data_raw/wgs84_outlet.rds") %>%
+  left_join(readRDS("data_raw/wgs84_wsd_sub.rds") %>% 
+              as_tibble() %>% 
+              dplyr::select(uid, oid),
+            by = "oid") %>%
   filter(uid %in% uid_incl) %>% 
-  group_by(sid) %>% 
-  slice(1) %>% 
   dplyr::select(NULL) %>% 
   st_join(sf_lev01) %>% 
   mutate(h = as.numeric(factor(id_lev01)))
@@ -51,8 +62,7 @@ g_map <- ggplot(sf_region) +
           alpha = 0.5) +
   geom_sf(data = sf_site,
           aes(color = factor(h)),
-          alpha = 0.5,
-          size = 0.4) +
+          size = 1) +
   guides(color = "none",
          fill = "none") +
   coord_sf(xlim = c(-163.8, 163.8)) +
@@ -68,40 +78,40 @@ source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
 ## fcl vs. watershed area
-g_size <- df_mu_est %>% 
+(g_size <- df_mu_est %>% 
   ggplot(aes(x = r_length,
              y = fcl_est)) +
   geom_point(aes(color = factor(h),
-                 size = w),
+                 size = scl_w),
              alpha = 0.5) + 
-  geom_line(data = filter(df_yh, focus == "log_r_length"),
-            aes(x = r_length,
-                y = y,
-                color = factor(h)),
-            alpha = 1,
-            linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_r_length"),
-            aes(x = r_length,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_r_length"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = r_length),
-              alpha = 0.1) +
+  # geom_line(data = filter(df_yh, focus == "log_r_length"),
+  #           aes(x = r_length,
+  #               y = y,
+  #               color = factor(h)),
+  #           alpha = 1,
+  #           linetype = "dashed") + 
+  # geom_line(data = filter(df_y, focus == "log_r_length"),
+  #           aes(x = r_length,
+  #               y = y)) +
+  # geom_ribbon(data = filter(df_y, focus == "log_r_length"),
+  #             aes(y = y,
+  #                 ymin = y_low,
+  #                 ymax = y_high,
+  #                 x = r_length),
+  #             alpha = 0.1) +
   scale_x_log10(labels = scales::label_log(digits = 2)) +
   scale_y_log10() +
   labs(y = "Food chain length",
-       x = "River length (km)") +
-  guides(size = "none",
-         color = "none")
+       x = "River length (km)",
+       size = "Weight") +
+    guides(color = "none"))
 
 ## fcl vs. branching prob
-g_b <- df_mu_est %>% 
+(g_b <- df_mu_est %>% 
   ggplot(aes(x = lambda,
              y = fcl_est)) +
   geom_point(aes(color = factor(h),
-                 size = w),
+                 size = scl_w),
              alpha = 0.4) +
   geom_line(data = filter(df_yh, focus == "log_lambda"),
             aes(x = lambda,
@@ -123,8 +133,7 @@ g_b <- df_mu_est %>%
   labs(y = "Food chain length",
        x = expression("Branching rate ("*km^-1*")")) +
   guides(size = "none",
-         color = "none")
-
+         color = "none"))
 
 # arrange -----------------------------------------------------------------
 
@@ -137,9 +146,10 @@ g_reg <- g_b + (g_size + theme(axis.title.y = element_blank()))
 
 g_comb <- g_reg + g_map + plot_layout(nrow = 2, 
                                       widths = c(1, 3),
-                                      design = layout)
+                                      design = layout) +
+  plot_annotation(tag_levels = "A")
 
 ggsave(g_comb,
-       filename = "output/figure_fcl.pdf",
+       filename = "output/fig_emp_fcl.pdf",
        width = 9,
        height = 8)
