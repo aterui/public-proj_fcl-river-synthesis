@@ -138,15 +138,16 @@ ggplot2::theme_set(default_theme)
 # arrange -----------------------------------------------------------------
 
 layout <- "
-AABB
-CCCC
+AAAA
+BBCC
 "
 
-g_reg <- g_b + (g_size + theme(axis.title.y = element_blank()))
-
-g_comb <- g_reg + g_map + plot_layout(nrow = 2, 
-                                      widths = c(1, 3),
-                                      design = layout) +
+g_comb <- g_map + 
+  g_b + 
+  (g_size + theme(axis.title.y = element_blank())) +
+  plot_layout(nrow = 2, 
+              widths = c(3, 1),
+              design = layout) +
   plot_annotation(tag_levels = "A")
 
 ggsave(g_comb,
