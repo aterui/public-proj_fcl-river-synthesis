@@ -109,6 +109,7 @@ f_inits_h0 <- function() {
 }
 
 parms <- c("a",
+           "a0",
            "b",
            "b0",
            "nu",
@@ -134,6 +135,7 @@ post_h0 <- nimbleMCMC(code = m0,
                                    func = function(x) mean(x < 0),
                                    func_name = "pr_neg") %>%  
     as_tibble(rownames = "parms") %>% 
+    filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
     transmute(parms,
               median = `50%`,
               low = `2.5%`,
@@ -160,13 +162,12 @@ if(max(df_est_h0$rhat, na.rm = TRUE) < 1.1) {
                mcmc = post_h0$samples,
                setup = c(iter = n_iter,
                          burn = n_burn,
-                         thin = n_thin)),
+                         thin = n_thin,
+                         nchain = n_chain)),
           file = "data_fmt/output_model_h0.rds")
   
 } else {
-  print(paste("f*ck",
-              max(df_est_h0$rhat, na.rm = TRUE))
-  )
+  print(paste("f*ck", max(df_est_h0$rhat, na.rm = TRUE)))
 }
 
 
@@ -202,6 +203,7 @@ f_inits_h1 <- function() {
 }
 
 parms <- c("a",
+           "a0",
            "b_mu",
            "b_prime", 
            "z",
@@ -231,6 +233,7 @@ post_h1 <- nimbleMCMC(code = m1,
                                    func = function(x) mean(x < 0),
                                    func_name = "pr_neg") %>% 
     as_tibble(rownames = "parms") %>% 
+    filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
     transmute(parms,
               median = `50%`,
               low = `2.5%`,
@@ -257,12 +260,11 @@ if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {
                mcmc = post_h1$samples,
                setup = c(iter = n_iter,
                          burn = n_burn,
-                         thin = n_thin)),
+                         thin = n_thin,
+                         nchain = n_chain)),
           file = "data_fmt/output_model_h1.rds")
 } else {
-  print(paste("f*ck",
-              max(df_est_h1$rhat, na.rm = TRUE))
-  )
+  print(paste("f*ck", max(df_est_h1$rhat, na.rm = TRUE)))
 }
 
 ## h2: random-slope, length ###############################################
@@ -294,10 +296,11 @@ f_inits_h2 <- function() {
             logY = ifelse(censoring == 1,
                           log(cut + 1),
                           NA))
-  ) 
+  )
 }
 
 parms <- c("a",
+           "a0",
            "b_mu",
            "b_prime",
            "z",
@@ -327,6 +330,7 @@ post_h2 <- nimbleMCMC(code = m1,
                                    func = function(x) mean(x < 0),
                                    func_name = "pr_neg") %>%
     as_tibble(rownames = "parms") %>%
+    filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
     transmute(parms,
               median = `50%`,
               low = `2.5%`,
@@ -353,12 +357,11 @@ if(max(df_est_h2$rhat, na.rm = TRUE) < 1.1) {
                mcmc = post_h2$samples,
                setup = c(iter = n_iter,
                          burn = n_burn,
-                         thin = n_thin)),
+                         thin = n_thin,
+                         nchain = n_chain)),
           file = "data_fmt/output_model_h2.rds")
 } else {
-  print(paste("f*ck",
-              max(df_est_h2$rhat, na.rm = TRUE))
-  )
+  print(paste("f*ck", max(df_est_h2$rhat, na.rm = TRUE)))
 }
 
 
@@ -398,6 +401,7 @@ f_inits_h3 <- function() {
 }
 
 parms <- c("a",
+           "a0",
            "b_mu",
            "b_prime",
            "z",
@@ -427,6 +431,7 @@ post_h3 <- nimbleMCMC(code = m1,
                                    func = function(x) mean(x < 0),
                                    func_name = "pr_neg") %>%
     as_tibble(rownames = "parms") %>%
+    filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
     transmute(parms,
               median = `50%`,
               low = `2.5%`,
@@ -453,12 +458,11 @@ if(max(df_est_h3$rhat, na.rm = TRUE) < 1.1) {
                mcmc = post_h3$samples,
                setup = c(iter = n_iter,
                          burn = n_burn,
-                         thin = n_thin)),
+                         thin = n_thin,
+                         nchain = n_chain)),
           file = "data_fmt/output_model_h3.rds")
 } else {
-  print(paste("f*ck",
-              max(df_est_h3$rhat, na.rm = TRUE))
-  )
+  print(paste("f*ck", max(df_est_h3$rhat, na.rm = TRUE)))
 }
 
 
