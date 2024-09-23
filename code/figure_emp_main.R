@@ -151,5 +151,5 @@ g_comb <- g_reg + g_map + plot_layout(nrow = 2,
 
 ggsave(g_comb,
        filename = "output/fig_emp_fcl.pdf",
-       width = 9,
+       width = 9.5,
        height = 8)
