@@ -177,14 +177,22 @@ Thus, XXX.
 
 \subsection{Empirical evidence}
 
-In this study, we empirically validate our theoretical predictions using stable isotope data on $\delta^{15}N$ from existing literature.
-Our meta-analysis distinguishes itself from previous research in its extent, extracting FCL estimates from XXX sites across XXX watersheds worldwide.
-We employed Bayesian hierarchical models to evaluate the effects of total river length and branching rate on FCL, while also accounting for potential influences of resource supply and disturbance through relevant proxy variables.
+We empirically validate our theoretical predictions using stable isotope data on $\delta^{15}N$ from existing literature.
+Our meta-analysis distinguishes itself from previous research in its extent, extracting FCL estimates from 317 sites across 115 watersheds worldwide (Figure \ref{fig:fcl-obs}C).
+We employed Bayesian hierarchical models to evaluate the effects of total river length and branching rate on FCL, while also accounting for potential influences of resource supply and disturbance through relevant proxy variables (Methods).
 
 The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of increased FCL.
-The analysis provided strong statistical support for the effect of branching rate, with a high probability (XXX) that the regression coefficient is positive.
-Conversely, the effect of total river length was ambiguous, characterized by the posterior distribution of its coefficient centered around zero.
+The analysis provided strong statistical support for the effect of branching rate, with a high probability ($\approx$ 0.95) that the regression coefficient is positive (Figure \ref{fig:fcl-obs}A).
+Conversely, the effect of total river length was ambiguous (Figure \ref{fig:fcl-obs}B), characterized by the posterior distribution of its coefficient centered around zero.
+Interestingly, despite continental uniqueness in ecological communities and distinct evolutionary histories, no statistical evidence exists that these relationships vary among them -- the model assuming constant slopes for these ecosystem properties exhibited the WAIC value lower than one with continent-specific slopes (-251.4 vs. -251.2).
 These patterns were consistent across continents despite variations in ecological communities and distinct evolutionary histories. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{output/fig_emp_fcl.pdf}
+    \caption{Caption}
+    \label{fig:fcl-obs}
+\end{figure}
 
 Our theory predicts that ecosystem complexity regulates FCL by dispersing the risk of disturbance cascades.
 This buffering mechanism may explain the observed effect of branching because the wealth of observations suggests the prevalence of disturbance cascades in rivers \citep{swanson_flood_1998, nakamura_disturbance_2000, berghuijs_growing_2019, sarremejane_drought_2021, sharma_spatial_2024}.
