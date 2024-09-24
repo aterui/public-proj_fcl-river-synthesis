@@ -29,7 +29,9 @@ df_mu_est <- list_est[[id_best]]$mcmc %>%
          scl_w = w / max(w))
 
 
-# map ---------------------------------------------------------------------
+# first figure ------------------------------------------------------------
+
+## map ####################################################################
 
 ## map layer
 sf_lev01 <- readRDS("data_raw/wgs84_region_lev01.rds") %>% 
@@ -72,7 +74,7 @@ g_map <- ggplot(sf_region) +
         panel.border = element_blank())
 
 
-# prediction plot ---------------------------------------------------------
+## prediction plot #######################################################
 
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
@@ -135,7 +137,7 @@ ggplot2::theme_set(default_theme)
   guides(size = "none",
          color = "none"))
 
-# arrange -----------------------------------------------------------------
+## arrange ################################################################
 
 layout <- "
 AAAA
@@ -154,3 +156,53 @@ ggsave(g_comb,
        filename = "output/fig_emp_fcl.pdf",
        width = 9.5,
        height = 8)
+
+
+# second figure -----------------------------------------------------------
+
+var_name <- c("River length",
+              "Branching rate",
+              "Air temperature",
+              "Precipitation",
+              "Human footprint",
+              "Elevation")
+
+df_ridge <- list_est[[id_best]]$mcmc %>% 
+  ggmcmc::ggs() %>% 
+  rename_with(.fn = str_to_lower) %>% 
+  filter(str_detect(parameter, "b\\[\\d{1,}\\]|^a\\[\\d{1,}\\]"),
+         parameter != "b[1]") %>% 
+  mutate(var = case_when(parameter == "b[2]" ~ var_name[1],
+                         parameter == "b[3]" ~ var_name[2],
+                         parameter == "b[4]" ~ var_name[3],
+                         parameter == "b[5]" ~ var_name[4],
+                         parameter == "b[6]" ~ var_name[5],
+                         parameter == "a[1]" ~ var_name[6]),
+         var = factor(var, levels = rev(var_name))) 
+
+g_ridge <- df_ridge %>% 
+  ggplot(aes(x = value,
+             y = var,
+             fill = 0.5 - abs(0.5 - stat(ecdf)))) +
+  ggridges::stat_density_ridges(quantile_lines = TRUE,
+                                calc_ecdf = TRUE,
+                                geom = "density_ridges_gradient",
+                                quantiles = 0.5,
+                                color = grey(0, 0.2)) +
+  scale_fill_gradient(low = "white",
+                      high = "salmon",
+                      name = "Tail prob.") +
+  geom_vline(xintercept = 0, 
+             linetype = "dashed",
+             color = grey(0.5, 0.5),
+             linewidth = 0.75) +
+  ggridges::theme_ridges() +
+  labs(x = "Posterior estimate",
+       y = "Variable")
+
+
+## export
+ggsave(g_ridge,
+       filename = "output/fig_ridge.pdf",
+       width = 7,
+       height = 4)
