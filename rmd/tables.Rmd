@@ -1,0 +1,15 @@
+---
+output: 
+  pdf_document:
+    keep_tex: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| a    | a    | a    |
+| b    | b    | b    |
+| c    | c    | c    |
