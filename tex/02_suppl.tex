@@ -1,7 +1,7 @@
 \documentclass[11pt, class=article, crop=false]{standalone}
 \usepackage[subpreambles=true]{standalone}
 \usepackage[T1]{fontenc} % for font setting
-\usepackage{newtxtext,newtxmath}
+\usepackage{newtxtext, newtxmath}
 \usepackage{import,
             graphicx,
             parskip,
@@ -12,6 +12,9 @@
             fancyhdr,
             soul,
             tabularx}
+
+% markdown input
+\usepackage{markdown}
 
 % side caption figure
 \usepackage{sidecap}
@@ -510,6 +513,6 @@ This result suggests that watersheds with higher precipitation are more likely t
 
 \newpage
 
-\input{rmd/tables}
+\markdownInput{rmd/tables.md}
 
 \end{document}
