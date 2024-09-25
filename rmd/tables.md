@@ -1,8 +1,3 @@
----
-output: 
-  pdf_document:
-    keep_tex: true
----
 
 
 
