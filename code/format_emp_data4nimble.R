@@ -41,7 +41,7 @@ df_flag <- df_env_local %>%
   left_join(df_fcl0 %>% 
               select(sid, uid)) %>% 
   group_by(uid) %>% 
-  summarize(flag_flow = ifelse(any(is.na(fsd)), "Y", "N"))
+  summarize(flag_flow = ifelse(all(is.na(fsd)), "Y", "N"))
 
 
 # format ------------------------------------------------------------------
