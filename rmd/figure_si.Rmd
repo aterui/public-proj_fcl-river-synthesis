@@ -1,0 +1,65 @@
+---
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE,
+                      root.dir = "/data_fmt")
+```
+
+```{r figure-sim}
+
+library(tidyverse)
+
+df_grt <- readRDS("sim_fcl_si.rds") %>%
+  distinct(g, rho, theta, h, delta0, z)
+
+title_text <- with(df_grt,
+                   paste0("## Numerical prediction (",
+                          "$g_0=", g, "$, ",
+                          "$\\rho=", rho, "$, ",
+                          "$\\theta=", theta, "$)\n"))
+
+c_text <- "Heatmap of FCL as a function of ecosystem size (river length, $L$)
+and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
+different combinations of resource supply ($r_0$), disturbance regime
+($\\mu^{(0)}$), predation effect ($\\mu^{(c)}$), and prey effect ($\\mu^{(p)}$).
+Each cell represents the average FCL of five food webs.
+Additional parameter values are: "
+
+cap <- with(df_grt,
+            paste0(c_text,
+                   "number of gross propagules $g_0=", g, "$, ",
+                   "synchrony probability $\\rho=", rho, "$, ",
+                   "omnivory $\\theta=", theta, "$, ",
+                   "habitat density $h=", h, "$, ",
+                   "dispersal capability $\\delta_0=", delta0, "$, and ",
+                   "scaling exponent $\\psi=", z, "$."))
+
+pdf <- with(df_grt,
+            paste0("fig_rho", rho,
+                   "_g", g,
+                   "_theta", theta) %>%
+              str_remove_all("\\.")) %>%
+  paste0(".pdf")
+
+figure_sim_chunk <- knit_chunk <- NULL
+
+for(i in seq_len(nrow(df_grt))) {
+
+  knit_chunk <- paste0(title_text[i],
+                       "\n```{r fig-sim", i, ", fig.cap=cap[",i,"]}\n",
+                       "\n knitr::include_graphics(pdf[", i, "]) \n",
+                       "```\n",
+                       "\n\\newpage\n")
+
+  figure_sim_chunk <- c(figure_sim_chunk, knit_chunk)
+
+}
+
+```
+
+`r paste(knitr::knit(text = figure_sim_chunk), collapse = '\n')`

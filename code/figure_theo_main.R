@@ -14,8 +14,8 @@ ggplot2::theme_set(default_theme)
 # figure 1 ----------------------------------------------------------------
 
 ## draw scheme
-#img <- image_read("output/subfig_scheme.png")
-img <- image_read_pdf("output/subfig_scheme.pdf")
+#img <- image_read("data_fmt/subfig_scheme.png")
+img <- image_read_pdf("data_fmt/figsub_scheme.pdf")
 
 g_subsch <- ggdraw() +
   draw_image(img)
@@ -66,7 +66,7 @@ g_uhat <- df_u %>%
   plot_annotation(tag_levels = "A"))
 
 ggsave(g_scheme,
-       filename = "output/fig_scheme.pdf",
+       filename = "data_fmt/fig_scheme.pdf",
        width = 9,
        height = 4)
 
@@ -201,7 +201,7 @@ g_sim_main <- g_heat05 + g_br + g_size +
   plot_annotation(tag_levels = "A")
 
 ggsave(g_sim_main,
-       filename = "output/fig_sim_main.pdf",
+       filename = "data_fmt/fig_sim_main.pdf",
        width = 9,
        height = 10)
 

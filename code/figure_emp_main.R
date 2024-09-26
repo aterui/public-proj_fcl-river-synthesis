@@ -153,7 +153,7 @@ g_comb <- g_map +
   plot_annotation(tag_levels = "A")
 
 ggsave(g_comb,
-       filename = "output/fig_emp_fcl.pdf",
+       filename = "data_fmt/fig_emp_fcl.pdf",
        width = 9.5,
        height = 8)
 
@@ -183,7 +183,7 @@ df_ridge <- list_est[[id_best]]$mcmc %>%
 g_ridge <- df_ridge %>% 
   ggplot(aes(x = value,
              y = var,
-             fill = 0.5 - abs(0.5 - stat(ecdf)))) +
+             fill = 0.5 - abs(0.5 - after_stat(ecdf)))) +
   ggridges::stat_density_ridges(quantile_lines = TRUE,
                                 calc_ecdf = TRUE,
                                 geom = "density_ridges_gradient",
@@ -203,6 +203,6 @@ g_ridge <- df_ridge %>%
 
 ## export
 ggsave(g_ridge,
-       filename = "output/fig_ridge.pdf",
+       filename = "data_fmt/fig_ridge.pdf",
        width = 7,
        height = 4)
