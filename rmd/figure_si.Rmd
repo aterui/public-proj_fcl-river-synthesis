@@ -21,7 +21,7 @@ title_text <- with(df_grt,
                           ifelse(g == max(g), "high propagule, ", "low propagule, "),
                           ifelse(rho == max(rho), "high synchrony, ", "low synchrony, "),
                           ifelse(theta == max(theta), "strong omnivory", "weak omnivory"),
-                          ")\n\n"))
+                          ") {-}\n\n"))
 
 c_text <- "Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
