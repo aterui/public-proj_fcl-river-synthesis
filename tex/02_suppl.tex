@@ -13,8 +13,8 @@
             soul,
             tabularx}
 
-% markdown input
-\usepackage{markdown}
+% graphic path
+\graphicspath{ {./data_fmt/} }
 
 % side caption figure
 \usepackage{sidecap}
@@ -510,5 +510,7 @@ As $\nu_d$ approaches infinity, the Student's t-distribution converges to a norm
 We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Maintext) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
 The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
 This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
+
+\input{rmd/table}
 
 \end{document}
