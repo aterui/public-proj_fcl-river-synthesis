@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       warning = FALSE)
 ```
 
-```{r figure-sim}
+```{r figure-sim, include=FALSE}
 
 library(tidyverse)
 
@@ -18,9 +18,10 @@ df_grt <- readRDS(here::here("data_fmt/sim_fcl_si.rds")) %>%
 
 title_text <- with(df_grt,
                    paste0("## Numerical prediction (",
-                          "$g_0=", g, "$, ",
-                          "$\\rho=", rho, "$, ",
-                          "$\\theta=", theta, "$)\n"))
+                          ifelse(g == max(g), "high propagule, ", "low propagule, "),
+                          ifelse(rho == max(rho), "high synchrony, ", "low synchrony, "),
+                          ifelse(theta == max(theta), "strong omnivory", "weak omnivory"),
+                          ")\n\n"))
 
 c_text <- "Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
@@ -36,7 +37,7 @@ cap <- with(df_grt,
                    "omnivory $\\theta=", theta, "$, ",
                    "habitat density $h=", h, "$, ",
                    "dispersal capability $\\delta_0=", delta0, "$, and ",
-                   "scaling exponent $\\psi=", z, "$."))
+                   "scaling exponent $\\psi_1=\\psi_2=", z, "$."))
 
 pdf <- with(df_grt,
             paste0("data_fmt/",
@@ -51,8 +52,8 @@ figure_sim_chunk <- knit_chunk <- NULL
 for(i in seq_len(nrow(df_grt))) {
 
   knit_chunk <- paste0(title_text[i],
-                       "\n```{r fig-sim", i, ", fig.cap=cap[",i,"]}\n",
-                       "\n knitr::include_graphics(here::here(pdf[", i, "])) \n",
+                       "```{r fig-sim", i, ", fig.aligh='center', fig.cap=cap[",i,"]}\n",
+                       "\nknitr::include_graphics(here::here(pdf[", i, "]))\n",
                        "```\n",
                        "\n\\newpage\n")
 
