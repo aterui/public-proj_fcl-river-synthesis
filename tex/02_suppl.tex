@@ -42,6 +42,7 @@
 \usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
 
 \title{Supporting Information}
+\date{} % remove date from title
 
 \begin{document}
 
@@ -266,12 +267,12 @@ We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equation
 The summed length of upstream links $u'$ is the product of the mean length of upstream links $\hat{l}$ and the number of upstream links $n$.
 % If $\lambda_b L \rightarrow \infty$ and each link length follows the \textit{i.i.d.} assumption, the expected value of mean length $\hat{l}$ ($= \sum_s^n l_s n^{-1}$) can be approximated as $\lambda_b^{-1}$ (the expected value of an exponential distribution) since one may ignore the length constraint imposed by the condition $\sum_s l_s = L$.
 % If $\lambda_b L$ is not sufficiently large, however, we need to account for this constraint.
-With the known sum $\sum_s l_s = L$, the fraction of single link length $\psi_s$ (= $l_s L^{-1}$) follows a Beta distribution as $\psi_s ~|~ z \sim \mbox{Beta}(1, z)$ (\textbf{Lemma 1}), whose expected value is $\mathbb{E}(\psi~|~z) = (z + 1)^{-1}$.
+With the known sum $\sum_s l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (\textbf{Lemma 1}), whose expected value is $\mathbb{E}(F~|~z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
     \begin{split}
-    \mathbb{E}(\hat{l}~|~z) &= L \cdot \mathbb{E}(\psi~|~z)\\
+    \mathbb{E}(\hat{l}~|~z) &= L \cdot \mathbb{E}(F~|~z)\\
                             &= L(z + 1)^{-1}\\
                             &= Lb^{-1}.
     \end{split}
@@ -374,8 +375,8 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 \begin{align}
     \begin{split}
         \mathbb{E}(u) = \hat{u}(L, \lambda_b) 
-                    &= \sum_{z = 0}^{\infty} \left[ \frac{L}{z + 1} \left(\hat{n}(z) + \frac{1}{2}\right) f'_{\text{pois}}(z; L, \lambda_b) \right]\\
-                    &= L \sum_{z = 0}^{\infty} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + 
+                    &= \sum_{z \in \mathbb{Z}_{\ge 0}} \left[ \frac{L}{z + 1} \left(\hat{n}(z) + \frac{1}{2}\right) f'_{\text{pois}}(z; L, \lambda_b) \right]\\
+                    &= L \sum_{z \in \mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + 
                     \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})}.
     \end{split}
 \end{align}
@@ -384,7 +385,7 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 
 \textbf{Lemma 1.}
 Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
-Then, the conditional distribution of $\psi = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = y$ follows $\mbox{Beta}(\alpha, \beta)$.
+Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = y$ follows $\mbox{Beta}(\alpha, \beta)$.
 
 \textit{Proof}.
 Let $Y = X_1 + X_2$, then the conditional probability density of $X_1$, $f_{X_1}(x_1 | Y = y)$ (0 $\le x_1 \le y$), is defined as
@@ -417,7 +418,7 @@ The conditional probability density function $f(x_1 | Y = 1)$ represents the pro
 Thus, we obtain
 
 \begin{equation}
-    \psi \sim \mbox{Beta}(\alpha, \beta).
+    F \sim \mbox{Beta}(\alpha, \beta).
 \end{equation}
 
 \textbf{Lemma 2.}
@@ -516,6 +517,8 @@ As $\nu_d$ approaches infinity, the Student's t-distribution converges to a norm
 We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Maintext) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
 The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
 This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
+
+\newpage
 
 \section{Supplementary Figures}
 
