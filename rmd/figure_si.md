@@ -7,7 +7,7 @@ output:
 
 
 
-## Numerical prediction (low propagule, low synchrony, weak omnivory) {-}
+**Numerical prediction** (low propagule $g_0 = 75$, low synchrony $\rho = 0.25$, weak omnivory $\theta = 0.25$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -18,7 +18,7 @@ Additional parameter values are: number of gross propagules $g_0=75$, synchrony 
 
 \newpage
 
-## Numerical prediction (high propagule, low synchrony, weak omnivory) {-}
+**Numerical prediction** (high propagule $g_0 = 150$, low synchrony $\rho = 0.25$, weak omnivory $\theta = 0.25$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -29,7 +29,7 @@ Additional parameter values are: number of gross propagules $g_0=150$, synchrony
 
 \newpage
 
-## Numerical prediction (low propagule, high synchrony, weak omnivory) {-}
+**Numerical prediction** (low propagule $g_0 = 75$, high synchrony $\rho = 0.5$, weak omnivory $\theta = 0.25$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -40,7 +40,7 @@ Additional parameter values are: number of gross propagules $g_0=75$, synchrony 
 
 \newpage
 
-## Numerical prediction (high propagule, high synchrony, weak omnivory) {-}
+**Numerical prediction** (high propagule $g_0 = 150$, high synchrony $\rho = 0.5$, weak omnivory $\theta = 0.25$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -51,7 +51,7 @@ Additional parameter values are: number of gross propagules $g_0=150$, synchrony
 
 \newpage
 
-## Numerical prediction (low propagule, low synchrony, strong omnivory) {-}
+**Numerical prediction** (low propagule $g_0 = 75$, low synchrony $\rho = 0.25$, strong omnivory $\theta = 0.5$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -62,7 +62,7 @@ Additional parameter values are: number of gross propagules $g_0=75$, synchrony 
 
 \newpage
 
-## Numerical prediction (high propagule, low synchrony, strong omnivory) {-}
+**Numerical prediction** (high propagule $g_0 = 150$, low synchrony $\rho = 0.25$, strong omnivory $\theta = 0.5$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -73,7 +73,7 @@ Additional parameter values are: number of gross propagules $g_0=150$, synchrony
 
 \newpage
 
-## Numerical prediction (low propagule, high synchrony, strong omnivory) {-}
+**Numerical prediction** (low propagule $g_0 = 75$, high synchrony $\rho = 0.5$, strong omnivory $\theta = 0.5$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying
@@ -84,7 +84,7 @@ Additional parameter values are: number of gross propagules $g_0=75$, synchrony 
 
 \newpage
 
-## Numerical prediction (high propagule, high synchrony, strong omnivory) {-}
+**Numerical prediction** (high propagule $g_0 = 150$, high synchrony $\rho = 0.5$, strong omnivory $\theta = 0.5$)
 
 ![Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns displaying

@@ -17,11 +17,18 @@ df_grt <- readRDS(here::here("data_fmt/sim_fcl_si.rds")) %>%
   distinct(g, rho, theta, h, delta0, z)
 
 title_text <- with(df_grt,
-                   paste0("## Numerical prediction (",
-                          ifelse(g == max(g), "high propagule, ", "low propagule, "),
-                          ifelse(rho == max(rho), "high synchrony, ", "low synchrony, "),
-                          ifelse(theta == max(theta), "strong omnivory", "weak omnivory"),
-                          ") {-}\n\n"))
+                   paste0("**Numerical prediction** (",
+                          ifelse(g == max(g),
+                                 paste0("high propagule $g_0 = ", g, "$, "),
+                                 paste0("low propagule $g_0 = ", g, "$, ")),
+                          ifelse(rho == max(rho),
+                                 paste0("high synchrony $\\rho = ", rho, "$, "),
+                                 paste0("low synchrony $\\rho = ", rho, "$, ")),
+                          ifelse(theta == max(theta),
+                                 paste0("strong omnivory $\\theta = ", theta, "$)"),
+                                 paste0("weak omnivory $\\theta = ", theta, "$)")),
+                          "\n\n")
+                   )
 
 c_text <- "Heatmap of FCL as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
