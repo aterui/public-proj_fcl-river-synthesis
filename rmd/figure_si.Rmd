@@ -16,7 +16,8 @@ c_text <- "Analytical prediction with no disturbance cascade. Heatmaps of FCL ar
 
 pdf0 <- "data_fmt/fig_rho0.pdf"
 
-fig_alyt_chunk <- paste0("```{r fig-alyt, fig.cap=c_text}\n\n",
+fig_alyt_chunk <- paste0("# Supplementary Figures\n\n",
+                         "```{r fig-alyt, fig.cap=c_text}\n\n",
                          "knitr::include_graphics(here::here(pdf0))\n\n",
                          "```\n\n",
                          "\\newpage\n\n")
