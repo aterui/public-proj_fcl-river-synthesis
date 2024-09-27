@@ -200,8 +200,17 @@ g_sim_main <- g_heat05 + g_br + g_size +
   plot_layout(design = layout) +
   plot_annotation(tag_levels = "A")
 
+
+# export ------------------------------------------------------------------
+
 ggsave(g_sim_main,
        filename = "data_fmt/fig_sim_main.pdf",
        width = 9,
        height = 10)
+
+ggsave(g_heat0,
+       filename = "data_fmt/fig_rho0.pdf",
+       width = 6,
+       height = 5)
+
 
