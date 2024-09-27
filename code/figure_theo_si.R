@@ -62,8 +62,8 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
     paste0(".pdf")
   
   ggsave(g, filename = filename,
-         height = 6,
-         width = 7.5)
+         height = 5.5,
+         width = 7)
   
   return(g)
 }
