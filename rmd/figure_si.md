@@ -9,7 +9,7 @@ output:
 
 # Supplementary Figures
 
-![Analytical prediction with no disturbance cascade. Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in Figure \ref{fig:sim-main}B and C. Additional parameter values are provided in Table 1.](../data_fmt/fig_rho0.pdf)
+![Analytical prediction with no disturbance cascade. Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in Figure 2B and 2C in the maintext. Additional parameter values are provided in Table 1.](../data_fmt/fig_rho0.pdf)
 
 \newpage
 
