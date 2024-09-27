@@ -52,7 +52,7 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
          fill = "FCL") +
     theme_classic() +
     theme(strip.background = element_blank(),
-          axis.text =  element_text(size = 8))
+          axis.text =  element_text(size = 7))
   
   filename <- with(df_parms[i, ],
                    paste0("data_fmt/fig_",
