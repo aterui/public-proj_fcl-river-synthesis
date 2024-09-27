@@ -51,7 +51,8 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
          y = expression("River length"~italic(L)),
          fill = "FCL") +
     theme_classic() +
-    theme(strip.background = element_blank())
+    theme(strip.background = element_blank(),
+          axis.text =  element_text(size = 8))
   
   filename <- with(df_parms[i, ],
                    paste0("data_fmt/fig_",
@@ -62,8 +63,8 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
     paste0(".pdf")
   
   ggsave(g, filename = filename,
-         height = 5.5,
-         width = 7)
+         height = 4.5,
+         width = 6)
   
   return(g)
 }
