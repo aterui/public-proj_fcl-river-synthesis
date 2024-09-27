@@ -16,6 +16,36 @@
 % graphic path
 \graphicspath{ {./data_fmt/} }
 
+% external document
+%----Helper code for dealing with external references----
+% (by cyberSingularity at http://tex.stackexchange.com/a/69832/226)
+
+\usepackage{xr}
+
+\newcommand*{\addFileDependency}[1]{% argument=file name and extension
+\typeout{(#1)}% latexmk will find this if $recorder=0
+% however, in that case, it will ignore #1 if it is a .aux or 
+% .pdf file etc and it exists! If it doesn't exist, it will appear 
+% in the list of dependents regardless)
+%
+% Write the following if you want it to appear in \listfiles 
+% --- although not really necessary and latexmk doesn't use this
+%
+\@addtofilelist{#1}
+%
+% latexmk will find this message if #1 doesn't exist (yet)
+\IfFileExists{#1}{}{\typeout{No file #1.}}
+}\makeatother
+
+\newcommand*{\myexternaldocument}[1]{%
+\externaldocument{#1}%
+\addFileDependency{#1.tex}%
+\addFileDependency{#1.aux}%
+}
+%------------End of helper code--------------
+
+\myexternaldocument{01_main}
+
 % side caption figure
 \usepackage{sidecap}
 \sidecaptionvpos{figure}{t}
@@ -516,11 +546,7 @@ As $\nu_d$ approaches infinity, the Student's t-distribution converges to a norm
 
 We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Maintext) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
 The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
-This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
-
-\newpage
-
-\section{Supplementary Figures}
+This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.\ref{fig:sim-main}
 
 \input{rmd/figure_si}
 
