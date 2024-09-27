@@ -95,7 +95,7 @@ On average, ecosystems with higher branching rates encompass more confluences (s
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{output/fig_scheme.pdf}
+    \includegraphics[width=\textwidth]{data_fmt/fig_scheme.pdf}
     \caption{Modeling scheme. (A) Schematic representation of modeled river branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length refers to the portion of the river located upstream from a given habitat patch. As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) Visual representation of function $\hat{u}(L, \lambda_b)$. Upstream river length $\hat{u}$ is a complex function of total river length $L$ and branching rate $\lambda_b$ (Methods).}
     \label{fig:scheme}
 \end{figure}
@@ -170,8 +170,8 @@ The positive relationship between FCL and branching rate was consistent, whereas
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{output/fig_sim_main.pdf}
-    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\lambda_b$). Each cell represents the average FCL of 20 food webs, with rows and columns reflecting different resource supply and disturbance regimes. White dashed lines indicate specific scenarios, explored in panels B and C. Additional parameter values are provided in Table XX. (B, C) Ecosystem complexity, but not size, significantly increases FCL in the presence of spatial disturbance cascades (red lines). The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed, the positive effect of ecosystem complexity disappears (gray lines in panel B), yielding patterns consistent with the ecosystem size hypothesis (gray lines in panel C).}
+    \includegraphics[width=0.8\textwidth]{data_fmt/fig_sim_main.pdf}
+    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B and C. Additional parameter values are provided in Table XX. (B, C) Ecosystem complexity, but not size, significantly increases FCL in the presence of spatial disturbance cascades (red lines). The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed, the positive effect of ecosystem complexity disappears (gray lines in panel B), yielding patterns consistent with the ecosystem size hypothesis (gray lines in panel C).}
     \label{fig:sim-main}
 \end{figure}
 
@@ -189,7 +189,7 @@ This result suggests the generality of our findings.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{output/fig_emp_fcl.pdf}
+    \includegraphics[width=0.9\linewidth]{data_fmt/fig_emp_fcl.pdf}
     \caption{Empirical regression analysis of food chain length (FCL) reveals the influence of ecosystem complexity. (A) Global map of sampling locations, with points representing outlet coordinates of 115 study watersheds. Colors indicate geographic regions categorized by HydroBASINS (level one) \citep{lehner_global_2013}. (B, C) Regression plots. Circles show FCL estimates averaged for each watershed (i.e., parameter $\alpha_{0,w}$ in Equation \ref{eq:watershed-avarage}), and their sizes correspond to statistical weights based on the number of sites and the randomness of spatial sampling (Methods). The solid line represents the global model prediction, while dashed lines show region-specific predictions (note: no regression lines in panel C due to weak statistical evidence). Colors in the regression plots match the geographic regions in panel A.}
     \label{fig:fcl-obs}
 \end{figure}
@@ -233,7 +233,7 @@ Although watershed-scale experiments are practically impossible, small-scale exp
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{output/fig_ridge.pdf}
+    \includegraphics[width=0.75\linewidth]{data_fmt/fig_ridge.pdf}
     \caption{Posterior distributions for the regression coefficients. The Y-axis represents predictor variables, and colors are proportional to tail probabilities. Vertical lines are median estimates.}
     \label{fig:ridge}
 \end{figure}
@@ -353,7 +353,7 @@ The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstre
 The expected value $\hat{u}$ can be expressed as a complex function of $L$ and $\lambda_b$ (SI Appendix for derivation):
 
 \begin{equation}
-    \hat{u}(L, \lambda_b) = L \sum_{z = 0}^{\infty} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
+    \hat{u}(L, \lambda_b) = L \sum_{z \in \mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
 \end{equation}
 
 where
