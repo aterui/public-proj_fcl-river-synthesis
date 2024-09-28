@@ -8,6 +8,7 @@ pacman::p_load(
   magick,
   cowplot,
   nimble,
+  xtable,
   ## simulation
   foreach,
   mcbrnet,
