@@ -9,7 +9,7 @@ output:
 \begin{table}[ht]
 \centering
 \caption{Parameter descriptions and values\label{tab:parms}} 
-\begin{tabular}{llll}
+\begin{tabularx}{\textwidth}{llll}
   \hline
 Symbol & Description & Value (analytical) & Value (numerical) \\ 
   \hline
@@ -24,6 +24,6 @@ $r_0$ & Resource supply [-] & 0.40, 0.80 & 0.40, 0.80 \\
   $\psi$ & Scaling exponent for dispersal capability and propagule size & 0.50 & 0.50 \\ 
   $\theta$ & Degree of omnivory [unit trophic position] & 0.25 & 0.25, 0.50 \\ 
    \hline
-\end{tabular}
+\end{tabularx}
 \end{table}
 
