@@ -75,5 +75,14 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 
 # export ------------------------------------------------------------------
 
-saveRDS(df_parms,
-        "data_fmt/data_parms.rds")
+options(xtable.comment = FALSE)
+
+print(xtable(df_parms,
+             caption = "Parameter descriptions and values\\label{tab:parms}"),
+      tabular.environment = "tabularx", # use \begin{tabularx}
+      width = "\\textwidth", # scale table with \textwidth
+      sanitize.text.function = function(x) x, # for math mode
+      include.rownames = FALSE,
+      caption.placement = "top",
+      size = "\\small",
+      file = "rmd/table.tex")
