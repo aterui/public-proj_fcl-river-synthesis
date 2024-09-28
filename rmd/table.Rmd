@@ -15,7 +15,9 @@ pacman::p_load(tidyverse,
                xtable)
 
 df_parms <- readRDS(here::here("data_fmt/data_parms.rds"))
-xtable(df_parms)
+
+options(xtable.comment = FALSE)
+print(xtable(df_parms), sanitize.text.function = function(x) x)
 
 ```
 
