@@ -47,6 +47,7 @@
 \begin{document}
 
 \renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 
 \maketitle
@@ -55,11 +56,9 @@
 
 \newpage
 
-\section{Supplementary Text}
+\section{Theory}
 
-\subsection{Theory}
-
-\subsubsection{Model Derivation}
+\subsection{Model Derivation}
 
 \textit{Single patch dynamics} --
 Our model builds upon the deterministic approximation of the continuous-time Markov process.
@@ -219,11 +218,10 @@ and
 The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod}. 
 In Equation \ref{eq:extn}, we introduce the expected value of the upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
 
-\subsubsection{Derivation of Expected Upstream River Length} \label{updist}
+\subsection{Derivation of Expected Upstream River Length} \label{updist}
 
 \textbf{Definitions and assumptions.}
 We derive the expected value of the upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
-
 We use the following key terms: \textit{link} and \textit{magnitude}.
 The term link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth).
 The term magnitude refers to the number of exterior source links (links containing upstream terminals) flowing into a given link within the network.
@@ -384,7 +382,7 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
     \end{split}
 \end{align}
 
-\subsubsection{Proofs of Lemma}
+\subsection{Proofs of Lemma}
 
 \textbf{Lemma 1.}
 Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
@@ -493,11 +491,46 @@ Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
     \end{split}
 \end{align}
 
-\newpage
+\subsection{No Cascade Model}
 
-\subsection{Empirical Analysis}
+To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
+This ``no cascade'' model is identical to the one presented in the main text, except for the extinction rate $\mu_k$, which was modified as follows:
 
-\subsubsection{Discharge-Precipitation Relationship}
+\begin{equation}
+    \mu_{k} = 
+        \underbrace{\mu_{k}^{(0)} o}_{\text{Disturbance}} + 
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}}_{\text{Predation}}.
+    \label{eq:extn}    
+\end{equation}
+
+Here, $o$ is a constant used to ensure that the disturbance rate is comparable to the rates explored in the model with spatial disturbance cascades.
+We assumed $o = (1 + \rho \hat{u}(L = 55, \lambda_b = 0.55))$, and other parameter values are specified as described in Table 1 (analytical).
+Model predictions are displayed in Figure \ref{fig:no-cascade}.
+
+\begin{figure}
+\centering
+\includegraphics{../data_fmt/fig_rho0.pdf}
+\caption{Analytical prediction with no disturbance cascade. Heatmaps of
+FCL are expressed as a function of ecosystem size (river length, \(L\))
+and complexity (branching rate, \(\lambda_b\)), with rows and columns
+reflecting different disturbance and resource supply regimes. Each cell
+represents the average FCL of 20 food webs. White dashed lines indicate
+specific scenarios, explored in Figure 2B and 2C in the maintext.
+Additional parameter values are provided in Table 1.}
+\label{fig:no-cascade}
+\end{figure}
+
+\subsection{Numerical Exploration}
+
+% Figures
+\input{rmd/figure_si}
+
+\section{Empirical Analysis}
+
+\subsection{Data sources}
+
+\subsection{Discharge-Precipitation Relationship}
 We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability.
 The discharge data is available at a 0.1-degree resolution (approximately 10 km at the equator) and was extracted from the nearest flow-connected cell for each site; however, discharge data could not be obtained for two headwater stream sites, which were excluded from further analysis.
 At each site, we log-transformed the discharge data and scaled it by the temporal mean to facilitate comparison across sites with varying stream sizes.
@@ -521,6 +554,45 @@ We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-tra
 The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
 This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
 
-\input{rmd/figure_si}
+\subsection{Distance Ratio}
+
+The distance ratio, \(d_{r,w}\), was used to evaluate the randomness of the spatial sampling design within each watershed \(w\). The procedure consists of the following steps:
+
+\begin{enumerate}
+    \item Dummy sites were randomly generated along the river network. The number of dummy sites matched the number of actual sampling sites in the observations.
+    \item Euclidean distance between each pair of sites was calculated, and the median distance was determined.
+    \item Steps 1 and 2 were repeated 100 times to compute the average of the median distances, denoted as \(\mu_d\).
+    \item Finally, \(d_{r,w}\) was calculated as the ratio of the observed median distance to \(\mu_d\).
+\end{enumerate}
+
+Therefore, the distance ratio $d_{r,w}$ represents the spatial randomness of actual sampling sites, with values smaller (greater) than one indicating over-aggregation (over-dispersion) of sampling sites.
+We assumed $d_{r,w} = 0$ if there was only one site within a watershed.
+
+\subsection{Competing Model}
+
+The hierarchical model presented in the main text is a random intercept model, which assumes no geographic variation in the effects of river length and branching rate. To allow for geographic variation, we developed a random intercept-slope model, where the effects of river length and branching rate vary by geographic region $u$.
+
+Specifically, we modified the watershed-level regression equation as follows:
+
+\begin{equation}
+    \alpha_{0, w} = \beta_{0, u(w)} + \beta_{1, u(w)} L_w + \beta_{2, u(w)} \lambda_{b, w} + \sum_m \beta_m x'_{m, w} + \varepsilon_{w},
+    \label{eq:watershed-average}
+\end{equation}
+
+and
+
+\begin{equation}
+    \boldsymbol{\beta_u} \sim \mbox{MVN}(\boldsymbol{\mu_{\beta}}, \Omega),
+\end{equation}
+
+where $\boldsymbol{\beta_u} = \{\beta_{0, u}, \beta_{1, u}, \beta_{2, u}\}$. Here, $\boldsymbol{\mu_{\beta}}$ represents the mean vector, and $\Omega$ denotes the variance-covariance matrix.
+We used weakly informative priors, where $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$, and $\sigma_{\beta, m} \sim t(0, 1, 10)_{>0}$ ($m \in \{0, 1, 2\}$). In this context, the upper-triangular matrix $U_{\Omega}$ is the Cholesky factor for the correlation matrix, and $\sigma_{\beta, m}$ represents the standard deviations in $\Omega$.
+Other priors were specified as described in the main text.
+
+Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
+converged.
+The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
+As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the calculation of posterior distributions.
+Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
 
 \end{document}
