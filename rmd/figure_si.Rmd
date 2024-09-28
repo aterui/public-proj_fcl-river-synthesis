@@ -10,17 +10,17 @@ knitr::opts_chunk$set(echo = FALSE,
 
 library(tidyverse)
 
-# chunks for analytical solutions ####
-
-c_text <- "Analytical prediction with no disturbance cascade. Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in Figure 2B and 2C in the maintext. Additional parameter values are provided in Table 1."
-
-pdf0 <- "data_fmt/fig_rho0.pdf"
-
-fig_alyt_chunk <- paste0("# Supplementary Figures\n\n",
-                         "```{r fig-alyt, fig.cap=c_text}\n\n",
-                         "knitr::include_graphics(here::here(pdf0))\n\n",
-                         "```\n\n",
-                         "\\newpage\n\n")
+# # chunks for analytical solutions ####
+# 
+# c_text <- "Analytical prediction with no disturbance cascade. Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in Figure 2B and 2C in the maintext. Additional parameter values are provided in Table 1."
+# 
+# pdf0 <- "data_fmt/fig_rho0.pdf"
+# 
+# fig_alyt_chunk <- paste0("# Supplementary Figures\n\n",
+#                          "```{r fig-alyt, fig.cap=c_text}\n\n",
+#                          "knitr::include_graphics(here::here(pdf0))\n\n",
+#                          "```\n\n",
+#                          "\\newpage\n\n")
 
 # chunks for numerical solutions ####
 
@@ -74,16 +74,12 @@ for(i in seq_len(nrow(df_grt))) {
   knit_chunk <- paste0("```{r fig-num", i, ", fig.cap=cap[",i,"]}\n\n",
                        "knitr::include_graphics(here::here(pdf[", i, "]))\n\n",
                        "```\n\n",
-                       "\\newpage\n\n")
+                       "\\newpage\n")
 
   fig_num_chunk <- c(fig_num_chunk, knit_chunk)
 
 }
 
-fig_chunk <- c(fig_alyt_chunk, fig_num_chunk)
-
 ```
 
-\newpage
-
-`r paste(knitr::knit(text = fig_chunk), collapse = '\n')`
+`r paste(knitr::knit(text = fig_num_chunk), collapse = '\n')`

@@ -64,8 +64,8 @@ df_parms <- lapply(list_parms, FUN = function(x) {
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
                                  parms == "rho" ~ "Synchrony probability [-]",
-                                 parms == "psi" ~ "Scaling exponent for dispersal capability and propagule size",
-                                 parms == "theta" ~ "Degree of omnivory [unit trophic position]")) %>% 
+                                 parms == "psi" ~ "Scaling exponent for dispersal and propagule parameters [per unit trophic position]",
+                                 parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
   rename("Value (analytical)" = value.x,
          "Value (numerical)" = value.y) %>% 
   relocate(symbol, description) %>% 
