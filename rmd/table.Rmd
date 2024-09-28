@@ -11,13 +11,11 @@ knitr::opts_chunk$set(echo = FALSE,
 ```
 
 ```{r table, results='asis'}
-pacman::p_load(tidyverse)
-df_parms <- readRDS(here::here("data_fmt/data_parms.rds"))
+pacman::p_load(tidyverse,
+               xtable)
 
-knitr::kable(df_parms,
-                booktabs = TRUE,
-                escape = FALSE,
-                format = "simple",
-                caption = "Parameter values in analytical and numerical analysis.")
+df_parms <- readRDS(here::here("data_fmt/data_parms.rds"))
+xtable(df_parms)
+
 ```
 

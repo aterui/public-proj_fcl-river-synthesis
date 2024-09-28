@@ -34,8 +34,8 @@ list_parms <- list.files("data_fmt",
 
 df_parms <- lapply(list_parms, FUN = function(x) {
   
-  uv <- sapply(x, function(x) sprintf("%.2f", unique(x)))
-  uv$g0 <- sprintf("%.0f", unique(x$g0))
+  uv <- sapply(x, function(x) paste(sprintf("%.2f", unique(x)), collapse = ", "))
+  uv[which(colnames(x) == "g0")] <- paste(sprintf("%.0f", unique(x$g0)), collapse = ", ")
     
   parms <- names(uv)
   names(uv) <- NULL
