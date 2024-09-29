@@ -105,22 +105,21 @@ In what follows, we use Equation \ref{eq:dm0} as the baseline model that describ
 
 \textit{Colonization} --
 We express the colonization rate $c_{ik}$ as a function of ecological and ecosystem attributes.
-Specifically, we define $c_{ik}$ as follows:
+We define $c_{ik}$ as follows:
 
 \begin{equation}
-    c_{ik} = r_{ik} \frac{\sum_{j \ne i}^N c_{0, jk} \pi_{jk}}{N},
+    c_{ik} = r_{ik} \frac{\sum_{j}^N c_{0, jk} \pi_{jk}}{N},
     \label{eq:clnz}
 \end{equation}
 
-where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit distance) .
-The term $\sum_{j \ne i}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
-We scaled $\sum_{j \ne i}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
+where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit river length) .
+The term $\sum_{j}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
+We scaled $\sum_{j}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
 For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} \equiv c_{0, k}$).
-We also use the approximation for the proportion of patches occupied $p_k$ as $p_k = N^{-1}\sum_{j}^N \pi_{jk} \approx N^{-1}\sum_{j \ne i}^N \pi_{jk}$, assuming that $N$ is sufficiently large.
-These simplifying assumptions, without loss of generality, yield:
+With notation $p_k = N^{-1}\sum_{j}^N \pi_{jk}$, this simplifying assumption yields:
 
 \begin{equation}
-     c_{ik} \approx r_{ik} c_{0, k} p_k
+     c_{ik} = r_{ik} c_{0, k} p_k
 \end{equation}
 
 The establishment probability $r_{ik}$ represents different quantities for producers and consumers:
@@ -160,12 +159,12 @@ The survival probability during dispersal $\phi_k$ is a function of the species-
 Equation \ref{eq:phi} assumes that propagule survival during dispersal increases with increasing dispersal capability and habitat density.
 
 \textit{Extinction} -- 
-We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey availability, and predation:
+We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey scarcity, and predation:
 
 \begin{equation}
     \mu_{ik} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey availability}} + 
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} \pi_{iq}}_{\text{Predation}}.
     \label{eq:extn}
 \end{equation}
@@ -180,7 +179,7 @@ Our model assumes that such risks of synchronized disturbance linearly scale wit
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
 In the prey term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
-Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of prey species.
+Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of consumable prey species.
 The extinction risk caused by the lack of prey is reduced by the factor $S_{p, k}^{-1} \sum_{q~\in~\text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of possible prey species $S_{p, k}$.
 Note that $\mu_{k}^{(p)} = 0$ for producers.
 
