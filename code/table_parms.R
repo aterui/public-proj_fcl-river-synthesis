@@ -27,7 +27,8 @@ list_parms <- list.files("data_fmt",
                     theta) %>% 
       rename(r0 = rsrc,
              g0 = g,
-             psi = z)
+             psi = z) %>% 
+      filter(rho != 0)
   })
 
 ## transform them into tables
