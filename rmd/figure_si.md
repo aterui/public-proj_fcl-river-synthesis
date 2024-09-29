@@ -10,7 +10,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num1}](../data_fmt/fig_rho025_g75_theta025.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho025_g75_theta025.pdf)
 
 \newpage
 
@@ -19,7 +19,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num2}](../data_fmt/fig_rho025_g150_theta025.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho025_g150_theta025.pdf)
 
 \newpage
 
@@ -28,7 +28,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num3}](../data_fmt/fig_rho05_g75_theta025.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho05_g75_theta025.pdf)
 
 \newpage
 
@@ -37,7 +37,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num4}](../data_fmt/fig_rho05_g150_theta025.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho05_g150_theta025.pdf)
 
 \newpage
 
@@ -46,7 +46,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num5}](../data_fmt/fig_rho025_g75_theta05.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho025_g75_theta05.pdf)
 
 \newpage
 
@@ -55,7 +55,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num6}](../data_fmt/fig_rho025_g150_theta05.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho025_g150_theta05.pdf)
 
 \newpage
 
@@ -64,7 +64,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num7}](../data_fmt/fig_rho05_g75_theta05.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho05_g75_theta05.pdf)
 
 \newpage
 
@@ -73,7 +73,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\mu^{(0)}$), predation effect ($\mu^{(c)}$), and prey effect ($\mu^{(p)}$).
 Each cell represents the average FCL of five food webs.
-Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi_1=\psi_2=0.5$.\label{fig:fig-num8}](../data_fmt/fig_rho05_g150_theta05.pdf)
+Additional parameter values are: habitat density $h=2.5$, dispersal capability $\delta_0=0.5$, and scaling exponent $\psi=0.5$.](../data_fmt/fig_rho05_g150_theta05.pdf)
 
 \newpage
 

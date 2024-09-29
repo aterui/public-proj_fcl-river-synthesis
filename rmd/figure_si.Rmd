@@ -52,12 +52,10 @@ Additional parameter values are: "
                  c_text0,
                  "habitat density $h=", h, "$, ",
                  "dispersal capability $\\delta_0=", delta0, "$, and ",
-                 "scaling exponent $\\psi_1=\\psi_2=", z, "$.")
+                 "scaling exponent $\\psi=", z, "$.")
   
   return(cap0)
 })
-
-cap <- paste0(cap, "\\label{fig:fig-num", seq_len(length(cap)),"}")
 
 ## graphics
 pdf <- with(df_grt,
