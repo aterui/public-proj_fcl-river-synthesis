@@ -57,6 +57,8 @@ Additional parameter values are: "
   return(cap0)
 })
 
+cap <- paste0(cap, "\\label{fig:fig-num", seq_len(length(cap)),"}")
+
 ## graphics
 pdf <- with(df_grt,
             paste0("data_fmt/",
