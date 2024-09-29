@@ -79,7 +79,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 options(xtable.comment = FALSE)
 
 print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
-             caption = "Parameter descriptions and values\\label{tab:parms}"),
+             caption = "Parameter descriptions and values (analytical).\\label{tab:parms}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
@@ -89,7 +89,7 @@ print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
       file = "rmd/table.tex")
 
 print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
-             caption = "Parameter descriptions and values\\label{tab:parms}"),
+             caption = "Parameter values in numerical analysis.\\label{tab:parms-num}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
