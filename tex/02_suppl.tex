@@ -510,7 +510,7 @@ Model predictions are displayed in Figure \ref{fig:no-cascade}.
 
 \begin{figure}
 \centering
-\includegraphics{../data_fmt/fig_rho0.pdf}
+\includegraphics[width=0.75\textwidth]{../data_fmt/fig_rho0.pdf}
 \caption{Analytical prediction with no disturbance cascade. Heatmaps of
 FCL are expressed as a function of ecosystem size (river length, \(L\))
 and complexity (branching rate, \(\lambda_b\)), with rows and columns
@@ -524,13 +524,15 @@ Additional parameter values are provided in Table 1.}
 \subsection{Numerical Exploration}
 
 We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$) (Table \ref{tab:parms}), resulting in 128 simulation scenarios.
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$) (Table \ref{tab:parms-num}), resulting in 128 simulation scenarios.
+Model predictions are displayed in Figures S2 -- S9.
+
+\input{rmd/table_si}
+
 In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis.
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described above.
 An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-
-\input{rmd/table_si}
 
 % Figures
 \input{rmd/figure_si}
