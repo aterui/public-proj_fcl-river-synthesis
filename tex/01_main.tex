@@ -386,13 +386,6 @@ We crossed these 20 food webs with resource supply ($r_0 \in \{0.4, 0.8\}$) and 
 In each simulation scenario, we systematically varied total river length $L$ and branching rate $\lambda_b$ as $L \in [10, 100]$ and $\lambda_b \in [0.1, 1.0]$ (50 values with an equal interval) to assess their influences.
 This analytical exploration results in $20 \times 2^2 \times 50^2 = 200,000$ runs.
 
-We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$) (Table \ref{tab:parms}), resulting in 128 simulation scenarios.
-In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis.
-In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described above.
-An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
-This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-
 At (quasi)equilibrium, we calculated the ``realized'' trophic position $\tau^{(w)}$ for persistent species as follows.
 Producers are assigned $\tau^{(w)} = 1.0$.
 Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trophic positions plus one:
