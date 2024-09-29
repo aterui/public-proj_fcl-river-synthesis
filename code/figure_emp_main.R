@@ -160,12 +160,15 @@ ggsave(g_comb,
 
 # second figure -----------------------------------------------------------
 
-var_name <- c("River length",
-              "Branching rate",
+var_name <- c("log River length",
+              "log Branching rate",
               "Air temperature",
               "Precipitation",
               "Human footprint",
               "Elevation")
+
+sigma_br <- sd(df_fcl_wsd$log_lambda)
+sigma_rl <- sd(df_fcl_wsd$log_r_length)
 
 df_ridge <- list_est[[id_best]]$mcmc %>% 
   ggmcmc::ggs() %>% 
@@ -178,27 +181,38 @@ df_ridge <- list_est[[id_best]]$mcmc %>%
                          parameter == "b[5]" ~ var_name[4],
                          parameter == "b[6]" ~ var_name[5],
                          parameter == "a[1]" ~ var_name[6]),
-         var = factor(var, levels = rev(var_name))) 
+         std_value = case_when(var == "log Branching rate" ~ value * sigma_br,
+                               var == "log River length" ~ value * sigma_rl,
+                               TRUE ~ as.numeric(value))) 
+
+var_level <- df_ridge %>% 
+  group_by(var) %>% 
+  summarize(b = median(value)) %>% 
+  arrange(b) %>% 
+  pull(var)
 
 g_ridge <- df_ridge %>% 
-  ggplot(aes(x = value,
+  mutate(var = factor(var, levels = var_level)) %>% 
+  ggplot(aes(x = std_value,
              y = var,
              fill = 0.5 - abs(0.5 - after_stat(ecdf)))) +
   ggridges::stat_density_ridges(quantile_lines = TRUE,
                                 calc_ecdf = TRUE,
                                 geom = "density_ridges_gradient",
                                 quantiles = 0.5,
-                                color = grey(0, 0.2)) +
+                                color = grey(0, 0.2), 
+                                size = 0.25,
+                                scale = 0.95) +
   scale_fill_gradient(low = "white",
                       high = "salmon",
                       name = "Tail prob.") +
   geom_vline(xintercept = 0, 
              linetype = "dashed",
              color = grey(0.5, 0.5),
-             linewidth = 0.75) +
+             linewidth = 0.25) +
   ggridges::theme_ridges() +
   labs(x = "Posterior estimate",
-       y = "Variable")
+       y = "Predictor")
 
 
 ## export
