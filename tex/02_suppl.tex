@@ -218,6 +218,8 @@ and
 The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod}. 
 In Equation \ref{eq:extn}, we introduce the expected value of the upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
 
+\newpage
+
 \subsection{Derivation of Expected Upstream River Length} \label{updist}
 
 \textbf{Definitions and assumptions.}
@@ -382,6 +384,8 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
     \end{split}
 \end{align}
 
+\newpage
+
 \subsection{Proofs of Lemma}
 
 \textbf{Lemma 1.}
@@ -491,6 +495,8 @@ Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
     \end{split}
 \end{align}
 
+\newpage
+
 \subsection{No Cascade Model}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
@@ -521,25 +527,30 @@ Additional parameter values are provided in Table 1.}
 \label{fig:no-cascade}
 \end{figure}
 
-\subsection{Numerical Exploration}
+\newpage
+
+\subsection{Numerical Analysis}
 
 We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$) (Table \ref{tab:parms-num}), resulting in 128 simulation scenarios.
-Model predictions are displayed in Figures S2 -- S9.
-
-\input{rmd/table_si}
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
 In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis.
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described above.
 An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
+Model predictions are displayed in Figures S2 -- S9.
 
-% Figures
+\input{rmd/table_si}
+
+\newpage
+
 \input{rmd/figure_si}
 
 \section{Empirical Analysis}
 
-\subsection{Data sources}
+\subsection{Data Sources}
+
+Insert a table
 
 \subsection{Discharge-Precipitation Relationship}
 We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability.
