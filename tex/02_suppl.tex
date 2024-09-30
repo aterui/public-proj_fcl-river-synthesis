@@ -66,16 +66,16 @@ Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) t
 The exact dynamics can be described by a stochastic differential equation:
 
 \begin{equation}
-    \pi'_{ik}(t + dt) - \pi'_{ik}(t) = c'_{ik}(t) (1 - \pi'_{ik}(t)) - \mu'_{ik}(t) \pi'_{ik}(t),
+    \pi'_{ik}(t + dt) - \pi'_{ik}(t) = c'_{ik} (1 - \pi'_{ik}(t)) - \mu'_{ik} \pi'_{ik}(t),
     \label{eq:sde0}
 \end{equation}
 
-where $c'_{ik}(t)$ and $\mu'_{ik}(t)$ are time-independent Bernoulli random variables representing colonization and extinction with means:
+where $c'_{ik}$ and $\mu'_{ik}$ are time-independent Bernoulli random variables representing colonization and extinction  of species $k$ at patch $i$ with means:
 
 \begin{align}
     \begin{split}
-        \overrightarrow{c'_{ik}(t)} &= c_{ik} dt,\\
-        \overrightarrow{\mu'_{ik}(t)} &= \mu_{ik} dt.
+        \overrightarrow{c'_{ik}} &= c_{ik} dt,\\
+        \overrightarrow{\mu'_{ik}} &= \mu_{ik} dt.
     \end{split}
 \end{align}
 
@@ -90,7 +90,7 @@ We rewrite Equation \ref{eq:sde0} using the means:
 where $d\xi_{ik}(t)$ is the stochastic term given by:
 
 \begin{equation}
-    d\xi_{ik}(t) = (c'_{ik}(t) - \overrightarrow{c'_{ik}(t)}) (1 - \pi'_{ik}(t)) - (\mu'_{ik}(t) - \overrightarrow{\mu_{ik}(t)}) \pi'_{ik}(t).
+    d\xi_{ik}(t) = (c'_{ik} - \overrightarrow{c'_{ik}}) (1 - \pi'_{ik}(t)) - (\mu'_{ik} - \overrightarrow{\mu_{ik}}) \pi'_{ik}(t).
 \end{equation}
 
 Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
@@ -115,7 +115,7 @@ We define $c_{ik}$ as follows:
 where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit river length) .
 The term $\sum_{j}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
 We scaled $\sum_{j}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
-For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} \equiv c_{0, k}$).
+For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} = c_{0, k}$).
 With notation $p_k = N^{-1}\sum_{j}^N \pi_{jk}$, this simplifying assumption yields:
 
 \begin{equation}
@@ -128,12 +128,12 @@ The establishment probability $r_{ik}$ represents different quantities for produ
     r_{ik} =
     \begin{cases}
     r_{0} & \text{if $k~\in~\text{producer}$,}\\
-    \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} & \text{if $k~\in~\text{consumer}$,}
+    \frac{\sum_{q~\in~S_k} \pi_{iq}}{|S_{k}|} & \text{if $k~\in~\text{consumer}$,}
     \end{cases}
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $\sum_{q~\in~\text{prey}} \pi_{iq}$ is the expected number of prey species available at patch $i$, and $S_{p, k}$ is the number of prey species consumable for consumer $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $S_k$ is the set of prey species available for species $k$ (and thus $\sum_{q ~\in~S_k} \pi_{iq}$ represents the expected number of prey species at patch $q$), and $|S_{k}|$ is the number of prey species consumable for consumer $k$.
 This formulation assumes that resource or proportional prey availability increases species' establishment.
 The resource supply $r_0$ is assumed to be constant over space.
 
@@ -164,8 +164,8 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
 \begin{equation}
     \mu_{ik} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} \pi_{iq}}{S_{p, k}} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} \pi_{iq}}_{\text{Predation}}.
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~S_k} \pi_{iq}}{|S_{k}|} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator of}~k} \pi_{iq}}_{\text{Predation}}.
     \label{eq:extn}
 \end{equation}
 
@@ -178,9 +178,9 @@ Similarly, flood and drought disturbances are highly correlated between up- and 
 Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u_i$, allowing us to capture the essential feature of riverine systems.
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
-In the prey term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
+In the second term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
 Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of consumable prey species.
-The extinction risk caused by the lack of prey is reduced by the factor $S_{p, k}^{-1} \sum_{q~\in~\text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of possible prey species $S_{p, k}$.
+The extinction risk caused by the lack of prey is reduced by the factor $|S_{k}|^{-1} \sum_{q~\in~\text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of consumable prey species $|S_{k}|$.
 Note that $\mu_{k}^{(p)} = 0$ for producers.
 
 In the predation term, the extinction risk caused by predation is assumed to increase linearly with the species richness of predators at patch $i$.
@@ -200,7 +200,7 @@ where
     r_{k} = 
     \begin{cases}
         r_0 & \text{for producers,}\\
-        \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p,k}} & \text{for consumers,}
+        \frac{\sum_{q~\in~S_k} p_{q}}{|S_{k}|} & \text{for consumers,}
     \end{cases}
 \end{equation}
 
@@ -209,8 +209,8 @@ and
 \begin{equation}
     \mu_{k} = 
         \mu_{k}^{(0)} (1 + \rho \hat{u}) + 
-        \mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right) + 
-        \mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}.
+        \mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~S_k} p_{q}}{|S_{k}|} \right) + 
+        \mu_{k}^{(c)} \sum_{q~\in~\text{predator of}~ k} p_{q}.
     \label{eq:extn}    
 \end{equation}
 
@@ -243,11 +243,10 @@ We use these assumptions in the following derivation.
     \begin{tabularx}{\textwidth}{ll}
         Symbol & Description\\
         \hline
-        $u$ & upstream river length at a given habitat patch.\\
+        $u$ & Upstream river length at a given habitat patch.\\
         $L$ & Total river length.\\
         $\lambda_b$ & Branching rate defining the length distribution of individual links.\\
         $l$ & Individual link length. Assumed to follow $l \sim \mbox{Exp}(\lambda_b)$.\\
-        $B$ & Number of links ($B = Z + 1$).\\
         $Z$ & Number of links minus one ($Z = B - 1$).\\
         \hline
     \end{tabularx}
@@ -389,7 +388,7 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 
 \textbf{Lemma 1.}
 Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
-Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = y$ follows $\mbox{Beta}(\alpha, \beta)$.
+Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = 1$ follows $\mbox{Beta}(\alpha, \beta)$.
 
 \textit{Proof}.
 Let $Y = X_1 + X_2$, then the conditional probability density of $X_1$, $f_{X_1}(x_1 | Y = y)$ (0 $\le x_1 \le y$), is defined as
