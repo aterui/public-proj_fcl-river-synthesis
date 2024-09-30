@@ -21,8 +21,9 @@ df_x <- list_fcl[[1]] %>%
                             prec,
                             temp,
                             hfp)) %>% 
-  mutate(resid_elev = resid(lm(log(local_elev) ~ prec, .))) %>% 
-  dplyr::select(local_area,
+  dplyr::select(h,
+                g,
+                local_area,
                 local_elev,
                 forest_b1km,
                 r_length,
@@ -36,10 +37,17 @@ df_x <- list_fcl[[1]] %>%
   dplyr::select(-c(local_area,
                    r_length,
                    lambda)) %>% 
-  relocate(log_area,
+  relocate(h,
+           g,
+           log_area,
            local_elev,
            forest_b1km,
            log_rl,
            log_lambda)
 
-plot(df_x)
+
+# analysis ----------------------------------------------------------------
+
+df_x %>% 
+  select(-h, -g) %>% 
+  cor()
