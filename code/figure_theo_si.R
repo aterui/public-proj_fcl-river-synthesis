@@ -19,11 +19,11 @@ df_plot <- df_fcl_sim %>%
   mutate(lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
          lab_rsrc = sprintf("italic(r[0])==%.2f", rsrc),
          lab_mu_p = ifelse(mu_p > min(mu_p),
-                           sprintf("mu^{(p)}==%.2f~(strong~prey~effect)", mu_p),
-                           sprintf("mu^{(p)}==%.2f~(weak~prey~effect)", mu_p)),
+                           sprintf("mu^{(1)}==%.2f~(strong~prey~effect)", mu_p),
+                           sprintf("mu^{(1)}==%.2f~(weak~prey~effect)", mu_p)),
          lab_mu_c = ifelse(mu_c == min(mu_c),
-                           sprintf("mu^{(c)}==%.2f~(weak~predation)", mu_c),
-                           sprintf("mu^{(c)}==%.2f~(strong~predation)", mu_c)))
+                           sprintf("mu^{(2)}==%.2f~(weak~predation)", mu_c),
+                           sprintf("mu^{(2)}==%.2f~(strong~predation)", mu_c)))
 
 df_parms <- df_plot %>% 
   distinct(rho, g, theta) %>% 
