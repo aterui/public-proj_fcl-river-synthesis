@@ -7,6 +7,7 @@
             parskip,
             url,
             amsmath,
+            amsthm,
             amssymb,
             wrapfig,
             fancyhdr,
@@ -24,12 +25,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
+% for math
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+
 % citation setup
 \usepackage[euler]{textgreek}
 \usepackage[sort&compress]{natbib}
 \setcitestyle{square}
 \setcitestyle{comma}
-\bibliographystyle{bibstyle}
+\bibliographystyle{pnas-new}
 
 % caption setup
 \usepackage[font={f, small}, labelfont={bf, small}]{caption}
@@ -90,7 +95,7 @@ We rewrite Equation \ref{eq:sde0} using the means:
 where $d\xi_{ik}(t)$ is the stochastic term given by:
 
 \begin{equation}
-    d\xi_{ik}(t) = (c'_{ik} - \overrightarrow{c'_{ik}}) (1 - \pi'_{ik}(t)) - (\mu'_{ik} - \overrightarrow{\mu_{ik}}) \pi'_{ik}(t).
+    d\xi_{ik}(t) = (c'_{ik} - \overrightarrow{c'_{ik}}) (1 - \pi'_{ik}(t)) - (\mu'_{ik} - \overrightarrow{\mu'_{ik}}) \pi'_{ik}(t).
 \end{equation}
 
 Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
@@ -258,31 +263,31 @@ We use these assumptions in the following derivation.
 The expected upstream river length $\mathbb{E}(u)$ at a given habitat patch within a random branching network, characterized by total river length $L$ and branching rate $\lambda_b$, can be expressed as a function of $L$ and $\lambda_b$.
 
 \textit{Proof.}
-The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l')$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat patch) and $l'$ is the distance from the upstream link end to the habitat patch within the focal link.
-To calculate $\mathbb{E}(u')$ and $\mathbb{E}(l')$, we condition on the number of branching events as $Z = z$ ($z \in 2\mathbb{Z}_{\ge 0}$) and the number of links as $B = b = z + 1$, whose randomness is accounted for as the final step of the proof.
+The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s(i)})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat patch) and $l'_{s(i)}$ is the distance from the upstream link end to habitat patch $i$ in link $s$.
+To calculate $\mathbb{E}(u')$ and $\mathbb{E}(l'_{s(i)})$, we condition on the number of branching events as $Z = z$ ($z \in 2\mathbb{Z}_{\ge 0}$) and the number of links as $B = b = z + 1$, whose randomness is accounted for as the final step of the proof.
 We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
 % In the following, we first derive the expected values of $u'$ and $l'$ when the random variables $Z$ and $B$ are given as $Z = z$ ($z \in \{\text{even integer}\}$, $z \ge 0$) and $B = b = z + 1$ ($b \in \{\text{odd integer}\}$, $b \ge 1$).
 % We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
 % We account for the randomness of $Z$ as the final step of the derivation.
 
-The summed length of upstream links $u'$ is the product of the mean length of upstream links $\hat{l}$ and the number of upstream links $n$.
+The summed length of upstream links $u'$ is the product of the mean length of a single link $\hat{l}$ and the number of upstream links $n$.
 % If $\lambda_b L \rightarrow \infty$ and each link length follows the \textit{i.i.d.} assumption, the expected value of mean length $\hat{l}$ ($= \sum_s^n l_s n^{-1}$) can be approximated as $\lambda_b^{-1}$ (the expected value of an exponential distribution) since one may ignore the length constraint imposed by the condition $\sum_s l_s = L$.
 % If $\lambda_b L$ is not sufficiently large, however, we need to account for this constraint.
-With the known sum $\sum_s l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (\textbf{Lemma 1}), whose expected value is $\mathbb{E}(F~|~z) = (z + 1)^{-1}$.
+With the known sum $\sum_s^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (\textbf{Lemma 1}), whose expected value is $\mathbb{E}(F_s~|~z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
     \begin{split}
-    \mathbb{E}(\hat{l}~|~z) &= L \cdot \mathbb{E}(F~|~z)\\
-                            &= L(z + 1)^{-1}\\
-                            &= Lb^{-1}.
+    \hat{l}~|~z = \mathbb{E}(l_s~|~z) &= L \cdot \mathbb{E}(F_s~|~z)\\
+                                      &= L(z + 1)^{-1}\\
+                                      &= Lb^{-1}.
     \end{split}
 \end{align}
 
 In the limit of $\lambda_b L \rightarrow \infty$, the expected value of this quantity, $\mathbb{E}(LB^{-1})$, approaches $\lambda_b^{-1}$ since $\mathbb{E}(B) = \lambda_b L + 1$.
 
 The number of upstream links $n$ requires the consideration of its probability distribution since $n$ depends on the location in a network.
-Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs), a classical framework of bifurcating river networks.
+Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \citep{shreve_infinite_1967}, a classical framework of bifurcating river networks.
 The probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $\omega(m; M)$, is described as
 
 \begin{equation}
@@ -304,9 +309,10 @@ Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; \textbf{Lemma 
     \label{eq:n-hat}
 \end{align}
 
-Here, $M$ is a function of $z$.
+%Here, $M$ is a function of $z$.
 TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link.
-Using $M = (b + 1) / 2 = (z + 2) / 2$, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
+This means that $M$ is a function of $z$: $M = (b + 1) / 2 = (z + 2) / 2$.
+Using this formulation, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
 
 \begin{equation}
     \mathbb{E}(n~|~z) = \hat{n}(z) = 
@@ -317,34 +323,50 @@ In sum, we obtain $\mathbb{E}(u' ~|~ z)$ as
 
 \begin{align}
     \begin{split}
-        \mathbb{E}(u' ~|~ z) &= \mathbb{E}(\hat{l}n ~|~ z)\\
-                           &= \mathbb{E}(\hat{l} ~|~ z) \cdot \mathbb{E}(n ~|~ z)\\
-                           &= \frac{L \hat{n}(z)}{z + 1}.
+        \mathbb{E}(u' ~|~ z) 
+        &= \hat{l} \cdot \mathbb{E}(n ~|~ z)\\
+        &= \frac{L \hat{n}(z)}{z + 1}.
     \end{split}
 \end{align}
 
-We used $\mathbb{E}(\hat{l}n ~|~ z) = \mathbb{E}(\hat{l} ~|~ z) \cdot \mathbb{E}(n ~|~ z)$ in light of the lack of covariance between $\hat{l}$ and $n$.
+Note that we used $\mathbb{E}(u' ~|~ z)  = \hat{l} \cdot \mathbb{E}(n ~|~ z)$ in light of the lack of covariance between $\hat{l}$ and $n$.
 
-The expected distance $\mathbb{E}(l'~|~z)$ is calculated as follows.
-Assuming that habitat patches are randomly distributed along the river (i.e., Poisson process), the distance to habitat patch $i$ in link $s$, $l'_{s(i)}$, follows a uniform distribution as $l'_{s(i)}~|~z \sim \mbox{Unif}(0, l_s)$.
-Thus, the conditional expectation is
+The expected distance $\mathbb{E}(l'_{s(i)}~|~z)$ is calculated as follows.
+Assuming that habitat patches are randomly distributed along the river (i.e., Poisson process), the distance to habitat patch $i$ in link $s$, $l'_{s(i)}$, follows a uniform distribution, i.e.,  $\Pr(l'_{s(i)}~|~z, l_s) = \mbox{Unif}(0, l_s)$.
+Thus, the conditional expectation of the distance is
 
 \begin{equation}
-    \mathbb{E}(l'_{s}~|~z) = \frac{l_s}{2}.
+    \mathbb{E}(l'_{s(i)}~|~z, l_s) = \frac{l_s}{2}.
 \end{equation}
 
-Since the expected length of link $s$ is $\mathbb{E}(l_s~|~z) = L(z+1)^{-1}$, we obtain
+Now, we derive the expected distance to the habitat in a focal link $\mathbb{E}(l'_{s(i)}~|~z)$.
+Recall that the conditional probability of the distance to a given patch is $\Pr(l'_{s(i)}~|~z)= \int \Pr(l'_{s(i)}~|~z, l_s) \Pr(l_s~|~z)d l_s$, and that the expected length of link $s$ is $\mathbb{E}(l_s~|~z) = L(z+1)^{-1}$.
+Then, we obtain 
 
 \begin{align}
-    \mathbb{E}(l'~|~z) = \frac{L}{2(z + 1)}.
+    \begin{split}
+        \mathbb{E}(l'_{s(i)}~|~z)
+        &= \int l'_{s(i)} \Pr(l'_{s(i)}~|~z) dl'_{s(i)}\\
+        &= \iint l'_{s(i)} \Pr(l'_{s(i)}~|~z, l_s) \Pr(l_s~|~z) dl'_{s(i)} dl_s \\
+        &= \int \frac{l_s}{2} \Pr(l_s~|~z) dl_s \\
+        &= \frac{L}{2(z + 1)}.
+    \end{split}
 \end{align}
 
-Summing $\mathbb{E}(u' ~|~ z)$ and $\mathbb{E}(l'~|~z)$ for a network with a given value of $z$ yields
+% \begin{comment}
+% Since the expected length of link $s$ is $\mathbb{E}(l_s~|~z) = L(z+1)^{-1}$, we obtain
+
+% \begin{align}
+%     \mathbb{E}(l'~|~z) = \frac{L}{2(z + 1)}.
+% \end{align}
+% \end{comment}
+
+Summing $\mathbb{E}(u' ~|~ z)$ and $\mathbb{E}(l'_{s(i)}~|~z)$ for a network with a given value of $z$ yields
 
 \begin{align}
     \begin{split}
         \mathbb{E}(u ~|~ z) 
-        &= \mathbb{E}(u' ~|~ z) + \mathbb{E}(l'~|~z)\\
+        &= \mathbb{E}(u' ~|~ z) + \mathbb{E}(l'_{s(i)}~|~z)\\
         &= \frac{L}{z+1} \left[ \hat{n}(z) + \frac{1}{2} \right].
     \end{split}
     \label{eq:cu}
@@ -385,7 +407,20 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 \newpage
 
 \subsection{Proofs of Lemma}
+%\begin{comment}
+\begin{lemma}
+Let $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$. Given the total length $L=\sum_{s=1}^b l_s$, the fraction of single length $F_s=l_s/L$ follows a Beta distribution $\mbox{Beta}(1, z)$.
+\end{lemma}
 
+\begin{proof}
+Because an exponential distribution is a special case of a Gamma distribution, $l_1, l_2, \ldots, l_z$  also follows $\mbox{Ga}(1, \lambda_b)$.
+
+The relationship between a Beta distribution and a Gamma distribution derives $l_1/(l_1+l_2) \sim \mbox{Beta}(1, 2)$ [ref to a stat textbook]. Combined with the reproductive property of  Gamma distribution (e.g., $l_1+l_2 \sim \mbox{Ga}(2, \lambda_b)$), this relationship can be generalized as follows:
+\begin{equation}
+F_s=\frac{l_s}{L} \sim \mbox{Beta} (1, z).
+\end{equation}
+\end{proof}
+%\end{comment}
 \textbf{Lemma 1.}
 Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
 Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = 1$ follows $\mbox{Beta}(\alpha, \beta)$.
@@ -424,7 +459,7 @@ Thus, we obtain
     F \sim \mbox{Beta}(\alpha, \beta).
 \end{equation}
 
-\textbf{Lemma 2.}
+\begin{lemma}
 Let $\omega(m; M)$ be a probability mass function defined as
 
 \begin{equation}
@@ -436,8 +471,9 @@ Then, the expected value of $m$ is given by
 \begin{equation}
     \mathbb{E}(m; M) = \sum_{m = 1}^M m~\omega(m; M) = 4^{M-1} \binom{2M-1}{M}^{-1}.
 \end{equation}
+\end{lemma}
 
-\textit{Proof.}  
+\begin{proof}
 We begin by reorganizing the probability mass function
 
 \begin{equation}
@@ -475,26 +511,84 @@ Thus, we conclude
 \begin{equation}
     \mathbb{E}(m; M) = 4^{M - 1} \binom{2M - 1}{M}^{-1}.
 \end{equation}
+\end{proof}
 
 Yutaka Osada and Ryosuke Iritani contributed this Lemma.
 
-\textbf{Lemma 3.} Let $f_{\text{pois}}(y; \lambda) = \Pr(Y = y)$ be the probability mass function of a Poisson distribution.
+\begin{lemma}
+Let $f_{\text{pois}}(y; \lambda) = \Pr(Y = y)$ be the probability mass function of a Poisson distribution.
 Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
-
-\textit{Proof}.
-
+\end{lemma}
+\begin{proof}
 \begin{align}
     \begin{split}
         \Pr(Y \in 2\mathbb{Z}_{\ge 0}) 
         &= \sum_{z = 0}^{\infty} \left[ \frac{\lambda^{y} e^{-\lambda}}{y!} \cdot \frac{1 + (-1)^{y}}{2} \right]\\
         &= \frac{e^{-\lambda}}{2} \left[ \sum_{y = 0}^{\infty} \frac{\lambda^{y}}{y!} + \sum_{y = 0}^{\infty} \frac{(-\lambda)^{y}}{y!}\right]\\
-        &= \frac{e^{-\lambda}}{2} (e^{\lambda} + e^{-\lambda})\\
+        &= \frac{e^{-\lambda}}{2} (e^{\lambda} + e^{-\lambda}) ~ (\because \text{Maclaurin series expansion of the exponential function})\\
         &= \frac{1 + e^{- 2 \lambda}}{2}.
     \end{split}
 \end{align}
-
+\end{proof}
 \newpage
+\subsection{Proof of the uniqueness of the stable equilibrium}
+ we show the uniqueness of the locally stable equilibrium in the system given by Equation (1) when $\mu_k^{(2)}=0$.
+\begin{proof}
+    Recall that the fraction of patches occupied by species $k$ at equilibrium is written as follows:
+    \begin{align}
+    \frac{dp_k}{dt} = 0 \Leftrightarrow p_k = 
+         0 ~\text{or}~
+         p_{k}^{*},
+\end{align}
+where $p_{k}^{*} = 1 - \mu_k / \gamma_k$. Note that $p_{k}^{*} <0 \Leftrightarrow \gamma_k-\mu_k<0$ is biologically meaningless.
 
+Species $k$ can consume species $1,2,\ldota, k-1$ but  does not $k+1. k+2, \ldots, S$ because the food web is acyclic (see Method in the main text). This implies that $\mu_k$ and $\gamma_k$ can depend on $p_1, p_2, \ldots, p_{k-1}$, but they are independent on  $p_{P+1}, p_{P+2}, \ldots, p_{S}$.
+    
+    The Jacobian matrix of Equation (1) is then lower-triangular. The characteristic equation of this Jacobian matrix at equilibrium  is written as follows:
+    \begin{align}
+         &|\lambda I - J| = 0  \nonumber\\
+        \Leftrightarrow 
+        &\prod_{k=1}^{S}(\lambda -J_{kk})=0 \nonumber\\
+        \Leftrightarrow
+        &\lambda = J_{kk}~ \forall k
+    \end{align}
+    where
+    \begin{align}
+        J_{kk} &= \gamma_k(1-2p_k)-\mu_k \\
+        &=\left\{
+        \begin{array}{cl}
+             \mu_k - \gamma_k& (\text{if}~ p_k=p_k^*)   \\
+             \gamma_k - \mu_k& (\text{if}~ p_k=0) .
+        \end{array}
+        \right.
+    \end{align}
+An equilibrium is locally stable if and only if all eigenvalues $\lambda$ are negative. Therefore, a focal equilibrium is stable if and only if
+\begin{align}
+    \lambda < 0 &\Leftrightarrow 
+    \left\{
+    \begin{array}{cc}
+         \mu_k-\gamma_k<0&  (\text{if}~ p_k=p_k^*)   \\
+         \gamma_k-\mu_k<0& (\text{if}~ p_k=0) .
+    \end{array}
+    \right.
+\end{align}
+In other words, $\mu_k-\gamma_k<0$ for present species ($p_k=p_k^*>0$), and $\gamma_k-\mu_k<0$ for absent species ($p_k=0$), respectively, at a stable equilibrium.
+
+Now, we show the uniqueness of the stable equilibrium, although the system has multiple equilibria that differ in the combination of the presence and absence of species.
+For producer species ($k=1,2,\ldots, P$), $\mu_k-\gamma_k$ is constant as follows:
+\begin{align}
+    \mu_k-\gamma_k = c_{0, k}
+r_0 - \mu_{k}^{(0)} (1 + \rho \hat{u}).
+\end{align}
+This indicates the unique combination of the presence and absence of producers at a stable equilibrium.
+
+For consumer species ($k=P+1,P+2,\ldots, S$), $\mu_k-\gamma_k$ depends on $p_1, p_2, \ldots, p_{k-1}$ as follows:
+\begin{align}
+    \mu_k-\gamma_k = \frac{\left(c_{0, k}+\mu_{k}^{(1)}\right)}{|A_k|}\sum_{q \in A_k} p_q
+- \mu_{k}^{(0)} (1 + \rho \hat{u})-\mu_{k}^{(1)} ,
+\end{align}
+where $A_k$ is a set of consumable prey for species $k$. Recall that $A_k$ cannot contain species $q=k, k+1, \ldots, S$ due to the acyclic food web. For species $k=P+1$, the value of $\mu_k-\gamma_k$ at a stable equilibrium is unique because the producers' occupancy at a stable equilibrium ($p_1, p_2, \ldots, p_P$) is also unique (i.e., $\sum_{q \in A_k} p_q$ is unique). In other words, the presence or absence of the producer species at a stable equilibrium uniquely determines the presence of species $k=P+1$ at a stable equilibrium. This logic recursively holds for species $k=P+2. \ldots, S$. Therefore, the system given by Equation (1) has a unique stable equilibrium.
+\end{proof}
 \subsection{No Cascade Model}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
@@ -536,7 +630,7 @@ In each simulation scenario, we considered 20 values of total river length $L$ a
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described above.
 An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-Model predictions are displayed in Figures S2 -- S9.
+Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
 
 \input{rmd/table_si}
 
@@ -614,5 +708,7 @@ converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
 As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the calculation of posterior distributions.
 Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
+
+\bibliography{references}
 
 \end{document}

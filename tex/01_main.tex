@@ -92,6 +92,7 @@ The present study offers an important conceptual pillar for understanding how fo
 We consider a bifurcating branching ecosystem of total river length $L$ (ecosystem size) and branching rate $\lambda_b$ (ecosystem complexity).
 Habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river, resulting in the total number of habitat patches $N = Lh$.
 In our framework, the branching rate $\lambda_b$ can be viewed as the average number of links per unit river length, where an individual link (or ``branch'') refers to a river segment (Figure \ref{fig:scheme}A).
+Due to the bifurcating nature, the number of links $B$ in a network must be odd (Figure \ref{fig:scheme}A).
 On average, ecosystems with higher branching rates encompass more confluences (see \textbf{Methods} for specific assumptions).
 
 \begin{figure}
@@ -134,15 +135,16 @@ The extinction rate comprises three potential sources of extinction, that is, di
 \begin{equation}
     \mu_{k} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{1}{|S_{k}|}\sum_{q\in S_k} p_{q} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator of }k} p_{q}}_{\text{Predation}},
-    \label{eq:extn}    
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_{k}|}\sum_{q\in A_{k}} p_{q} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_{k}} p_{q}}_{\text{Predation}},
+    \label{eq:extn-main}    
 \end{equation}
 
-where $\mu_k^{(0)}$, $\mu_k^{(p)}$, and $\mu_k^{(c)}$ are base parameters scaling the impacts of disturbance, prey scarcity, and predation, $\rho$ is the spatial synchrony probability, $\hat{u}$ is the expected upstream river length at a given habitat patch within a branching network, $S_{k}$ is the set of consumable prey for consumer $k$, and $|S_{k}|$ is the number of such prey species for consumer $k$.
-For simplicity, we assumed constant values across species for $\mu_k^{(0)} = \mu^{(0)}$, and $\mu_k^{(c)} = \mu^{(c)}$. $\mu_k^{(p)}$ was assumed zero for all producers and constant ($\mu_k^{(p)} = \mu^{(p)}$) for all consumers.
+where $\mu_k^{(0)}$, $\mu_k^{(1)}$, and $\mu_k^{(2)}$ are base parameters scaling the impacts of disturbance, prey scarcity, and predation, $\rho$ is the spatial synchrony probability, $\hat{u}$ is the expected upstream river length at a given habitat patch within a branching network, $A_{k}$ ($\tilde{A}_{k}$) is the set of consumable prey (predators) for species $k$, and $|A_{k}|$ is the number of consumable prey species for species $k$.
+For simplicity, we assumed constant values across species for $\mu_k^{(0)} = \mu^{(0)}$, and $\mu_k^{(2)} = \mu^{(2)}$.
+Similarly, the prey effect $\mu_k^{(1)}$ was assumed to be zero for all producers and constant for all consumers ($\mu_k^{(1)} = \mu^{(1)}$).
 
-The first term of Equation 3 %\ref{eq:extn}
+The first term of Equation \ref{eq:extn-main}
 captures the downstream disturbance cascade, a prevailing phenomenon in riverine systems.
 In rivers, any disturbance event occurring upstream can propagate downstream through water movement, such as the spread of environmental contaminants \citep{massoudieh_biogeochemical_2010}, floods \citep{swanson_flood_1998, nakamura_disturbance_2000}, and droughts \citep{sarremejane_drought_2021}.
 This propagation can lead to synchronized extirpation among flow-connected sites with a certain probability \citep{larsen_geography_2021, sarremejane_drought_2021}, denoted as the synchrony probability $\rho$. 
@@ -153,8 +155,7 @@ Therefore, the extinction dynamics are also linked to the spatial ecosystem prop
 
 Using 20 replicas of realistic food webs (Methods), we evaluated how food chains respond to total river length $L$ and branching rate $\lambda_b$ across different levels of resource supply ($r_0$) and disturbance regimes ($\mu^{(0)}$).
 These simulated food webs comprise 32 trophic species and vary in the number of trophic links and producers, allowing us to account for potential variations in food web structure.
-In the absence of predation effects ($\mu^{(c)} = 0$), the FCL at equilibrium -- defined as the maximum trophic position (see Equation \ref{eq:def_tp} for its definition) of persistent species -- can be analytically determined by sequentially solving Equation \ref{eq:model0} for $p_k$ ($dp_k/dt = 0$) from the base to the apex of the food web (Methods). 
-
+In the absence of predation effects ($\mu^{(2)} = 0$),-- can be analytically determined by sequentially solving Equation \ref{eq:model0} for $p_k$ from the base to the apex of the food web (Methods). Although our model has multiple equilibria, it has a single stable equilibrium. We evaluated the FCL, defined as the maximum trophic position, at the stable equilibrium; see SI Appendix for the details.
 Ecosystem complexity (branching rate) was predicted to increase FCL regardless of ecological scenarios (Figure \ref{fig:sim-main}A and B).
 Although resource supply and disturbance regimes influenced FCL, these factors did not alter the overall qualitative relationships (Figure \ref{fig:sim-main}).
 A simple geometric mechanism underlies the consistency.
@@ -169,7 +170,7 @@ Consequently, the greater frequency of synchronized extirpation can offset, or e
 Removing the effect of disturbance cascades therefore reverts the model prediction. 
 In the absence of spatial disturbance cascades, the model predicted the positive influence of ecosystem size on FCL (Figure \ref{fig:sim-main}C and S1), a pattern consistent with previous food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019, guo_towards_2023}.
 
-The analytical predictions remain robust even when relaxing the assumption to include predation effect ($\mu^{(c)} > 0$) and allowing variation in other ecological parameters, such as prey effect ($\mu^{(p)}$), propagule size ($g$), and trophic omnivory ($\theta$).
+The analytical predictions remain robust even when relaxing the assumption to include predation effect ($\mu^{(2)} > 0$) and allowing variation in other ecological parameters, such as prey effect ($\mu^{(1)}$), propagule size ($g$), and trophic omnivory ($\theta$).
 The positive relationship between FCL and branching rate was consistent, whereas the influence of ecosystem size on FCL was highly context-dependent (SI Appendix).
 
 \begin{figure}
@@ -266,7 +267,7 @@ Although conventional wisdom emphasizes the importance of ecosystem size, a radi
 
 We used the preferential prey model to generate initial food webs \citep{johnson_trophic_2014}.
 We chose this method because it generates (i) food web structures comparable to those observed in nature and (ii) acyclic food webs \citep{shibasaki_food_2024}.
-Although the niche model \citep{williams_simple_2000} is used widely in food web research, this algorithm is unsuitable for our study because it may create loops and cannibalism in a food web, which prevented us from defining trophic positions and FCL \citep{shibasaki_food_2024}.
+Although the niche model \citep{williams_simple_2000} is used widely in food web research, this algorithm is unsuitable for our study because it may create loops and cannibalism in a food web, which prevent us from defining trophic positions and FCL \citep{shibasaki_food_2024}.
 
 The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $P$, the expected number of trophic links $N_l$, and trophic omnivory $\theta$ ($\theta > 0$).
 In this model, a food web begins with $P$ primary producers, indexed as species $k = 1, 2, ..., P$.
@@ -279,26 +280,26 @@ The probability of choosing prey $q'$, denoted as $Q_{q'}$, is proportional to t
 \end{equation}
 
 where $\tau_q$ is the structural trophic position of species $q$.
-Producer trophic positions are ones, and
+The trophic position of producers is one, and
 consumer trophic positions are given as the average of prey trophic positions plus one:
 
 \begin{equation}
     \tau_k = 
     \begin{cases}
     1 & ~\text{for producers}~ (k=1, 2, \ldots, P),\\
-    1+\frac{\sum_{q~\in~ S_k} \tau_q}{|S_{k}|} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S),
+    1+\frac{1}{|A_{k}|} \sum_{q \in A_{k}} \tau_q & ~\text{for consumers}~ (k = P+1, P+2, \ldots, S),
     \end{cases}
-    \label{eq:def_tp}
+    % \label{eq:def_tp}
 \end{equation}
 
-where $S_{k}$ is the the of consumable prey species for consumer $k$, and $|S_k|$ is the number of such prey species for  consumer $k$.
+where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey species for species $k$, respectively.
 See SI Appendix for further details.
 
 \subsubsection{Spatial model}
 
 We consider a bifurcating branching ecosystem of total river length $L$ and branching rate $\lambda_b$, in which $N$ habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river (i.e., $N = Lh$).
 In this system, the branching rate is a statistical parameter controlling the length of an individual ``link'' (Figure \ref{fig:scheme}A).
-Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$ \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}, but is conditional on $\sum_s l_s = L$.
+Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$ \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}, but is conditional on $\sum_s^B l_s = L$ ($B$ denotes the number of links).
 The average link length approaches $\lambda_b^{-1}$ as $\lambda_b L \rightarrow \infty$.
 
 Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023}.
@@ -319,11 +320,11 @@ We assumed that the establishment probability is proportional to resource supply
     r_{k} = 
     \begin{cases}
         r_0 & ~\text{for producers}~ (k=1, 2, \ldots, P)\\
-        \frac{\sum_{q~S_k} p_{q}}{| S_{k}|} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S)
+        \frac{1}{|A_{k}|} \sum_{q~\in A_{k}} p_{q} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S)
     \end{cases}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, and $\sum_{q~\n ~ S_k p_{q}}$ ($q \ne k$) is the expected species richness of prey for consumer $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, and $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the expected species richness of prey for consumer $k$.
 Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable species.
 
 Effective propagule $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
@@ -348,8 +349,8 @@ This assumption aligns with the known relationships of trophic position versus f
 \begin{equation}
     \mu_{k} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{1}{|S_{k}|}\sum_{q\in S_k} p_{q}\right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator of k}} p_{q}}_{\text{Predation}}.
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_{k}|}\sum_{q\in A_{k}} p_{q}\right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_{k}} p_{q}}_{\text{Predation}}.
     \label{eq:extn}    
 \end{equation}
 
@@ -362,7 +363,7 @@ The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstre
 The expected value $\hat{u}$ can be expressed as a nonlinear function of $L$ and $\lambda_b$ (see SI Appendix for derivation):
 
 \begin{equation}
-    \hat{u}(L, \lambda_b) = L \sum_{z \in \mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
+    \hat{u}(L, \lambda_b) = L \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
 \end{equation}
 
 where
@@ -379,9 +380,25 @@ and
 
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
-In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with increasing species richness of available prey, and the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(p)} = 0$ for producers).
-Predation pressure is assumed to increase linearly with the species richness of predators $\sum_{q~\in~\text{predator of } k} p_{q}$.
-The parameter $\mu_{k}^{(c)}$ defines how quickly the predator-induced extinction rate increases with the predator richness.
+In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with increasing species richness of available prey, and the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(1)} = 0$ for producers).
+Predation pressure is assumed to increase linearly with the species richness of predators $\sum_{q \in \tilde{A}_{k}} p_{q}$.
+The parameter $\mu_{k}^{(2)}$ defines how quickly the predator-induced extinction rate increases with the predator richness.
+
+In the absence of extinction caused by predation ($\mu_{k}^{(2)}=0$), equilibrium of the system  is analytically derived as follows.
+According to  Equation \ref{eq:model0}, the fraction of patches occupied by species $k$ at equilibrium is written as follows:
+\begin{align}
+    \frac{dp_k}{dt} = 0 \Leftrightarrow p_k = \left\{\begin{array}{c}
+         0 \\
+         p_{k}^{*} 
+    \end{array}
+    \right.
+\end{align}
+where $p_{k}^{*} = 1 - \mu_k / \gamma_k$. 
+For producers ($k=1, 2, \ldots, P$), $\gamma_k$ and $\mu_k$ are constant. $p_k$ at equilibrium is, therefore, binary: present ($p_k=p_k^*>0$) or absent ($p_k=0$).
+For consumers ($k=P+1, P+1, \ldots, S$), $p_1, p_2, \ldots, p_{k-1}$, but not depend on $p_{k}, p_{k+1}, \ldots, p_{S}$, can affect $p_1, p_2, \ldots, p_{k-1}$. In other words, when species $k$ is present, the fraction of the patches occupied by species $k$ at equilibrium varies depending those by species $1, 2, \ldots, k-1$. 
+Although this implies the system has multiple equilibria, SI Appendix shows that there exist a unique stable equilibrium among them. This leads the unique ``realized'' FCL at equilibrium (see below).
+
+%We consider the feasible case where $p_{k}^{*} > 0$ for all $k=1, 2, \ldots, S$.This is a necessary and sufficient condition for the local stability of the feasible equilibrium (SI Appendix).Next, we show that the feasible equilibrium is, if exists, unique. For producers ($k=1,2,\ldots, P$), $\mu_k$ and $\gamma_k$ are independent of $\Vec{p}=\left(p_1, p_2, \ldots, p_S\right)$. Thus, $\hat{p}_k$ is unique for all producers.For consumers ($k=P+1,P+2,\ldots, S$), $\mu_k$ and $\gamma_k$ \textit{depend} on $\Vec{p}$. Nevertheless, because we assume acyclic food webs, $\mu_k$ and $\gamma_k$ depend only on $\left(p_1,p_2, \ldots, p_P,\ldots, p_{k-1} \right)$. This allows us to obtain $\hat{p_k}$ recursively. For example, $\hat{p_{P+1}}$ is unique because $\left(p_1, p_2, \ldots, p_P\right)$ is unique. Then, $p_{P+2}$ is also unique. This calculation can be continued until $k=S$.
 
 \subsubsection{Model analysis}
 
@@ -397,7 +414,8 @@ Producers are assigned $\tau^{(w)} = 1$.
 Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trophic positions plus one:
 
 \begin{equation}
-    \tau^{(w)}_k = \frac{\sum_{q~\in~S_k} p_{q} \tau^{(w)}_q}{\sum_{q~\in~S_k} p_{q}} + 1
+    \tau^{(w)}_k = \frac{\sum_{q \in A_{k}} p_{q}^{*} \tau^{(w)}_q}{\sum_{q \in A_{k}} p_{q}^{*}} + 1
+    \label{eq:def_tp}
 \end{equation}
 
 We report the maximum value of $\tau_k^{(w)}$ as the predicted FCL in a given environmental context.
