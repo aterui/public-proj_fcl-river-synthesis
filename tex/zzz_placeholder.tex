@@ -159,3 +159,43 @@
 %                          &= \frac{1 + e^{- 2 \lambda_b L}}{2}    
 %     \end{split}
 % \end{align}
+
+%%%%%%%%%%%Proof for Gamma - Beta relation
+
+% \textbf{Lemma 1.}
+% Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
+% Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = 1$ follows $\mbox{Beta}(\alpha, \beta)$.
+
+% \textit{Proof}.
+% Let $Y = X_1 + X_2$, then the conditional probability density of $X_1$, $f_{X_1}(x_1 | Y = y)$ (0 $\le x_1 \le y$), is defined as
+
+% \begin{equation}
+%     f_{X_1}(x_1~|~Y = y) = \frac{f_{X_1}(x_1) f_{X_2}(y - x_1)}{f_{Y}(Y = y)}
+% \end{equation}
+
+% Given the reproductive property of Gamma distribution, $Y$ follows a Gamma distribution as $Y \sim \mbox{Ga}(\alpha + \beta, \lambda)$.
+% Thus, we get
+
+% \begin{align}
+%     \begin{split}
+%         f_{X_1}(x_1~|~Y = y)
+%         &= 
+%         \left[
+%             \frac{\lambda^{\alpha + \beta}}{\Gamma(\alpha) \Gamma(\beta)}x_1^{\alpha - 1} (y - x_1)^{\beta - 1} e^{-\lambda y}
+%         \right]
+%         \left[
+%             \frac{\lambda^{\alpha + \beta}}{\Gamma(\alpha + \beta)} y^{\alpha + \beta - 1} e^{-\lambda y}
+%         \right]^{-1}\\
+%         &= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta) y^{\alpha + \beta - 1}} x_1^{\alpha - 1} (y - x_1)^{\beta - 1}\\
+%         &= \frac{x_1^{\alpha - 1} (y - x_1)^{\beta - 1}}{\mbox{B}(\alpha, \beta) y^{\alpha + \beta - 1}},
+%     \end{split}
+%     \label{eq:dbeta}
+% \end{align}
+
+% where $\mbox{B}(\cdot, \cdot)$ denotes a beta function.
+% The conditional probability density function $f(x_1 | Y = 1)$ represents the probability density function of $\mbox{Beta}(\alpha, \beta)$.
+% Thus, we obtain
+
+% \begin{equation}
+%     F \sim \mbox{Beta}(\alpha, \beta).
+% \end{equation}

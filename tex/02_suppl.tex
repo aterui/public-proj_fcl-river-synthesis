@@ -234,7 +234,7 @@ The term magnitude refers to the number of exterior source links (links containi
 The magnitude is one at an exterior source link.
 Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
 
-We assume that the length of individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_s l_s = L$.
+We assume that the length of individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
 The length $l_s$ can be interpreted as the ``waiting time'' to a branching event (or termination events for upstream sources).
 According to statistical theory, the number of such events within a given duration follows a Poisson distribution.
 In our case, this translates into counting the number of branching events $Z$ within the ``time'' frame $L$, excluding the final branching event (since link termination occurs at $L$ regardless).
@@ -407,59 +407,46 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 \newpage
 
 \subsection{Proofs of Lemma}
-%\begin{comment}
 \begin{lemma}
-Let $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$. Given the total length $L=\sum_{s=1}^b l_s$, the fraction of single length $F_s=l_s/L$ follows a Beta distribution $\mbox{Beta}(1, z)$.
+\label{lemma-f}
+Let $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$.
+If the total length is given as $L=\sum_{s=1}^b l_s$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
 \end{lemma}
 
 \begin{proof}
-Because an exponential distribution is a special case of a Gamma distribution, $l_1, l_2, \ldots, l_z$  also follows $\mbox{Ga}(1, \lambda_b)$.
-
-The relationship between a Beta distribution and a Gamma distribution derives $l_1/(l_1+l_2) \sim \mbox{Beta}(1, 2)$ [ref to a stat textbook]. Combined with the reproductive property of  Gamma distribution (e.g., $l_1+l_2 \sim \mbox{Ga}(2, \lambda_b)$), this relationship can be generalized as follows:
-\begin{equation}
-F_s=\frac{l_s}{L} \sim \mbox{Beta} (1, z).
-\end{equation}
-\end{proof}
-%\end{comment}
-\textbf{Lemma 1.}
-Let $X_1$ and $X_2$ be independent random variables that follow Gamma distributions as $X_1 \sim \mbox{Ga}(\alpha, \lambda)$ and $X_2 \sim \mbox{Ga}(\beta, \lambda)$.
-Then, the conditional distribution of $F = X_1(X_1 + X_2)^{-1}$ given $X_1 + X_2 = 1$ follows $\mbox{Beta}(\alpha, \beta)$.
-
-\textit{Proof}.
-Let $Y = X_1 + X_2$, then the conditional probability density of $X_1$, $f_{X_1}(x_1 | Y = y)$ (0 $\le x_1 \le y$), is defined as
-
-\begin{equation}
-    f_{X_1}(x_1~|~Y = y) = \frac{f_{X_1}(x_1) f_{X_2}(y - x_1)}{f_{Y}(Y = y)}
-\end{equation}
-
-Given the reproductive property of Gamma distribution, $Y$ follows a Gamma distribution as $Y \sim \mbox{Ga}(\alpha + \beta, \lambda)$.
-Thus, we get
+An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of a Gamma distribution, i.e., $\mbox{Ga}(1, \lambda_b)$.
+Thus, $l_1, l_2, \ldots, l_b$  follow $\mbox{Ga}(1, \lambda_b)$.
+Let us denote $X_1 = l_s$, $X_2 = \sum_{s'}^b l_{s'}$ ($s' \in \{1,2, \ldots, b\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
+Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
+The conditional probability density of $X_1 = x$ given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
 
 \begin{align}
     \begin{split}
-        f_{X_1}(x_1~|~Y = y)
+        f_{X_1}(X_1 = x~|~Y = L)
+        &= \frac{f_{X_1}(X_1 = x~|~Y = L) f_{X_2}(X_2 = L - x~|~Y = L)}{f_Y(Y = L)}\\
         &= 
         \left[
-            \frac{\lambda^{\alpha + \beta}}{\Gamma(\alpha) \Gamma(\beta)}x_1^{\alpha - 1} (y - x_1)^{\beta - 1} e^{-\lambda y}
+        \frac{\lambda_b^{1 + z}}{\Gamma(1) \Gamma(z)} (L - x)^{z - 1} e^{-\lambda_b L}
         \right]
         \left[
-            \frac{\lambda^{\alpha + \beta}}{\Gamma(\alpha + \beta)} y^{\alpha + \beta - 1} e^{-\lambda y}
+        \frac{\lambda_b^{1 + z}}{\Gamma(1 + z)} L^{z} e^{-\lambda_b L}
         \right]^{-1}\\
-        &= \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta) y^{\alpha + \beta - 1}} x_1^{\alpha - 1} (y - x_1)^{\beta - 1}\\
-        &= \frac{x_1^{\alpha - 1} (y - x_1)^{\beta - 1}}{\mbox{B}(\alpha, \beta) y^{\alpha + \beta - 1}},
+        &= \frac{\Gamma(1 + z)}{\Gamma(1) \Gamma(z) L^{z}} (L - x)^{z - 1}
     \end{split}
-    \label{eq:dbeta}
+    \label{eq:beta}
 \end{align}
 
-where $\mbox{B}(\cdot, \cdot)$ denotes a beta function.
-The conditional probability density function $f(x_1 | Y = 1)$ represents the probability density function of $\mbox{Beta}(\alpha, \beta)$.
+Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x~|~Y = 1)$ is a probability density function of $\mbox{Beta}(1, z)$.
 Thus, we obtain
 
 \begin{equation}
-    F \sim \mbox{Beta}(\alpha, \beta).
+    F_s=\frac{l_s}{L} \sim \mbox{Beta} (1, z).
 \end{equation}
 
+\end{proof}
+
 \begin{lemma}
+\label{lemma-m}
 Let $\omega(m; M)$ be a probability mass function defined as
 
 \begin{equation}
@@ -516,6 +503,7 @@ Thus, we conclude
 Yutaka Osada and Ryosuke Iritani contributed this Lemma.
 
 \begin{lemma}
+\label{lemma-pois}
 Let $f_{\text{pois}}(y; \lambda) = \Pr(Y = y)$ be the probability mass function of a Poisson distribution.
 Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
 \end{lemma}
@@ -542,7 +530,7 @@ Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
 \end{align}
 where $p_{k}^{*} = 1 - \mu_k / \gamma_k$. Note that $p_{k}^{*} <0 \Leftrightarrow \gamma_k-\mu_k<0$ is biologically meaningless.
 
-Species $k$ can consume species $1,2,\ldota, k-1$ but  does not $k+1. k+2, \ldots, S$ because the food web is acyclic (see Method in the main text). This implies that $\mu_k$ and $\gamma_k$ can depend on $p_1, p_2, \ldots, p_{k-1}$, but they are independent on  $p_{P+1}, p_{P+2}, \ldots, p_{S}$.
+Species $k$ can consume species $1,2,\ldots, k-1$ but  does not $k+1. k+2, \ldots, S$ because the food web is acyclic (see Method in the main text). This implies that $\mu_k$ and $\gamma_k$ can depend on $p_1, p_2, \ldots, p_{k-1}$, but they are independent on  $p_{P+1}, p_{P+2}, \ldots, p_{S}$.
     
     The Jacobian matrix of Equation (1) is then lower-triangular. The characteristic equation of this Jacobian matrix at equilibrium  is written as follows:
     \begin{align}
