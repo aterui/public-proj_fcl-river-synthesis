@@ -26,8 +26,11 @@
 \usepackage[T1]{fontenc}
 
 % for math
-\newtheorem{theorem}{Theorem}
-\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
 
 % citation setup
 \usepackage[euler]{textgreek}
@@ -132,13 +135,13 @@ The establishment probability $r_{ik}$ represents different quantities for produ
 \begin{equation}
     r_{ik} =
     \begin{cases}
-    r_{0} & \text{if $k~\in~\text{producer}$,}\\
-    \frac{\sum_{q~\in~S_k} \pi_{iq}}{|S_{k}|} & \text{if $k~\in~\text{consumer}$,}
+    r_{0} & \text{if $k \in \text{producer}$,}\\
+    \frac{\sum_{q \in A_k} \pi_{iq}}{|A_k|} & \text{if $k \in \text{consumer}$,}
     \end{cases}
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $S_k$ is the set of prey species available for species $k$ (and thus $\sum_{q ~\in~S_k} \pi_{iq}$ represents the expected number of prey species at patch $q$), and $|S_{k}|$ is the number of prey species consumable for consumer $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $A_k$ is the set of prey species available for species $k$ (and thus $\sum_{q  \in A_k} \pi_{iq}$ represents the expected number of prey species at patch $q$), and $|A_k|$ is the number of prey species consumable for species $k$.
 This formulation assumes that resource or proportional prey availability increases species' establishment.
 The resource supply $r_0$ is assumed to be constant over space.
 
@@ -169,14 +172,17 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
 \begin{equation}
     \mu_{ik} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~S_k} \pi_{iq}}{|S_{k}|} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator of}~k} \pi_{iq}}_{\text{Predation}}.
+        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q \in A_k} \pi_{iq}}{|A_k|} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(c)} \sum_{q \in \tilde{A}_k} \pi_{iq}}_{\text{Predation}},
     \label{eq:extn}
 \end{equation}
 
+where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively, and $A_k$ ($\tilde{A}_k$) is the set of consumable prey (predator) species for species $k$.
+$|A_k|$ denotes the number of consumable prey species.
+
 The disturbance term is composed of two sources.
 The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
-The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$), where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively.
+The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$).
 In rivers, any disturbance can cascade downstream as water flows downstream.
 For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement.
 Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches, likely causing synchronized extirpation of organisms across space.
@@ -185,27 +191,27 @@ The parameter $\rho$ independently controls the strength of up- and downstream s
 
 In the second term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
 Specifically, the parameter $\mu_{k}^{(p)}$ denotes the extinction rate in the complete absence of consumable prey species.
-The extinction risk caused by the lack of prey is reduced by the factor $|S_{k}|^{-1} \sum_{q~\in~\text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of consumable prey species $|S_{k}|$.
+The extinction risk caused by the lack of prey is reduced by the factor $|A_k|^{-1} \sum_{q \in \text{prey}} \pi_{iq}$ ($\le 1$), which is the ratio of the expected species richness of available prey relative to the number of consumable prey species $|A_k|$.
 Note that $\mu_{k}^{(p)} = 0$ for producers.
 
 In the predation term, the extinction risk caused by predation is assumed to increase linearly with the species richness of predators at patch $i$.
-The parameter $\mu_{k}^{(c)}$ defines how quickly the extinction rate increases with the expected species richness of predators $\sum_{q~\in~\text{predator}} \pi_{iq}$.
+The parameter $\mu_{k}^{(c)}$ defines how quickly the extinction rate increases with the expected species richness of predators $\sum_{q \in \tilde{A}_k} \pi_{iq}$.
 
 \textit{Mean field approximation} --
 We describe the temporal dynamics of the proportion of patches occupied, $p_k$ ($= N^{-1} \sum_i \pi_{ik}$), as the spatial mean field approximation of Equation \ref{eq:dm0}, dropping subscript $i$:
 
 \begin{equation}
-    \frac{dp_k}{dt} = r_{k} c_{0, k} p_{k} (1 - p_{k}) - \mu_{k} p_{k},
+    \frac{dp_k}{dt} = \gamma_k p_{k} (1 - p_{k}) - \mu_{k} p_{k},
     \label{eq:master}
 \end{equation}
 
-where
+where $\gamma_k = r_{k} c_{0, k}$ and
 
 \begin{equation}
     r_{k} = 
     \begin{cases}
         r_0 & \text{for producers,}\\
-        \frac{\sum_{q~\in~S_k} p_{q}}{|S_{k}|} & \text{for consumers,}
+        \frac{\sum_{q \in A_k} p_{q}}{|A_k|} & \text{for consumers,}
     \end{cases}
 \end{equation}
 
@@ -214,8 +220,8 @@ and
 \begin{equation}
     \mu_{k} = 
         \mu_{k}^{(0)} (1 + \rho \hat{u}) + 
-        \mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~S_k} p_{q}}{|S_{k}|} \right) + 
-        \mu_{k}^{(c)} \sum_{q~\in~\text{predator of}~ k} p_{q}.
+        \mu_{k}^{(1)} \left(1 - \frac{\sum_{q \in A_k} p_{q}}{|A_k|} \right) + 
+        \mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}.
     \label{eq:extn}    
 \end{equation}
 
@@ -224,9 +230,9 @@ In Equation \ref{eq:extn}, we introduce the expected value of the upstream river
 
 \newpage
 
-\subsection{Derivation of Expected Upstream River Length} \label{updist}
+\subsection{Expected Upstream River Length} \label{updist}
 
-\textbf{Definitions and assumptions.}
+\begin{definition}
 We derive the expected value of the upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
 We use the following key terms: \textit{link} and \textit{magnitude}.
 The term link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth).
@@ -258,22 +264,19 @@ We use these assumptions in the following derivation.
     \label{tab:key-symbol}
 \end{table}
 
+\end{definition}
 
-\textbf{Proposition}.
+\begin{proposition}
 The expected upstream river length $\mathbb{E}(u)$ at a given habitat patch within a random branching network, characterized by total river length $L$ and branching rate $\lambda_b$, can be expressed as a function of $L$ and $\lambda_b$.
+\end{proposition}
 
-\textit{Proof.}
+\begin{proof}
 The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s(i)})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat patch) and $l'_{s(i)}$ is the distance from the upstream link end to habitat patch $i$ in link $s$.
 To calculate $\mathbb{E}(u')$ and $\mathbb{E}(l'_{s(i)})$, we condition on the number of branching events as $Z = z$ ($z \in 2\mathbb{Z}_{\ge 0}$) and the number of links as $B = b = z + 1$, whose randomness is accounted for as the final step of the proof.
 We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
-% In the following, we first derive the expected values of $u'$ and $l'$ when the random variables $Z$ and $B$ are given as $Z = z$ ($z \in \{\text{even integer}\}$, $z \ge 0$) and $B = b = z + 1$ ($b \in \{\text{odd integer}\}$, $b \ge 1$).
-% We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
-% We account for the randomness of $Z$ as the final step of the derivation.
 
 The summed length of upstream links $u'$ is the product of the mean length of a single link $\hat{l}$ and the number of upstream links $n$.
-% If $\lambda_b L \rightarrow \infty$ and each link length follows the \textit{i.i.d.} assumption, the expected value of mean length $\hat{l}$ ($= \sum_s^n l_s n^{-1}$) can be approximated as $\lambda_b^{-1}$ (the expected value of an exponential distribution) since one may ignore the length constraint imposed by the condition $\sum_s l_s = L$.
-% If $\lambda_b L$ is not sufficiently large, however, we need to account for this constraint.
-With the known sum $\sum_s^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (\textbf{Lemma 1}), whose expected value is $\mathbb{E}(F_s~|~z) = (z + 1)^{-1}$.
+With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (Lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s~|~z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
@@ -296,7 +299,7 @@ The probability of drawing a link with magnitude $m$ at random from a population
 
 The notation $\binom{\cdot}{\cdot}$ and $\binom{\cdot}{\cdot}^{-1}$ denote a binomial coefficient and its inverse.
 The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of TDCNs.
-Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; \textbf{Lemma 2}), we obtain
+Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; Lemma \ref{lemma-m}), we obtain
 
 \begin{align}
     \begin{split}
@@ -309,7 +312,6 @@ Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; \textbf{Lemma 
     \label{eq:n-hat}
 \end{align}
 
-%Here, $M$ is a function of $z$.
 TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link.
 This means that $M$ is a function of $z$: $M = (b + 1) / 2 = (z + 2) / 2$.
 Using this formulation, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
@@ -353,14 +355,6 @@ Then, we obtain
     \end{split}
 \end{align}
 
-% \begin{comment}
-% Since the expected length of link $s$ is $\mathbb{E}(l_s~|~z) = L(z+1)^{-1}$, we obtain
-
-% \begin{align}
-%     \mathbb{E}(l'~|~z) = \frac{L}{2(z + 1)}.
-% \end{align}
-% \end{comment}
-
 Summing $\mathbb{E}(u' ~|~ z)$ and $\mathbb{E}(l'_{s(i)}~|~z)$ for a network with a given value of $z$ yields
 
 \begin{align}
@@ -391,7 +385,7 @@ where $f_{\text{pois}}(z; L, \lambda_b)$ is the probability mass function of a P
     f_{\text{pois}}(z; L, \lambda_b) = \Pr(Z = z) = \frac{(\lambda_b L)^{z} e^{-\lambda_b L}}{z!},
 \end{equation}
 
-and $\Pr(Z \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda_b L})$ (\textbf{Lemma 3}). 
+and $\Pr(Z \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda_b L})$ (Lemma \ref{lemma-pois}). 
 % In Equation \ref{eq:tpois}, $f_{\text{pois}}(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even integers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} f'_{\text{pois}}(z; L, \lambda_b) = 1$.
 Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a function of $L$ and $\lambda_b$:
 
@@ -403,10 +397,10 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
                     \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})}.
     \end{split}
 \end{align}
+\end{proof}
 
 \newpage
 
-\subsection{Proofs of Lemma}
 \begin{lemma}
 \label{lemma-f}
 Let $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$.
@@ -418,7 +412,7 @@ An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of a Gamma
 Thus, $l_1, l_2, \ldots, l_b$  follow $\mbox{Ga}(1, \lambda_b)$.
 Let us denote $X_1 = l_s$, $X_2 = \sum_{s'}^b l_{s'}$ ($s' \in \{1,2, \ldots, b\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
 Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
-The conditional probability density of $X_1 = x$ given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
+The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
 
 \begin{align}
     \begin{split}
@@ -431,12 +425,12 @@ The conditional probability density of $X_1 = x$ given $Y = L$, denoted as $f_{X
         \left[
         \frac{\lambda_b^{1 + z}}{\Gamma(1 + z)} L^{z} e^{-\lambda_b L}
         \right]^{-1}\\
-        &= \frac{\Gamma(1 + z)}{\Gamma(1) \Gamma(z) L^{z}} (L - x)^{z - 1}
+        &= \frac{\Gamma(1 + z)}{\Gamma(1) \Gamma(z) L^{z}} (L - x)^{z - 1}.
     \end{split}
     \label{eq:beta}
 \end{align}
 
-Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x~|~Y = 1)$ is a probability density function of $\mbox{Beta}(1, z)$.
+Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x~|~Y = 1)$ is the probability density function of $\mbox{Beta}(1, z)$.
 Thus, we obtain
 
 \begin{equation}
@@ -518,65 +512,91 @@ Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
     \end{split}
 \end{align}
 \end{proof}
+
 \newpage
-\subsection{Proof of the uniqueness of the stable equilibrium}
- we show the uniqueness of the locally stable equilibrium in the system given by Equation (1) when $\mu_k^{(2)}=0$.
+
+\subsection{Uniqueness of Stable Equilibrium}
+ 
+\begin{proposition}
+Under the condition that $\mu_k^{(2)} = 0$, the system given by Equation \ref{eq:master} has a unique locally stable equilibrium.
+\end{proposition}
+
 \begin{proof}
-    Recall that the fraction of patches occupied by species $k$ at equilibrium is written as follows:
-    \begin{align}
+The fraction of patches occupied by species $k$ at equilibrium is written as follows:
+
+\begin{align}
     \frac{dp_k}{dt} = 0 \Leftrightarrow p_k = 
          0 ~\text{or}~
          p_{k}^{*},
 \end{align}
+
 where $p_{k}^{*} = 1 - \mu_k / \gamma_k$. Note that $p_{k}^{*} <0 \Leftrightarrow \gamma_k-\mu_k<0$ is biologically meaningless.
 
-Species $k$ can consume species $1,2,\ldots, k-1$ but  does not $k+1. k+2, \ldots, S$ because the food web is acyclic (see Method in the main text). This implies that $\mu_k$ and $\gamma_k$ can depend on $p_1, p_2, \ldots, p_{k-1}$, but they are independent on  $p_{P+1}, p_{P+2}, \ldots, p_{S}$.
-    
-    The Jacobian matrix of Equation (1) is then lower-triangular. The characteristic equation of this Jacobian matrix at equilibrium  is written as follows:
-    \begin{align}
-         &|\lambda I - J| = 0  \nonumber\\
-        \Leftrightarrow 
-        &\prod_{k=1}^{S}(\lambda -J_{kk})=0 \nonumber\\
-        \Leftrightarrow
-        &\lambda = J_{kk}~ \forall k
-    \end{align}
-    where
-    \begin{align}
-        J_{kk} &= \gamma_k(1-2p_k)-\mu_k \\
-        &=\left\{
-        \begin{array}{cl}
-             \mu_k - \gamma_k& (\text{if}~ p_k=p_k^*)   \\
-             \gamma_k - \mu_k& (\text{if}~ p_k=0) .
-        \end{array}
-        \right.
-    \end{align}
-An equilibrium is locally stable if and only if all eigenvalues $\lambda$ are negative. Therefore, a focal equilibrium is stable if and only if
+Under the preferential prey model, species $k$ may consume a subset of species $1,2,\ldots, k-1$ but cannot consume $k+1, k+2, \ldots, S$ because the food web is acyclic (see Methods in the main text).
+This implies that $\mu_k$ and $\gamma_k$ depend on at least one of $p_1, p_2, \ldots, p_{k-1}$, but they are independent of $p_{k+1}, p_{k+2}, \ldots, p_{S}$.
+
+The Jacobian matrix of Equation \ref{eq:master} is then lower-triangular. The characteristic equation of this Jacobian matrix at equilibrium is given as:
+
+\begin{align}
+&|\lambda I - J| = 0  \nonumber\\
+\Leftrightarrow 
+&\prod_{k=1}^{S}(\lambda -J_{kk})=0 \nonumber\\
+\Leftrightarrow
+&\lambda = J_{kk}~ \forall k
+\end{align}
+
+where
+
+\begin{align}
+    J_{kk}  &= \gamma_k(1-2p_k)-\mu_k \\
+            &=\left\{
+                   \begin{array}{cl}
+                   \mu_k - \gamma_k& (\text{if}~ p_k=p_k^*)\\
+                   \gamma_k - \mu_k& (\text{if}~ p_k=0).
+                   \end{array}
+               \right.
+\end{align}
+
+An equilibrium is locally stable if and only if all eigenvalues $\lambda$ are negative. Therefore, a focal equilibrium is locally stable if and only if
+
 \begin{align}
     \lambda < 0 &\Leftrightarrow 
     \left\{
     \begin{array}{cc}
-         \mu_k-\gamma_k<0&  (\text{if}~ p_k=p_k^*)   \\
-         \gamma_k-\mu_k<0& (\text{if}~ p_k=0) .
+         \mu_k - \gamma_k < 0&  (\text{if}~ p_k = p_k^*)\\
+         \gamma_k - \mu_k < 0& (\text{if}~ p_k = 0) .
     \end{array}
     \right.
+    \label{eq:eigenvalue}
 \end{align}
-In other words, $\mu_k-\gamma_k<0$ for present species ($p_k=p_k^*>0$), and $\gamma_k-\mu_k<0$ for absent species ($p_k=0$), respectively, at a stable equilibrium.
 
-Now, we show the uniqueness of the stable equilibrium, although the system has multiple equilibria that differ in the combination of the presence and absence of species.
+Equation \ref{eq:eigenvalue} indicates that $\mu_k - \gamma_k < 0$ for persistent species ($p_k = p_k^*>0$), and $\gamma_k - \mu_k < 0$ for extinct species ($p_k=0$), respectively, at a stable equilibrium.
+
+Now, we show the uniqueness of the stable equilibrium despite the system having multiple equilibria that differ in the combination of the persistent and extinct species.
 For producer species ($k=1,2,\ldots, P$), $\mu_k-\gamma_k$ is constant as follows:
-\begin{align}
-    \mu_k-\gamma_k = c_{0, k}
-r_0 - \mu_{k}^{(0)} (1 + \rho \hat{u}).
-\end{align}
-This indicates the unique combination of the presence and absence of producers at a stable equilibrium.
 
-For consumer species ($k=P+1,P+2,\ldots, S$), $\mu_k-\gamma_k$ depends on $p_1, p_2, \ldots, p_{k-1}$ as follows:
+\begin{align}
+    \mu_k-\gamma_k = r_0 c_{0, k} - \mu_{k}^{(0)} (1 + \rho \hat{u}).
+\end{align}
+
+This indicates the unique combination of the persistent and extinct producers at a stable equilibrium.
+
+For consumer species ($k = P+1, P+2,\ldots, S$), $\mu_k-\gamma_k$ depends on $p_1, p_2, \ldots, p_{k-1}$ as follows:
+
 \begin{align}
     \mu_k-\gamma_k = \frac{\left(c_{0, k}+\mu_{k}^{(1)}\right)}{|A_k|}\sum_{q \in A_k} p_q
 - \mu_{k}^{(0)} (1 + \rho \hat{u})-\mu_{k}^{(1)} ,
 \end{align}
-where $A_k$ is a set of consumable prey for species $k$. Recall that $A_k$ cannot contain species $q=k, k+1, \ldots, S$ due to the acyclic food web. For species $k=P+1$, the value of $\mu_k-\gamma_k$ at a stable equilibrium is unique because the producers' occupancy at a stable equilibrium ($p_1, p_2, \ldots, p_P$) is also unique (i.e., $\sum_{q \in A_k} p_q$ is unique). In other words, the presence or absence of the producer species at a stable equilibrium uniquely determines the presence of species $k=P+1$ at a stable equilibrium. This logic recursively holds for species $k=P+2. \ldots, S$. Therefore, the system given by Equation (1) has a unique stable equilibrium.
+
+where $A_k$ is a set of consumable prey for species $k$.
+
+Recall that $A_k$ does not contain species $q = k, k+1, \ldots, S$ due to the acyclic nature of the food web.
+For species $k = P+1$, the value of $\mu_k-\gamma_k$ at a stable equilibrium is unique because the producer's occupancy at a stable equilibrium ($p_1, p_2, \ldots, p_P$) is unique (i.e., $\sum_{q \in A_k} p_q$ is unique).
+In other words, the persistence state of the producer species at a stable equilibrium uniquely determines the state of species $k = P+1$ at a stable equilibrium.
+This logic recursively holds for species $k=P+2. \ldots, S$.
+Therefore, the system given by Equation \ref{eq:master} has a unique stable equilibrium.
 \end{proof}
+
 \subsection{No Cascade Model}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
@@ -585,8 +605,8 @@ This ``no cascade'' model is identical to the one presented in the main text, ex
 \begin{equation}
     \mu_{k} = 
         \underbrace{\mu_{k}^{(0)} o}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(p)} \left(1 - \frac{\sum_{q~\in~\text{prey}} p_{q}}{S_{p, k}} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(c)} \sum_{q~\in~\text{predator}} p_{q}}_{\text{Predation}}.
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{\sum_{q \in \text{prey}} p_{q}}{S_{p, k}} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}}_{\text{Predation}}.
     \label{eq:extn}    
 \end{equation}
 
@@ -612,7 +632,7 @@ Additional parameter values are provided in Table 1.}
 \subsection{Numerical Analysis}
 
 We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(p)}$ and $\mu^{(c)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
 In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis.
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described above.
