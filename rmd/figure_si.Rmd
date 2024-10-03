@@ -44,7 +44,7 @@ cap <- with(df_grt, {
   c_text0 <- "Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
-($\\mu^{(0)}$), predation effect ($\\mu^{(c)}$), and prey effect ($\\mu^{(p)}$).
+($\\mu^{(0)}$), prey effect ($\\mu^{(1)}$), and predation effect ($\\mu^{(2)}$).
 Each cell represents the average FCL of five food webs.
 Additional parameter values are: "
   
