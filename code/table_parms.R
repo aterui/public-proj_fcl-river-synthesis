@@ -129,7 +129,7 @@ df_sum <- list_est[[1]] %>%
 ## export
 print(xtable(df_sum,
              caption = "Parameter estimates of the hierarchical Bayesian model 
-             with corresponding 95% credible intervals (CIs), 
+             with corresponding 95\\% credible intervals (CIs), 
              representing the uncertainty around each parameter estimate.
              \\label{tab:parms-est}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
