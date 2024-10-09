@@ -46,8 +46,31 @@ df_x <- list_fcl[[1]] %>%
            log_lambda)
 
 
-# analysis ----------------------------------------------------------------
+# analysis for correlations between predictors ----------------------------
 
 df_x %>% 
   select(-h, -g) %>% 
   cor()
+
+
+# correlation between elev and others -------------------------------------
+
+## exclude watersheds with < 3 sites
+g_sub <- df_x %>% 
+  group_by(g) %>% 
+  tally() %>% 
+  filter(n >= 3) %>% 
+  pull(g)
+
+## scale area and elevation by watershed, to account for regional differences
+df_elev <- df_x %>% 
+  filter(g %in% g_sub) %>% 
+  group_by(g) %>% 
+  transmute(scl_log_area = c(scale(log_area)),
+            scl_local_elev = c(scale(local_elev))) %>% 
+  ungroup() %>% 
+  dplyr::select(-g)
+
+## correlation test
+with(df_elev, cor.test(scl_log_area,
+                       scl_local_elev))
