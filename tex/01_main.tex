@@ -426,7 +426,7 @@ Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trop
 \end{equation}
 
 We report the maximum value of $\tau_k^{(w)}$ as the predicted FCL in a given environmental context.
-The analysis was performed in R 4.3.2.
+The analysis was performed in R 4.3.2 \citep{r_program}.
 
 \subsection{Meta-analysis}
 
@@ -465,9 +465,9 @@ For any instances where FCL estimates were originally calculated using a differe
 
 We assembled environmental data at site and watershed levels.
 The site-level environment refers to the environmental value at the sampling site.
-At this level, we obtained the following variables: upstream watershed area [km$^2$], forest fraction within a 1-km buffer [-], and elevation [m].
+At this level, we obtained the following variables: upstream watershed area [km$^2$] and elevation [m].
 We delineated watershed polygons with MERIT Hydro version 1.0.3 \citep{yamazaki_merit_2019} to estimate the upstream watershed area at each site.
-We extracted the elevation and the forest fraction from the MERIT DEM (3 arc-second) and the Copernicus Global Land Service ($\sim$ 100-m resolution at the equator), respectively.
+We extracted the elevation from the MERIT DEM (3 arc-second) \citep{yamazaki_high-accuracy_2017}.
 
 At the watershed level, we obtained the following variables: total river length [km], branching rate [km$^{-1}$], mean annual air temperature [$^\circ$C], annual precipitation amount [kg m$^{-2}$], and human footprint index [-].
 In our analysis, watersheds were separated by either the ocean, large lakes/reservoirs (10 km$^{2}$ in area), or large rivers that represent semi-lentic habitats (5000 km$^{2}$ in watershed area), which were extracted from Global 3 arc-second Water Body Map version 1.3 \citep{yamazaki_development_2015} and MERIT Hydro version 1.0.3 \citep{yamazaki_merit_2019}.
@@ -477,7 +477,7 @@ We estimated the branching rate as the inverse of the mean link length (= distan
 The inverse of the mean link length is an empirical proxy for theoretical branching rate $\lambda_b$ because it corresponds to the maximum likelihood estimate of the rate parameter of an exponential distribution.
 We took the spatial average of air temperature, precipitation, and human footprint index for each watershed polygon, whose data were sourced from CHELSA BIOCLIM+ (average of 1981-2010, 30 arc-second) \citep{brun_global_2022} and a global Human Footprint dataset populated by Mu et al \citep{mu_global_2022}.
 For the Human Footprint Index, we used data from 2000, 2005, ..., 2015 (5-year interval), and extracted values from the year nearest to the first sampling year in each watershed.
-We used the following R packages for our GIS analysis: \textit{sf} \citep{pebesma_simple_2018}, \textit{terra} \citep{hijmans_terra_2022}, \textit{exactextractr} \citep{baston_exactextractr_2020}, \textit{whitebox} \citep{lindsay_whitebox_2016}, and \textit{stars} \citep{pebesma_stars_2020}.
+We used the following R packages for our GIS analysis: \textit{sf} \citep{pkg_sf}, \textit{terra} \citep{pkg_terra}, \textit{exactextractr} \citep{pkg_exactextractr}, \textit{whitebox} \citep{pkg_whitebox}, and \textit{stars} \citep{pkg_stars}.
 
 \subsubsection{Statistical analysis}
 
@@ -510,8 +510,8 @@ The expected value $\mu_{y,i}$ is related to site-level linear predictor(s) as:
 
 where $\alpha_{0, w[i]}$ is the watershed specific intercept for watershed $w$ ($w[i]$ denotes site $i$ nested within watershed $w$), and $\alpha_m$ is the coefficient for the $m$-th site-level predictor $x_{m, i}$.
 At this level, we considered the local elevation at the site. 
-Elevation was used as a collective proxy for gross primary production (GPP) because: (i) in our data, it correlated with the upstream watershed area (XXX) and the forest fraction (XXX), both of which control light availability and GPP in streams \citep{finlay_light-mediated_2011, finlay_stream_2011, bernhardt_light_2022}; (ii) a meta-analysis showed an elevational gradient of gross primary production in streams and rivers \citep{marzolf_ecosystem_2021}; and (iii) it influences trophic structures \citep{oksanen_exploitation_1981}.
-We did not include the upstream watershed area and the forest fraction to avoid multi-colinearity and over-control bias \citep{arif_predictive_2022}.
+Elevation was used as a collective proxy for gross primary production (GPP) because: (i) in our data, it moderately but significantly correlated with the log-transformed upstream watershed area (Pearson's product-moment correlation $= -0.43$, $p < 0.001$), which controls light availability and GPP in streams \citep{finlay_light-mediated_2011, finlay_stream_2011, bernhardt_light_2022}; (ii) a meta-analysis showed an elevational gradient of GPP in streams and rivers \citep{marzolf_ecosystem_2021}.
+We did not include the upstream watershed area to avoid over-control bias \citep{arif_predictive_2022}.
 
 We related watershed-specific intercept $\alpha_{0, w}$ (the expected average FCL at watershed $w$) to watershed-level predictors as:
 
@@ -529,18 +529,18 @@ The parameter $\varepsilon_w$ the watershed-level residual errors, and we scaled
 
 \begin{align}
     \varepsilon_w &\sim \mbox{Normal}(0, \sigma_{\varepsilon}^2 \zeta_w^{-1}),\\
-    \zeta_w &\propto N_{s, w}^{\xi_1} e^{-\xi_2 (1 - d_{r,w})^2},
+    \zeta_w &\propto N_{s, w}^{\xi_1} e^{-\xi_2 (1 - d_{w})^2},
 \end{align}
 
-where $\sigma_{\varepsilon}^2$ is the residual variance, and $\zeta_w$ is the weight for watershed $w$, which is assumed to be proportional to a product of the number of sampling sites $N_{s,w}$ and the randomness factor $\exp[-\xi_2 (1 - d_{r,w})^2]$.
-The spatial randomness of sampling sites was assessed by distance ratio $d_{r, w}$.
+where $\sigma_{\varepsilon}^2$ is the residual variance, and $\zeta_w$ is the weight for watershed $w$, which is assumed to be proportional to a product of the number of sampling sites $N_{s,w}$ and the randomness factor $\exp[-\xi_2 (1 - d_{w})^2]$.
+The spatial randomness of sampling sites was assessed by distance ratio $d_{w}$.
 The distance ratio compares the median distance of observed site pairs to that of replicated ``random'' site pairs simulated along the same river network (see \textit{SI Appendix} for details).
-If spatially biased, the distance ratio shows deviation from one, where $d_{r, w} < 1$ and $d_{r, w} > 1$ indicate over-aggregation and over-dispersion, respectively.
-The Gaussian function $\exp[-\xi_2 (1 - d_{r,w})^2]$ returns smaller values as $d_{r, w}$ deviates from one, thus awarding more weights if spatially random.
+If spatially biased, the distance ratio shows deviation from one, where $d_{w} < 1$ and $d_{w} > 1$ indicate over-aggregation and over-dispersion, respectively.
+The Gaussian function $\exp[-\xi_2 (1 - d_{w})^2]$ returns smaller values as $d_{w}$ deviates from one, thus awarding more weights if spatially random.
 The parameters $\xi_1$ and $\xi_2$ control how quickly $\zeta_w$ increases with the number of sampling sites and the spatial randomness, and these were estimated through the stochastic search of Bayesian inference.
 
 We fitted our model to the data using NIMBLE version 1.2.1 in R 4.3.2.
-We assigned weakly informative priors to parameters: $\alpha_m,~\beta_0,~\beta_m \sim \mbox{Normal}(0, 5^2)$; $\sigma,~\sigma_{\varepsilon},~\sigma_{\eta} \sim t(0, 1, 10)_{>0}$; $\xi_1 \sim \mbox{Normal}(0, 1)_{>0}$; $\xi_2 \sim \mbox{Normal}(0, (\ln 10)^2)_{>0}$; and $\nu \sim \mbox{Exp}(0.1)_{\ge 2}$. 
+We assigned weakly informative priors to parameters: $\alpha_m,~\beta_0,~\beta_m \sim \mbox{Normal}(0, 5^2)$; $\sigma,~\sigma_{\varepsilon},~\sigma_{\eta} \sim t^+(0, 1, 10)$; $\xi_1 \sim \mbox{Normal}^+(0, 1)$; $\xi_2 \sim \mbox{Normal}^+(0, (\ln 10)^2)$; and $\nu \sim \mbox{Trunc(Exp}(0.1); 2, \infty)$, where plus signs indicate half-Normal or half-t distributions. 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
@@ -559,6 +559,6 @@ None declared.
 
 Aisha Hamoud, Yutaka Osada, Ryosuke Iritani, Junjiro Negishi, Mason Ibrahim, Ethan Isaac, Lucia Ramirez-Joseph
 
-\bibliography{references}
+\bibliography{references, packages}
 
 \end{document}
