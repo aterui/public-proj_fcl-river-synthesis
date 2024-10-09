@@ -1,10 +1,11 @@
 #' DESCRIPTION:
-#' Create a table for parameter values
+#' Create tables for parameter values
 
 # setup -------------------------------------------------------------------
 
 rm(list = ls())
 source("code/set_library.R")
+options(xtable.comment = FALSE)
 
 
 # table -------------------------------------------------------------------
@@ -74,10 +75,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
   rename_with(.fn = str_to_sentence)
 
 
-# export ------------------------------------------------------------------
-
-options(xtable.comment = FALSE)
-
+## export
 print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
              caption = "Parameter descriptions and values (analytical).\\label{tab:parms}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
@@ -96,4 +94,48 @@ print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si.tex")
+      file = "rmd/table_si1.tex")
+
+
+# Bayesian model estimate -------------------------------------------------
+
+list_est <- readRDS("data_fmt/output_model_h0.rds")
+
+df_sum <- list_est[[1]] %>% 
+  filter(str_detect(parms, "nu|sigma|z")) %>% 
+  mutate(varname = case_when(parms == "nu" ~ "$\\nu$",
+                             parms == "sigma[1]" ~ "$\\sigma$",
+                             parms == "sigma[2]" ~ "$\\sigma_{\\varepsilon}$",
+                             parms == "sigma[3]" ~ "$\\sigma_{\\eta}$",
+                             parms == "z[1]" ~ "$\\xi_{1}$",
+                             parms == "z[2]" ~ "$\\xi_{2}$"),
+         description = case_when(parms == "nu" ~ "Degrees of freedom",
+                                 parms == "sigma[1]" ~ "Site-lvel standard deviation",
+                                 parms == "sigma[2]" ~ "Watershed-level standard deviation",
+                                 parms == "sigma[3]" ~ "Region-level standard deviation",
+                                 parms == "z[1]" ~ "Scaling exponent for the number of sites",
+                                 parms == "z[2]" ~ "Scaling parameter for spatial sampling randomness"),
+         estimate = sprintf("%.2f", median),
+         ci = paste0("[",
+                     sprintf("%.2f", low),
+                     ", ",
+                     sprintf("%.2f", high),
+                     "]")) %>% 
+  dplyr::select(Parameter = varname,
+                Description = description,
+                Estimate = estimate,
+                `95% CI` = ci)
+
+## export
+print(xtable(df_sum,
+             caption = "Parameter estimates of the hierarchical Bayesian model 
+             with corresponding 95% credible intervals (CIs), 
+             representing the uncertainty around each parameter estimate.
+             \\label{tab:parms-est}"),
+      tabular.environment = "tabularx", # use \begin{tabularx}
+      width = "\\textwidth", # scale table with \textwidth
+      sanitize.text.function = function(x) x, # for math mode
+      include.rownames = FALSE,
+      caption.placement = "top",
+      size = "\\small",
+      file = "rmd/table_si2.tex")
