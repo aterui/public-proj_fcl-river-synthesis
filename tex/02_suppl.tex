@@ -804,13 +804,13 @@ and
 \end{equation}
 
 where $\boldsymbol{\beta_u} = \{\beta_{0, u}, \beta_{1, u}, \beta_{2, u}\}$. Here, $\boldsymbol{\mu_{\beta}}$ represents the mean vector, and $\Omega$ denotes the variance-covariance matrix.
-We used weakly informative priors, where $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$, and $\sigma_{\beta, m} \sim t(0, 1, 10)_{>0}$ ($m \in \{0, 1, 2\}$). In this context, the upper-triangular matrix $U_{\Omega}$ is the Cholesky factor for the correlation matrix, and $\sigma_{\beta, m}$ represents the standard deviations in $\Omega$.
+We used weakly informative priors, where $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$, and $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$). In this context, the upper-triangular matrix $U_{\Omega}$ is the Cholesky factor for the correlation matrix, and $\sigma_{\beta, m}$ represents the standard deviations in $\Omega$.
 Other priors were specified as described in the main text.
 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
-As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the calculation of posterior distributions.
+As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the estimation of posterior distributions.
 Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
 
 \bibliography{references}
