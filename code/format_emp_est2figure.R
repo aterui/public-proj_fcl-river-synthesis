@@ -13,8 +13,10 @@ source("code/set_library.R")
 source("code/format_emp_data4nimble.R")
 
 df_fcl_wsd <- df_fcl_wsd %>% 
-  mutate(log_r_length = log(r_length) - mean(log(r_length)),
-         log_lambda = log(lambda) - mean(log(lambda)),
+  mutate(log_r_length = log(r_length),
+         log_lambda = log(lambda),
+         scl_r_length = c(scale(log_r_length)),
+         scl_lambda = c(scale(log_lambda)),
          scl_prec = c(scale(prec)),
          scl_temp = c(scale(temp)),
          scl_hfp = c(scale(hfp)))
@@ -58,7 +60,7 @@ B <- rbind(v_r, m_b)
 ## prepare predictors
 ## - predictor columns
 ## - NOTE: sensitive the order of the columns
-cnm <- c("log_r_length", "log_lambda", "scl_temp", "scl_prec", "scl_hfp")
+cnm <- c("scl_r_length", "scl_lambda", "scl_temp", "scl_prec", "scl_hfp")
 
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
@@ -112,8 +114,10 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 
 ## get unscaled values
 df_yh <- df_yh0 %>% 
-  mutate(r_length = exp(log_r_length + mean(log(df_fcl_wsd$r_length))),
-         lambda = exp(log_lambda + mean(log(df_fcl_wsd$lambda))),
+  mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_r_length) + 
+                          mean(df_fcl_wsd$log_r_length)),
+         lambda = exp(scl_lambda * sd(df_fcl_wsd$log_lambda) + 
+                        mean(df_fcl_wsd$log_lambda)),
          prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
          temp = scl_temp * sd(df_fcl_wsd$temp) + mean(df_fcl_wsd$temp),
          hfp = scl_hfp * sd(df_fcl_wsd$hfp) + mean(df_fcl_wsd$hfp))
@@ -179,8 +183,10 @@ df_y <- foreach(j = seq_len(length(cnm)),
                            y_low = exp(log_y_low),
                            y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
-                    mutate(r_length = exp(log_r_length + mean(log(df_fcl_wsd$r_length))),
-                           lambda = exp(log_lambda + mean(log(df_fcl_wsd$lambda))),
+                    mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_r_length) + 
+                                            mean(df_fcl_wsd$log_r_length)),
+                           lambda = exp(scl_lambda * sd(df_fcl_wsd$log_lambda) + 
+                                          mean(df_fcl_wsd$log_lambda)),
                            prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
                            temp = scl_temp * sd(df_fcl_wsd$temp) + mean(df_fcl_wsd$temp),
                            hfp = scl_hfp * sd(df_fcl_wsd$hfp) + mean(df_fcl_wsd$hfp)) %>% 

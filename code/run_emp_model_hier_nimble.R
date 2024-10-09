@@ -19,18 +19,16 @@ list_fcl <- readRDS("data_fmt/data_fcl_reg.rds")
 df_fcl_local <- list_fcl[[1]] %>% 
   rename(local_hfp = hfp) %>% 
   left_join(list_fcl[[2]] %>% 
-              dplyr::select(uid, r_length, lambda, prec, temp, hfp)) %>% 
-  mutate(resid_elev = resid(lm(log(local_elev) ~ prec, .)),
-         resid_temp = resid(lm(temp ~ prec, .)))
+              dplyr::select(uid, r_length, lambda, prec, temp, hfp))
 
 df_fcl_wsd <- list_fcl[[2]]
 
 ## set data for JAGS
 ## - local level data
 X1 <- df_fcl_local %>% 
-  mutate(log_area = log(local_area) - mean(log(local_area))) %>% 
+  mutate(log_area = log(local_area)) %>% 
   dplyr::select(local_elev) %>% 
-  mutate(across(.cols = -starts_with("log"),
+  mutate(across(.cols = everything(),
                 .fns = function(x) c(scale(x)))) %>% 
   data.matrix()
 
@@ -44,14 +42,14 @@ list_const_local <- with(df_fcl_local,
 
 ## - watershed level data
 df_x2 <- df_fcl_wsd %>% 
-  mutate(log_rl = log(r_length) - mean(log(r_length)),
-         log_lambda = log(lambda) - mean(log(lambda))) %>% 
+  mutate(log_rl = log(r_length),
+         log_lambda = log(lambda)) %>% 
   dplyr::select(log_rl,
                 log_lambda,
                 temp,
                 prec,
                 hfp) %>% 
-  mutate(across(.cols = -starts_with("log"),
+  mutate(across(.cols = everything(),
                 .fns = function(x) c(scale(x))))
 
 X2 <- model.matrix(~ ., df_x2)

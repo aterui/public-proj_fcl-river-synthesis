@@ -86,16 +86,16 @@ ggplot2::theme_set(default_theme)
   geom_point(aes(color = factor(h),
                  size = scl_w),
              alpha = 0.5) + 
-  # geom_line(data = filter(df_yh, focus == "log_r_length"),
+  # geom_line(data = filter(df_yh, focus == "scl_r_length"),
   #           aes(x = r_length,
   #               y = y,
   #               color = factor(h)),
   #           alpha = 1,
   #           linetype = "dashed") + 
-  # geom_line(data = filter(df_y, focus == "log_r_length"),
+  # geom_line(data = filter(df_y, focus == "scl_r_length"),
   #           aes(x = r_length,
   #               y = y)) +
-  # geom_ribbon(data = filter(df_y, focus == "log_r_length"),
+  # geom_ribbon(data = filter(df_y, focus == "scl_r_length"),
   #             aes(y = y,
   #                 ymin = y_low,
   #                 ymax = y_high,
@@ -115,16 +115,16 @@ ggplot2::theme_set(default_theme)
   geom_point(aes(color = factor(h),
                  size = scl_w),
              alpha = 0.4) +
-  geom_line(data = filter(df_yh, focus == "log_lambda"),
+  geom_line(data = filter(df_yh, focus == "scl_lambda"),
             aes(x = lambda,
                 y = y,
                 color = factor(h)),
             alpha = 1,
             linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "log_lambda"),
+  geom_line(data = filter(df_y, focus == "scl_lambda"),
             aes(x = lambda,
                 y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "log_lambda"),
+  geom_ribbon(data = filter(df_y, focus == "scl_lambda"),
               aes(y = y,
                   ymin = y_low,
                   ymax = y_high,
@@ -167,9 +167,6 @@ var_name <- c("log River length",
               "Human footprint",
               "Elevation")
 
-sigma_br <- sd(df_fcl_wsd$log_lambda)
-sigma_rl <- sd(df_fcl_wsd$log_r_length)
-
 df_ridge <- list_est[[id_best]]$mcmc %>% 
   ggmcmc::ggs() %>% 
   rename_with(.fn = str_to_lower) %>% 
@@ -180,10 +177,7 @@ df_ridge <- list_est[[id_best]]$mcmc %>%
                          parameter == "b[4]" ~ var_name[3],
                          parameter == "b[5]" ~ var_name[4],
                          parameter == "b[6]" ~ var_name[5],
-                         parameter == "a[1]" ~ var_name[6]),
-         std_value = case_when(var == "log Branching rate" ~ value * sigma_br,
-                               var == "log River length" ~ value * sigma_rl,
-                               TRUE ~ as.numeric(value))) 
+                         parameter == "a[1]" ~ var_name[6])) 
 
 var_level <- df_ridge %>% 
   group_by(var) %>% 
@@ -193,7 +187,7 @@ var_level <- df_ridge %>%
 
 g_ridge <- df_ridge %>% 
   mutate(var = factor(var, levels = var_level)) %>% 
-  ggplot(aes(x = std_value,
+  ggplot(aes(x = value,
              y = var,
              fill = 0.5 - abs(0.5 - after_stat(ecdf)))) +
   ggridges::stat_density_ridges(quantile_lines = TRUE,
@@ -217,6 +211,6 @@ g_ridge <- df_ridge %>%
 
 ## export
 ggsave(g_ridge,
-       filename = "data_fmt/fig_ridge.pdf",
+       filename = "data_fmt/fig_emp_ridge.pdf",
        width = 7,
        height = 4)
