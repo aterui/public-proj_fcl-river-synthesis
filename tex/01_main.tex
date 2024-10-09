@@ -539,7 +539,7 @@ If spatially biased, the distance ratio shows deviation from one, where $d_{w} <
 The Gaussian function $\exp[-\xi_2 (1 - d_{w})^2]$ returns smaller values as $d_{w}$ deviates from one, thus awarding more weights if spatially random.
 The parameters $\xi_1$ and $\xi_2$ control how quickly $\zeta_w$ increases with the number of sampling sites and the spatial randomness, and these were estimated through the stochastic search of Bayesian inference.
 
-We fitted our model to the data using NIMBLE version 1.2.1 in R 4.3.2.
+We fitted our model to the data using NIMBLE version 1.2.1 \citep{nimble, pkg_nimble} in R 4.3.2 \citep{r_program}.
 We assigned weakly informative priors to parameters: $\alpha_m,~\beta_0,~\beta_m \sim \mbox{Normal}(0, 5^2)$; $\sigma,~\sigma_{\varepsilon},~\sigma_{\eta} \sim t^+(0, 1, 10)$; $\xi_1 \sim \mbox{Normal}^+(0, 1)$; $\xi_2 \sim \mbox{Normal}^+(0, (\ln 10)^2)$; and $\nu \sim \mbox{Trunc(Exp}(0.1); 2, \infty)$, where plus signs indicate half-Normal or half-t distributions. 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
