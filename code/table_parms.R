@@ -84,7 +84,7 @@ print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table.tex")
+      file = "rmd/table_main.tex")
 
 print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
              caption = "Parameter values in numerical analysis.\\label{tab:parms-num}"),
@@ -94,7 +94,7 @@ print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si1.tex")
+      file = "rmd/table_si_theo.tex")
 
 
 # Bayesian model estimate -------------------------------------------------
@@ -124,7 +124,7 @@ df_sum <- list_est[[1]] %>%
   dplyr::select(Parameter = varname,
                 Description = description,
                 Estimate = estimate,
-                `95% CI` = ci)
+                `95\\% CI` = ci)
 
 ## export
 print(xtable(df_sum,
@@ -138,4 +138,4 @@ print(xtable(df_sum,
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si2.tex")
+      file = "rmd/table_si_emp.tex")

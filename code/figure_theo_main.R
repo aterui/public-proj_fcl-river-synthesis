@@ -66,7 +66,7 @@ g_uhat <- df_u %>%
   plot_annotation(tag_levels = "A"))
 
 ggsave(g_scheme,
-       filename = "data_fmt/fig_scheme.pdf",
+       filename = "data_fmt/fig_theo_scheme.pdf",
        width = 9,
        height = 4)
 
@@ -204,12 +204,12 @@ g_sim_main <- g_heat05 + g_br + g_size +
 # export ------------------------------------------------------------------
 
 ggsave(g_sim_main,
-       filename = "data_fmt/fig_sim_main.pdf",
+       filename = "data_fmt/fig_theo_main.pdf",
        width = 9,
        height = 10)
 
 ggsave(g_heat0,
-       filename = "data_fmt/fig_rho0.pdf",
+       filename = "data_fmt/fig_theo_rho0.pdf",
        width = 6,
        height = 5)
 
