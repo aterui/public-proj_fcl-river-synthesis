@@ -102,15 +102,29 @@ print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
 list_est <- readRDS("data_fmt/output_model_h0.rds")
 
 df_sum <- list_est[[1]] %>% 
-  filter(str_detect(parms, "nu|sigma|z")) %>% 
-  mutate(varname = case_when(parms == "nu" ~ "$\\nu$",
+  filter(!str_detect(parms, "b0")) %>% 
+  mutate(varname = case_when(parms == "a[1]" ~ "$\\alpha_1$",
+                             parms == "b[1]" ~ "$\\beta_0$",
+                             parms == "b[2]" ~ "$\\beta_1$",
+                             parms == "b[3]" ~ "$\\beta_2$",
+                             parms == "b[4]" ~ "$\\beta_3$",
+                             parms == "b[5]" ~ "$\\beta_4$",
+                             parms == "b[6]" ~ "$\\beta_5$",
+                             parms == "nu" ~ "$\\nu$",
                              parms == "sigma[1]" ~ "$\\sigma$",
                              parms == "sigma[2]" ~ "$\\sigma_{\\varepsilon}$",
                              parms == "sigma[3]" ~ "$\\sigma_{\\eta}$",
                              parms == "z[1]" ~ "$\\xi_{1}$",
                              parms == "z[2]" ~ "$\\xi_{2}$"),
-         description = case_when(parms == "nu" ~ "Degrees of freedom",
-                                 parms == "sigma[1]" ~ "Site-lvel standard deviation",
+         description = case_when(parms == "a[1]" ~ "Elevation",
+                                 parms == "b[1]" ~ "Intercept",
+                                 parms == "b[2]" ~ "log River length",
+                                 parms == "b[3]" ~ "log Branching rate",
+                                 parms == "b[4]" ~ "Air temperature",
+                                 parms == "b[5]" ~ "Precipitation",
+                                 parms == "b[6]" ~ "Human footprint",
+                                 parms == "nu" ~ "Degrees of freedom",
+                                 parms == "sigma[1]" ~ "Site-level standard deviation",
                                  parms == "sigma[2]" ~ "Watershed-level standard deviation",
                                  parms == "sigma[3]" ~ "Region-level standard deviation",
                                  parms == "z[1]" ~ "Scaling exponent for the number of sites",
@@ -120,11 +134,15 @@ df_sum <- list_est[[1]] %>%
                      sprintf("%.2f", low),
                      ", ",
                      sprintf("%.2f", high),
-                     "]")) %>% 
+                     "]"),
+         pr_neg = sprintf("%.2f", pr_neg),
+         pr_pos = sprintf("%.2f", pr_pos)) %>% 
   dplyr::select(Symbol = varname,
                 Description = description,
                 Estimate = estimate,
-                `95\\% CI` = ci)
+                `95\\% CI` = ci,
+                `$\\Pr(< 0)$` = pr_neg,
+                `$\\Pr(> 0)$` = pr_pos)
 
 ## export
 print(xtable(df_sum,
