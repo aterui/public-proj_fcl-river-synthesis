@@ -13,9 +13,9 @@ source("code/set_library.R")
 source("code/format_emp_data4nimble.R")
 
 df_fcl_wsd <- df_fcl_wsd %>% 
-  mutate(log_r_length = log(r_length),
+  mutate(log_rl = log(r_length),
          log_lambda = log(lambda),
-         scl_r_length = c(scale(log_r_length)),
+         scl_r_length = c(scale(log_rl)),
          scl_lambda = c(scale(log_lambda)),
          scl_prec = c(scale(prec)),
          scl_temp = c(scale(temp)),
@@ -114,8 +114,8 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 
 ## get unscaled values
 df_yh <- df_yh0 %>% 
-  mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_r_length) + 
-                          mean(df_fcl_wsd$log_r_length)),
+  mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_rl) + 
+                          mean(df_fcl_wsd$log_rl)),
          lambda = exp(scl_lambda * sd(df_fcl_wsd$log_lambda) + 
                         mean(df_fcl_wsd$log_lambda)),
          prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
@@ -183,8 +183,8 @@ df_y <- foreach(j = seq_len(length(cnm)),
                            y_low = exp(log_y_low),
                            y_high = exp(log_y_high)) %>% 
                     bind_cols(df_x) %>% 
-                    mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_r_length) + 
-                                            mean(df_fcl_wsd$log_r_length)),
+                    mutate(r_length = exp(scl_r_length * sd(df_fcl_wsd$log_rl) + 
+                                            mean(df_fcl_wsd$log_rl)),
                            lambda = exp(scl_lambda * sd(df_fcl_wsd$log_lambda) + 
                                           mean(df_fcl_wsd$log_lambda)),
                            prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
