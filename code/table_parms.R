@@ -121,7 +121,7 @@ df_sum <- list_est[[1]] %>%
                      ", ",
                      sprintf("%.2f", high),
                      "]")) %>% 
-  dplyr::select(Parameter = varname,
+  dplyr::select(Symbol = varname,
                 Description = description,
                 Estimate = estimate,
                 `95\\% CI` = ci)
