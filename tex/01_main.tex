@@ -47,18 +47,43 @@
 \author[1]{Akira Terui}
 \author[1,2]{Shota Shibasaki}
 \author[3]{Justin P. F. Pomeranz}
-\author[4]{Dai Yamazaki}
-\author[5]{Jacques C. Finlay}
+\author[1, 4]{Mason Ibrahim}
+\author[1]{Ethan Isaac}
+\author[1]{Ashley LaRoque}
+\author[5]{Dai Yamazaki}
+\author[6]{Jacques C. Finlay}
 \affil[1]{Depatment of Biology, University of North Carolina at Greensboro}
 \affil[2]{Center for Frontier Research, National Institute of Genetics}
 \affil[3]{XXX, Colorado Mesa University}
-\affil[4]{Institute of Industrial Science, University of Tokyo}
-\affil[5]{Departiment of Ecology, Evolution, and Behavior, University of Minnesota}
+\affil[4]{XXX, Duke University}
+\affil[5]{Institute of Industrial Science, University of Tokyo}
+\affil[6]{Departiment of Ecology, Evolution, and Behavior, University of Minnesota}
 
 
 \begin{document}
 
 \maketitle
+
+\section*{Abstract}
+Since the time of Charles Elton, ecologists have been fascinated by the variation in food chain length within natural communities.
+The ecosystem size hypothesis suggests that the size of an ecosystem is a key factor influencing food chain length.
+However, current discussions on food webs have overlooked the potential influence of spatial ecosystem complexity -- a geometric characteristic that is independent of ecosystem size.
+Here, we use theoretical models and meta-analysis to demonstrate that ecosystem complexity, rather than ecosystem size, plays a crucial role in regulating food chains in rivers.
+Our spatial theory suggests that the complex branching patterns of tributaries buffer downstream areas from cascading disturbances like floods, thereby allowing longer food chains to persist across landscapes.
+Contrary to traditional views, our theory predicts the ambiguous relationship between food chain length and ecosystem size.
+The meta-analysis of global food chain data strongly supports these theoretical insights.
+The complexity of tributary branching consistently had positive effects on riverine food chains worldwide.
+This study provides a significant conceptual framework for understanding the organization of food webs in ecosystems with complex spatial structures.
+
+\section*{Significance}
+Why do food chain lengths -- the number of feeding links from producers to apex consumers in a food web -- vary in nature?
+This question has captivated ecologists since the early 20th century, and larger ecosystems were thought to support longer food chains.
+However, we found that the complexity of an ecosystem’s shape, such as the branching patterns of diverging rivers, matters more than size.
+Intricate river branching can buffer downstream areas from disturbances like floods, allowing longer food chains to persist.
+We also observed an ambiguous relationship between food chain length and ecosystem size, challenging the idea that bigger is always better for food chains.
+This study highlights how the shape of ecosystems influences their food webs, offering insights into their organization.
+
+\newpage
 
 \section{Introduction}
 Since Charles Elton coined the term ``food cycles'' \citep{elton_animal_1927}, food webs have been a central theme in ecology \citep{paine_food_1966, pimm_food_1991, post_long_2002}.
@@ -97,7 +122,7 @@ On average, ecosystems with higher branching rates encompass more confluences (s
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{data_fmt/fig_scheme.pdf}
+    \includegraphics[width=\textwidth]{data_fmt/fig_theo_scheme.pdf}
     \caption{Modeling scheme. (A) Schematic representation of modeled river branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length (black solid lines) refers to the portion of the river located upstream from a given habitat patch. As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) Visual representation of function $\hat{u}(L, \lambda_b)$. Upstream river length $\hat{u}$ is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (Methods).}
     \label{fig:scheme}
 \end{figure}
@@ -151,7 +176,7 @@ This propagation can lead to synchronized extirpation among flow-connected sites
 We assumed that such a risk of disturbance cascade is proportional to the upstream river length $u$, whose expected value $\hat{u}$ is a nonlinear function of river length $L$ and branching rate $\lambda_b$ (Figure \ref{fig:scheme}B; Methods).
 Therefore, the extinction dynamics are also linked to the spatial ecosystem properties.
 
-\input{rmd/table}
+\input{rmd/table_main}
 
 Using 20 replicas of realistic food webs (Methods), we evaluated how food chains respond to total river length $L$ and branching rate $\lambda_b$ across different levels of resource supply ($r_0$) and disturbance regimes ($\mu^{(0)}$).
 These simulated food webs comprise 32 trophic species and vary in the number of trophic links and producers, allowing us to account for potential variations in food web structure.
@@ -176,7 +201,7 @@ The positive relationship between FCL and branching rate was consistent, whereas
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{data_fmt/fig_sim_main.pdf}
+    \includegraphics[width=0.8\textwidth]{data_fmt/fig_theo_main.pdf}
     \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Additional parameter values are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity, but not size, significantly increases FCL in the presence of spatial disturbance cascades (red lines). The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed, the positive effect of ecosystem complexity disappears (gray lines in panel B), yielding patterns consistent with the ecosystem size hypothesis (gray lines in panel C).}
     \label{fig:sim-main}
 \end{figure}
@@ -188,9 +213,9 @@ Our meta-analysis distinguishes itself from previous research in its extent, ext
 We employed Bayesian hierarchical models to evaluate the effects of total river length and branching rate on FCL, while also accounting for potential influences of resource supply and disturbance through relevant proxy variables (Methods).
 
 The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of increased FCL.
-The analysis provided strong statistical support for the positive effect of branching rate (Figure \ref{fig:fcl-obs}B), with a high probability ($\approx$ 0.95) that the regression coefficient is positive (Figure \ref{fig:ridge}).
+The analysis provided strong statistical support for the positive effect of branching rate (Figure \ref{fig:fcl-obs}B), with a high probability that the regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure \ref{fig:ridge} and Table S3).
 Conversely, the effect of total river length was ambiguous (Figure \ref{fig:fcl-obs}C), characterized by the posterior distribution of its coefficient centered around zero (Figure \ref{fig:ridge}).
-Interestingly, despite regional uniqueness in ecological communities and distinct evolutionary histories, no statistical evidence exists that these relationships vary among regions -- the model assuming constant slopes for these ecosystem properties exhibited the WAIC lower than one with region-specific slopes (-251.4 vs. -251.2).
+Interestingly, despite regional uniqueness in ecological communities and distinct evolutionary histories, no statistical evidence exists that these relationships vary among regions -- the model assuming constant slopes for these ecosystem properties exhibited the WAIC \citep{watanabe_asymptotic_2010} lower than one with region-specific slopes ($-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
 This result suggests the generality of our findings. 
 
 \begin{figure}
@@ -222,7 +247,7 @@ Thus, the present study speaks to the importance of spatial scale when examining
 
 Our analysis unveiled a strong influence of elevation on FCL (Figure \ref{fig:ridge}), and this pattern may reflect an elevational gradient of stream productivity \citep{marzolf_ecosystem_2021}.
 Elevation may control gross primary production through diverse pathways, including light availability and water temperature \citep{marzolf_ecosystem_2021, atkinson_determinants_2018}.
-In our dataset, high-elevation streams are characterized by high forest cover and small stream sizes (Methods), restricting light transmission to the water surface by shading \citep{finlay_light-mediated_2011, finlay_human_2013, bernhardt_light_2022}.
+In our dataset, high-elevation streams are characterized by small stream sizes (Methods), restricting light transmission to the water surface by shading \citep{finlay_light-mediated_2011, finlay_human_2013, bernhardt_light_2022}.
 Additionally, lower water temperatures in high elevations may limit stream productivity \citep{demars_temperature_2011}.
 Although we could not yield direct measures of stream productivity at FCL sites, the negative influence of elevation provides indirect support for the resource availability hypothesis in rivers.
 
@@ -235,11 +260,11 @@ Our advanced statistical modeling accounted for common challenges in meta-analys
 These quantitative techniques are crucial for our analysis, as they accommodate the variability in sampling schemes found in previous studies.
 However, as with any empirical research, our findings should be interpreted with caveat.
 We cannot rule out the possibility of spurious correlations, and experimental manipulations are warranted to confirm biological causality.
-Although watershed-scale experiments are practically impossible, small-scale experiments of micro-organisms may provide an alternative means to test the causality.
+Although watershed-scale experiments are practically impossible, small-scale experiments of micro-organisms may provide an alternative means to test the causality \citep{altermatt_big_2015, green_long_2023}.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{data_fmt/fig_ridge.pdf}
+    \includegraphics[width=0.75\linewidth]{data_fmt/fig_emp_ridge.pdf}
     \caption{Posterior distributions for the regression coefficients. The Y-axis represents predictor variables, and colors are proportional to tail probabilities. Vertical lines are median estimates.}
     \label{fig:ridge}
 \end{figure}
@@ -350,7 +375,7 @@ This assumption aligns with the known relationships of trophic position versus f
 \begin{equation}
     \mu_{k} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{\sum_{q\in A_{k}} p_{q}}{|A_{k}|}\right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_{k}|}\sum_{q\in A_{k}} p_{q}\right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_{k}} p_{q}}_{\text{Predation}},
     \label{eq:extn}    
 \end{equation}
@@ -545,7 +570,7 @@ Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
 As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the estimation of posterior distributions.
-Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
+Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1 \citep{gelman2013bayesian}.
 
 \section{Data availability}
 
@@ -557,8 +582,10 @@ None declared.
 
 \section{Acknowledgements}
 
-Aisha Hamoud, Yutaka Osada, Ryosuke Iritani, Junjiro Negishi, Mason Ibrahim, Ethan Isaac, Lucia Ramirez-Joseph
+We extend our gratitude to Yutaka Osada and Ryosuke Iritani for their valuable contributions to Lemma 1.3.2, as well as to Aisha Hamoud and Lucia Ramirez-Joseph for their assistance with the meta-analysis.
+Our meta-analysis would not have been possible without the previous studies listed in \textit{SI Appendix} and the generous provision of raw data from several authors of the published articles.
+This material is based upon work supported by the National Science Foundation through the Division of Environmental Biology (DEB 2015634).
 
-\bibliography{references, packages}
+\bibliography{references, ref_package, ref_book}
 
 \end{document}
