@@ -1,0 +1,68 @@
+README
+================
+
+# Article Information
+
+**Tentative title**: Geometric ecosystem complexity regulates food
+chains
+
+**Authors**: Terui A, Shibasaki S, Pomeranz JPF, XXX, Yamazaki D, Finlay
+JC
+
+# Analysis Flow
+
+## Theoretical Analysis
+
+Script `run_theory.R` runs all analysis, including analytical and
+numerical explorations.
+
+For source codes, see:
+
+- `analysis_theory_m_heatmap.R`
+
+- `analysis_theory_m_line.R`
+
+- `analysis_theory_si.R`
+
+For visualization, see:
+
+- `figure_theo_main.R`
+
+- `figure_theo_si.R`
+
+## Empirical Analysis
+
+**Bayesian data analysis**: Script `run_emp_model_hier_nimble.R` runs
+the Bayesian hierarchical models. Model source codes are
+`model_nimble_hi.R` (random intercept model) and `model_nimble_hsl.R`
+(random intercept and slope model).
+
+Data are formatted and sourced from:
+
+- `format_emp_data4nimble.R` (`data_fmt/data_fcl_reg.rds`)
+
+- `gis_emp_wsd_weight.R` (distance ratio; `data_fmt/data_weight.rds`)
+
+**Precipitation-flow analysis**: Script `format_emp_flow.R` runs the GAM
+analysis. Script `analysis_emp_cor.R` analyze the relationship between
+precipitation and discharge anomalies.
+
+**Predictor correlation**: Script `analysis_emp_cor.R` analyzes
+correlations between predictors.
+
+# Data Sources
+
+## Overview
+
+| file                     | description                                                                                                                                                                                                                |
+|:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data_env_flow.rds`      | Discharge data sourced from CaMa Flood.                                                                                                                                                                                    |
+| `data_env_local.rds`     | Site-level environmental data. Averaged for upstream watershed area.                                                                                                                                                       |
+| `data_env_wsd.rds`       | Watershed-level environmental data.                                                                                                                                                                                        |
+| `data_fcl_src.rds`       | Source data for food chain length. This data contains sites that are located in semi-lentic rivers (\> 5k sq-km in watershed area). This source data was used to generate `wgs84_fcl_site.rds`.                            |
+| `wgs84_fcl_site.rds`     | Point layer for site coordinates (with estimates of food chain length; class `sf`). Include temporal duplicates (either seasonal or annual) at some sites and some watersheds that are removed through a screening process |
+| `wgs84_outlet.rds`       | Outlet coordinates of study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).                                                                |
+| `wgs84_region_lev01.rds` | Polygon layer for HydroBASINS level-one (class `sf`).                                                                                                                                                                      |
+| `wgs84_str_sub.rds`      | Polyline layer for study watersheds. Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).                                                                                |
+| `wgs84_subwatershed.rds` | Polygon layer for upstream watershed at each sampling site (class `sf`).                                                                                                                                                   |
+| `wgs84_wsd_sub.rds`      | Polygon layer for study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).                                                                    |
