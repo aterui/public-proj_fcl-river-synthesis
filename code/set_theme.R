@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Set figure theme
 
 default_theme <- theme_bw() +
   theme(panel.grid = element_blank(),

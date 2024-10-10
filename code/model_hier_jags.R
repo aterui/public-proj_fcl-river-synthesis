@@ -1,3 +1,6 @@
+#' DESCRIPTION:
+#' JAGS model, random-intercept
+
 model {
   
   sd0 <- 10

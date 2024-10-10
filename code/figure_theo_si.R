@@ -1,5 +1,6 @@
 #' DESCRIPTION
-#' xxx
+#' Produce predictions with numerical analysis
+#' Heatmaps for a number of parameter combinations
 
 # setup -------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 #' DESCRIOTION:
-#' xxx
+#' Produce empirical figures for maintext
+#' Map/prediction plots, and posterior distributions
 
 # setup -------------------------------------------------------------------
 

@@ -1,3 +1,6 @@
+#' DESCRIPTION:
+#' Run NIMBLE models and calculate Bayes Factor
+#' Error produced, cannot be fixed; no use for publication
 
 # setup -------------------------------------------------------------------
 

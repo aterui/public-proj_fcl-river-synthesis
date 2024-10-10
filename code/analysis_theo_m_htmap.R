@@ -1,5 +1,5 @@
 #' DESCRIPTION:
-#' This script explores possible outcomes of food chain length
+#' Explores possible outcomes of food chain length
 #' No predation and analytical
 
 # setup -------------------------------------------------------------------

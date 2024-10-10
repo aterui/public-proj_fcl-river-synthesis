@@ -1,5 +1,5 @@
 #' DESCRIPTION:
-#' Model code for a random intercept-slope model
+#' NIMBLE model, random-intercept and slope
 
 ## define function
 uppertri_mult_diag <- nimbleFunction(

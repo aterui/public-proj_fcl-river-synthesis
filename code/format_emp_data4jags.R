@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Format data for analysis in JAGS
 
 # setup -------------------------------------------------------------------
 

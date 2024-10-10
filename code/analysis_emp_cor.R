@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Correlation analysis of predictors
 
 # setup -------------------------------------------------------------------
 

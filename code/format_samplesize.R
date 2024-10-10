@@ -1,5 +1,5 @@
-#' DESCRIOTION:
-#' xxx
+#' DESCRIPTION:
+#' Get sample sizes
 
 # setup -------------------------------------------------------------------
 

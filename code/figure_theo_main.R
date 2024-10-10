@@ -1,5 +1,6 @@
 #' DESCRIOTION:
-#' xxx
+#' Produce scheme figure and main theoretical predictions
+#' Main theoretical predictions include heatmap and line arts
 
 # setup -------------------------------------------------------------------
 
@@ -212,5 +213,3 @@ ggsave(g_heat0,
        filename = "data_fmt/fig_theo_rho0.pdf",
        width = 6,
        height = 5)
-
-

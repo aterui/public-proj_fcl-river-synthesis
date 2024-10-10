@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' GIS analysis to obtain distance ratio d_w
 
 # setup -------------------------------------------------------------------
 

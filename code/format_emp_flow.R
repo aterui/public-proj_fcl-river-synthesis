@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Format and analyze flow data (GAM)
 
 # setup -------------------------------------------------------------------
 

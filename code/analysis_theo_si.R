@@ -1,6 +1,6 @@
 #' DESCRIPTION:
-#' This script explores possible outcomes of food chain length
-#' in a variety of ecological scenarios
+#' Explores possible outcomes of food chain length
+#' Expanded analysis using numerical methods
 
 # setup -------------------------------------------------------------------
 

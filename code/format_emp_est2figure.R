@@ -1,4 +1,4 @@
-#' DESCRIOTION:
+#' DESCRIPTION:
 #' Format model estimates for visualization
 
 # setup -------------------------------------------------------------------

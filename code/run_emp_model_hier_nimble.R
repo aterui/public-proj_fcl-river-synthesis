@@ -1,5 +1,5 @@
 #' DESCRIPTION:
-#' Run nimble models
+#' Run NIMBLE models
 #' Model code: `model_nimble_hi.R` or `model_nimble_hsl.R`
 
 # setup -------------------------------------------------------------------

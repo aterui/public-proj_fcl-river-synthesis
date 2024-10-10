@@ -1,6 +1,5 @@
 #' DESCRIPTION:
-#' This script analyze the relationship  between river discharge and regional
-#'  precipitation
+#' Analyze the relationship  between river discharge and regional precipitation
 
 # setup -------------------------------------------------------------------
 

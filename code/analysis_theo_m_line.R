@@ -1,6 +1,6 @@
 #' DESCRIPTION:
-#' This script draw representative prediction for some parameter combos
-#' Dotted lines in the heatmap, `figure_fcl_theory_main.R`
+#' Draw predictions for representative parameter combos
+#' Dotted lines in the heatmap, `figure_theo_main.R`
 #' No predation and analytical
 
 # setup -------------------------------------------------------------------

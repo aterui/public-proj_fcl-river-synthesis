@@ -1,3 +1,5 @@
+#' DESCRIPTION:
+#' Get coordinates for sampling sites
 
 # setup -------------------------------------------------------------------
 
