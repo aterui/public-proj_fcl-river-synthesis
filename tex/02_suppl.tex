@@ -262,7 +262,7 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
 \begin{equation}
     \mu_{ik} = 
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{\sum_{q \in A_k} \pi_{iq}}{|A_k|} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} \pi_{iq} \right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} \pi_{iq}}_{\text{Predation}},
     \label{eq:extn}
 \end{equation}
@@ -309,7 +309,7 @@ and
 \begin{equation}
     \mu_{k} = 
         \mu_{k}^{(0)} (1 + \rho \hat{u}) + 
-        \mu_{k}^{(1)} \left(1 - \frac{\sum_{q \in A_k} p_{q}}{|A_k|} \right) + 
+        \mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} p_{q} \right) + 
         \mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}.
     \label{eq:extn}    
 \end{equation}
@@ -645,8 +645,8 @@ where $I$ and $\lambda$ are the identity matrix and the eigenvalue, respectively
         J_{kk}  &= \gamma_k(1-2p_k)-\mu_k \\
                 &=\left\{
                        \begin{array}{cl}
-                       \mu_k - \gamma_k& (\text{if}~ p_k=p_k^*)\\
-                       \gamma_k - \mu_k& (\text{if}~ p_k=0).
+                       \mu_k - \gamma_k& \text{if}~ p_k=p_k^*\\
+                       \gamma_k - \mu_k& \text{if}~ p_k=0.
                        \end{array}
                    \right.
     \end{split}
@@ -658,8 +658,8 @@ An equilibrium is locally stable if and only if all eigenvalues $\lambda$ are ne
     \lambda < 0 &\Leftrightarrow 
     \left\{
     \begin{array}{cc}
-         \mu_k - \gamma_k < 0   &(\text{if}~ p_k = p_k^*)\\
-         \gamma_k - \mu_k < 0   &(\text{if}~ p_k = 0) .
+         \mu_k - \gamma_k < 0   &\text{if}~ p_k = p_k^*\\
+         \gamma_k - \mu_k < 0   &\text{if}~ p_k = 0.
     \end{array}
     \right.
     \label{eq:eigenvalue}
@@ -701,7 +701,7 @@ This ``no cascade'' model is identical to the one presented in the main text, ex
 \begin{equation}
     \mu_{k} = 
         \underbrace{\mu_{k}^{(0)} o}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{\sum_{q \in A_k} p_{q}}{|A_k|} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} p_{q} \right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}}_{\text{Predation}}.
 \end{equation}
 
@@ -729,7 +729,7 @@ Additional parameter values are provided in Table 1.}
 We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
 Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
-In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods in the main text).
+In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
 An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
@@ -751,31 +751,30 @@ Insert a table
 
 Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
 The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
-See main text for model details.
 
 \input{rmd/table_si_emp}
 
 \subsection{Discharge-Precipitation Relationship}
-We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability.
+We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \citep{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
 The discharge data is available at a 0.1-degree resolution (approximately 10 km at the equator) and was extracted from the nearest flow-connected cell for each site; however, discharge data could not be obtained for two headwater stream sites, which were excluded from further analysis.
-At each site, we log-transformed the discharge data and scaled it by the temporal mean to facilitate comparison across sites with varying stream sizes.
+At each site, we log-transformed the discharge data and then scaled it by the temporal mean to facilitate comparison across sites with varying stream sizes.
 
 We define ``flow variability'' as the magnitude of discharge deviations from seasonal expectations.
 To model this variability, we fitted a Generalized Additive Model (GAM) as follows:
 
 \begin{align}
     \begin{split}
-    D_i &= \alpha_d + s(\text{Julian}_i) + \varepsilon_i,\\
+    D_i &= \alpha_d + s(\mbox{Julian}_i) + \varepsilon_i,\\
     \varepsilon_i &\sim t(0, \sigma_d^2, \nu_d),
     \end{split}
 \end{align}
 
-where $D_i$ represents the scaled daily discharge, "Julian" refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing spline.
+where $D_i$ represents the scaled daily discharge, ``$\mbox{Julian}_i$'' refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing spline.
 We used a Student's t-distribution for the error structure, as it better captures the fat-tailed nature of the discharge data.
 The degree of freedom, $\nu_d$, characterizes the thickness of the tails, with smaller values indicating a higher likelihood of extreme high or low flows relative to seasonal expectations (i.e., fatter tails).
 As $\nu_d$ approaches infinity, the Student's t-distribution converges to a normal distribution.
 
-We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Maintext) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
+We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Methods) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
 The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
 This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
 
