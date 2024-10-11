@@ -82,4 +82,38 @@ knitr::kable(df_cnm)
 
 ```
 
+## Predator Collection
+
+Column `top_predator_collected` indicates whether suitable top predator(s) are collected (`Y`) or not (`N`).
+We consider top predator(s) to be suitably collected (`Y`) if they meet either of the following criteria: (**A**) the article explicitly states that the identified top predators were collected for stable isotope analysis, and/or (**B**) the study targets the entire aquatic or consumer community within the system to ensure that the stable isotope signatures of the top predators are included.
+If (**C**) the study targets a subset of community members excluding potential top predators, we enter `N`.
+
+Column `predator_collection_scheme` identifies the collection scheme as `A`, `B`, or `C` as described above.
+In some cases, the author(s) of the original article provided detailed information to evaluate `Y` and `N`.
+We used this information to determine the collection status of top predators, which is noted in the `note` column when applicable.
+
+
+## Coordinate Precision
+
+Coordinate precision was categorized as follows (**4** and **5** have been excluded in `data_fcl_src.rds`):
+
+**1**: Exact coordinates available (either through article or author correspondence);
+**2**: Nearly exact coordinates recovered from text;
+**3**: Coordinates visually recovered from a map with reference to landmarks/river morphology;
+**4**: Coordinates approximated by river name or multiple sites aggregated;
+**5**: Not available.
+
+## Geospatial Data
+
+Geospatial data (RDS files with prefix `wgs84_`) were generated in a [separate repository](https://github.com/aterui/priv-proj_gis-global-fcl).
+The data package used in this repository is **GFCL version 0.2.2**.
+
+# Session Information
+
+```{r}
+
+source(here::here("code/set_library.R"))
+sessionInfo()
+
+```
 

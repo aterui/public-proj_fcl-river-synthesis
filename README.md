@@ -96,7 +96,7 @@ correlations between predictors.
 |                      | local_elev                 | Elevation at the sampling site.                                                                                                      |
 | `data_env_wsd.rds`   | uid                        | Unique ID for the watershed.                                                                                                         |
 |                      | wid                        | Watershed ID. Possible reduntant ID numbers between huid units. Use `uid` for grouping, which is a combination of `huid` and `wid`.) |
-|                      | tifid                      | GeoTIFF id produced in the process of watershed analysis. Ignore.                                                                    |
+|                      | tifid                      | GeoTIFF ID produced in the process of watershed analysis. Ignore.                                                                    |
 |                      | oid                        | Outlet ID.                                                                                                                           |
 |                      | huid                       | Hydrological unit ID. Grouped by HydroBASINS level-4. Used only for computational purposes.                                          |
 |                      | area                       | Watershed area.                                                                                                                      |
@@ -118,15 +118,15 @@ correlations between predictors.
 |                      | elev_sd                    | SD elevation within the watershed.                                                                                                   |
 | `data_fcl_src.rds`   | lat                        | Latitude (Geodetic, WGS84).                                                                                                          |
 |                      | lon                        | Longitude (Geodetic, WGS84).                                                                                                         |
-|                      | study_id                   | Study identification code for published articles.                                                                                    |
+|                      | study_id                   | Study ID for the published article.                                                                                                  |
 |                      | sid                        | Site ID. Re-defined for our analysis.                                                                                                |
 |                      | who_is_extracting          | Person in charge of data extraction.                                                                                                 |
 |                      | org_site_id                | Site name used in the original article.                                                                                              |
 |                      | month                      | Sampling month.                                                                                                                      |
 |                      | habitat                    | Habitat type of the sampling site.                                                                                                   |
 |                      | year_sampled               | Sampling year of stable isotope data.                                                                                                |
-|                      | top_predator_collected     | Whether top predator(s) is collected or not. See Section **Predator Collection**                                                     |
-|                      | predator_collection_scheme | Top predator collection scheme. See Section **Predator Collection**                                                                  |
+|                      | top_predator_collected     | Whether top predator(s) is collected or not. See Section **Predator Collection**.                                                    |
+|                      | predator_collection_scheme | Top predator collection scheme. See Section **Predator Collection**.                                                                 |
 |                      | fcl_mean                   | Food chain length (uncorrected). Reported values in original articles.                                                               |
 |                      | fcl_se                     | Standard error of food chain length estimate. Uncorrected for trophic enrichment factor.                                             |
 |                      | mean_deltaN_top            | Average value of delta 15 N for the top consumer.                                                                                    |
@@ -145,7 +145,7 @@ correlations between predictors.
 |                      | base_species_taxon         | Taxonomic group of the baseline species.                                                                                             |
 |                      | base_species               | Lowest taxonomic identity of the baseline species.                                                                                   |
 |                      | tp_base                    | Trophic position of the baseline species.                                                                                            |
-|                      | coord_precision            | Coordinate precision. See Section **Coordinate Precision**                                                                           |
+|                      | coord_precision            | Coordinate precision. See Section **Coordinate Precision**.                                                                          |
 |                      | note                       | Note                                                                                                                                 |
 |                      | data_from                  | Data location in the published article.                                                                                              |
 |                      | last_verification          | Last verified.                                                                                                                       |
@@ -155,13 +155,100 @@ correlations between predictors.
 |                      | huid                       | Hydrological unit ID. Grouped by HydroBASINS level-4. Used only for computational purposes.                                          |
 |                      | wid                        | Watershed ID. Possible reduntant ID numbers between huid units. Use `uid` for grouping, which is a combination of `huid` and `wid`.) |
 |                      | sid                        | Site ID. Re-defined for our analysis.                                                                                                |
-|                      | study_id                   | Study identification code for published articles.                                                                                    |
+|                      | study_id                   | Study ID for the published article.                                                                                                  |
 |                      | org_site_id                | Site name used in the original article.                                                                                              |
 |                      | year_sampled               | Sampling year of stable isotope data.                                                                                                |
 |                      | month                      | Sampling month.                                                                                                                      |
 |                      | fcl                        | Food chain length (re-defined). Corrected for trophic enrichment factor (tef = 3.4 for all data points).                             |
-|                      | top_predator_collected     | Whether top predator(s) is collected or not. See Section **Predator Collection**                                                     |
+|                      | top_predator_collected     | Whether top predator(s) is collected or not. See Section **Predator Collection**.                                                    |
 |                      | top_predator_taxon         | Taxonomic group of the top consumer.                                                                                                 |
 |                      | top_predator_species       | Lowest taxonomic identity of the top consumer.                                                                                       |
 |                      | base_species_taxon         | Taxonomic group of the baseline species.                                                                                             |
 |                      | base_species               | Lowest taxonomic identity of the baseline species.                                                                                   |
+
+## Predator Collection
+
+Column `top_predator_collected` indicates whether suitable top
+predator(s) are collected (`Y`) or not (`N`). We consider top
+predator(s) to be suitably collected (`Y`) if they meet either of the
+following criteria: (**A**) the article explicitly states that the
+identified top predators were collected for stable isotope analysis,
+and/or (**B**) the study targets the entire aquatic or consumer
+community within the system to ensure that the stable isotope signatures
+of the top predators are included. If (**C**) the study targets a subset
+of community members excluding potential top predators, we enter `N`.
+
+Column `predator_collection_scheme` identifies the collection scheme as
+`A`, `B`, or `C` as described above. In some cases, the author(s) of the
+original article provided detailed information to evaluate `Y` and `N`.
+We used this information to determine the collection status of top
+predators, which is noted in the `note` column when applicable.
+
+## Coordinate Precision
+
+Coordinate precision was categorized as follows (**4** and **5** have
+been excluded in `data_fcl_src.rds`):
+
+**1**: Exact coordinates available (either through article or author
+correspondence); **2**: Nearly exact coordinates recovered from text;
+**3**: Coordinates visually recovered from a map with reference to
+landmarks/river morphology; **4**: Coordinates approximated by river
+name or multiple sites aggregated; **5**: Not available.
+
+## Geospatial Data
+
+Geospatial data (RDS files with prefix `wgs84_`) were generated in a
+[separate
+repository](https://github.com/aterui/priv-proj_gis-global-fcl). The
+data package used in this repository is **GFCL version 0.2.2**.
+
+# Session Information
+
+    ## R version 4.3.2 (2023-10-31 ucrt)
+    ## Platform: x86_64-w64-mingw32/x64 (64-bit)
+    ## Running under: Windows 10 x64 (build 19045)
+    ## 
+    ## Matrix products: default
+    ## 
+    ## 
+    ## locale:
+    ## [1] LC_COLLATE=English_United States.utf8 
+    ## [2] LC_CTYPE=English_United States.utf8   
+    ## [3] LC_MONETARY=English_United States.utf8
+    ## [4] LC_NUMERIC=C                          
+    ## [5] LC_TIME=English_United States.utf8    
+    ## 
+    ## time zone: America/New_York
+    ## tzcode source: internal
+    ## 
+    ## attached base packages:
+    ## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
+    ## [8] base     
+    ## 
+    ## other attached packages:
+    ##  [1] doSNOW_1.0.20     snow_0.4-4        doParallel_1.0.17 iterators_1.0.14 
+    ##  [5] rpom_0.1.0        mcbrnet_1.4.1     foreach_1.5.2     xtable_1.8-4     
+    ##  [9] nimble_1.2.1      cowplot_1.1.1     magick_2.7.3      igraph_2.0.2     
+    ## [13] terra_1.7-71      patchwork_1.2.0   sf_1.0-16         lubridate_1.9.3  
+    ## [17] forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4       purrr_1.0.2      
+    ## [21] readr_2.1.5       tidyr_1.3.1       tibble_3.2.1      ggplot2_3.5.0    
+    ## [25] tidyverse_2.0.0  
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] gtable_0.3.4        xfun_0.47           lattice_0.21-9     
+    ##  [4] tzdb_0.4.0          numDeriv_2016.8-1.1 vctrs_0.6.5        
+    ##  [7] tools_4.3.2         generics_0.1.3      proxy_0.4-27       
+    ## [10] fansi_1.0.6         pacman_0.5.1        pkgconfig_2.0.3    
+    ## [13] KernSmooth_2.23-20  lifecycle_1.0.4     compiler_4.3.2     
+    ## [16] munsell_0.5.0       codetools_0.2-18    htmltools_0.5.8.1  
+    ## [19] class_7.3-20        yaml_2.3.10         pracma_2.4.4       
+    ## [22] pillar_1.9.0        classInt_0.4-10     tidyselect_1.2.1   
+    ## [25] digest_0.6.33       stringi_1.8.3       rprojroot_2.0.3    
+    ## [28] fastmap_1.1.1       grid_4.3.2          here_1.0.1         
+    ## [31] colorspace_2.1-0    cli_3.6.2           magrittr_2.0.3     
+    ## [34] utf8_1.2.4          e1071_1.7-14        withr_3.0.0        
+    ## [37] scales_1.3.0        timechange_0.3.0    rmarkdown_2.28     
+    ## [40] hms_1.1.3           coda_0.19-4.1       evaluate_0.24.0    
+    ## [43] knitr_1.48          rlang_1.1.3         Rcpp_1.0.12        
+    ## [46] glue_1.7.0          DBI_1.2.2           rstudioapi_0.14    
+    ## [49] R6_2.5.1            units_0.8-5
