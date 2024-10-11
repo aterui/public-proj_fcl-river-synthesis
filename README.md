@@ -18,11 +18,11 @@ numerical explorations.
 
 For source codes, see:
 
-- `analysis_theory_m_heatmap.R` (analytical)
+- `analysis_theo_m_heatmap.R` (analytical)
 
-- `analysis_theory_m_line.R` (analytical, for visualization)
+- `analysis_theo_m_line.R` (analytical, for visualization)
 
-- `analysis_theory_si.R` (numerical)
+- `analysis_theo_si.R` (numerical)
 
 For visualization, see:
 
