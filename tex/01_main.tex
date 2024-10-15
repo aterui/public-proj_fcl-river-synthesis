@@ -124,7 +124,7 @@ On average, ecosystems with higher branching rates encompass more confluences (s
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{data_fmt/fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of modeled river branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value of $u$ is on the Y-axis in panel B). As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) Visual representation of function $\hat{u}(L, \lambda_b)$. The expected value of upstream river length $\hat{u}$ is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (Methods).}
+    \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Methods and \textit{SI Appendix}).}
     \label{fig:scheme}
 \end{figure}
 
@@ -210,7 +210,7 @@ The positive relationship between FCL and branching rate was consistent, whereas
 \subsection{Empirical Evidence}
 
 We empirically validate our theoretical predictions using stable isotope data on $\delta^{15}N$ from existing literature.
-Our meta-analysis distinguishes itself from previous research in its extent, extracting FCL estimates from 317 sites across 115 watersheds worldwide (Figure \ref{fig:fcl-obs}A).
+Our meta-analysis distinguishes itself from similar previous studies in its extent, extracting FCL estimates from 317 sites across 115 watersheds worldwide (Figure \ref{fig:fcl-obs}A).
 We employed Bayesian hierarchical models to evaluate the effects of total river length and branching rate on FCL, while also accounting for potential influences of resource supply and disturbance through relevant proxy variables (Methods).
 
 The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of increased FCL.
@@ -330,7 +330,7 @@ In this system, the branching rate is a statistical parameter controlling the le
 Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$ \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}, but is conditional on $\sum_s^B l_s = L$ ($B$ denotes the number of links).
 The average link length approaches $\lambda_b^{-1}$ as $\lambda_b L \rightarrow \infty$.
 
-Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023}.
+Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023} (see \textit{SI Appendix} for derivation).
 Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
 We describe the temporal dynamics as:
 
@@ -526,7 +526,7 @@ Our observed FCL estimate $Y_i$ (log transformed) is linked to $y_i$ as:
 Writing $f(\cdot;\Theta)$ as the probability density of a specified model with parameter vector $\Theta$, each observed data point contributes $f(Y_i;\Theta)$ to the likelihood of $\Theta$ whereas a censored data point provides a contribution of $\Pr(y_i > Y_i~|~\Theta) = \int_{Y_i}^{\infty} f(y_i;\Theta) dy_i$.
 With this formulation, the censored regression corrects for possible biases in statistical inference (e.g., coefficients) \citep{terui_stream_2018, lunn_bugs_2012}, allowing us to use the data from imperfect sampling.
 
-Our model assumed that $y_i$ follows a Student's t distribution as $y_i \sim \mbox{t}(\mu_{y,i}, \sigma^2, \nu)$.
+Our model assumed that $y_i$ follows a Student's t distribution as $y_i \sim t(\mu_{y,i}, \sigma^2, \nu)$.
 We chose a Student's t distribution as an error structure because uncontrollable data anomalies may exist due to the nature of meta-analysis.
 A Student's t distribution is robust to outliers, thereby providing conservative estimates of regression parameters \citep{lunn_bugs_2012}.
 The expected value $\mu_{y,i}$ is related to site-level linear predictor(s) as:
