@@ -69,7 +69,7 @@ Since the time of Charles Elton, ecologists have been fascinated by the variatio
 The ecosystem size hypothesis suggests that the size of an ecosystem is a key factor influencing food chain length.
 However, current discussions on food webs have overlooked the potential influence of spatial ecosystem complexity -- a geometric characteristic that is independent of ecosystem size.
 Here, we use theoretical models and meta-analysis to demonstrate that ecosystem complexity, rather than ecosystem size, plays a crucial role in regulating food chains in rivers.
-Our spatial theory suggests that the complex branching patterns of tributaries buffer downstream areas from cascading disturbances like floods, thereby allowing longer food chains to persist across landscapes.
+Our spatial theory suggests that the complex branching patterns of tributaries buffer downstream areas from cascading disturbances like floods, thereby allowing longer food chains to persist.
 Contrary to traditional views, our theory predicts the ambiguous relationship between food chain length and ecosystem size.
 The meta-analysis of global food chain data strongly supports these theoretical insights.
 The complexity of tributary branching consistently had positive effects on riverine food chains worldwide.
@@ -86,14 +86,14 @@ This study highlights how the shape of ecosystems influences their food webs, of
 \newpage
 
 \section{Introduction}
-Since Charles Elton coined the term ``food cycles'' \citep{elton_animal_1927}, food webs have been a central theme in ecology \citep{paine_food_1966, pimm_food_1991, post_long_2002}.
+Since Charles Elton coined the term ``food cycles'' in 1927 \citep{elton_animal_1927}, food webs have been a central theme in ecology \citep{paine_food_1966, pimm_food_1991, post_long_2002}.
 In particular, the vertical structure of food webs, often measured as food chain length (FCL), has intrigued ecologists due to its implications for trophic dynamics, nutrient cycling, and biomagnification of environmental contaminants \citep{post_long_2002}.
 
 In theory, FCL should increase with increasing resource availability \citep{oksanen_exploitation_1981}, environmental stability \citep{pimm_number_1977}, and ecosystem size \citep{schoener_food_1989} through the enhanced persistence of constituent species.
 However, empirical research has reported mixed results for resource availability and environmental stability hypotheses \citep{takimoto_environmental_2013, warfe_productivity_2013, guo_towards_2023}, due partly to complex interactions between internal food web structure and environmental drivers \citep{takimoto_effects_2012, shibasaki_food_2024}.
 In contrast, ample evidence suggests that ecosystem size can increase FCL in simple model ecosystems (e.g., oceanic islands) \citep{vander_zanden_patterns_1999, post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009}.
 % , where the areal extent may capture important processes underlying the ecosystem size hypothesis \citep{takimoto_effects_2012, ward_mechanistic_2017, terui_spatial_2019, guo_towards_2023}.
-Although underlying mechanisms are controversial \citep{takimoto_effects_2012, ward_mechanistic_2017, mcintosh_capacity_2018, terui_spatial_2019}, these findings have led to the prevailing view that ecosystem size is a primary regulator of food chains.
+Although underlying mechanisms are controversial \citep{takimoto_effects_2012, ward_mechanistic_2017, mcintosh_capacity_2018, terui_spatial_2019}, these findings have led to the prevailing view that factors associated with ecosystem size are a primary regulator of food chains.
 
 Current debates on FCL, however, overlook the role of geometric ecosystem complexity (``ecosystem complexity'').
 Many natural systems display convoluted structures, characterized by repeating geometric patterns across spatial scales \citep{rodriguez-iturbe_fractal_2001, turner_landscape_2015}.
@@ -104,11 +104,12 @@ Yet, previous studies on food webs predominantly assumed simplified landscapes f
 % Thus, there is a clear need to understand whether ecosystem complexity can control the vertical structure of food webs, and, if so, how.
 
 Here, we use mathematical theory to gain mechanistic insights into how ecosystem complexity controls FCL in rivers.
-A key element in our model is spatial disturbance cascades, a phenomenon ubiquitous in rivers \citep{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021} and other ecosystems \citep{connell_30year_1997, cansler_climate_2014}.
-Our spatial theory predicts that the intricate branching of diverging tributaries reduces the downstream propagation of cascading disturbance (e.g., floods), thus promoting the persistence of long food chains across the landscape.
-However, contrary to conventional wisdom, the relationship between FCL and ecosystem size is predicted to be indeterminate.
-Our meta-analysis of global FCL data provides strong empirical support for these theoretical predictions.
-The present study offers an important conceptual pillar for understanding how food webs are organized in spatially complex ecosystems.
+A key element in our model is representation of spatial disturbance cascades, a phenomenon ubiquitous in rivers \citep{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021} and other ecosystems \citep{connell_30year_1997, cansler_climate_2014}, where disturbances are manifest at large spatial scales.
+Our spatial theory predicts that the intricate branching of diverging tributaries reduces the downstream propagation of cascading disturbance (e.g., floods, drying).
+This mechanism promotes the persistence of long food chains within the landscape under common structural properties of stream networks.
+However, the relationship between FCL and ecosystem size is predicted to be indeterminate in the presence of spatial disturbance cascades.
+Our theoretical predictions are supported by the results of a meta-analysis of global FCL data, which provides strong empirical evidence.
+This study offers an important conceptual basis for understanding how food webs are organized in spatially complex ecosystems.
 
 \section{Results and Discussion}
 
@@ -123,7 +124,7 @@ On average, ecosystems with higher branching rates encompass more confluences (s
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{data_fmt/fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of modeled river branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length (black solid lines) refers to the portion of the river located upstream from a given habitat patch. As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) Visual representation of function $\hat{u}(L, \lambda_b)$. Upstream river length $\hat{u}$ is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (Methods).}
+    \caption{Modeling scheme. (A) Schematic representation of modeled river branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the Y-axis in panel B). As ecosystem size increases, the total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing ecosystem complexity raises the branching rate while keeping the total river length constant. (B) Visual representation of function $\hat{u}(L, \lambda_b)$. Upstream river length $\hat{u}$ is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (Methods).}
     \label{fig:scheme}
 \end{figure}
 
@@ -187,11 +188,11 @@ Although resource supply and disturbance regimes influenced FCL, these factors d
 A simple geometric mechanism underlies the consistency.
 Branching divides the river network into flow-unconnected sub-networks, thereby dispersing the risk of synchronized extirpation due to flow-mediated disturbances.
 Mathematically, this effect is manifested as a reduction in upstream river length $\hat{u}$ in complex, highly branched networks compared to simpler, less branched ones of similar sizes (Figure \ref{fig:scheme}B).
-It is important to clarify that the positive association is contingent on the presence of spatial disturbance cascades; therefore, it disappears when omitting the impact of synchronized extirpation (Figure \ref{fig:sim-main}B and Figure S1).
+It is important to clarify that the positive effect of ecosystem complexity is contingent on the presence of spatial disturbance cascades; therefore, it disappears when omitting the impact of synchronized extirpation (Figure \ref{fig:sim-main}B and Figure S1).
 
-In contrast, and contrary to the ecosystem size hypothesis, the model indicates that the relationship between FCL and river length ($L$) is either hump-shaped or vague (Figure \ref{fig:sim-main}A and C).
+Our model indicates that a substantially different driver of FCL in river systems than that predicted by the ecosystem size hypothesis -- the predicted relationship between FCL and watershed river length ($L$) is either hump-shaped or vague (Figure \ref{fig:sim-main}A and C).
 % The disturbance cascade is also responsible for this counter-intuitive prediction.
-In our framework, we assumed that the risk of disturbance cascade increases with increasing upstream river length $\hat{u}$, a monotonic increasing function of total river length $L$ (Figure \ref{fig:scheme}B) -- that is, the broader spatial coverage increases the likelihood that an episodic disturbance will occur in some part of the upstream flow-connected area.
+In our framework, we assumed that the likelihood of a disturbance cascade increases with increasing upstream river length $\hat{u}$, a monotonic increasing function of total river length $L$ (Figure \ref{fig:scheme}B) -- that is, the broader spatial coverage increases the likelihood that an episodic disturbance will occur in some part of the upstream flow-connected area.
 Consequently, the greater frequency of synchronized extirpation can offset, or even exceed, the benefit of increased propagule sources in larger ecosystems.
 Removing the effect of disturbance cascades therefore reverts the model prediction. 
 In the absence of spatial disturbance cascades, the model predicted the positive influence of ecosystem size on FCL (Figure \ref{fig:sim-main}C and S1), a pattern consistent with previous food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019, guo_towards_2023}.
@@ -215,13 +216,14 @@ We employed Bayesian hierarchical models to evaluate the effects of total river 
 The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of increased FCL.
 The analysis provided strong statistical support for the positive effect of branching rate (Figure \ref{fig:fcl-obs}B), with a high probability that the regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure \ref{fig:ridge} and Table S3).
 Conversely, the effect of total river length was ambiguous (Figure \ref{fig:fcl-obs}C), characterized by the posterior distribution of its coefficient centered around zero (Figure \ref{fig:ridge}).
-Interestingly, despite regional uniqueness in ecological communities and distinct evolutionary histories, no statistical evidence exists that these relationships vary among regions -- the model assuming constant slopes for these ecosystem properties exhibited the WAIC \citep{watanabe_asymptotic_2010} lower than one with region-specific slopes ($-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
+Interestingly, despite regional uniqueness in ecological communities and distinct evolutionary histories, there was no statistical evidence that these relationships vary among regions.
+The regression coefficients for these ecosystem properties (size and complexity) were constant among geographic regions, as evidenced by the lower WAIC \citep{watanabe_asymptotic_2010} of the constant-slope model than the region-specific slope model ($-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
 This result suggests the generality of our findings. 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.9\linewidth]{data_fmt/fig_emp_fcl.pdf}
-    \caption{Empirical regression analysis of food chain length (FCL) reveals the influence of ecosystem complexity. (A) Global map of sampling locations, with points representing outlet coordinates of 115 study watersheds. Colors indicate geographic regions categorized by HydroBASINS (level one) \citep{lehner_global_2013}. (B, C) Regression plots. Circles show FCL estimates averaged for each watershed (i.e., parameter $\alpha_{0,w}$ in Equation \ref{eq:watershed-avarage}), and their sizes correspond to statistical weights based on the number of sites and the randomness of spatial sampling (Methods). The solid line represents the global model prediction, while dashed lines show region-specific predictions (note: no regression lines in panel C due to weak statistical evidence). Colors in the regression plots match the geographic regions in panel A.}
+    \caption{Empirical regression analysis of food chain length (FCL) reveals the influence of ecosystem complexity. (A) Global map of sampling locations, with points representing outlet coordinates of 115 study watersheds. Colors indicate geographic regions categorized by HydroBASINS (level one) \citep{lehner_global_2013}. (B, C) Regression plots. Circles show FCL estimates averaged for each watershed (i.e., parameter $\alpha_{0,w}$ in Equation \ref{eq:watershed-avarage}). Colors in the regression plots match the geographic regions in panel A. The solid line represents the global model prediction with its 95\% credible interval (gray shade), while dashed lines show region-specific predictions (note: no regression lines in panel C due to weak statistical evidence).}
     \label{fig:fcl-obs}
 \end{figure}
 
@@ -236,7 +238,7 @@ It is therefore reasonable that our data support the strong impact of precipitat
 In fact, our independent analysis of river discharge and precipitation (\textit{SI Appendix}) suggested that extreme flow anomalies are more likely to occur in areas with higher precipitation amounts.
 % Our work expands on previous findings and documents the far-reaching consequences for food webs.
 
-The lack of ecosystem size effects is consistent with our theoretical predictions, where the high context dependency may obscure the statistical relationship.
+The lack of ecosystem size effects is consistent with our theoretical predictions.
 In contrast, several empirical studies have reported that ecosystem size can regulate riverine food chains \citep{mchugh_dual_2010, sabo_role_2010, mcintosh_capacity_2018}.
 Apparently, our findings contradict these observations.
 They, however, consider the effect of ecosystem size within an explicitly local context.
@@ -265,7 +267,7 @@ Although watershed-scale experiments are practically impossible, small-scale exp
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{data_fmt/fig_emp_ridge.pdf}
-    \caption{Posterior distributions for the regression coefficients. The Y-axis represents predictor variables, and colors are proportional to tail probabilities. Vertical lines are median estimates.}
+    \caption{Posterior distributions for the standardized regression coefficients. The Y-axis represents predictor variables, and colors are proportional to tail probabilities. Vertical lines are median estimates.}
     \label{fig:ridge}
 \end{figure}
 
@@ -458,7 +460,7 @@ The analysis was performed in R 4.3.2 \citep{r_program}.
 \subsubsection{Stable isotope data}
 
 We performed a meta-analysis of empirical studies to examine environmental drivers of food chain length in rivers.
-We assembled stable isotope data on $\delta^{15} N$ (\textperthousand) from three sources.
+We assembled stable isotope data on $\delta^{15} N$ (\textperthousand) or trophic position estimates from three sources.
 First, we used a systematic search. 
 Our search was conducted on January 28, 2021, with the search term ``("food chain length")AND (stream* OR watershed* OR river*) AND ("stable isotope*")'' in Scopus.
 Second, we examined studies used in the previous meta-analysis by Vander Zanden and Fetzer \citep{vander_zanden_global_2007}.
