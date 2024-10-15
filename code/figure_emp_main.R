@@ -161,7 +161,7 @@ ggsave(g_comb,
 
 # second figure -----------------------------------------------------------
 
-var_name <- c("log River length",
+var_name <- c("log Total river length",
               "log Branching rate",
               "Air temperature",
               "Precipitation",

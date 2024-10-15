@@ -55,7 +55,7 @@ g_uhat <- df_u %>%
   MetBrewer::scale_color_met_d("Hiroshige",
                                direction = -1) +
   labs(y = expression("Upstream river length"~~hat(italic(u))),
-       x = expression("River length"~italic(L)),
+       x = expression("Total river length"~italic(L)),
        color = expression("Branching rate"~lambda[b])) + 
   theme(legend.position = "inside",
         legend.position.inside = c(0.2, 0.7),
@@ -120,11 +120,15 @@ heatmap <- function(data) {
                color = "white",
                linetype = "dashed") +
     labs(x = expression("Branching rate"~lambda[b]),
-         y = expression("River length"~italic(L)),
+         y = expression("Total river length"~italic(L)),
          fill = "FCL") +
     theme_classic() +
     theme(strip.background = element_blank(),
-          strip.text = element_text(size = 12))
+          strip.text = element_text(size = 14),
+          axis.title = element_text(size = 14),
+          axis.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          legend.text = element_text(size = 12))
 }
 
 (g_heat05 <- heatmap(data = df_heat %>% filter(rho == 0.5)))
@@ -169,7 +173,11 @@ lineart <- function(data1, data2,
     scale_color_manual(values = c(`0` = "grey",
                                   `0.5` = "tomato"),
                        labels = c(`0` = "No cascade",
-                                  `0.5` = "Cascade"))
+                                  `0.5` = "Cascade")) +
+    theme(axis.title = element_text(size = 14),
+          axis.text = element_text(size = 12),
+          legend.title = element_text(size = 14),
+          legend.text = element_text(size = 12))
 }
 
 ## food chain length vs. branching
@@ -178,7 +186,7 @@ g_br <- lineart(df_fcl_line,
                 x = "branch",
                 x_axis = "lambda") +
   labs(x = expression("Branching rate"~lambda[b]),
-       y = "FCL") +
+       y = "Food chain length") +
   guides(color = "none")
 
 ## food chain length vs. size
@@ -186,9 +194,9 @@ g_size <- lineart(df_fcl_line,
                   df_fcl_mu,
                   x = "size",
                   x_axis = "rl") +
-  labs(x = expression("River length"~italic(L)),
+  labs(x = expression("Total river length"~italic(L)),
        y = "",
-       color = "Disturbance type")
+       color = "Disturbance")
 
 ## layout ####
 
