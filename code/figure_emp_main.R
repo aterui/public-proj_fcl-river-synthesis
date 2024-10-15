@@ -105,7 +105,7 @@ ggplot2::theme_set(default_theme)
   scale_x_log10(labels = scales::label_log(digits = 2)) +
   scale_y_log10() +
   labs(y = "Food chain length",
-       x = "River length (km)",
+       x = "Total river length (km)",
        size = "Weight") +
     guides(color = "none"))
 
