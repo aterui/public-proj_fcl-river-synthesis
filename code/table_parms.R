@@ -179,7 +179,7 @@ u_study <- readRDS("data_fmt/data_fcl_reg.rds") %>%
 ## format
 df_src <- df_lit %>% 
   filter(study_id %in% u_study) %>% 
-  mutate(journal = paste0("\\texit{", journal, "}"),
+  mutate(journal = paste0("\\textit{", journal, "}"),
          pub0 = case_when(more_than_two == "N" & is.na(second_author) ~ 
                             paste0(first_author, " ", title, ". ", journal),
                           more_than_two == "N" & !is.na(second_author) ~
