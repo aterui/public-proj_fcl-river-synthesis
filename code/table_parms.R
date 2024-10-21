@@ -200,7 +200,7 @@ print(xtable(df_src,
              caption = "List of publications used for our meta-analysis.
              \\label{tab:meta-list}",
              align = "rrX"),
-      tabular.environment = "tabularx", # use \begin{tabularx}
+      tabular.environment = "longtblr", # use \begin{longtblr}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
