@@ -191,15 +191,14 @@ df_src <- df_lit %>%
                               paste0(pub0, " ", volume, ": ", page_st, "-", page_end)
          )
   ) %>% 
-  select(Publication) %>% 
-  mutate(ID = row_number()) %>% 
-  relocate(ID)
+  select(Code = study_id,
+         Publication)
 
 ## export
 print(xtable(df_src,
              caption = "List of publications used for our meta-analysis.
              \\label{tab:meta-list}",
-             align = "rp{0.1\\textwidth}p{0.9\\textwidth}"),
+             align = "p{0}p{0.1\\textwidth}p{0.9\\textwidth}"),
       tabular.environment = "longtable", # use \begin{longtable}
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
