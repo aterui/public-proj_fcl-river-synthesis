@@ -179,13 +179,13 @@ u_study <- readRDS("data_fmt/data_fcl_reg.rds") %>%
 ## format
 df_src <- df_lit %>% 
   filter(study_id %in% u_study) %>% 
-  mutate(journal = paste0("*", journal, "*"),
+  mutate(journal = paste0("\\texit{", journal, "}"),
          pub0 = case_when(more_than_two == "N" & is.na(second_author) ~ 
-                            paste0(first_author, ", ", title, ". ", journal),
+                            paste0(first_author, " ", title, ". ", journal),
                           more_than_two == "N" & !is.na(second_author) ~
-                            paste0(first_author, " and ", second_author, title, ". ", journal),
+                            paste0(first_author, " and ", second_author, " ", title, ". ", journal),
                           more_than_two == "Y" ~ 
-                            paste0(first_author, " *et al*., ", title, ". ", journal)),
+                            paste0(first_author, " \\textit{et al}. ", title, ". ", journal)),
          Publication = ifelse(is.na(page_st)|is.na(page_end),
                               paste0(pub0, " ", volume, ": ", art_no),
                               paste0(pub0, " ", volume, ": ", page_st, "-", page_end)
@@ -198,7 +198,8 @@ df_src <- df_lit %>%
 ## export
 print(xtable(df_src,
              caption = "List of publications used for our meta-analysis.
-             \\label{tab:meta-list}"),
+             \\label{tab:meta-list}",
+             align = "rrX"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
