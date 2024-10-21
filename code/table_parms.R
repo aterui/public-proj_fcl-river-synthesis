@@ -188,15 +188,16 @@ df_src <- df_lit %>%
                             paste0(first_author, " \\textit{et al}. ", title, ". ", journal)),
          Publication = ifelse(is.na(page_st)|is.na(page_end),
                               paste0(pub0, " ", volume, ": ", art_no),
-                              paste0(pub0, " ", volume, ": ", page_st, "-", page_end)
-         )
+                              paste0(pub0, " ", volume, ": ", page_st, "-", page_end)),
+         Code = str_remove_all(study_id, "_.{1,}")
   ) %>% 
-  select(Code = study_id,
+  select(Code,
          Publication)
 
 ## export
 print(xtable(df_src,
-             caption = "List of publications used for our meta-analysis.
+             caption = "List of publications included in the meta-analysis.
+             'Code' refers to the unique identifier assigned to each study for use in the analysis.
              \\label{tab:meta-list}",
              align = "p{0}p{0.1\\textwidth}p{0.9\\textwidth}"),
       tabular.environment = "longtable", # use \begin{longtable}
