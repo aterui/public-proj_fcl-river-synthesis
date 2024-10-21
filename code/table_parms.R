@@ -158,3 +158,51 @@ print(xtable(df_sum,
       caption.placement = "top",
       size = "\\small",
       file = "rmd/table_si_emp.tex")
+
+
+# table for meta-analysis sources -----------------------------------------
+
+## download source file; update as needed
+# googledrive::drive_download("data_lit_list_v_0_1_0",
+#                             type = "csv",
+#                             path = "data_raw/data_lit_list.csv",
+#                             overwrite = TRUE)
+
+## literature list and study_id for those used in our analysis
+df_lit <- read_csv("data_raw/data_lit_list.csv")
+u_study <- readRDS("data_fmt/data_fcl_reg.rds") %>% 
+  .[[1]] %>% 
+  pull(sid) %>% 
+  str_remove_all("_s\\d{1,}") %>% 
+  unique()
+
+## format
+df_src <- df_lit %>% 
+  filter(study_id %in% u_study) %>% 
+  mutate(journal = paste0("*", journal, "*"),
+         pub0 = case_when(more_than_two == "N" & is.na(second_author) ~ 
+                            paste0(first_author, ", ", title, ". ", journal),
+                          more_than_two == "N" & !is.na(second_author) ~
+                            paste0(first_author, " and ", second_author, title, ". ", journal),
+                          more_than_two == "Y" ~ 
+                            paste0(first_author, " *et al*., ", title, ". ", journal)),
+         Publication = ifelse(is.na(page_st)|is.na(page_end),
+                              paste0(pub0, " ", volume, ": ", art_no),
+                              paste0(pub0, " ", volume, ": ", page_st, "-", page_end)
+         )
+  ) %>% 
+  select(Publication) %>% 
+  mutate(ID = row_number()) %>% 
+  relocate(ID)
+
+## export
+print(xtable(df_src,
+             caption = "List of publications used for our meta-analysis.
+             \\label{tab:meta-list}"),
+      tabular.environment = "tabularx", # use \begin{tabularx}
+      width = "\\textwidth", # scale table with \textwidth
+      sanitize.text.function = function(x) x, # for math mode
+      include.rownames = FALSE,
+      caption.placement = "top",
+      size = "\\small",
+      file = "rmd/table_si_list.tex")
