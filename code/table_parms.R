@@ -199,11 +199,11 @@ df_src <- df_lit %>%
 print(xtable(df_src,
              caption = "List of publications used for our meta-analysis.
              \\label{tab:meta-list}",
-             align = "rrX"),
-      tabular.environment = "longtblr", # use \begin{longtblr}
-      width = "\\textwidth", # scale table with \textwidth
+             align = "rp{0.1\\textwidth}p{0.9\\textwidth}"),
+      tabular.environment = "longtable", # use \begin{longtable}
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si_list.tex")
+      file = "rmd/table_si_list.tex",
+      floating = FALSE)
