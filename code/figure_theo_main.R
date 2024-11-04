@@ -59,7 +59,8 @@ g_uhat <- df_u %>%
        color = expression("Branching rate"~lambda[b])) + 
   theme(legend.position = "inside",
         legend.position.inside = c(0.2, 0.7),
-        legend.background = element_blank())
+        legend.background = element_blank(),
+        legend.key = element_blank())
 
 ## layout ####
 (g_scheme <- g_subsch + g_uhat +
