@@ -56,7 +56,7 @@
 \affil[1]{Depatment of Biology, University of North Carolina at Greensboro}
 \affil[2]{Center for Frontier Research, National Institute of Genetics}
 \affil[3]{XXX, Colorado Mesa University}
-\affil[4]{XXX, Duke University}
+\affil[4]{Nicholas School of the Environment, Duke University}
 \affil[5]{Institute of Industrial Science, University of Tokyo}
 \affil[6]{Departiment of Ecology, Evolution, and Behavior, University of Minnesota}
 
@@ -563,7 +563,6 @@ We related watershed-specific intercept $\alpha_{0, w}$ (the expected average FC
 where $\beta_0$ is the global intercept, $\beta_m$ the regression coefficient for the $m$-th watershed-level predictor $x'_{m, w}$, $\eta_{u[w]}$ the random effect accounting for geographic variations, with $u$ denoting the index for each geographic region defined by HydroBASINS level-1 (Lehner et al. \citep{lehner_global_2013}; see Figure \ref{fig:fcl-obs}A).
 At this level, we considered ecosystem size (log-transformed total river length), ecosystem complexity (log-transformed branching rate), climatic conditions (mean annual air temperature and annual precipitation amount), and human influences (human footprint index).
 The random effect $\eta_{u[w]}$ was assumed to follow a normal distribution as $\eta_{u} \sim \mbox{Normal}(0, \sigma_{\eta}^2)$.
-While Equation \ref{eq:watershed-avarage} represents a random intercept model, we also developed a random intercept-slope model as an alternative model, in which the effects of ecosystem size and complexity vary by region (\textit{SI Appendix}).
 
 The parameter $\varepsilon_w$ the watershed-level residual errors, and we scaled $\varepsilon_w$ to assign higher weights to watersheds (i) with more sampling sites and (ii) with spatially random sampling design:
 
@@ -586,6 +585,10 @@ converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
 As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the estimation of posterior distributions.
 Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1 \citep{gelman2013bayesian}.
+
+While Equation \ref{eq:watershed-avarage} represents a random intercept model, we also developed a random intercept-slope model as an alternative, allowing the effects of ecosystem size and complexity to vary by region (\textit{SI Appendix}).
+We used the Widely Applicable Information Criterion (WAIC; \citep{watanabe_asymptotic_2010}) to compare the predictive performance of these models (random intercept versus random intercept-slope) and assess whether the relationships are region-specific.
+A lower WAIC value indicates better predictive performance for the model.
 
 \section{Data availability}
 
