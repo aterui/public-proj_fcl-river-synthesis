@@ -59,25 +59,25 @@ df_parms <- lapply(list_parms, FUN = function(x) {
                             parms == "psi" ~ "$\\psi$",
                             parms == "theta" ~ "$\\theta$"),
          description = case_when(parms == "r0" ~ "Resource supply [-]",
-                                 parms == "g0" ~ "Propagule size for producers [-]",
+                                 parms == "g0" ~ "Number of propagules for producers [-]",
                                  parms == "h" ~ "Habitat density [per unit river distance]",
                                  parms == "delta0" ~ "Dispersal capability for producers [per unit river distance]",
                                  parms == "mu0" ~ "Disturbance rate [per unit time]",
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
                                  parms == "rho" ~ "Synchrony probability [-]",
-                                 parms == "psi" ~ "Scaling exponent for propagule and dispersal parameters [per unit trophic position]",
+                                 parms == "psi" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
                                  parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
-  rename("Value (analytical)" = value.x,
-         "Value (numerical)" = value.y) %>% 
   relocate(symbol, description) %>% 
   dplyr::select(-parms) %>% 
   rename_with(.fn = str_to_sentence)
 
 
 ## export
-print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
-             caption = "Parameter descriptions and values (analytical).\\label{tab:parms}"),
+print(xtable(df_parms %>%
+               dplyr::select(-Value.y) %>% 
+               rename(Value = Value.x),
+             caption = "Parameter descriptions and values used for analytical predictions.\\label{tab:parms}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
@@ -86,8 +86,10 @@ print(xtable(df_parms %>% dplyr::select(-`Value (numerical)`),
       size = "\\small",
       file = "rmd/table_main.tex")
 
-print(xtable(df_parms %>% dplyr::select(-`Value (analytical)`),
-             caption = "Parameter values in numerical analysis.\\label{tab:parms-num}"),
+print(xtable(df_parms %>%
+               dplyr::select(-Value.x) %>% 
+               rename(Value = Value.y),
+             caption = "Parameter descriptions and values used for numerical predictions\\label{tab:parms-num}"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
@@ -118,7 +120,7 @@ df_sum <- list_est[[1]] %>%
                              parms == "z[2]" ~ "$\\xi_{2}$"),
          description = case_when(parms == "a[1]" ~ "Elevation",
                                  parms == "b[1]" ~ "Intercept",
-                                 parms == "b[2]" ~ "log River length",
+                                 parms == "b[2]" ~ "log Total river length",
                                  parms == "b[3]" ~ "log Branching rate",
                                  parms == "b[4]" ~ "Air temperature",
                                  parms == "b[5]" ~ "Precipitation",
