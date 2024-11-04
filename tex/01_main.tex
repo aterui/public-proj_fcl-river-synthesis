@@ -169,6 +169,7 @@ The extinction rate comprises three potential sources of extinction, that is, di
 where $\mu_k^{(0)}$, $\mu_k^{(1)}$, and $\mu_k^{(2)}$ are base parameters scaling the impacts of disturbance, prey scarcity, and predation, $\rho$ is the spatial synchrony probability, $\hat{u}$ is the expected upstream river length at a given habitat patch within a branching network, $A_{k}$ ($\tilde{A}_{k}$) is the set of consumable prey (predators) for species $k$, and $|A_{k}|$ is the number of consumable prey for species $k$.
 For simplicity, we assumed constant values across species for $\mu_k^{(0)} = \mu^{(0)}$, and $\mu_k^{(2)} = \mu^{(2)}$.
 Similarly, the prey effect $\mu_k^{(1)}$ was assumed to be zero for all producers and constant for all consumers ($\mu_k^{(1)} = \mu^{(1)}$).
+While the use of summed occupancies in Equation \ref{eq:extn-main} may seem unintuitive, it naturally arises as a spatial mean-field approximation of local predator-prey interactions (\textit{SI Appendix}).
 
 The first term of Equation \ref{eq:extn-main} captures the downstream disturbance cascade.
 In rivers, any disturbance event occurring upstream can propagate downstream through water movement, such as the spread of environmental contaminants \citep{massoudieh_biogeochemical_2010}, floods \citep{swanson_flood_1998, nakamura_disturbance_2000}, and droughts \citep{sarremejane_drought_2021}.
@@ -284,15 +285,15 @@ Over the past decades, discussions in FCL research have revolved around three ma
 However, little attention has been paid to ecosystem complexity despite the ubiquity of fractals across terrestrial \citep{turner_landscape_2015} and aquatic ecosystems \citep{rodriguez-iturbe_fractal_2001}.
 Here, our synthesis provides the first evidence that ecosystem complexity regulates food chains in rivers, an exemplary case of spatially complex ecosystems.
 The regulatory role of ecosystem complexity arises purely from the physical architecture of spatial network structure, likely explaining the remarkable consistency across geographic regions.
-% Supporting this prediction, our meta-analysis demonstrates that ecosystem complexity controls FCL across diverse geographic regions, regardless of differences in species pools and evolutionary histories.
 Although our focus is on river networks, there is no reason to believe that this concept is irrelevant to other ecosystems.
 Forests exhibit complex vertical and horizontal structures, creating heterogeneous microhabitats with varying susceptibilities to wind and fire disturbances \citep{peterson_contagious_2002, cansler_climate_2014}.
 Similarly, reef topography influences spatial disturbance patterns in marine systems \citep{connell_30year_1997}.
 Therefore, the complexity should be seen as the rule, not the exception.
 
-Climate change increases the frequency and magnitude of environmental disturbances, and ecosystem complexity may serve as a natural defense mechanism against these disruptive changes \citep{terui_metapopulation_2018, terui_emergent_2021, pomeranz_ecosystem_2023}.
-However, human activities often simplify the spatial structure of ecosystems to manage production systems or control natural disasters \citep{turner_landscape_2015, grill_mapping_2019, elmore_disappearing_2008}, likely eroding their inherent resilience to a changing climate.
-Our findings add to the modern conservation initiative that seeks to protect a diverse habitat portfolio
+Despite growing recognition of ecosystem-based conservation \citep{schindler_portfolio_2015}, it remains uncommon to consider the diverse habitat portfolios that complex ecosystems encompass.
+As climate change escalates the frequency and magnitude of environmental disturbances, preserving ecosystem complexity has become more critical than ever.
+Without comprehensive frameworks, human activities risk simplifying ecosystem structures, likely compromising their natural resilience in the face of climate change \citep{turner_landscape_2015}.
+A radical shift in conservation principles is needed to safeguard resilient food webs in a rapidly changing environment.
 
 \newpage
 
@@ -339,7 +340,8 @@ In this system, the branching rate is a statistical parameter controlling the le
 Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$ \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}, but is conditional on $\sum_s^B l_s = L$ ($B$ denotes the number of links).
 The average link length approaches $\lambda_b^{-1}$ as $\lambda_b L \rightarrow \infty$.
 
-Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023} (see \textit{SI Appendix} for derivation).
+Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023}.
+Our spatial model represents a spatial mean-field approximation of local food web dynamics, where the richness of prey and predator species within a local habitat influences colonization and extinction dynamics over time (\citep{shibasaki_food_2024}; see \textit{SI Appendix} for derivation).
 Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
 We describe the temporal dynamics as:
 
@@ -361,8 +363,8 @@ We assumed that the establishment probability is proportional to resource supply
     \end{cases}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, and $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the expected species richness of prey for consumer $k$.
-Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable species.
+where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, and $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the summed occupancy of prey for consumer $k$.
+Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable prey.
 
 Effective propagule $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
 We impose a habitat constraint on $c_{0,k}$ because $N$ is the maximum number of habitat patches that effective propagules can colonize \citep{takimoto_effects_2012, terui_spatial_2019}:
@@ -418,9 +420,9 @@ and
 
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
-In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with increasing species richness of available prey, and the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(1)} = 0$ for producers).
-Predation pressure is assumed to increase linearly with the species richness of predators $\sum_{q \in \tilde{A}_{k}} p_{q}$.
-The parameter $\mu_{k}^{(2)}$ defines how quickly the predator-induced extinction rate increases with the predator richness.
+In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with the summed occupancy of prey, and the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(1)} = 0$ for producers).
+Predation pressure is assumed to increase linearly with the summed occupancy of predators $\sum_{q \in \tilde{A}_{k}} p_{q}$.
+The parameter $\mu_{k}^{(2)}$ defines how quickly the predator-induced extinction rate increases with the summed predator occupancy.
 
 In the absence of predator-induced extinction ($\mu_{k}^{(2)}=0$), the equilibrium of the system can be derived analytically.
 According to  Equation \ref{eq:model0}, the fraction of patches occupied by species $k$ at equilibrium is written as follows:
