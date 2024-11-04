@@ -103,7 +103,7 @@ consumer trophic positions are given as the average of prey trophic positions pl
     % \label{eq:def_tp}
 \end{equation}
 
-where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey species for species $k$, respectively.
+where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for species $k$, respectively.
 
 \begin{lemma}
 \label{lemma-beta-tilde}
@@ -281,7 +281,7 @@ The parameter $\rho$ independently controls the strength of up- and downstream s
 
 In the second term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
 Specifically, the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of consumable prey.
-The extinction risk caused by the lack of prey is reduced by the factor $|A_k|^{-1} \sum_{q \in \text{prey}} \pi_{iq}$, which is the ratio of the expected species richness of available prey relative to the number of consumable prey species $|A_k|$.
+The extinction risk caused by the lack of prey is reduced by the factor $|A_k|^{-1} \sum_{q \in \text{prey}} \pi_{iq}$, which is the ratio of the expected species richness of available prey relative to the number of consumable prey $|A_k|$.
 Note that $\mu_{k}^{(1)} = 0$ for producers.
 
 In the predation term, the extinction risk caused by predation is assumed to increase linearly with the species richness of predators at patch $i$.
@@ -342,6 +342,7 @@ We use these assumptions in the following derivation.
     \centering
     \caption{Key symbols for the derivation of expected upstream river length}
     \begin{tabularx}{\textwidth}{ll}
+        \hline
         Symbol & Description\\
         \hline
         $u$ & Upstream river length at a given habitat patch.\\
@@ -746,13 +747,20 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
 
 \subsection{Data Sources}
 
-% Coordinate precision was categorized as follows (**4** and **5** have been excluded in `data_fcl_src.rds`):
+Table \ref{tab:meta-list} lists 46 studies that were used in our meta-analysis.
+These studies contained at least one site that (i) contains either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (primary producer or consumer) or an estimate of the maximum trophic position; (ii) contains reliable spatial coordinates for geospatial analysis; (iii) is located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes) and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); (iv) can be associated with potential environmental drivers in GIS.
 
-% **1**: Exact coordinates available (either through article or author correspondence);
-% **2**: Nearly exact coordinates recovered from text;
-% **3**: Coordinates visually recovered from a map with reference to landmarks/river morphology;
-% **4**: Coordinates approximated by river name or multiple sites aggregated;
-% **5**: Not available.
+To evaluate coordinate precision, we classified data into the following categories:
+
+\begin{itemize}
+    \item Category \textbf{1}: Exact coordinates available, either provided directly in the article or obtained through author correspondence.
+    \item Category \textbf{2}: Near-exact coordinates identified from text descriptions.
+    \item Category \textbf{3}: Coordinates visually inferred from a map, using reference landmarks or river geomorphology.
+    \item Category \textbf{4}: Coordinates estimated based on river name or by aggregating multiple sites.
+    \item Category \textbf{5}: Coordinates unavailable.
+\end{itemize}
+
+Categories \textbf{4} and \textbf{5} were excluded from our analysis.
 
 \input{rmd/table_si_list}
 
@@ -778,7 +786,7 @@ To model this variability, we fitted a Generalized Additive Model (GAM) as follo
     \end{split}
 \end{align}
 
-where $D_i$ represents the scaled daily discharge, ``$\mbox{Julian}_i$'' refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing spline.
+where $D_i$ represents the scaled daily discharge, ``$\mbox{Julian}_i$'' refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing function.
 We used a Student's t-distribution for the error structure, as it better captures the fat-tailed nature of the discharge data.
 The degree of freedom, $\nu_d$, characterizes the thickness of the tails, with smaller values indicating a higher likelihood of extreme high or low flows relative to seasonal expectations (i.e., fatter tails).
 As $\nu_d$ approaches infinity, the Student's t-distribution converges to a normal distribution.
@@ -828,6 +836,8 @@ converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
 As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the estimation of posterior distributions.
 Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
+
+\newpage
 
 \bibliography{references}
 
