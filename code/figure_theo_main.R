@@ -24,7 +24,7 @@ g_subsch <- ggdraw() +
 ## upstream length function
 ## set parameters
 rl <- 1:100
-lambda <- seq(0.1, 0.9, by = 0.2)
+lambda <- seq(0.2, 1.0, by = 0.2)
 x_values <- expand.grid(rl = rl, lambda = lambda)
 
 u <- sapply(seq_len(nrow(x_values)), function(i) {
@@ -51,7 +51,7 @@ g_uhat <- df_u %>%
   ggplot(aes(x = rl,
              y = u,
              color = factor(lambda))) +
-  geom_line(linewidth = 1.5) +
+  geom_line(linewidth = 0.75) +
   MetBrewer::scale_color_met_d("Hiroshige",
                                direction = -1) +
   labs(y = expression("Upstream river length"~~hat(italic(u))),
