@@ -6,4 +6,4 @@ knitr::knit(input = here::here("rmd/figure_si.Rmd"),
 
 rmarkdown::pandoc_convert(input = here::here("rmd/figure_si.md"),
                           to = "latex",
-                          output = here::here("rmd/figure_si.tex"))
+                          output = here::here("tex/figure_si.tex"))
