@@ -77,26 +77,28 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 print(xtable(df_parms %>%
                dplyr::select(-Value.y) %>% 
                rename(Value = Value.x),
-             caption = "Parameter descriptions and values used for analytical predictions.\\label{tab:parms}"),
+             caption = "Parameter descriptions and values used for analytical predictions.",
+             label = "tab:parms"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_main.tex")
+      file = "tex/table_main.tex")
 
 print(xtable(df_parms %>%
                dplyr::select(-Value.x) %>% 
                rename(Value = Value.y),
-             caption = "Parameter descriptions and values used for numerical predictions\\label{tab:parms-num}"),
+             caption = "Parameter descriptions and values used for numerical predictions.",
+             label = "tab:parms-num"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si_theo.tex")
+      file = "tex/table_si_theo.tex")
 
 
 # Bayesian model estimate -------------------------------------------------
@@ -151,15 +153,15 @@ print(xtable(df_sum,
              caption = "Parameter estimates of the hierarchical Bayesian model 
              with corresponding 95\\% credible intervals (CIs) and 
              posterior probabilities ($\\Pr(\\cdot)$), 
-             representing the uncertainty around each parameter estimate.
-             \\label{tab:parms-est}"),
+             representing the uncertainty around each parameter estimate.",
+             label = "tab:parms-est"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si_emp.tex")
+      file = "tex/table_si_emp.tex")
 
 
 # table for meta-analysis sources -----------------------------------------
@@ -208,13 +210,13 @@ df_src <- df_lit %>%
 ## export
 print(xtable(df_src,
              caption = "List of publications included in the meta-analysis.
-             `Code' refers to the unique identifier assigned to each study for use in the analysis.
-             \\label{tab:meta-list}",
-             align = "p{0}p{0.1\\textwidth}p{0.9\\textwidth}"),
+             `Code' refers to the unique identifier assigned to each study for use in the analysis.",
+             align = "p{0}p{0.1\\textwidth}p{0.9\\textwidth}",
+             label = "tab:meta-list"),
       tabular.environment = "longtable", # use \begin{longtable}
       sanitize.text.function = function(x) x, # for math mode
       include.rownames = FALSE,
       caption.placement = "top",
       size = "\\small",
-      file = "rmd/table_si_list.tex",
+      file = "tex/table_si_list.tex",
       floating = FALSE)
