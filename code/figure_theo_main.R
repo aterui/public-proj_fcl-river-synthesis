@@ -67,11 +67,6 @@ g_uhat <- df_u %>%
   plot_layout(width = c(1.5, 1)) +
   plot_annotation(tag_levels = "A"))
 
-ggsave(g_scheme,
-       filename = "output/fig_theo_scheme.pdf",
-       width = 9,
-       height = 4)
-
 # figure 2 ----------------------------------------------------------------
 
 ## heatmap ####
@@ -212,6 +207,11 @@ g_sim_main <- g_heat05 + g_br + g_size +
 
 
 # export ------------------------------------------------------------------
+
+ggsave(g_scheme,
+       filename = "output/fig_theo_scheme.pdf",
+       width = 9,
+       height = 4)
 
 ggsave(g_sim_main,
        filename = "output/fig_theo_main.pdf",
