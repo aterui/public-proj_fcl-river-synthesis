@@ -16,7 +16,7 @@
             longtable}
 
 % graphic path
-\graphicspath{ {./data_fmt/} }
+\graphicspath{ {./output/} }
 
 % side caption figure
 \usepackage{sidecap}
@@ -713,7 +713,7 @@ Model predictions are displayed in Figure \ref{fig:no-cascade}.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\textwidth]{../data_fmt/fig_theo_rho0.pdf}
+\includegraphics[width=0.75\textwidth]{fig_theo_rho0.pdf}
 \caption{Analytical prediction with no disturbance cascade. Heatmaps of
 FCL are expressed as a function of ecosystem size (river length, \(L\))
 and complexity (branching rate, \(\lambda_b\)), with rows and columns
@@ -737,11 +737,11 @@ An absorbing condition for this numerical analysis is $10^{-5}$, meaning that sp
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
 Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
 
-\input{rmd/table_si_theo}
+\input{tex/table_si_theo}
 
 \newpage
 
-\input{rmd/figure_si}
+\input{tex/figure_si}
 
 \section{Empirical Analysis}
 
@@ -762,14 +762,14 @@ To evaluate coordinate precision, we classified data into the following categori
 
 Categories \textbf{4} and \textbf{5} were excluded from our analysis.
 
-\input{rmd/table_si_list}
+\input{tex/table_si_list}
 
 \subsection{Parameter Estimate}
 
 Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
 The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
 
-\input{rmd/table_si_emp}
+\input{tex/table_si_emp}
 
 \subsection{Discharge-Precipitation Relationship}
 We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \citep{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
