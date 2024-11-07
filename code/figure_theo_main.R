@@ -68,7 +68,7 @@ g_uhat <- df_u %>%
   plot_annotation(tag_levels = "A"))
 
 ggsave(g_scheme,
-       filename = "data_fmt/fig_theo_scheme.pdf",
+       filename = "output/fig_theo_scheme.pdf",
        width = 9,
        height = 4)
 
