@@ -31,7 +31,7 @@
 \bibliographystyle{pnas-new}
 
 % caption setup
-\usepackage[font={f, small}, labelfont={bf, small}]{caption}
+\usepackage[font = small, labelfont = {bf, small}]{caption}
            
 % color box
 \usepackage[most]{tcolorbox}
@@ -94,7 +94,7 @@ In particular, the vertical structure of food webs, often measured as food chain
 In theory, FCL should increase with increasing ecosystem size \citep{schoener_food_1989}, resource availability \citep{oksanen_exploitation_1981}, and environmental stability \citep{pimm_number_1977} through the enhanced persistence of species populations.
 Ample empirical evidence suggests that ecosystem size increases FCL in simple model ecosystems (e.g., oceanic islands) \citep{vander_zanden_patterns_1999, post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009} with multiple mechanisms proposed to explain the positive relationship \citep{takimoto_effects_2012, ward_mechanistic_2017, mcintosh_capacity_2018, terui_spatial_2019}.
 Yet, mixed results are reported for resource availability and environmental stability hypotheses \citep{takimoto_environmental_2013, warfe_productivity_2013, guo_towards_2023}, partially due to complex interactions between internal food web structure and environmental drivers \citep{takimoto_effects_2012, shibasaki_food_2024}.
-Although underlying mechanisms remain elusive, these findings have led to the prevailing view that factors associated with ecosystem size are a primary regulator of food chains.
+These findings have led to the prevailing view that factors associated with ecosystem size are a primary regulator of food chains.
 
 Current frameworks, however, lack the ability to illuminate the role of geometric ecosystem complexity (``ecosystem complexity'') in regulating FCL.
 Many natural systems display convoluted structures, characterized by repeating geometric patterns across spatial scales \citep{rodriguez-iturbe_fractal_2001, turner_landscape_2015}.
@@ -144,14 +144,14 @@ The colonization rate $\gamma_k$ is the number of effective propagules $c_{0,k}$
 Propagules that survive the dispersal phase are referred to as ``effective.'' Thus, $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
 However, we impose a habitat constraint on $c_{0,k}$ to realize $N$ is the possible maximum that effective propagules can colonize \citep{takimoto_effects_2012, terui_spatial_2019}:
 
-\begin{equation}
+\begin{align}
     c_{0, k} = 
     \begin{cases}
         g_k \phi_k & \text{if $g_k \phi_k < N$},\\
         N & \text{if $g_k \phi_k \ge N$}.
     \end{cases}
-    \label{eq:c0-prod}
-\end{equation}
+    \label{eq:c0-prod-main}
+\end{align}
 
 Given the relationship $N = Lh$, the colonization rate increases with increasing ecosystem size unless being limited by the species' ability to produce effective propagules.
 We assumed that the establishment probability is proportional to resource supply $r_0$ for producers or the number of consumable prey for consumers (Methods).
@@ -318,14 +318,14 @@ where $\tau_q$ is the structural trophic position of species $q$.
 The trophic position of producers is one, and
 consumer trophic positions are given as the average of prey trophic positions plus one:
 
-\begin{equation}
+\begin{align}
     \tau_k = 
     \begin{cases}
     1 & ~\text{for producers}~ (k=1, 2, \ldots, P),\\
     1 + |A_{k}|^{-1} \sum_{q \in A_{k}} \tau_q & ~\text{for consumers}~ (k = P+1, P+2, \ldots, S),
     \end{cases}
     % \label{eq:def_tp}
-\end{equation}
+\end{align}
 
 where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for species $k$, respectively.
 See \textit{SI Appendix} for further details.
@@ -352,13 +352,13 @@ We express these parameters as functions of ecological processes and spatial eco
 \textit{Colonization}. The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
 We assumed that the establishment probability is proportional to resource supply for producers or prey availability for consumers:
 
-\begin{equation}
+\begin{align}
     r_{k} = 
     \begin{cases}
         r_0 & ~\text{for producers}~ (k=1, 2, \ldots, P)\\
         |A_{k}|^{-1} \sum_{q~\in A_{k}} p_{q} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S)
     \end{cases}
-\end{equation}
+\end{align}
 
 where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, and $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the summed occupancy of prey for consumer $k$.
 Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable prey.
@@ -366,14 +366,14 @@ Despite its simplicity, this formulation naturally accounts for the trade-off be
 Effective propagule $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
 We impose a habitat constraint on $c_{0,k}$ because $N$ is the maximum number of habitat patches that effective propagules can colonize \citep{takimoto_effects_2012, terui_spatial_2019}:
 
-\begin{equation}
+\begin{align}
     c_{0, k} = 
     \begin{cases}
         g_k \phi_k & \text{if $g_k \phi_k < N$},\\
         N & \text{if $g_k \phi_k \ge N$}.
     \end{cases}
-    \label{eq:c0-prod}
-\end{equation}
+    \label{eq:c0-prod-method}
+\end{align}
 
 The survival probability is described as $\phi_k = 1 - e^{-\delta_k h}$ so that dispersal capability $\delta_k$ and habitat density $h$ increase the survival during dispersal.
 This assumption makes biological sense because habitat density decreases the mean distance between a pair of habitat patches \citep{terui_spatial_2019}.
@@ -526,13 +526,13 @@ We accounted for this imperfect sampling with censored regression \citep{terui_s
 Let $y_i$ denote the suitable estimate of FCL at site $i$ after log transformation.
 Our observed FCL estimate $Y_i$ (log transformed) is linked to $y_i$ as:
 
-\begin{equation}
+\begin{align}
     y_i 
     \begin{cases}
         = Y_i~\text{if a suitable top predator is included (observed)},\\
         > Y_i~\text{if a suitable top predator is not included (censored).}
     \end{cases}
-\end{equation}
+\end{align}
 
 Writing $f(\cdot;\Theta)$ as the probability density of a specified model with parameter vector $\Theta$, each observed data point contributes $f(Y_i;\Theta)$ to the likelihood of $\Theta$ whereas a censored data point provides a contribution of $\Pr(y_i > Y_i~|~\Theta) = \int_{Y_i}^{\infty} f(y_i;\Theta) dy_i$.
 With this formulation, the censored regression corrects for possible biases in statistical inference (e.g., coefficients) \citep{terui_stream_2018, lunn_bugs_2012}, allowing us to use the data from imperfect sampling.
