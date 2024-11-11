@@ -26,10 +26,10 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
   ## - set seed for reproducibility
   set.seed(i * 10)
   
-  mcbrnet::ppm(n_species = S,
-               n_basal = v_n_base[i],
-               l = v_l[i],
-               theta = v_theta[i])
+  ecotools::ppm(n_species = S,
+                n_basal = v_n_base[i],
+                l = v_l[i],
+                theta = v_theta[i])
 })
 
 ## parms data frame

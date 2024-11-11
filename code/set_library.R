@@ -12,6 +12,7 @@ pacman::p_load(
   cowplot,
   nimble,
   xtable,
+  ecotools,
   ## simulation
   foreach,
   mcbrnet,
