@@ -49,7 +49,6 @@ df_flag <- df_env_local %>%
 ## watershed-level data frame
 ## - join `df_weight` for weighted regression
 ## - remove watersheds with less than 5 links; unreliable estimates of p_branch
-## - remove watersheds with no flow data
 ## - remove watersheds with no human footprint
 df_g <- df_env_wsd %>% 
   left_join(df_weight) %>% 
