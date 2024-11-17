@@ -6,8 +6,8 @@ README
 **Tentative title**: Geometric ecosystem complexity regulates food
 chains
 
-**Authors**: Terui A, Shibasaki S, Pomeranz JPF, Mason Ibrahim, Ethan
-Isaac, Ashley LaRoque, Yamazaki D, Finlay JC
+**Authors**: Terui A, Shibasaki S, Pomeranz JPF, Ibrahim M, Isaac E,
+LaRoque A, Yamazaki D, Finlay JC
 
 # Analysis Flow
 
