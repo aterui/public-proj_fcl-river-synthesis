@@ -21,7 +21,7 @@ pacman::p_load(tidyverse,
 
 **Tentative title**: Geometric ecosystem complexity regulates food chains
 
-**Authors**: Terui A, Shibasaki S, Pomeranz JPF, XXX, Yamazaki D, Finlay JC
+**Authors**: Terui A, Shibasaki S, Pomeranz JPF, Mason Ibrahim, Ethan Isaac, Ashley LaRoque, Yamazaki D, Finlay JC
 
 # Analysis Flow
 
@@ -42,6 +42,8 @@ For visualization, see:
 -   `figure_theo_main.R` (main figures)
 
 -   `figure_theo_si.R` (supporting figures)
+
+This theoretical analysis uses the user-defined R Packages [`rpom`](https://github.com/aterui/rpom) and [`ecotools`](https://github.com/aterui/ecotools).
 
 ## Empirical Analysis
 
