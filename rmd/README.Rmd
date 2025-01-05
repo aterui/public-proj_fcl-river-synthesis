@@ -90,14 +90,14 @@ Column `top_predator_collected` indicates whether suitable top predator(s) are c
 We consider top predator(s) to be suitably collected (`Y`) if they meet either of the following criteria: (**A**) the article explicitly states that the identified top predators were collected for stable isotope analysis, and/or (**B**) the study targets the entire aquatic or consumer community within the system to ensure that the stable isotope signatures of the top predators are included.
 If (**C**) the study targets a subset of community members excluding potential top predators, we enter `N`.
 
-Column `predator_collection_scheme` identifies the collection scheme as `A`, `B`, or `C` as described above.
-In some cases, the author(s) of the original article provided detailed information to evaluate `Y` and `N`.
-We used this information to determine the collection status of top predators, which is noted in the `note` column when applicable.
+<!-- Column `predator_collection_scheme` identifies the collection scheme as `A`, `B`, or `C` as described above. -->
+<!-- In some cases, the author(s) of the original article provided detailed information to evaluate `Y` and `N`. -->
+<!-- We used this information to determine the collection status of top predators, which is noted in the `note` column when applicable. -->
 
 
 ## Coordinate Precision
 
-Coordinate precision was categorized as follows (**4** and **5** have been excluded in `data_fcl_src.rds`):
+Coordinate precision was categorized as follows (**4** and **5** have been excluded in `wgs84_fcl_site.rds`):
 
 **1**: Exact coordinates available (either through article or author correspondence);
 **2**: Nearly exact coordinates recovered from text;

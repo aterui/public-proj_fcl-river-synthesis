@@ -14,7 +14,7 @@ df_fnm <- tibble(file = fnm) %>%
                                  file == "data_env_local.rds" ~ "Site-level environmental data.",
                                  file == "data_env_wsd.rds" ~ "Watershed-level environmental data.",
                                  file == "data_fcl_src.rds" ~ "Source data for food chain length. This data contains sites that are located in semi-lentic rivers (> 5k sq-km in watershed area). This source data was used to generate `wgs84_fcl_site.rds`.",
-                                 file == "wgs84_fcl_site.rds" ~ "Point layer for site coordinates (with estimates of food chain length; class `sf`). Include temporal duplicates (either seasonal or annual) at some sites and some watersheds that are removed through a screening process",
+                                 file == "wgs84_fcl_site.rds" ~ "Point layer for site coordinates (with estimates of food chain length; class `sf`). Include temporal duplicates (either seasonal or annual) at some sites. Some watersheds are removed before analysis through a screening process (see `format_emp_data4nimble.R`)",
                                  file == "wgs84_outlet.rds" ~ "Outlet coordinates of study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
                                  file == "wgs84_region_lev01.rds" ~ "Polygon layer for HydroBASINS level-one (class `sf`).",
                                  file == "wgs84_str_sub.rds" ~ "Polyline layer for study watersheds. Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
