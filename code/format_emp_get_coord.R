@@ -13,7 +13,8 @@ source("code/set_function.R")
 ## snapped site coordinates
 readRDS("data_raw/wgs84_subwatershed.rds") %>% 
   as_tibble() %>% 
-  left_join(readRDS("data_raw/data_fcl_src.rds") %>% 
+  left_join(readRDS("data_raw/wgs84_fcl_site.rds") %>% 
+              as_tibble() %>% 
               select(sid, study_id, org_site_id) %>% 
               filter(!duplicated(sid))) %>% 
   select(sid,
