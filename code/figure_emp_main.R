@@ -82,61 +82,61 @@ ggplot2::theme_set(default_theme)
 
 ## fcl vs. watershed area
 (g_size <- df_mu_est %>% 
-  ggplot(aes(x = r_length,
-             y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = scl_w),
-             alpha = 0.5) + 
-  # geom_line(data = filter(df_yh, focus == "scl_r_length"),
-  #           aes(x = r_length,
-  #               y = y,
-  #               color = factor(h)),
-  #           alpha = 1,
-  #           linetype = "dashed") +
-  # geom_line(data = filter(df_y, focus == "scl_r_length"),
-  #           aes(x = r_length,
-  #               y = y)) +
-  # geom_ribbon(data = filter(df_y, focus == "scl_r_length"),
-  #             aes(y = y,
-  #                 ymin = y_low,
-  #                 ymax = y_high,
-  #                 x = r_length),
-  #             alpha = 0.1) +
-  scale_x_log10(labels = scales::label_log(digits = 2)) +
-  scale_y_log10() +
-  labs(y = "Food chain length",
-       x = "Total river length (km)",
-       size = "Weight") +
+    ggplot(aes(x = r_length,
+               y = fcl_est)) +
+    geom_point(aes(color = factor(h),
+                   size = scl_w),
+               alpha = 0.5) + 
+    # geom_line(data = filter(df_yh, focus == "scl_r_length"),
+    #           aes(x = r_length,
+    #               y = y,
+    #               color = factor(h)),
+    #           alpha = 1,
+    #           linetype = "dashed") +
+    # geom_line(data = filter(df_y, focus == "scl_r_length"),
+    #           aes(x = r_length,
+    #               y = y)) +
+    # geom_ribbon(data = filter(df_y, focus == "scl_r_length"),
+    #             aes(y = y,
+    #                 ymin = y_low,
+    #                 ymax = y_high,
+    #                 x = r_length),
+    #             alpha = 0.1) +
+    scale_x_log10(labels = scales::label_log(digits = 2)) +
+    scale_y_log10() +
+    labs(y = "Food chain length",
+         x = "Total river length (km)",
+         size = "Weight") +
     guides(color = "none"))
 
 ## fcl vs. branching prob
 (g_b <- df_mu_est %>% 
-  ggplot(aes(x = lambda,
-             y = fcl_est)) +
-  geom_point(aes(color = factor(h),
-                 size = scl_w),
-             alpha = 0.4) +
-  geom_line(data = filter(df_yh, focus == "scl_lambda"),
-            aes(x = lambda,
-                y = y,
-                color = factor(h)),
-            alpha = 1,
-            linetype = "dashed") + 
-  geom_line(data = filter(df_y, focus == "scl_lambda"),
-            aes(x = lambda,
-                y = y)) +
-  geom_ribbon(data = filter(df_y, focus == "scl_lambda"),
-              aes(y = y,
-                  ymin = y_low,
-                  ymax = y_high,
-                  x = lambda),
-              alpha = 0.1) +
-  scale_x_continuous(trans = "log10") +
-  scale_y_continuous(trans = "log10") +
-  labs(y = "Food chain length",
-       x = expression("Branching rate ("*km^-1*")")) +
-  guides(size = "none",
-         color = "none"))
+    ggplot(aes(x = lambda,
+               y = fcl_est)) +
+    geom_point(aes(color = factor(h),
+                   size = scl_w),
+               alpha = 0.4) +
+    geom_line(data = filter(df_yh, focus == "scl_lambda"),
+              aes(x = lambda,
+                  y = y,
+                  color = factor(h)),
+              alpha = 1,
+              linetype = "dashed") + 
+    geom_line(data = filter(df_y, focus == "scl_lambda"),
+              aes(x = lambda,
+                  y = y)) +
+    geom_ribbon(data = filter(df_y, focus == "scl_lambda"),
+                aes(y = y,
+                    ymin = y_low,
+                    ymax = y_high,
+                    x = lambda),
+                alpha = 0.1) +
+    scale_x_continuous(trans = "log10") +
+    scale_y_continuous(trans = "log10") +
+    labs(y = "Food chain length",
+         x = expression("Branching rate ("*km^-1*")")) +
+    guides(size = "none",
+           color = "none"))
 
 ## arrange ################################################################
 
@@ -206,6 +206,9 @@ g_ridge <- df_ridge %>%
              color = grey(0.5, 0.5),
              linewidth = 0.25) +
   ggridges::theme_ridges() +
+  theme(axis.title.x = element_text(hjust = 0.5),  # center x-axis label
+        axis.title.y = element_text(hjust = 0.5)   # center y-axis label
+  ) +
   labs(x = "Posterior estimate",
        y = "Predictor")
 
