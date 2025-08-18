@@ -325,14 +325,15 @@ In Equation \ref{eq:extn}, we introduced the expected value of upstream river le
 \begin{definition}
 We derive the expected value of upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
 We use the following key terms: \textit{link} and \textit{magnitude}.
-A link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth).
-Magnitude refers to the number of exterior source links (links containing upstream terminals) flowing into a given link within the network.
-The magnitude is one at an exterior source link.
+A link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth; Figure \ref{fig:river-fig}).
+Magnitude $m$ refers to the number of exterior source links (links containing upstream terminals; Figure \ref{fig:river-fig}) flowing into a given link within the network; thus, magnitude is defined for each link and $m=1$ at an exterior source link (Figure \ref{fig:river-fig}).
+We denote by $M$ the network-wide magnitude, which corresponds to the magnitude of the outlet link.
 Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
 
 \begin{SCfigure}
-    \includegraphics[width=0.4\linewidth]{output/figure_si_mag.pdf}
+    \includegraphics[width=0.5\linewidth]{output/fig_si_mag.pdf}
     \caption{text}
+    \label{fig:river-fig}
 \end{SCfigure}
 
 We assume that the length of individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
