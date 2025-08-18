@@ -57,7 +57,7 @@
 \affil[2]{Department of Physical and Environmental Sciences, Colorado Mesa University}
 \affil[3]{Institute of Industrial Science, University of Tokyo}
 \affil[4]{Departiment of Ecology, Evolution, and Behavior, University of Minnesota}
-\affil[a]{Current Affiliation: Center for Frontier Research, National Institute of Genetics}
+\affil[a]{Current Affiliation: Faculty of Culture and Information Science, Doshisha University}
 \affil[b]{Current Affiliation: Nicholas School of the Environment, Duke University}
 
 \linenumbers
@@ -417,15 +417,15 @@ The first component $\mu^{(0)}_k$ is the stochastic disturbance occurring at the
 The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstream disturbance cascade, where $\rho$ and $\hat{u}$ denote the disturbance synchrony probability and the expected upstream river length at a given habitat patch, respectively.
 The parameter $\rho$ is a constant that controls the likelihood of co-extirpation between upstream and downstream habitats connected by flow.
 
-The key component is the expected value of upstream river length $\hat{u}$.
-Assuming a finite total river length $L > 0$ with random branching at a rate $\lambda_b > 0$, the expected value $\hat{u}$ emerges as a nonlinear function of $L$ and $\lambda_b$ (see Figure \ref{fig:scheme}B for visual representation and \textit{SI Appendix} for derivation):
+The key element is the expected value of upstream river length $\hat{u}$.
+Assuming a finite total river length $L > 0$ with random branching at a rate $\lambda_b > 0$, we derived that the expected value $\hat{u}$ is a nonlinear function of $L$ and $\lambda_b$ (see Figure \ref{fig:scheme}B for visual representation and \textit{SI Appendix} for derivation):
 
 \begin{equation}
     \hat{u}(L, \lambda_b) = L \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
     \label{eq:u-hat}
 \end{equation}
 
-where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers ($z \in 2\mathbb{Z}_{\ge 0}$ is a constraint arising from the requirement that the number of links be odd).
+where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers, and $z \in 2\mathbb{Z}_{\ge 0}$ is a constraint arising from the requirement that the number of links be odd.
 The functions $\hat{n}(z)$ and $f'_{\text{pois}}(z; L, \lambda_b)$ represent, respectively, the expected number of upstream links and the probability mass function of a truncated Poisson distribution, defined as:
 
 \begin{equation}
@@ -529,13 +529,12 @@ We assembled environmental data at the site and watershed levels.
 The site-level environment refers to the environmental value at the sampling site.
 At this level, we obtained the following variables: upstream watershed area [km$^2$] and elevation [m].
 We delineated watershed polygons with MERIT Hydro version 1.0.3 \citep{yamazaki_merit_2019} to estimate the upstream watershed area at each site.
-We extracted the elevation from the MERIT DEM (3 arc-second) \citep{yamazaki_high-accuracy_2017}.
+Elevation was extracted from the MERIT DEM (3 arc-second) \citep{yamazaki_high-accuracy_2017}.
 
 At the watershed level, we obtained the following variables: total river length [km], branching rate [km$^{-1}$], mean annual air temperature [$^\circ$C], annual precipitation amount [kg m$^{-2}$], and human footprint index [-].
 In our analysis, watersheds were separated by either the ocean, large lakes/reservoirs (10 km$^{2}$ in area), or large rivers that represent semi-lentic habitats (5000 km$^{2}$ in watershed area), which were extracted from Global 3 arc-second Water Body Map version 1.3 \citep{yamazaki_development_2015} and MERIT Hydro version 1.0.3 \citep{yamazaki_merit_2019}.
-
 For each watershed, we delineated the watershed polygon and river polylines ($>$ 1 km$^2$ in watershed area) with MERIT Hydro to estimate the total river length and branching rate.
-The total river length is the summed length of river polylines.
+The total river length was calculated as the sum of all tributary lengths within the watershed.
 We estimated the branching rate as the inverse of the mean link length (= distance from one confluence to another or the river terminal [upstream river origins or river mouth]).
 The inverse of the mean link length is an empirical proxy for theoretical branching rate $\lambda_b$ because it corresponds to the maximum likelihood estimate of the rate parameter of an exponential distribution \citep{terui_revisiting_2024}.
 
