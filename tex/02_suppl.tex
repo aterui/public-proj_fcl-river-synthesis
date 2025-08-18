@@ -705,6 +705,23 @@ Therefore, the system given by Equation \ref{eq:master} has a unique stable equi
 
 \newpage
 
+\subsection{Numerical Analysis}
+
+We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
+
+In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
+In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
+An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
+This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
+Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
+
+\input{tex/table_si_theo}
+
+\newpage
+
+\input{tex/figure_si}
+
 \subsection{No Cascade Model}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
@@ -735,23 +752,6 @@ Additional parameter values are provided in Table 1.}
 \end{figure}
 
 \newpage
-
-\subsection{Numerical Analysis}
-
-We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
-
-In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
-In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
-An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
-This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
-
-\input{tex/table_si_theo}
-
-\newpage
-
-\input{tex/figure_si}
 
 \section{Empirical Analysis}
 
