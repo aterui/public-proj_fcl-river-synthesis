@@ -330,11 +330,15 @@ Magnitude $m$ refers to the number of exterior source links (links containing up
 We denote by $M$ the network-wide magnitude, which corresponds to the magnitude of the outlet link.
 Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
 
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
 \begin{SCfigure}
-    \includegraphics[width=0.5\linewidth]{output/fig_si_mag.pdf}
-    \caption{text}
+    \includegraphics[width=0.45\linewidth]{output/fig_si_mag.pdf}
+    \caption{Schematic diagram illustrating the concepts of link and magnitude. A link is a river segment that connects either two confluences or a confluence and a terminal point of the river. The magnitude ($m$) of a link is the number of exterior source links that flow into it, with $m=1$ for an exterior source link. We denote by $M$ the \textit{network-wide magnitude}, defined as the magnitude of the outlet link. In the example shown, the network consists of seven links and four exterior source links; therefore, the network properties are $B=7$ and $M=4$.}
     \label{fig:river-fig}
 \end{SCfigure}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
 We assume that the length of individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
 The length $l_s$ can be interpreted as the ``waiting time'' to a branching event (or termination events for upstream sources).
