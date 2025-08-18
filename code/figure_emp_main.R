@@ -154,7 +154,7 @@ g_comb <- g_map +
   plot_annotation(tag_levels = "A")
 
 ggsave(g_comb,
-       filename = "output/fig_emp_fcl.pdf",
+       filename = "tex/fig_emp_fcl.pdf",
        width = 9.5,
        height = 8)
 
@@ -215,6 +215,6 @@ g_ridge <- df_ridge %>%
 
 ## export
 ggsave(g_ridge,
-       filename = "output/fig_emp_ridge.pdf",
+       filename = "tex/fig_emp_ridge.pdf",
        width = 7,
        height = 4)
