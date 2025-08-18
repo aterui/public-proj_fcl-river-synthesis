@@ -16,7 +16,7 @@ ggplot2::theme_set(default_theme)
 
 ## draw scheme
 #img <- image_read("data_fmt/subfig_scheme.png")
-img <- image_read_pdf("output/figsub_scheme.pdf")
+img <- image_read_pdf("tex/figsub_scheme.pdf")
 
 g_subsch <- ggdraw() +
   draw_image(img)
@@ -209,16 +209,16 @@ g_sim_main <- g_heat05 + g_br + g_size +
 # export ------------------------------------------------------------------
 
 ggsave(g_scheme,
-       filename = "output/fig_theo_scheme.pdf",
+       filename = "tex/fig_theo_scheme.pdf",
        width = 9,
        height = 4)
 
 ggsave(g_sim_main,
-       filename = "output/fig_theo_main.pdf",
+       filename = "tex/fig_theo_main.pdf",
        width = 9,
        height = 10)
 
 ggsave(g_heat0,
-       filename = "output/fig_theo_rho0.pdf",
+       filename = "tex/fig_theo_rho0.pdf",
        width = 6,
        height = 5)

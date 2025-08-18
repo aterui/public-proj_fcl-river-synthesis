@@ -61,7 +61,7 @@ cap <- paste0("\\label{fig:fig-num", seq_len(length(cap)), "}", cap)
 
 ## graphics
 pdf <- with(df_grt,
-            paste0("output/",
+            paste0("tex/",
                    "fig_theo_rho", rho,
                    "_g", g,
                    "_theta", theta) %>%
