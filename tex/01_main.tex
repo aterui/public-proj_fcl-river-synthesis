@@ -462,7 +462,7 @@ For producers ($k=1, 2, \ldots, P$), $\gamma_k$ and $\mu_k$ are constants.
 The occupancy at equilibrium is therefore either persistent ($p_k = p_k^* > 0$) or extinct ($p_k = 0$).
 For consumers ($k = P+1, P+2, \ldots, S$), the occupancies of species $q = 1, 2, \ldots, k - 1$ potentially affect $p_k$, but not $q = k + 1, \ldots, S$.
 Although this implies many possible combinations of equilibrium states (i.e., binary permutations of persistent or extinct), we demonstrated that the system has a unique stable equilibrium (see \textit{SI Appendix}).
-This results in a single ``realized'' FCL at stable equilibrium (Equation \ref{eq:def_tp}).
+This results in a single realized FCL at stable equilibrium (Equation \ref{eq:def_tp}).
 
 %We consider the feasible case where $p_{k}^{*} > 0$ for all $k=1, 2, \ldots, S$.This is a necessary and sufficient condition for the local stability of the feasible equilibrium (\textit{SI Appendix}).Next, we show that the feasible equilibrium is, if exists, unique. For producers ($k=1,2,\ldots, P$), $\mu_k$ and $\gamma_k$ are independent of $\Vec{p}=\left(p_1, p_2, \ldots, p_S\right)$. Thus, $\hat{p}_k$ is unique for all producers.For consumers ($k=P+1,P+2,\ldots, S$), $\mu_k$ and $\gamma_k$ \textit{depend} on $\Vec{p}$. Nevertheless, because we assume acyclic food webs, $\mu_k$ and $\gamma_k$ depend only on $\left(p_1,p_2, \ldots, p_P,\ldots, p_{k-1} \right)$. This allows us to obtain $\hat{p_k}$ recursively. For example, $\hat{p_{P+1}}$ is unique because $\left(p_1, p_2, \ldots, p_P\right)$ is unique. Then, $p_{P+2}$ is also unique. This calculation can be continued until $k=S$.
 
@@ -476,7 +476,7 @@ In each simulation scenario, we systematically varied total river length $L$ and
 This analytical exploration results in $20 \times 2^2 \times 50^2 = 200,000$ runs.
 Note that we explored a broader parameter space using numerical analysis in \textit{SI Appendix}.
 
-At (quasi)equilibrium, we calculated the ``realized'' trophic position $\tau^{(w)}$ for persistent species as follows.
+At (quasi)equilibrium, we calculated the realized trophic position $\tau^{(w)}$ for persistent species as follows.
 Producers are assigned $\tau^{(w)} = 1$.
 Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trophic positions plus one:
 
@@ -587,7 +587,7 @@ At this level, we considered ecosystem size (log-transformed total river length)
 Precipitation was included as a proxy for disturbance regimes because of its established relationship with flow variability in rivers (see \textit{SI Appendix} for supporting analysis).
 The random effect $\eta_{u[w]}$ was assumed to follow a normal distribution as $\eta_{u} \sim \mbox{Normal}(0, \sigma_{\eta}^2)$.
 
-The parameter $\varepsilon_w$ the watershed-level residual errors, and we scaled $\varepsilon_w$ to assign higher weights to watersheds (i) with more sampling sites and (ii) with spatially random sampling design:
+The parameter $\varepsilon_w$ is the watershed-level residual errors, and we scaled $\varepsilon_w$ to assign higher weights to watersheds (i) with more sampling sites and (ii) with spatially random sampling design:
 
 \begin{align}
     \varepsilon_w &\sim \mbox{Normal}(0, \sigma_{\varepsilon}^2 \zeta_w^{-1}),\\

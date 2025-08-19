@@ -322,8 +322,11 @@ In Equation \ref{eq:extn}, we introduced the expected value of upstream river le
 
 \subsection{Expected Upstream River Length} \label{updist}
 
+In this section, we derive the expected value of upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
+Our derivation accounts for all topologically distinct river networks; that is, we consider all possible arrangements of links that form a spanning tree, with each network structure properly weighted according to $L$ and $\lambda_b$.
+Consequently, Proposition \ref{proposition-u} applies broadly to any finite-sized river network with random bifurcations. 
+
 \begin{definition}
-We derive the expected value of upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
 We use the following key terms: \textit{link} and \textit{magnitude}.
 A link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth; Figure \ref{fig:river-fig}).
 Magnitude $m$ refers to the number of exterior source links (links containing upstream terminals; Figure \ref{fig:river-fig}) flowing into a given link within the network; thus, magnitude is defined for each link and $m=1$ at an exterior source link (Figure \ref{fig:river-fig}).
@@ -348,6 +351,7 @@ Thus, $Z \sim \mbox{Pois}(\lambda_b L)$.
 The total number of links $B$ equals $Z + 1$, where adding one accounts for the final event of link termination at length $L$.
 We use these assumptions in the following derivation.
 
+\vspace{0.5cm} 
 \begin{table}
     \centering
     \caption{Key symbols for the derivation of expected upstream river length}
@@ -364,10 +368,12 @@ We use these assumptions in the following derivation.
     \end{tabularx}
     \label{tab:key-symbol}
 \end{table}
+\vspace{0.5cm} 
 
 \end{definition}
 
 \begin{proposition}
+\label{proposition-u}
 The expected upstream river length $\mathbb{E}(u)$ at a given habitat patch within a random branching network, characterized by total river length $L$ and branching rate $\lambda_b$, can be expressed as a function of $L$ and $\lambda_b$.
 \end{proposition}
 
@@ -504,14 +510,14 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 
 \begin{lemma}
 \label{lemma-f}
-Let link length $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$.
-If the total length is given as $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
+Let link length $l_1, l_2, \ldots, l_{z+1}$ be independent random variables, each following $\mbox{Exp}(\lambda_b)$, where $z+1$ is the number of links in the network.
+If the total length is given as $\sum_{s=1}^{z+1} l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
 \end{lemma}
 
 \begin{proof}
 An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of Gamma distribution, i.e., $\mbox{Ga}(1, \lambda_b)$.
-Thus, $l_1, l_2, \ldots, l_b$  follow $\mbox{Ga}(1, \lambda_b)$.
-Let us denote $X_1 = l_s$, $X_2 = \sum_{s'}^b l_{s'}$ ($s' \in \{1,2, \ldots, b\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
+Thus, $l_1, l_2, \ldots, l_{z+1}$  follow $\mbox{Ga}(1, \lambda_b)$.
+Let us denote $X_1 = l_s$, $X_2 = \sum_{s'} l_{s'}$ ($s' \in \{1,2, \ldots, z+1\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
 Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
 The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
 
@@ -716,7 +722,9 @@ An absorbing condition for this numerical analysis is $10^{-5}$, meaning that sp
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
 Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
 
+\vspace{0.5cm} 
 \input{tex/table_si_theo}
+\vspace{0.5cm} 
 
 \newpage
 
@@ -773,14 +781,18 @@ To evaluate coordinate precision, we classified data into the following categori
 
 Categories \textbf{4} and \textbf{5} were excluded from our analysis.
 
+\vspace{0.5cm} 
 \input{tex/table_si_list}
+\vspace{0.5cm} 
 
 \subsection{Parameter Estimate}
 
 Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
 The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
 
+\vspace{0.5cm} 
 \input{tex/table_si_emp}
+\vspace{0.5cm} 
 
 \subsection{Discharge-Precipitation Relationship}
 We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \cite{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
@@ -828,7 +840,7 @@ The hierarchical model presented in the main text is a random intercept model, w
 Specifically, we modified the watershed-level regression equation as follows:
 
 \begin{equation}
-    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} L_w + \beta_{2, u[w]} \lambda_{b, w} + \sum_m \beta_m x'_{m, w} + \varepsilon_{w},
+    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} L_w + \beta_{2, u[w]} \lambda_{b, w} + \sum_{m=3} \beta_m x'_{m, w} + \varepsilon_{w},
     \label{eq:watershed-average}
 \end{equation}
 
@@ -839,7 +851,8 @@ and
 \end{equation}
 
 where $\boldsymbol{\beta_u} = \{\beta_{0, u}, \beta_{1, u}, \beta_{2, u}\}$. Here, $\boldsymbol{\mu_{\beta}}$ represents the mean vector, and $\Omega$ denotes the variance-covariance matrix.
-We used weakly informative priors, where $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$, and $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$). In this context, the upper-triangular matrix $U_{\Omega}$ is the Cholesky factor for the correlation matrix, and $\sigma_{\beta, m}$ represents the standard deviations in $\Omega$.
+We used weakly informative priors for the mean vector $\boldsymbol{\mu_{\beta}}$, the standard deviations $\sigma_{\beta, m}$ for $\boldsymbol{\beta_u}$ (= diagonal elements in $\Omega$), and the upper-triangular Cholesky factor $U_{\Omega}$ for $\Omega$:  $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$), and $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$.
+The Cholesky LKJ correlation prior implies $U_{\Omega}^T U_{\Omega} = R_{\Omega} \sim \mbox{Lkj}(2.0)$, where $R_{\Omega}$ corresponds to the correlation matrix from $\Omega$. 
 Other priors were specified as described in the main text.
 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
