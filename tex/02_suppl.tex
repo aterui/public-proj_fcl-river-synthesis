@@ -1,56 +1,56 @@
 \documentclass[11pt, class=article, crop=false]{standalone}
 \usepackage[subpreambles=true]{standalone}
-\usepackage[T1]{fontenc} % for font setting
-\usepackage{newtxtext, newtxmath}
-\usepackage{import,
-            graphicx,
-            parskip,
-            url,
-            amsmath,
-            amsthm,
-            amssymb,
-            wrapfig,
-            fancyhdr,
-            soul,
-            tabularx,
-            longtable}
 
-% graphic path
-\graphicspath{ {./tex/} }
-
-% side caption figure
-\usepackage{sidecap}
-\sidecaptionvpos{figure}{t}
-
-% for special characters in bibliography            
+% encoding & fonts
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
 
-% for math
+% graphics & figures
+\usepackage{graphicx,wrapfig,sidecap}
+\sidecaptionvpos{figure}{t}
+\graphicspath{ {./tex/} }
+
+% spacing & layout
+\usepackage{parskip,geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm}
+
+% tables
+\usepackage{tabularx,longtable}
+
+% math
+\let\openbox\relax
+\usepackage{amsmath, amsthm}
 \newtheorem{proposition}{Proposition}[subsection]
 \newtheorem{lemma}{Lemma}[subsection]
-
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
 
-% citation setup
+% citations
 \usepackage[euler]{textgreek}
 \usepackage[sort&compress]{natbib}
-\setcitestyle{square}
-\setcitestyle{comma}
+\setcitestyle{square,comma}
 \bibliographystyle{pnas-new}
 
 % caption setup
-\usepackage[font={f, small}, labelfont={bf, small}]{caption}
-           
+\usepackage[font=small, labelfont=bf]{caption}
+
 % color box
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{breakable}
 
-% margin
-\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
-
-\title{Supporting Information}
+% title & author
+\title{Supporting Information for: \\Geometric ecosystem complexity regulates food chains}
+\author{
+Akira Terui, 
+Shota Shibasaki,
+Justin P. F. Pomeranz,
+Mason Ibrahim,
+Ethan Isaac,\\
+Ashley LaRoque,
+Dai Yamazaki,
+Jacques C. Finlay
+}
 \date{} % remove date from title
 
 \begin{document}
@@ -69,7 +69,7 @@
 
 \subsection{Preferential Prey Model}
 
-We used the preferential prey model to generate initial food webs \citep{johnson_trophic_2014}.
+We used the preferential prey model to generate initial food webs \cite{johnson_trophic_2014}.
 The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $P$, the expected number of trophic links $N_l$, and trophic omnivory $\theta$ ($\theta > 0$).
 In this model, a food web begins with $P$ primary producers, indexed as species $k = 1, 2, ..., P$.
 Then, consumer species with index $k = P + 1, P + 2, ..., S$ are sequentially introduced and given their first prey $q$ randomly from those introduced earlier.
@@ -160,7 +160,7 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
 \subsection{Spatial Model Derivation}
 
 \textit{Single patch dynamics} --
-Our model builds upon the deterministic approximation of the continuous-time Markov process \citep{ovaskainen_asymptotically_2006}.
+Our model builds upon the deterministic approximation of the continuous-time Markov process \cite{ovaskainen_asymptotically_2006}.
 Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at patch $i$ and time $t$.
 The exact dynamics can be described by a stochastic differential equation:
 
@@ -265,7 +265,7 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
         \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} \pi_{iq} \right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} \pi_{iq}}_{\text{Predation}},
-    \label{eq:extn}
+    \label{eq:extn-local}
 \end{equation}
 
 where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively, and $\tilde{A}_k$ is the set of predator species for species $k$.
@@ -274,8 +274,8 @@ The disturbance term is composed of two sources.
 The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
 The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$).
 In rivers, any disturbance can cascade downstream as water flows downstream.
-For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement \citep{massoudieh_biogeochemical_2010}.
-Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches \citep{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021}, likely causing synchronized extirpation of organisms across space \citep{larsen_geography_2021}.
+For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement \cite{massoudieh_biogeochemical_2010}.
+Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches \cite{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021}, likely causing synchronized extirpation of organisms across space \cite{larsen_geography_2021}.
 Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u_i$, allowing us to capture the essential feature of riverine systems.
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
@@ -391,7 +391,7 @@ Thus, we obtain an intuitive solution for the expectation of mean length as
 In the limit of $\lambda_b L \rightarrow \infty$, the expected value of this quantity, $\mathbb{E}(LB^{-1})$, approaches $\lambda_b^{-1}$ since $\mathbb{E}(B) = \lambda_b L + 1$.
 
 The number of upstream links $n$ requires the consideration of its probability distribution since $n$ depends on the location in a network.
-Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \citep{shreve_infinite_1967}, a classical framework of bifurcating river networks.
+Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \cite{shreve_infinite_1967}, a classical framework of bifurcating river networks.
 The probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $\omega(m; M)$, is described as
 
 \begin{equation}
@@ -413,7 +413,7 @@ Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; Lemma \ref{lem
     \label{eq:n-hat}
 \end{align}
 
-TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \citep{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
+TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \cite{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
 This means that $M$ is a function of $z$: $M = (b + 1) / 2 = (z + 2) / 2$.
 Using this formulation, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
 
@@ -783,7 +783,7 @@ The 95\% credible intervals and posterior probabilities are estimated based on 2
 \input{tex/table_si_emp}
 
 \subsection{Discharge-Precipitation Relationship}
-We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \citep{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
+We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \cite{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
 The discharge data is available at a 0.1-degree resolution (approximately 10 km at the equator) and was extracted from the nearest flow-connected cell for each site; however, discharge data could not be obtained for two headwater stream sites, which were excluded from further analysis.
 At each site, we log-transformed the discharge data and then scaled it by the temporal mean to facilitate comparison across sites with varying stream sizes.
 

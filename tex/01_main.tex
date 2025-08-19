@@ -1,44 +1,43 @@
 \documentclass[11pt, class=article, crop=false]{standalone}
 \usepackage[subpreambles=true]{standalone}
-\usepackage[T1]{fontenc} % for font setting
-\usepackage{newtxtext,newtxmath}
-\usepackage{import,
-            graphicx,
-            parskip,
-            url,
-            amsmath,
-            wrapfig,
-            fancyhdr,
-            soul,
-            tabularx,
-            authblk,
-            textcomp,
-            lineno}
 
-% side caption figure
-\usepackage{sidecap}
-\sidecaptionvpos{figure}{t}
+% Encoding & fonts
+\usepackage[utf8]{inputenc}      % input encoding
+\usepackage[T1]{fontenc}         % font encoding
+\usepackage{newtxtext,newtxmath} % text + math fonts
 
-% for special characters in bibliography            
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+% Graphics & figures
+\usepackage{import, graphicx, wrapfig, sidecap}
+\sidecaptionvpos{figure}{t}      % top-aligned side captions
+\graphicspath{{./tex/}}
 
-% citation setup
+% Spacing & layout
+\usepackage{parskip, geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm}
+
+% Math environments
+\let\openbox\relax
+\usepackage{amsmath, amsthm}
+\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
+
+% Citations
 \usepackage[euler]{textgreek}
-\usepackage[sort&compress]{natbib}
-\setcitestyle{square}
-\setcitestyle{comma}
+\usepackage[sort&compress,numbers]{natbib}  % numeric citations
+\setcitestyle{square,comma}
 \bibliographystyle{pnas-new}
 
-% caption setup
-\usepackage[font = small, labelfont = {bf, small}]{caption}
-           
-% color box
+% Captions
+\usepackage[font=small, labelfont=bf]{caption}
+
+% Color boxes
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{breakable}
 
-% margin
-\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
+% Other utilities
+\usepackage{url, soul, tabularx, fancyhdr, lineno, authblk}  % miscellaneous
 
 % title
 \title{Geometric ecosystem complexity regulates food chains}
