@@ -1,28 +1,4 @@
----
-output:
-  pdf_document: default
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE,
-                      message = FALSE,
-                      warning = FALSE)
-
 library(tidyverse)
-
-# # chunks for analytical solutions ####
-# 
-# c_text <- "Analytical prediction with no disturbance cascade. Heatmaps of FCL are expressed as a function of ecosystem size (river length, $L$) and complexity (branching rate, $\\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in Figure 2B and 2C in the maintext. Additional parameter values are provided in Table 1."
-# 
-# pdf0 <- "data_fmt/fig_rho0.pdf"
-# 
-# fig_alyt_chunk <- paste0("# Supplementary Figures\n\n",
-#                          "```{r fig-alyt, fig.cap=c_text}\n\n",
-#                          "knitr::include_graphics(here::here(pdf0))\n\n",
-#                          "```\n\n",
-#                          "\\newpage\n\n")
-
-# chunks for numerical solutions ####
 
 ## parameter setup
 df_grt <- readRDS(here::here("data_fmt/sim_fcl_si.rds")) %>%
@@ -57,11 +33,9 @@ Additional parameter values are: "
   return(cap0)
 })
 
-cap <- paste0("\\label{fig:fig-num", seq_len(length(cap)), "}", cap)
-
 ## graphics
 pdf <- with(df_grt,
-            paste0("output/",
+            paste0("tex/",
                    "fig_theo_rho", rho,
                    "_g", g,
                    "_theta", theta) %>%
@@ -72,16 +46,21 @@ pdf <- with(df_grt,
 fig_num_chunk <- knit_chunk <- NULL
 
 for(i in seq_len(nrow(df_grt))) {
-
-  knit_chunk <- paste0("```{r fig-num", i, ", fig.cap=cap[",i,"]}\n\n",
-                       "knitr::include_graphics(here::here(pdf[", i, "]))\n\n",
-                       "```\n\n",
-                       "\\newpage\n")
-
+  
+  knit_chunk <- paste0(
+    "\\begin{figure}\n",
+    "\\centering\n",
+    "\\includegraphics[keepaspectratio]{", pdf[i], "}\n",
+    "\\caption{", cap[i], "}\n",
+    "\\label{fig:fig-num", i, "}\n",
+    "\\end{figure}\n",
+    "\\newpage\n"
+  )
+  
   fig_num_chunk <- c(fig_num_chunk, knit_chunk)
-
+  
 }
 
-```
-
-`r paste(knitr::knit(text = fig_num_chunk), collapse = '\n')`
+## export
+writeLines(paste(fig_num_chunk, collapse = "\n"),
+           con = here::here("tex/figure_si.tex"))

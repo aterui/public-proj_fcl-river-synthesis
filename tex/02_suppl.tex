@@ -1,56 +1,56 @@
 \documentclass[11pt, class=article, crop=false]{standalone}
 \usepackage[subpreambles=true]{standalone}
-\usepackage[T1]{fontenc} % for font setting
-\usepackage{newtxtext, newtxmath}
-\usepackage{import,
-            graphicx,
-            parskip,
-            url,
-            amsmath,
-            amsthm,
-            amssymb,
-            wrapfig,
-            fancyhdr,
-            soul,
-            tabularx,
-            longtable}
 
-% graphic path
-\graphicspath{ {./output/} }
-
-% side caption figure
-\usepackage{sidecap}
-\sidecaptionvpos{figure}{t}
-
-% for special characters in bibliography            
+% encoding & fonts
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
 
-% for math
+% graphics & figures
+\usepackage{graphicx,wrapfig,sidecap}
+\sidecaptionvpos{figure}{t}
+\graphicspath{ {./tex/} }
+
+% spacing & layout
+\usepackage{parskip,geometry}
+\geometry{top=2.54cm,bottom=2.54cm,left=2.54cm,right=2.54cm}
+
+% tables
+\usepackage{tabularx,longtable}
+
+% math
+\let\openbox\relax
+\usepackage{amsmath, amsthm}
 \newtheorem{proposition}{Proposition}[subsection]
 \newtheorem{lemma}{Lemma}[subsection]
-
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
 
-% citation setup
+% citations
 \usepackage[euler]{textgreek}
 \usepackage[sort&compress]{natbib}
-\setcitestyle{square}
-\setcitestyle{comma}
+\setcitestyle{square,comma}
 \bibliographystyle{pnas-new}
 
 % caption setup
-\usepackage[font={f, small}, labelfont={bf, small}]{caption}
-           
+\usepackage[font=small, labelfont=bf]{caption}
+
 % color box
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{breakable}
 
-% margin
-\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}%set margin
-
-\title{Supporting Information}
+% title & author
+\title{Supporting Information for: \\Geometric ecosystem complexity regulates food chains}
+\author{
+Akira Terui, 
+Shota Shibasaki,
+Justin P. F. Pomeranz,
+Mason Ibrahim,
+Ethan Isaac,\\
+Ashley LaRoque,
+Dai Yamazaki,
+Jacques C. Finlay
+}
 \date{} % remove date from title
 
 \begin{document}
@@ -69,7 +69,7 @@
 
 \subsection{Preferential Prey Model}
 
-We used the preferential prey model to generate initial food webs \citep{johnson_trophic_2014}.
+We used the preferential prey model to generate initial food webs \cite{johnson_trophic_2014}.
 The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $P$, the expected number of trophic links $N_l$, and trophic omnivory $\theta$ ($\theta > 0$).
 In this model, a food web begins with $P$ primary producers, indexed as species $k = 1, 2, ..., P$.
 Then, consumer species with index $k = P + 1, P + 2, ..., S$ are sequentially introduced and given their first prey $q$ randomly from those introduced earlier.
@@ -160,7 +160,7 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
 \subsection{Spatial Model Derivation}
 
 \textit{Single patch dynamics} --
-Our model builds upon the deterministic approximation of the continuous-time Markov process \citep{ovaskainen_asymptotically_2006}.
+Our model builds upon the deterministic approximation of the continuous-time Markov process \cite{ovaskainen_asymptotically_2006}.
 Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at patch $i$ and time $t$.
 The exact dynamics can be described by a stochastic differential equation:
 
@@ -265,7 +265,7 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
         \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
         \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} \pi_{iq} \right)}_{\text{Prey scarcity}} + 
         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} \pi_{iq}}_{\text{Predation}},
-    \label{eq:extn}
+    \label{eq:extn-local}
 \end{equation}
 
 where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively, and $\tilde{A}_k$ is the set of predator species for species $k$.
@@ -274,8 +274,8 @@ The disturbance term is composed of two sources.
 The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
 The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$).
 In rivers, any disturbance can cascade downstream as water flows downstream.
-For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement \citep{massoudieh_biogeochemical_2010}.
-Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches \citep{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021}, likely causing synchronized extirpation of organisms across space \citep{larsen_geography_2021}.
+For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement \cite{massoudieh_biogeochemical_2010}.
+Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches \cite{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021}, likely causing synchronized extirpation of organisms across space \cite{larsen_geography_2021}.
 Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u_i$, allowing us to capture the essential feature of riverine systems.
 The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
 
@@ -316,19 +316,32 @@ and
 \end{equation}
 
 The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod}. 
-In Equation \ref{eq:extn}, we introduced the expected value of the upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
+In Equation \ref{eq:extn}, we introduced the expected value of upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
 
 \newpage
 
 \subsection{Expected Upstream River Length} \label{updist}
 
+In this section, we derive the expected value of upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
+Our derivation accounts for all topologically distinct river networks; that is, we consider all possible arrangements of links that form a spanning tree, with each network structure properly weighted according to $L$ and $\lambda_b$.
+Consequently, Proposition \ref{proposition-u} applies broadly to any finite-sized river network with random bifurcations. 
+
 \begin{definition}
-We derive the expected value of the upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
 We use the following key terms: \textit{link} and \textit{magnitude}.
-The term link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth).
-The term magnitude refers to the number of exterior source links (links containing upstream terminals) flowing into a given link within the network.
-The magnitude is one at an exterior source link.
+A link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth; Figure \ref{fig:river-fig}).
+Magnitude $m$ refers to the number of exterior source links (links containing upstream terminals; Figure \ref{fig:river-fig}) flowing into a given link within the network; thus, magnitude is defined for each link and $m=1$ at an exterior source link (Figure \ref{fig:river-fig}).
+We denote by $M$ the network-wide magnitude, which corresponds to the magnitude of the outlet link.
 Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\begin{SCfigure}
+    \includegraphics[width=0.45\linewidth]{tex/fig_si_mag.pdf}
+    \caption{Schematic diagram illustrating the concepts of link and magnitude. A link is a river segment that connects either two confluences or a confluence and a terminal point of the river. The magnitude ($m$) of a link is the number of exterior source links that flow into it, with $m=1$ for an exterior source link. We denote by $M$ the \textit{network-wide magnitude}, defined as the magnitude of the outlet link. In the example shown, the network consists of seven links and four exterior source links; therefore, the network properties are $B=7$ and $M=4$.}
+    \label{fig:river-fig}
+\end{SCfigure}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
 We assume that the length of individual link $s$, denoted as $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
 The length $l_s$ can be interpreted as the ``waiting time'' to a branching event (or termination events for upstream sources).
@@ -338,6 +351,7 @@ Thus, $Z \sim \mbox{Pois}(\lambda_b L)$.
 The total number of links $B$ equals $Z + 1$, where adding one accounts for the final event of link termination at length $L$.
 We use these assumptions in the following derivation.
 
+\vspace{0.5cm} 
 \begin{table}
     \centering
     \caption{Key symbols for the derivation of expected upstream river length}
@@ -354,10 +368,12 @@ We use these assumptions in the following derivation.
     \end{tabularx}
     \label{tab:key-symbol}
 \end{table}
+\vspace{0.5cm} 
 
 \end{definition}
 
 \begin{proposition}
+\label{proposition-u}
 The expected upstream river length $\mathbb{E}(u)$ at a given habitat patch within a random branching network, characterized by total river length $L$ and branching rate $\lambda_b$, can be expressed as a function of $L$ and $\lambda_b$.
 \end{proposition}
 
@@ -381,7 +397,7 @@ Thus, we obtain an intuitive solution for the expectation of mean length as
 In the limit of $\lambda_b L \rightarrow \infty$, the expected value of this quantity, $\mathbb{E}(LB^{-1})$, approaches $\lambda_b^{-1}$ since $\mathbb{E}(B) = \lambda_b L + 1$.
 
 The number of upstream links $n$ requires the consideration of its probability distribution since $n$ depends on the location in a network.
-Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \citep{shreve_infinite_1967}, a classical framework of bifurcating river networks.
+Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \cite{shreve_infinite_1967}, a classical framework of bifurcating river networks.
 The probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $\omega(m; M)$, is described as
 
 \begin{equation}
@@ -403,7 +419,7 @@ Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; Lemma \ref{lem
     \label{eq:n-hat}
 \end{align}
 
-TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \citep{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
+TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \cite{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
 This means that $M$ is a function of $z$: $M = (b + 1) / 2 = (z + 2) / 2$.
 Using this formulation, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
 
@@ -478,7 +494,7 @@ where $f_{\text{pois}}(z; L, \lambda_b)$ is the probability mass function of a P
 
 and $\Pr(Z \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda_b L})$ (Lemma \ref{lemma-pois}). 
 % In Equation \ref{eq:tpois}, $f_{\text{pois}}(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even integers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} f'_{\text{pois}}(z; L, \lambda_b) = 1$.
-Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a function of $L$ and $\lambda_b$:
+Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a function of $L > 0$ and $\lambda_b > 0$:
 
 \begin{align}
     \begin{split}
@@ -494,14 +510,14 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 
 \begin{lemma}
 \label{lemma-f}
-Let link length $l_1, l_2, \ldots, l_b$ be independent random variables that follow $\mbox{Exp}(\lambda_b)$.
-If the total length is given as $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
+Let link length $l_1, l_2, \ldots, l_{z+1}$ be independent random variables, each following $\mbox{Exp}(\lambda_b)$, where $z+1$ is the number of links in the network.
+If the total length is given as $\sum_{s=1}^{z+1} l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
 \end{lemma}
 
 \begin{proof}
 An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of Gamma distribution, i.e., $\mbox{Ga}(1, \lambda_b)$.
-Thus, $l_1, l_2, \ldots, l_b$  follow $\mbox{Ga}(1, \lambda_b)$.
-Let us denote $X_1 = l_s$, $X_2 = \sum_{s'}^b l_{s'}$ ($s' \in \{1,2, \ldots, b\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
+Thus, $l_1, l_2, \ldots, l_{z+1}$  follow $\mbox{Ga}(1, \lambda_b)$.
+Let us denote $X_1 = l_s$, $X_2 = \sum_{s'} l_{s'}$ ($s' \in \{1,2, \ldots, z+1\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
 Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
 The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
 
@@ -695,6 +711,25 @@ Therefore, the system given by Equation \ref{eq:master} has a unique stable equi
 
 \newpage
 
+\subsection{Numerical Analysis}
+
+We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
+
+In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
+In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
+An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
+This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
+Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
+
+\vspace{0.5cm} 
+\input{tex/table_si_theo}
+\vspace{0.5cm} 
+
+\newpage
+
+\input{tex/figure_si}
+
 \subsection{No Cascade Model}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
@@ -726,29 +761,13 @@ Additional parameter values are provided in Table 1.}
 
 \newpage
 
-\subsection{Numerical Analysis}
-
-We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
-
-In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
-In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
-An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
-This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
-
-\input{tex/table_si_theo}
-
-\newpage
-
-\input{tex/figure_si}
-
 \section{Empirical Analysis}
 
 \subsection{Data Sources}
 
-Table \ref{tab:meta-list} lists 46 studies that were used in our meta-analysis.
+Table \ref{tab:meta-list} lists 46 studies that were used in our empirical analysis.
 These studies contained at least one site that (i) contains either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (primary producer or consumer) or an estimate of the maximum trophic position; (ii) contains reliable spatial coordinates for geospatial analysis; (iii) is located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes) and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); (iv) can be associated with potential environmental drivers in GIS.
+When multiple estimates of FCL were available (e.g., from inter-annual or seasonal replicates), we averaged these values so that each site was represented by a single FCL estimate.
 
 To evaluate coordinate precision, we classified data into the following categories:
 
@@ -762,17 +781,21 @@ To evaluate coordinate precision, we classified data into the following categori
 
 Categories \textbf{4} and \textbf{5} were excluded from our analysis.
 
+\vspace{0.5cm} 
 \input{tex/table_si_list}
+\vspace{0.5cm} 
 
 \subsection{Parameter Estimate}
 
 Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
 The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
 
+\vspace{0.5cm} 
 \input{tex/table_si_emp}
+\vspace{0.5cm} 
 
 \subsection{Discharge-Precipitation Relationship}
-We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \citep{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
+We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \cite{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
 The discharge data is available at a 0.1-degree resolution (approximately 10 km at the equator) and was extracted from the nearest flow-connected cell for each site; however, discharge data could not be obtained for two headwater stream sites, which were excluded from further analysis.
 At each site, we log-transformed the discharge data and then scaled it by the temporal mean to facilitate comparison across sites with varying stream sizes.
 
@@ -817,7 +840,7 @@ The hierarchical model presented in the main text is a random intercept model, w
 Specifically, we modified the watershed-level regression equation as follows:
 
 \begin{equation}
-    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} L_w + \beta_{2, u[w]} \lambda_{b, w} + \sum_m \beta_m x'_{m, w} + \varepsilon_{w},
+    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} L_w + \beta_{2, u[w]} \lambda_{b, w} + \sum_{m=3} \beta_m x'_{m, w} + \varepsilon_{w},
     \label{eq:watershed-average}
 \end{equation}
 
@@ -828,7 +851,8 @@ and
 \end{equation}
 
 where $\boldsymbol{\beta_u} = \{\beta_{0, u}, \beta_{1, u}, \beta_{2, u}\}$. Here, $\boldsymbol{\mu_{\beta}}$ represents the mean vector, and $\Omega$ denotes the variance-covariance matrix.
-We used weakly informative priors, where $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$, and $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$). In this context, the upper-triangular matrix $U_{\Omega}$ is the Cholesky factor for the correlation matrix, and $\sigma_{\beta, m}$ represents the standard deviations in $\Omega$.
+We used weakly informative priors for the mean vector $\boldsymbol{\mu_{\beta}}$, the standard deviations $\sigma_{\beta, m}$ for $\boldsymbol{\beta_u}$ (= diagonal elements in $\Omega$), and the upper-triangular Cholesky factor $U_{\Omega}$ for $\Omega$:  $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$), and $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$.
+The Cholesky LKJ correlation prior implies $U_{\Omega}^T U_{\Omega} = R_{\Omega} \sim \mbox{Lkj}(2.0)$, where $R_{\Omega}$ corresponds to the correlation matrix from $\Omega$. 
 Other priors were specified as described in the main text.
 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates

@@ -56,7 +56,7 @@ list_g <- foreach(i = 1:nrow(df_parms)) %do% {
           axis.text =  element_text(size = 7))
   
   filename <- with(df_parms[i, ],
-                   paste0("output/fig_theo_",
+                   paste0("tex/fig_theo_",
                           "rho", rho,
                           "_g", g,
                           "_theta", theta)) %>% 
