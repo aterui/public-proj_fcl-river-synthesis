@@ -17,6 +17,7 @@ list_parms <- list.files("data_fmt",
   lapply(FUN = function(x) {
     readRDS(x) %>% 
       dplyr::select(rsrc, 
+                    zeta,
                     g,
                     delta0,
                     h,
@@ -26,9 +27,6 @@ list_parms <- list.files("data_fmt",
                     rho,
                     z,
                     theta) %>% 
-      rename(r0 = rsrc,
-             g0 = g,
-             psi = z) %>% 
       filter(rho != 0)
   })
 
@@ -37,7 +35,7 @@ list_parms <- list.files("data_fmt",
 df_parms <- lapply(list_parms, FUN = function(x) {
   
   uv <- sapply(x, function(x) paste(sprintf("%.2f", unique(x)), collapse = ", "))
-  uv[which(colnames(x) == "g0")] <- paste(sprintf("%.0f", unique(x$g0)), collapse = ", ")
+  uv[which(colnames(x) == "g")] <- paste(sprintf("%.0f", unique(x$g)), collapse = ", ")
     
   parms <- names(uv)
   names(uv) <- NULL
@@ -48,25 +46,27 @@ df_parms <- lapply(list_parms, FUN = function(x) {
   return(cout)
 }) %>% 
   reduce(left_join, by = "parms") %>% 
-  mutate(symbol = case_when(parms == "r0" ~ "$r_0$",
-                            parms == "g0" ~ "$g_0$",
+  mutate(symbol = case_when(parms == "rsrc" ~ "$r_0$",
+                            parms == "zeta" ~ "$\\omega$",
+                            parms == "g" ~ "$g_0$",
                             parms == "h" ~ "$h$",
                             parms == "delta0" ~ "$\\delta_0$",
                             parms == "mu0" ~ "$\\mu^{(0)}$",
                             parms == "mu_p" ~ "$\\mu^{(1)}$",
                             parms == "mu_c" ~ "$\\mu^{(2)}$",
                             parms == "rho" ~ "$\\rho$",
-                            parms == "psi" ~ "$\\psi$",
+                            parms == "z" ~ "$\\psi$",
                             parms == "theta" ~ "$\\theta$"),
-         description = case_when(parms == "r0" ~ "Resource supply [-]",
-                                 parms == "g0" ~ "Number of propagules for producers [-]",
+         description = case_when(parms == "rsrc" ~ "Resource supply [-]",
+                                 parms == "zeta" ~ "Effect of stream size on the establishment probability of basal species [per unit river distance]",
+                                 parms == "g" ~ "Number of propagules for producers [-]",
                                  parms == "h" ~ "Habitat density [per unit river distance]",
                                  parms == "delta0" ~ "Dispersal capability for producers [per unit river distance]",
                                  parms == "mu0" ~ "Disturbance-induced extinction rate [per unit time]",
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
                                  parms == "rho" ~ "Synchrony probability [-]",
-                                 parms == "psi" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
+                                 parms == "z" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
                                  parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
   relocate(symbol, description) %>% 
   dplyr::select(-parms) %>% 
