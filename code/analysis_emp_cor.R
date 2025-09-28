@@ -50,10 +50,16 @@ df_x <- list_fcl[[1]] %>%
 
 # analysis for correlations between predictors ----------------------------
 
-df_x %>% 
-  select(-h, -g) %>% 
+## watershed level correlation
+m_rho <- df_x %>% 
+  select(-c(h, 
+            g,
+            forest_b1km,
+            local_elev)) %>% 
   cor()
 
+diag(m_rho) <- NA
+range(m_rho, na.rm = TRUE)
 
 # correlation between elev and others -------------------------------------
 
