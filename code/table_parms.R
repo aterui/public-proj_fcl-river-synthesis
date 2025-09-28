@@ -62,7 +62,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
                                  parms == "g0" ~ "Number of propagules for producers [-]",
                                  parms == "h" ~ "Habitat density [per unit river distance]",
                                  parms == "delta0" ~ "Dispersal capability for producers [per unit river distance]",
-                                 parms == "mu0" ~ "Disturbance rate [per unit time]",
+                                 parms == "mu0" ~ "Disturbance-induced extinction rate [per unit time]",
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
                                  parms == "rho" ~ "Synchrony probability [-]",
