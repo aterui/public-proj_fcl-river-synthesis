@@ -47,7 +47,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 }) %>% 
   reduce(left_join, by = "parms") %>% 
   mutate(symbol = case_when(parms == "rsrc" ~ "$r_0$",
-                            parms == "zeta" ~ "$\\omega$",
+                            parms == "zeta" ~ "$b$",
                             parms == "g" ~ "$g_0$",
                             parms == "h" ~ "$h$",
                             parms == "delta0" ~ "$\\delta_0$",
