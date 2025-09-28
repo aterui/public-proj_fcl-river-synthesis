@@ -282,6 +282,9 @@ Although we could not yield direct measures of stream productivity at FCL sites,
 
 Our advanced statistical modeling accounted for common challenges in analyzing data collated from the literature, such as outliers, unequal and non-random sampling efforts, and the imperfect sampling of stable isotope data (see Methods for details).
 This quantitative technique is crucial for our analysis, as it accommodates the variability in sampling schemes found in previous studies.
+In addition, we statistically controlled the potential confounding effects of human influences by including the human footprint index, an integrated variable that summarizes eight pressure variables such as population density, land transformation, and infrastructures \citep{mu_global_2022}.
+As such, including the human footprint index would also enable the model to account for river fragmentation, which is often linked to road crossings and land transformation.
+
 However, as with any empirical research, our findings should be interpreted with caveat.
 We cannot rule out the possibility of spurious correlations, and experimental manipulations are warranted to confirm biological causality.
 Although watershed-scale experiments are practically impossible, small-scale experiments of micro-organisms may provide an alternative means to test the causality \citep{altermatt_big_2015, green_long_2023}.
@@ -396,7 +399,9 @@ We impose a habitat constraint on $c_{0,k}$ because $N$ is the maximum number of
 \end{align}
 
 The survival probability is described as $\phi_k = 1 - e^{-\delta_k h}$ so that dispersal capability $\delta_k$ and habitat density $h$ increase the survival during dispersal.
-This assumption makes biological sense because habitat density decreases the mean distance between a pair of habitat patches \citep{terui_spatial_2019}.
+This assumption has two merits.
+First, it makes biological sense because the mean distance between a pair of adjacent habitat patches decreases with habitat density.
+Second, this formulation relaxes a common assumption of global dispersal in analytical metapopulation models. 
 We assumed that $g_k$ and $\delta_k$ scale with the species' structural trophic position $\tau_k$ as $\ln g_k = \ln g_0 - \psi \ln \tau_k$ and $\ln \delta_k = \ln \delta_0 + \psi \ln \tau_k$, where $g_0$ and $\delta_0$ represent the propagule and dispersal values for producers.
 This assumption aligns with the known relationships of trophic position (or level) versus production \citep{finlay_stream_2011} and versus dispersal ability \citep{mccann_dynamics_2005}.
 
@@ -424,7 +429,8 @@ Assuming a finite total river length $L > 0$ with random branching at a rate $\l
     \label{eq:u-hat}
 \end{equation}
 
-where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers, and $z \in 2\mathbb{Z}_{\ge 0}$ is a constraint arising from the requirement that the number of links be odd.
+where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers.
+The constraint $z \in 2\mathbb{Z}_{\ge 0}$ arises from the requirement that the number of links be odd in a bifurcating river network.
 The functions $\hat{n}(z)$ and $f'_{\text{pois}}(z; L, \lambda_b)$ represent, respectively, the expected number of upstream links and the probability mass function of a truncated Poisson distribution, defined as:
 
 \begin{equation}
@@ -585,6 +591,8 @@ We related watershed-specific intercept $\alpha_{0, w}$ (the expected average FC
 where $\beta_0$ is the global intercept, $\beta_m$ the regression coefficient for the $m$-th watershed-level predictor $x'_{m, w}$, $\eta_{u[w]}$ the random effect accounting for geographic variations, with $u$ denoting the index for each geographic region defined by HydroBASINS level-1 (Lehner et al. \citep{lehner_global_2013}; see Figure \ref{fig:fcl-obs}A).
 At this level, we considered ecosystem size (log-transformed total river length), ecosystem complexity (log-transformed branching rate), climatic conditions (mean annual air temperature and annual precipitation amount), and human influences (human footprint index).
 Precipitation was included as a proxy for disturbance regimes because of its established relationship with flow variability in rivers (see \textit{SI Appendix} for supporting analysis).
+Human footprint index accounts for any cross-watershed heterogeneity in human activities, including the likelihood of river fragmentation due to road crossings.
+The absolute Pearson’s correlation between these predictors was less than $0.4$ for all pairs, suggesting that multicollinearity is unlikely to be influential.
 The random effect $\eta_{u[w]}$ was assumed to follow a normal distribution as $\eta_{u} \sim \mbox{Normal}(0, \sigma_{\eta}^2)$.
 
 The parameter $\varepsilon_w$ is the watershed-level residual errors, and we scaled $\varepsilon_w$ to assign higher weights to watersheds (i) with more sampling sites and (ii) with spatially random sampling design:

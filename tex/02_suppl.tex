@@ -82,7 +82,7 @@ The parameter $f_k$ is assumed to be a realization of a Beta distribution:
     f_k \sim \mbox{Beta}\left(1, \frac{(S + P - 3)(S - P)}{2(N_l - S + P)} - 1\right)
 \end{equation}
 
-This parameterization ensures that the realized number of trophic links $n_l$ has the expected value of $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (Lemma \ref{lemma-beta-tilde}).
+This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (Lemma \ref{lemma-beta-tilde}).
 
 The probability of choosing prey $q'$, denoted as $Q_{q'}$, is proportional to trophic distance between $q$ and $q'$:
 
@@ -211,7 +211,7 @@ We define $c_{ik}$ as follows:
     \label{eq:clnz}
 \end{equation}
 
-where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit river length) .
+where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit river length).
 The term $\sum_{j}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
 We scaled $\sum_{j}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
 For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} = c_{0, k}$).
@@ -506,8 +506,6 @@ Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a funct
 \end{align}
 \end{proof}
 
-\newpage
-
 \begin{lemma}
 \label{lemma-f}
 Let link length $l_1, l_2, \ldots, l_{z+1}$ be independent random variables, each following $\mbox{Exp}(\lambda_b)$, where $z+1$ is the number of links in the network.
@@ -767,6 +765,7 @@ Additional parameter values are provided in Table 1.}
 
 Table \ref{tab:meta-list} lists 46 studies that were used in our empirical analysis.
 These studies contained at least one site that (i) contains either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (primary producer or consumer) or an estimate of the maximum trophic position; (ii) contains reliable spatial coordinates for geospatial analysis; (iii) is located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes) and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); (iv) can be associated with potential environmental drivers in GIS.
+With respect to condition (iv), we excluded sites located in small streams where the resolution of environmental data layers did not allow accurate site-environment association, or where branching rates could not be reliably estimated due to having fewer than five links.
 When multiple estimates of FCL were available (e.g., from inter-annual or seasonal replicates), we averaged these values so that each site was represented by a single FCL estimate.
 
 To evaluate coordinate precision, we classified data into the following categories:
