@@ -43,11 +43,14 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 ## - rho, synchrony prob.
 ## - z, scaling exponent for delta and g
 ## - fw, foodweb index
-parms <- expand.grid(rl = seq(10, 100, length = 20),
+v_rl <- seq(10, 100, length = 20)
+
+parms <- expand.grid(rl = v_rl,
                      lambda = seq(0.1, 1, length = 20),
                      h = 2.5,
                      delta0 = 0.5,
-                     rsrc = c(0.4, 0.8),
+                     rsrc = c(0.25, 0.5),
+                     zeta = 1 / max(v_rl),
                      g = c(75, 150),
                      mu0 = c(2.5, 5),
                      mu_p = c(2.5, 5),
@@ -95,12 +98,13 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                       ## w/o predation effect
                       
                       ## - analytical equilibrium with rpom::fcl()
-                      y0 <- rpom::fcl(foodweb = list_fw[[fw[i]]],
+                      y0 <- rpom::fcl(w = list_fw[[fw[i]]],
                                       lambda = lambda[i],
                                       size = rl[i],
                                       h = h[i],
                                       delta = delta0[i] * v_tp^z[i],
                                       rsrc = rsrc[i],
+                                      zeta = zeta[i],
                                       g = g[i] * v_tp^(-z[i]),
                                       mu0 = mu0[i],
                                       mu_p = mu_p[i],
@@ -117,12 +121,13 @@ df_y <- foreach(i = seq_len(nrow(parms)),
                       
                       ## - numerical equilibrium with rpom::nfcl()
                       while (attr(y0, "convergence") > 0) {
-                        y0 <- rpom::nfcl(foodweb = list_fw[[fw[i]]],
+                        y0 <- rpom::nfcl(w = list_fw[[fw[i]]],
                                          lambda = lambda[i],
                                          size = rl[i],
                                          h = h[i],
                                          delta = delta0[i] * v_tp^z[i],
                                          rsrc = rsrc[i],
+                                         zeta = zeta[i],
                                          g = g[i] * v_tp^(-z[i]),
                                          mu0 = mu0[i],
                                          mu_p = mu_p[i],

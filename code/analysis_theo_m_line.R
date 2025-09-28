@@ -63,7 +63,8 @@ v <- 1 + max(rho0) * rpom::u_length(unique(c_lambda), unique(c_rl))
 
 ## - combine with other parameters
 parms <- expand.grid(id = seq_len(length(lambda)),
-                     rsrc = c(0.4, 0.8),
+                     rsrc = c(0.25, 0.5),
+                     zeta = 0.01,
                      mu0 = c(2.5, 5),
                      mu_p = 5,
                      delta = 0.5,
@@ -103,10 +104,11 @@ y <- foreach(i = seq_len(nrow(parms)),
                  v_tp <- attr(list_fw[[fw[i]]], "tp")
                  
                  ## analytical calculation
-                 y0 <- rpom::fcl(foodweb = list_fw[[fw[i]]],
+                 y0 <- rpom::fcl(w = list_fw[[fw[i]]],
                                  lambda = lambda[i],
                                  size = rl[i],
                                  rsrc = rsrc[i],
+                                 zeta = zeta[i],
                                  mu0 = mu0_scl[i],
                                  mu_p = mu_p[i],
                                  delta = delta[i] * v_tp^z[i],
