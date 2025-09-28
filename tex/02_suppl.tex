@@ -226,13 +226,15 @@ The establishment probability $r_{ik}$ represents different quantities for produ
 \begin{equation}
     r_{ik} =
     \begin{cases}
-    r_{0} & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
+    \min(r_{0} + b u_i, 1) & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
     |A_k|^{-1} \sum_{q \in A_k} \pi_{iq} & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$,}
     \end{cases}
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the resource supply, $A_k$ is the set of prey available for species $k$ (and thus $\sum_{q  \in A_k} \pi_{iq}$ represents the expected number of prey species at patch $i$), and $|A_k|$ is the number of prey species consumable for species $k$.
+where $r_0$ ($0 \le r_0 \le 1$) is the (minimum) resource supply, and the parameter $b$ ($\ge 0$) expresses the downstream increase of resource supply as a coefficient of the upstream river length at patch $i$ ($u_i$).
+Therefore, this formulation enables the model to capture a downstream increase of primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
+$A_k$ is the set of prey available for species $k$ (and thus $\sum_{q  \in A_k} \pi_{iq}$ represents the expected number of prey species at patch $i$), and $|A_k|$ is the number of prey species consumable for species $k$.
 This formulation assumes that resource or proportional prey availability increases species' establishment.
 The resource supply $r_0$ is assumed to be constant over space.
 
@@ -300,9 +302,10 @@ where
 \begin{equation}
     r_{k} = 
     \begin{cases}
-        r_0 & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
+        \min(r_0 + b \hat{u}, 1) & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
         |A_k|^{-1} \sum_{q \in A_k} p_{q} & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$,}
     \end{cases}
+    \label{eq:clnz}    
 \end{equation}
 
 and
@@ -316,7 +319,7 @@ and
 \end{equation}
 
 The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod}. 
-In Equation \ref{eq:extn}, we introduced the expected value of upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
+In Equations \ref{eq:clnz} and \ref{eq:extn}, we introduced the expected value of upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
 
 \newpage
 
