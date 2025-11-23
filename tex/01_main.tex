@@ -65,6 +65,8 @@
 
 \maketitle
 
+\textbf{Keywords:} food web, network complexity, stream, metapopulation
+
 \section*{Abstract}
 Since the time of Charles Elton, ecologists have been fascinated by the variation in food chain length among natural communities.
 A prevailing view suggests that the size of an ecosystem is a key factor influencing food chain length (the ecosystem size hypothesis).
@@ -127,7 +129,7 @@ On average, ecosystems with higher branching rates encompass more confluences (s
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing branching rate raises ecosystem complexity while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Equation \ref{eq:u-hat} in Methods and \textit{SI Appendix} for derivation).}
+    \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing the branching rate raises ecosystem complexity while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Equation \ref{eq:u-hat} in Methods and \textit{SI Appendix} for derivation).}
     \label{fig:scheme}
 \end{figure}
 
@@ -232,6 +234,7 @@ These watersheds are separated by the ocean or lentic water bodies (e.g., lake),
 However, they are small enough (26 to $\sim$5,000 km$^2$) to assume that top predators can disperse therein at a multi-generation time scale \citep{comte_fish_2018}.
 We employed Bayesian hierarchical modeling to evaluate the effects of ecosystem size (total river length [km]) and complexity (branching rate [km$^{-1}$]) on FCL.
 We also accounted for potential influences of resource supply, disturbance, and human impacts through relevant proxy variables (elevation, precipitation, and human footprint index, respectively; Methods).
+The absolute Pearson’s correlation between these predictors was less than $0.4$ for all pairs, suggesting that multicollinearity is unlikely to be influential.
 
 The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of FCL.
 The analysis provided strong statistical support for the positive effect of branching rate (Figure \ref{fig:fcl-obs}B), with a high probability that the regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure \ref{fig:ridge} and Table S3).
@@ -503,7 +506,7 @@ Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trop
 \end{equation}
 
 We report the maximum value of $\tau_k^{(w)}$ as the predicted FCL in a given environmental context.
-The analysis was performed in R 4.3.2 \citep{r_program}.
+The analysis was performed in R 4.5.2 \citep{r_program}.
 
 \subsection{Empirical Analysis}
 
@@ -622,7 +625,7 @@ If spatially biased, the distance ratio shows deviation from one, where $d_{w} <
 The Gaussian function $\exp[-\xi_2 (1 - d_{w})^2]$ returns smaller values as $d_{w}$ deviates from one, thus awarding more weights if spatially random.
 The parameters $\xi_1$ and $\xi_2$ control how quickly $\zeta_w$ increases with the number of sampling sites and the spatial randomness, and these were estimated through the stochastic search of Bayesian inference.
 
-We fitted our model to the data using NIMBLE version 1.2.1 \citep{nimble, pkg_nimble} in R 4.3.2 \citep{r_program}.
+We fitted our model to the data using NIMBLE version 1.2.1 \citep{nimble, pkg_nimble} in R 4.5.2 \citep{r_program}.
 We assigned weakly informative priors to parameters: $\alpha_m,~\beta_0,~\beta_m \sim \mbox{Normal}(0, 5^2)$; $\sigma,~\sigma_{\varepsilon},~\sigma_{\eta} \sim t^+(0, 1, 10)$; $\xi_1 \sim \mbox{Normal}^+(0, 1)$; $\xi_2 \sim \mbox{Normal}^+(0, (\ln 10)^2)$; and $\nu \sim \mbox{Trunc(Exp}(0.1); 2, \infty)$, where plus signs indicate half-Normal or half-t distributions. 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
