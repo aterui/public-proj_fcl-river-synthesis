@@ -7,39 +7,31 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-
 # read data ---------------------------------------------------------------
 
-sf_str <- readRDS("data_raw/wgs84_str_sub.rds") %>% 
-  bind_rows() %>% 
-  mutate(wid = str_pad(wid, width = 5, pad = "0"),
-         uid = paste0(huid, wid)) %>% 
-  dplyr::select(uid) %>% 
-  arrange(uid)
+sf_str <- readRDS("data_raw/sf_channel.rds") %>% 
+  arrange(huid)
 
-sf_fcl_point <- readRDS("data_raw/wgs84_fcl_site.rds") %>% 
+sf_fcl_point <- readRDS("data_raw/sf_fcl_site.rds") %>% 
   group_by(sid) %>% 
   slice(1) %>% # some sites (`sid`) has seasonal replicates
-  ungroup() %>% 
-  mutate(wid = str_pad(wid, width = 5, pad = "0"),
-         uid = paste0(huid, wid)) %>% 
-  dplyr::select(uid, sid, study_id) %>% 
-  arrange(uid)
-
+  ungroup()%>% 
+  dplyr::select(huid, oid, sid) %>% 
+  arrange(huid)
 
 # weight calculation ------------------------------------------------------
 # calculate distance ratio for each watershed
 
-v_uid <- unique(sf_str$uid)
+v_oid <- unique(sf_str$oid)
 
 tictoc::tic()
-df_ratio <- foreach(i = 1:length(v_uid),
+df_ratio <- foreach(i = seq_along(v_oid),
                     .combine = bind_rows) %do% {
                       
                       print(i)
                       
                       p <- sf_fcl_point %>% 
-                        filter(uid == v_uid[i])
+                        filter(oid == v_oid[i])
                       
                       if (n_distinct(p$sid) == 1) {
                         ## if only one point, return zero
@@ -53,7 +45,7 @@ df_ratio <- foreach(i = 1:length(v_uid),
                         ## - take a mean of median distances
                         ## - compare with median observed distance between sites
                         x <- sf_str %>% 
-                          filter(uid == v_uid[i])
+                          filter(oid == v_oid[i])
                         
                         cout <- d_ratio(x = x,
                                         point = p,
@@ -61,7 +53,7 @@ df_ratio <- foreach(i = 1:length(v_uid),
                                         seed = 123)
                       }
                       
-                      return(tibble(uid = v_uid[i],
+                      return(tibble(oid = v_oid[i],
                                     d_ratio = cout,
                                     n_site = n_distinct(p$sid)))
                     }
