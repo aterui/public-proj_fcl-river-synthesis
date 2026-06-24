@@ -7,21 +7,27 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-
 # preformat ---------------------------------------------------------------
 # update as needed
 # FCL data selected
 # - join level01 group id; continental hydrological units
-sf_lev01 <- readRDS("data_raw/wgs84_region_lev01.rds") %>% 
-  st_make_valid()
+sf_lev01 <- readRDS("data_raw/sf_hybas_lev01.rds") %>% 
+  st_make_valid() %>% 
+  rename(hybas_lev01 = hybas)
 
-sf_fcl0 <- readRDS("data_raw/wgs84_fcl_site.rds") %>%
-  st_join(sf_lev01)
+sf_lev02 <- readRDS("data_raw/sf_hybas_lev02.rds") %>% 
+  st_make_valid() %>% 
+  filter(hybas != "lev02_5020055870") %>% # invalid polygon
+  rename(hybas_lev02 = hybas)
+
+sf_fcl0 <- readRDS("data_raw/sf_fcl_site.rds") %>%
+  st_join(sf_lev01) %>% 
+  st_join(sf_lev02) %>% 
+  relocate(starts_with("hybas"))
 
 df_fcl0 <- sf_fcl0 %>%
   as_tibble() %>%
   dplyr::select(-geometry)
-
 
 # read data ---------------------------------------------------------------
 
@@ -39,8 +45,8 @@ df_weight <- readRDS("data_fmt/data_weight.rds")
 ## flag watersheds with no flow data
 df_flag <- df_env_local %>%
   left_join(df_fcl0 %>% 
-              select(sid, uid)) %>% 
-  group_by(uid) %>% 
+              select(sid, oid)) %>% 
+  group_by(oid) %>% 
   summarize(flag_flow = ifelse(all(is.na(fsd)), "Y", "N"))
 
 
@@ -57,36 +63,59 @@ df_g <- df_env_wsd %>%
   drop_na(hfp)
 
 ## - uid for those included
-uid_incl <- df_g %>% 
-  pull(uid)
+oid_incl <- df_g %>% 
+  pull(oid)
 
 ## local-level data
 ## - remove within-site replicates
 ## - take an average across seasons or years
 ## - censoring = 1 if top predator not collected (i.e., tpc == "N")
 df_fcl_local <- df_fcl0 %>% 
-  group_by(sid, wid, huid, id_lev01) %>% 
+  group_by(sid, 
+           oid, 
+           huid, 
+           hybas_lev01, 
+           hybas_lev02) %>% 
   summarize(fcl = mean(fcl),
-            tpc = unique(top_predator_collected)) %>% 
-  ungroup() %>% 
-  mutate(uid = paste0(huid,
-                      str_pad(wid, width = 5, pad = "0"))) %>% 
+            tpc = unique(top_predator_collected),
+            .groups = "drop") %>% 
   left_join(df_env_local) %>% 
-  filter(uid %in% uid_incl) %>% 
-  mutate(g = as.numeric(factor(uid)),
-         h = as.numeric(factor(id_lev01)),
+  filter(oid %in% oid_incl) %>% 
+  mutate(g = as.numeric(factor(oid)),
+         h01 = as.numeric(factor(hybas_lev01)),
+         h02 = as.numeric(factor(hybas_lev02)),
          censoring = ifelse(tpc == "N", 1, 0),
          cut = ifelse(tpc == "N", fcl, Inf)) %>% 
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
-  relocate(uid, h, g, sid, fcl, fcl_obs, cut, tpc, censoring)
+  relocate(
+    oid, 
+    h01,
+    h02,
+    g,
+    sid,
+    fcl,
+    fcl_obs, 
+    cut,
+    tpc,
+    censoring
+  )
 
 ## watershed-level data
 ## - left join `distinct(df_fcl, uid, g)` to align group id `g` between the two data frames
 ## - CAUTION! Don't forget `arrange(g)`
 df_fcl_wsd <- df_g %>% 
-  left_join(distinct(df_fcl_local, uid, g, h)) %>%
+  left_join(
+    distinct(df_fcl_local, 
+             oid, 
+             h01,
+             h02,
+             g)
+  ) %>%
   arrange(g) %>%
-  relocate(uid, g)
+  relocate(
+    oid,
+    g
+  )
 
 ## check g has a proper vector
 z <- mean(df_fcl_wsd$g == seq_len(nrow(df_fcl_wsd)))
