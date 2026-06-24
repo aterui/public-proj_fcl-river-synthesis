@@ -113,7 +113,9 @@ df_fcl_wsd <- df_g %>%
   ) %>%
   arrange(g) %>%
   relocate(
-    oid,
+    oid, 
+    h01,
+    h02,
     g
   )
 
@@ -142,7 +144,7 @@ saveRDS(list_fcl, "data_fmt/data_fcl_reg.rds")
 #   ungroup() %>%
 #   filter(n >= 5) %>%
 #   ggplot(aes(y = local_area,
-#              x = elev,
+#              x = local_elev,
 #              color = tpc)) +
 #   geom_point() +
 #   facet_wrap(facets =~ oid,
