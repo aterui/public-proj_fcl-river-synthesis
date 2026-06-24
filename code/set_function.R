@@ -3,34 +3,6 @@
 
 pacman::p_load(tidyverse)
 
-# split a polygon into sub-polygons with equal area -----------------------
-
-## function inspired by the following page:
-## - https://gis.stackexchange.com/questions/375345/dividing-polygon-into-parts-which-have-equal-area-using-r
-split_poly <- function(x, n_div, n_point = 10000, seed) {
-  
-  if (!missing(seed)) set.seed(seed)
-  
-  df_point <- sf::st_sample(x, size = n_point) %>% 
-    sf::st_coordinates() %>%
-    tidyr::as_tibble() %>%
-    setNames(c("lon", "lat"))
-  
-  kcl <- kmeans(df_point, centers = n_div)
-  
-  x_voronoi <- dismo::voronoi(kcl$centers, ext = x)
-  terra::crs(x_voronoi) <- terra::crs(x)
-  
-  cout <- x_voronoi %>% 
-    sf::st_as_sf() %>% 
-    sf::st_intersection(x) %>%
-    sf::st_make_valid() %>% 
-    dplyr::mutate(area = units::set_units(st_area(.), "km^2"))
-  
-  return(cout)
-}
-
-
 # compare median distance with random points ------------------------------
 
 d_ratio <- function(x, point, n_rand = 100, seed) {
@@ -67,6 +39,33 @@ d_ratio <- function(x, point, n_rand = 100, seed) {
   
   return(d_obs / mean(d_rand))
 }
+
+# split a polygon into sub-polygons with equal area -----------------------
+
+# ## function inspired by the following page:
+# ## - https://gis.stackexchange.com/questions/375345/dividing-polygon-into-parts-which-have-equal-area-using-r
+# split_poly <- function(x, n_div, n_point = 10000, seed) {
+#   
+#   if (!missing(seed)) set.seed(seed)
+#   
+#   df_point <- sf::st_sample(x, size = n_point) %>% 
+#     sf::st_coordinates() %>%
+#     tidyr::as_tibble() %>%
+#     setNames(c("lon", "lat"))
+#   
+#   kcl <- kmeans(df_point, centers = n_div)
+#   
+#   x_voronoi <- dismo::voronoi(kcl$centers, ext = x)
+#   terra::crs(x_voronoi) <- terra::crs(x)
+#   
+#   cout <- x_voronoi %>% 
+#     sf::st_as_sf() %>% 
+#     sf::st_intersection(x) %>%
+#     sf::st_make_valid() %>% 
+#     dplyr::mutate(area = units::set_units(st_area(.), "km^2"))
+#   
+#   return(cout)
+# }
 
 
 # # get a value of within-branch combinations -------------------------------
