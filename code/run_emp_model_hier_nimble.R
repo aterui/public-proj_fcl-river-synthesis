@@ -9,17 +9,24 @@ source("code/set_library.R")
 source("code/set_function.R")
 source("code/format_emp_data4nimble.R")
 
-
 # set data ----------------------------------------------------------------
 
 ## read data
 ## - df_fcl_local, local level data
 ## - df_fcl_wsd, watershed level data
 list_fcl <- readRDS("data_fmt/data_fcl_reg.rds")
+
 df_fcl_local <- list_fcl[[1]] %>% 
-  rename(local_hfp = hfp) %>% 
-  left_join(list_fcl[[2]] %>% 
-              dplyr::select(uid, r_length, lambda, prec, temp, hfp))
+  left_join(
+    list_fcl[[2]] %>% 
+      dplyr::select(
+        oid, 
+        r_length,
+        lambda,
+        prec,
+        temp,
+        hfp)
+  )
 
 df_fcl_wsd <- list_fcl[[2]]
 
@@ -57,8 +64,8 @@ X2 <- model.matrix(~ ., df_x2)
 list_const_wsd <- with(df_fcl_wsd,
                        list(X2 = X2,
                             K2 = ncol(X2),
-                            H = h,
-                            Nh = n_distinct(h),
+                            H = h01,
+                            Nh = n_distinct(h01),
                             Ratio = d_ratio,
                             N_site = n_site))
 
@@ -95,8 +102,8 @@ f_inits_h0 <- function() {
             a = rnorm(ncol(X1), sd = s0),
             b = rnorm(ncol(X2), sd = s0),
             sigma = runif(3, min = 0.05, max = 0.1),
-            r = rnorm(n_distinct(h), sd = s0),
-            a0 = rnorm(n_distinct(uid),
+            r = rnorm(n_distinct(h01), sd = s0),
+            a0 = rnorm(n_distinct(oid),
                        mean = mean(log(fcl_obs),
                                    na.rm = TRUE),
                        sd = s0),
