@@ -34,46 +34,46 @@ df_fsd <- foreach(i = seq_len(length(v_sid)),
                   .combine = bind_rows,
                   .packages = c("tidyverse",
                                 "mgcv")) %dopar% {
-                    
-                    ## subset data by site
-                    df_i <- df_flow %>%
-                      filter(sid == v_sid[i]) %>%
-                      arrange(date) %>%
-                      mutate(year = format(date, "%Y"))
-
-                    # ## gam fitting for seasonality
-                    # ## error normal
-                    # fit <- mgcv::gam(norm_log_flow ~ s(julian),
-                    #                  data = df_i)
-                    # 
-                    # ## get residual SD
-                    # sigma0 <- sqrt(fit$sig2)
-                    # 
-                    # ## output set
-                    # cout <- tibble(sid = v_sid[i],
-                    #                fsd = sigma0,
-                    #                fmu = mean(df_i$log_flow))
-                    
-                    ## gam fitting for seasonality
-                    ## error structure student-t, with minimum d.f. = 2
-                    fit <- mgcv::gam(norm_log_flow ~ s(julian),
-                                     family = mgcv::scat(min.df = 2),
-                                     data = df_i)
-
-                    ## degree of freedom in student-t
-                    nu <- with(family(fit), getTheta(trans = TRUE))[1]
-
-                    ## SD in student-t
-                    sigma0 <- with(family(fit), getTheta(trans = TRUE))[2]
-
-                    ## output set
-                    cout <- tibble(sid = v_sid[i],
-                                   fsd = sigma0,
-                                   fnu = nu,
-                                   fmu = mean(df_i$log_flow))
-                    
-                    return(cout)
-                  }
+                                  
+                                  ## subset data by site
+                                  df_i <- df_flow %>%
+                                    filter(sid == v_sid[i]) %>%
+                                    arrange(date) %>%
+                                    mutate(year = format(date, "%Y"))
+                                  
+                                  # ## gam fitting for seasonality
+                                  # ## error normal
+                                  # fit <- mgcv::gam(norm_log_flow ~ s(julian),
+                                  #                  data = df_i)
+                                  # 
+                                  # ## get residual SD
+                                  # sigma0 <- sqrt(fit$sig2)
+                                  # 
+                                  # ## output set
+                                  # cout <- tibble(sid = v_sid[i],
+                                  #                fsd = sigma0,
+                                  #                fmu = mean(df_i$log_flow))
+                                  
+                                  ## gam fitting for seasonality
+                                  ## error structure student-t, with minimum d.f. = 2
+                                  fit <- mgcv::gam(norm_log_flow ~ s(julian),
+                                                   family = mgcv::scat(min.df = 2),
+                                                   data = df_i)
+                                  
+                                  ## degree of freedom in student-t
+                                  nu <- with(family(fit), getTheta(trans = TRUE))[1]
+                                  
+                                  ## SD in student-t
+                                  sigma0 <- with(family(fit), getTheta(trans = TRUE))[2]
+                                  
+                                  ## output set
+                                  cout <- tibble(sid = v_sid[i],
+                                                 fsd = sigma0,
+                                                 fnu = nu,
+                                                 fmu = mean(df_i$log_flow))
+                                  
+                                  return(cout)
+                                }
 
 stopCluster(cl)
 
