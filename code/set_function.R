@@ -5,37 +5,49 @@ pacman::p_load(tidyverse)
 
 # compare median distance with random points ------------------------------
 
-d_ratio <- function(x, point, n_rand = 100, seed) {
+d_ratio <- function(x, point, n_rand = 100, seed = 123) {
+  
+  ## set internal function
+  median_pairwise <- function(pt) {
+    
+    d <- sf::st_distance(pt)
+    
+    units::drop_units(
+      units::set_units(
+        median(d[upper.tri(d)]),
+        "km"
+      )
+    )
+    
+  }
   
   ## observed median distance
-  m_dist <- sf::st_distance(point)
-  d_obs <- units::set_units(median(m_dist[upper.tri(m_dist)]),
-                            "km") %>% 
-    units::drop_units()
+  d_obs <- median_pairwise(point)
   
   ## median distance random points
-  if (!missing(seed)) set.seed(seed)
-  
-  d_rand <- replicate(n_rand,
-                      {
-                        p_rand <- suppressMessages(sf::st_sample(x, size = nrow(point)))
-                        p_rand <- p_rand[!sf::st_is_empty(p_rand)] %>% 
-                          sf::st_as_sf() %>% 
-                          sf::st_cast("POINT")
-                        
-                        while(nrow(p_rand) != nrow(point)) {
-                          p_rand <- suppressMessages(sf::st_sample(x, size = nrow(point)))
-                          p_rand <- p_rand[!sf::st_is_empty(p_rand)]
-                        } 
-                        
-                        m_dist_rand <- sf::st_distance(p_rand)
-                        d <- units::set_units(median(m_dist_rand[upper.tri(m_dist_rand)]),
-                                              "km") %>% 
-                          units::drop_units()
-                        
-                        return(d)
-                      },
-                      simplify = TRUE)
+  d_rand <- withr::with_seed(seed, {
+    
+    replicate(n_rand,
+              {
+                p_rand <- suppressMessages(sf::st_sample(x, size = nrow(point)))
+                p_rand <- p_rand[!sf::st_is_empty(p_rand)] %>% 
+                  sf::st_as_sf() %>% 
+                  sf::st_cast("POINT")
+                
+                while(nrow(p_rand) != nrow(point)) {
+                  p_rand <- suppressMessages(sf::st_sample(x, size = nrow(point)))
+                  p_rand <- p_rand[!sf::st_is_empty(p_rand)] %>% 
+                    sf::st_as_sf() %>% 
+                    sf::st_cast("POINT")
+                } 
+                
+                d <- median_pairwise(p_rand)
+                
+                return(d)
+              },
+              simplify = TRUE)
+    
+  })
   
   return(d_obs / mean(d_rand))
 }
