@@ -64,8 +64,8 @@ X2 <- model.matrix(~ ., df_x2)
 list_const_wsd <- with(df_fcl_wsd,
                        list(X2 = X2,
                             K2 = ncol(X2),
-                            H = h01,
-                            Nh = n_distinct(h01),
+                            H = ecor,
+                            Nh = n_distinct(ecor),
                             Ratio = d_ratio,
                             N_site = n_site))
 
@@ -102,7 +102,7 @@ f_inits_h0 <- function() {
             a = rnorm(ncol(X1), sd = s0),
             b = rnorm(ncol(X2), sd = s0),
             sigma = runif(3, min = 0.05, max = 0.1),
-            r = rnorm(n_distinct(h01), sd = s0),
+            r = rnorm(n_distinct(ecor), sd = s0),
             a0 = rnorm(n_distinct(oid),
                        mean = mean(log(fcl_obs),
                                    na.rm = TRUE),
