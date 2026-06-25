@@ -37,7 +37,7 @@ m0 <- nimble::nimbleCode({
   z[2] ~ T(dnorm(0, sd = log(10)), 0, )
   
   ## degree of freedom
-  nu ~ T(dexp(0.1), 2, )
+  nu ~ T(dexp(0.2), 2, )
   
   # likelihood --------------------------------------------------------------
   
