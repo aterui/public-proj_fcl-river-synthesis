@@ -32,17 +32,27 @@ sf_lev01 <- readRDS("data_raw/sf_hybas_lev01.rds") %>%
   st_make_valid() %>% 
   rename(hybas_lev01 = hybas)
 
+sf_lev02 <- readRDS("data_raw/sf_hybas_lev02.rds") %>% 
+  st_make_valid() %>% 
+  rename(hybas_lev02 = hybas)
+
 sf_use_s2(FALSE)
 sf_fcl0 <- readRDS("data_raw/sf_fcl_site.rds") %>%
-  st_join(sf_lev01) %>% 
-  st_join(sf_bior, join = st_nearest_feature) %>% 
+  st_join(sf_lev01, join = st_nearest_feature) %>% 
+  st_join(sf_lev02, join = st_nearest_feature) %>% 
+  st_join(sf_bior, join = st_nearest_feature) %>%
   relocate(starts_with("hybas"),
            bior)
 sf_use_s2(TRUE)
 
 df_fcl0 <- sf_fcl0 %>%
   as_tibble() %>%
-  dplyr::select(-geometry)
+  dplyr::select(-geometry) %>% 
+  mutate(
+    ecor = ifelse(str_detect(sid, "wilkinson"),
+                  "lev01_4010000010",
+                  hybas_lev01)
+  )
 
 # read data ---------------------------------------------------------------
 
@@ -59,8 +69,11 @@ df_weight <- readRDS("data_fmt/data_weight.rds")
 
 ## flag watersheds with no flow data
 df_flag <- df_env_local %>%
-  left_join(df_fcl0 %>% 
-              select(sid, oid)) %>% 
+  left_join(
+    select(df_fcl0,
+           sid,
+           oid)
+  ) %>% 
   group_by(oid) %>% 
   summarize(flag_flow = ifelse(all(is.na(fsd)), "Y", "N"))
 
@@ -90,7 +103,9 @@ df_fcl_local <- df_fcl0 %>%
            oid, 
            huid, 
            hybas_lev01, 
-           bior) %>% 
+           hybas_lev02, 
+           bior,
+           ecor) %>% 
   summarize(fcl = mean(fcl),
             tpc = unique(top_predator_collected),
             .groups = "drop") %>% 
@@ -98,14 +113,18 @@ df_fcl_local <- df_fcl0 %>%
   filter(oid %in% oid_incl) %>% 
   mutate(g = as.numeric(factor(oid)),
          h01 = as.numeric(factor(hybas_lev01)),
+         h02 = as.numeric(factor(hybas_lev02)),
          bior = as.numeric(factor(bior)),
+         ecor = as.numeric(factor(ecor)),
          censoring = ifelse(tpc == "N", 1, 0),
          cut = ifelse(tpc == "N", fcl, Inf)) %>% 
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
   relocate(
     oid, 
     h01,
+    h02,
     bior,
+    ecor,
     g,
     sid,
     fcl,
@@ -123,14 +142,18 @@ df_fcl_wsd <- df_g %>%
     distinct(df_fcl_local, 
              oid, 
              h01,
+             h02,
              bior,
+             ecor,
              g)
   ) %>%
   arrange(g) %>%
   relocate(
     oid, 
     h01,
+    h02,
     bior,
+    ecor,
     g
   )
 
