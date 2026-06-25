@@ -17,13 +17,13 @@ list_fcl <- readRDS("data_fmt/data_fcl_reg.rds")
 df_x <- list_fcl[[1]] %>% 
   rename(local_hfp = hfp) %>% 
   left_join(list_fcl[[2]] %>% 
-              dplyr::select(uid,
+              dplyr::select(oid,
                             r_length,
                             lambda,
                             prec,
                             temp,
                             hfp)) %>% 
-  dplyr::select(h,
+  dplyr::select(h01,
                 g,
                 local_area,
                 local_elev,
@@ -39,7 +39,7 @@ df_x <- list_fcl[[1]] %>%
   dplyr::select(-c(local_area,
                    r_length,
                    lambda)) %>% 
-  relocate(h,
+  relocate(h01,
            g,
            log_area,
            local_elev,
@@ -52,7 +52,7 @@ df_x <- list_fcl[[1]] %>%
 
 ## watershed level correlation
 m_rho <- df_x %>% 
-  select(-c(h, 
+  select(-c(h01, 
             g,
             forest_b1km,
             local_elev)) %>% 
