@@ -64,8 +64,8 @@ g_uhat <- df_u %>%
 
 ## layout ####
 (g_scheme <- g_subsch + g_uhat +
-  plot_layout(width = c(1.5, 1)) +
-  plot_annotation(tag_levels = "A"))
+   plot_layout(width = c(1.5, 1)) +
+   plot_annotation(tag_levels = "A"))
 
 # figure 2 ----------------------------------------------------------------
 
@@ -74,25 +74,28 @@ g_uhat <- df_u %>%
 ## read data for heatmap
 ## take average for food web replicates
 df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>% 
-  group_by(rl, lambda, h, delta0, rsrc, g, mu0, mu_p, mu_c, rho, theta) %>%
-  summarize(fcl = max(fcl)) %>%
+  group_by(rl, lambda, h, delta0, r0, g, mu0, mu_p, mu_c, rho0, theta) %>%
+  summarize(
+    fcl = mean(fcl), 
+    .groups = "drop"
+  ) %>%
   ungroup() %>%
   filter(theta == min(theta)) %>% 
   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
                           sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
                           sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
-         lab_rsrc = ifelse(rsrc > min(rsrc),
-                           sprintf("italic(r[0])==%.2f~(high)", rsrc),
-                           sprintf("italic(r[0])==%.2f~(low)", rsrc)),
-         lab_rho = ifelse(rho > min(rho),
-                          sprintf("rho==%.2f~(disturbance~cascade)", rho),
-                          sprintf("rho==%.2f~(no~disturbance~cascade)", rho)),
+         lab_r0 = ifelse(r0 > min(r0),
+                         sprintf("italic(r[0])==%.2f~(high)", r0),
+                         sprintf("italic(r[0])==%.2f~(low)", r0)),
+         lab_rho = ifelse(rho0 > min(rho0),
+                          sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
+                          sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
          lab_d = "Disturbance~rate",
          lab_r = "Resource~supply",
-         lambda_mid = ifelse(rsrc == max(rsrc) & mu0 == max(mu0),
+         lambda_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
                              mean(range(lambda)),
                              NA),
-         rl_mid = ifelse(rsrc == max(rsrc) & mu0 == max(mu0),
+         rl_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
                          mean(range(rl)),
                          NA)
   )
@@ -104,7 +107,7 @@ heatmap <- function(data) {
                fill = fcl)) +
     geom_raster(alpha = 1) +
     ggh4x::facet_nested(rows = vars(lab_d, lab_mu0),
-                        cols = vars(lab_r, lab_rsrc),
+                        cols = vars(lab_r, lab_r0),
                         labeller = label_parsed,
                         nest_line = element_line(linetype = 2)) +
     MetBrewer::scale_fill_met_c("Hiroshige",
@@ -127,8 +130,8 @@ heatmap <- function(data) {
           legend.text = element_text(size = 12))
 }
 
-(g_heat05 <- heatmap(data = df_heat %>% filter(rho == 0.5)))
-(g_heat0 <- heatmap(data = df_heat %>% filter(rho == 0)))
+(g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 0.5)))
+(g_heat0 <- heatmap(data = df_heat %>% filter(rho0 == 0)))
 
 ## lineart ####
 
