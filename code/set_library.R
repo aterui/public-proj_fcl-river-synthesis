@@ -5,8 +5,6 @@ pacman::p_load(
   ## general use
   tidyverse,
   patchwork,
-  sf,
-  terra,
   igraph,
   magick,
   cowplot,
@@ -17,7 +15,11 @@ pacman::p_load(
   foreach,
   mcbrnet,
   rpom,
-  doParallel,
-  doSNOW,
+  parallel,
+  doFuture,
+  progressr,
+  tictoc,
   ## gis
-  mapview)
+  mapview,
+  sf,
+  terra)
