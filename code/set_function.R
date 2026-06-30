@@ -52,6 +52,17 @@ d_ratio <- function(x, point, n_rand = 100, seed = 123) {
   return(d_obs / mean(d_rand))
 }
 
+
+# helper function, set one parameter fixed --------------------------------
+
+focus <- function(var_name, var_seq, fixed_name, fixed_seq, n) {
+  tibble(
+    !!var_name   := rep(var_seq, times = n),
+    !!fixed_name := mean(range(fixed_seq))
+  ) %>%
+    mutate(focus = var_name)
+}
+
 # split a polygon into sub-polygons with equal area -----------------------
 
 # ## function inspired by the following page:
