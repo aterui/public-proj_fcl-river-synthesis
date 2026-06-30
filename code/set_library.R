@@ -18,4 +18,6 @@ pacman::p_load(
   mcbrnet,
   rpom,
   doParallel,
-  doSNOW)
+  doSNOW,
+  ## gis
+  mapview)
