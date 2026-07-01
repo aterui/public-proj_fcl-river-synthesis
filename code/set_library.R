@@ -11,6 +11,7 @@ pacman::p_load(
   nimble,
   xtable,
   ecotools,
+  ape,
   ## simulation
   foreach,
   mcbrnet,
