@@ -13,28 +13,29 @@ source("code/set_library.R")
 list_reg <- readRDS("data_fmt/data_fcl_reg.rds")
 df_fsd <- readRDS("data_fmt/data_env_fsd.rds") %>% 
   left_join(list_reg[[1]] %>% 
-              select(sid, uid, h))
+              select(sid, oid, h01, local_area))
 
 ## data formatting
 df_m <- left_join(df_fsd,
                   list_reg[[2]] %>% 
-                    select(uid, prec)) %>% 
+                    select(oid, prec, area, lambda)) %>% 
   mutate(scl_fnu = scale(log(fnu)),
          scl_prec = scale(log(prec))) %>% 
-  drop_na(fnu, uid, h)
+  drop_na(fnu, oid, h01)
 
 # analysis ----------------------------------------------------------------
 
-fit0 <- lme4::lmer(log(fnu) ~ log(prec) + (1 | uid) + (1 | h),
-                   df_m)
+fit0 <- lme4::lmer(log(fnu) ~ log(prec) + (1 | oid) + (1 | h01),
+                   df_m,
+                   REML = FALSE)
 
 summary(fit0)
 
-# df_m %>% 
-#   ggplot(aes(x = prec,
-#              y = fnu)) +
+# df_m %>%
+#   ggplot(aes(x = lambda,
+#              y = fmu)) +
 #   geom_point() +
-#   facet_wrap(facets =~ h,
+#   facet_wrap(facets =~ h01,
 #              scales = "free") +
 #   scale_x_continuous(trans = "log10") +
 #   scale_y_continuous(trans = "log10")
