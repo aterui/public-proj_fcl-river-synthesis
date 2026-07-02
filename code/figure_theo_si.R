@@ -7,7 +7,46 @@
 rm(list = ls())
 source("code/set_library.R")
 
-# data --------------------------------------------------------------------
+# patch occupancy ---------------------------------------------------------
+
+df_2sp <- readRDS("data_fmt/sim_fcl_2sp_heat.rds")
+
+## take average for food web replicates
+df_plot_2sp <- df_2sp %>% 
+  mutate(
+    lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
+    lab_r0 = sprintf("italic(r[0])==%.2f", r0),
+    lab_tl = str_to_sentence(tl) %>% 
+      factor(levels = c("Prey", "Predator")),
+    lab_delta0 = sprintf("delta==%.2f", delta0)
+  )
+
+## figure
+g2sp <- df_plot_2sp %>% 
+  ggplot(aes(y = rl,
+             x = lambda,
+             fill = o)) +
+  geom_raster(alpha = 1) +
+  ggh4x::facet_nested(rows = vars(lab_delta0, lab_mu0),
+                      cols = vars(lab_tl, lab_r0),
+                      labeller = label_parsed,
+                      nest_line = element_line(linetype = 3)) +
+  geom_vline(xintercept = c(0.4, 0.8),
+             color = "white",
+             linetype = "dashed") +
+  scale_fill_viridis_c() +
+  labs(x = expression("Branching rate"~lambda[b]),
+       y = expression("River length"~italic(L)),
+       fill = "Occupancy") +
+  theme_classic() +
+  theme(strip.background = element_blank(),
+        axis.text =  element_text(size = 7))
+
+ggsave(g, filename = filename,
+       height = 4.5,
+       width = 6)
+
+# food chain length -------------------------------------------------------
 
 ## read data
 df_fcl_sim <- readRDS("data_fmt/sim_fcl_si.rds")
@@ -30,7 +69,7 @@ df_parms <- df_plot %>%
   distinct(rho, g, theta) %>% 
   arrange(desc(rho))
 
-# figure ------------------------------------------------------------------
+## figure
 
 list_g <- foreach(i = 1:nrow(df_parms)) %do% {
   
