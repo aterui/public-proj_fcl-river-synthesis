@@ -19,53 +19,87 @@ ggplot2::theme_set(default_theme)
 img <- image_read_pdf("tex/figsub_scheme.pdf")
 
 g_subsch <- ggdraw() +
-  draw_image(img)
+  draw_image(img) +
+  labs(tag = "A")
 
-## upstream length function
-## set parameters
-rl <- 1:100
-lambda <- seq(0.2, 1.0, by = 0.2)
-x_values <- expand.grid(rl = rl, lambda = lambda)
+## colonization-extinction
+df_ce <- tibble(rl = seq(100, 1000, length = 100)) %>% 
+  expand_grid(
+    lambda = seq(0.2, 1, by = 0.2),
+    delta0 = 0.1,
+    h = 1,
+    nu = 0.1
+  ) %>% 
+  rowwise() %>% 
+  mutate(
+    diam = diameter(lambda = lambda, size = rl, exact = TRUE),
+    d = pdist(lambda = lambda, size = rl, exact = TRUE),
+    u = u_length(lambda = lambda, size = rl, exact = TRUE),
+    phi = laplace_rayleigh(delta = delta0, mu = d),
+    rho = rpom::laplace_rt(nu = nu, mu = diam, exact = TRUE)
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    pgle = h * rl * phi,
+    extn = 1 + rho * u
+  )
 
-u <- sapply(seq_len(nrow(x_values)), function(i) {
-  with(x_values,
-       u_length(size = rl[i], lambda = lambda[i]))
-})
+g_pgle <- df_ce %>% 
+  ggplot(
+    aes(
+      x = rl,
+      y = pgle,
+      color = lambda,
+      group = lambda
+    )
+  ) +
+  geom_line() +
+  labs(
+    y = "Effective propagule",
+  ) +
+  MetBrewer::scale_color_met_c(
+    "Hiroshige",
+    direction = -1
+  ) +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank()
+  ) +
+  guides(color = "none")
 
-## get data frame for upstream distance
-df_u <- bind_cols(x_values, y = u) %>% 
-  as_tibble() %>% 
-  setNames(c("rl", "lambda", "u"))
+g_extn <- df_ce %>% 
+  ggplot(
+    aes(
+      x = rl,
+      y = extn,
+      color = lambda,
+      group = lambda
+    )
+  ) +
+  geom_line() +
+  labs(
+    x = expression("Total river length"~italic(L)),
+    y = "Disturbance rate",
+    color = expression(lambda[b])
+  ) +
+  MetBrewer::scale_color_met_c(
+    "Hiroshige",
+    direction = -1
+  )
 
-# ug0 <- df_u %>% 
-#   filter(lambda == 0.1) %>% 
-#   ggplot(aes(x = rl,
-#              y = u)) +
-#   geom_line(linewidth = 1.5,
-#             color = grey(0.3)) +
-#   labs(y = "E(Upstream length)",
-#        x = "River length") +
-#   guides(color = "none")
+g_pe <- (g_pgle + labs(tag = "B")) / g_extn
 
-g_uhat <- df_u %>% 
-  ggplot(aes(x = rl,
-             y = u,
-             color = factor(lambda))) +
-  geom_line(linewidth = 0.75) +
-  MetBrewer::scale_color_met_d("Hiroshige",
-                               direction = -1) +
-  labs(y = expression("Upstream river length"~~hat(italic(u))),
-       x = expression("Total river length"~italic(L)),
-       color = expression("Branching rate"~lambda[b])) + 
-  theme(legend.position = "inside",
-        legend.position.inside = c(0.2, 0.7),
-        legend.background = element_blank(),
-        legend.key = element_blank())
+## combine
+layout <- "
+AAB
+AAB
+"
 
 ## layout ####
-(g_scheme <- g_subsch + g_uhat +
-   plot_layout(width = c(1.5, 1)) +
-   plot_annotation(tag_levels = "A"))
+
+(g_scheme <- g_subsch + g_pe +
+   plot_layout(design = layout, 
+               guides = "collect"))
 
 # figure 2 ----------------------------------------------------------------
 
@@ -213,7 +247,7 @@ g_sim_main <- g_heat05 + g_br + g_size +
 
 ggsave(g_scheme,
        filename = "tex/fig_theo_scheme.pdf",
-       width = 9,
+       width = 8,
        height = 4)
 
 ggsave(g_sim_main,
