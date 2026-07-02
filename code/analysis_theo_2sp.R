@@ -16,21 +16,24 @@ v_tp <- c(1, 2)
 
 ## other parameters
 v_rl <- seq(100, 1000, length = 100)
-v_lambda <- seq(0.2, 1, length = 100)
+v_lambda <- seq(0.2, 0.8, length = 100)
 
 df_parms <- bind_rows(
   focus("lambda", v_lambda, "rl", v_rl, n = 1),
   focus("rl", v_rl, "lambda", v_lambda, n = 1)
 ) %>% 
-  expand_grid(h = 1,
-              delta0 = c(0.05, 0.01),
-              r0 = 0.2,
-              rho0 = c(0, 1),
-              nu = 1 / max(v_rl),
-              g0 = 10,
-              mu0 = 5,
-              mu_p = 5,
-              z = 0.5) %>% 
+  expand_grid(
+    h = 1,
+    delta0 = c(0.05, 0.1),
+    r0 = 0.4,
+    rho0 = c(0, 1),
+    nu = 0.1,
+    g0 = 5,
+    mu0 = 2.5,
+    mu_p = 5,
+    z = 0,
+    kernel = "exp"
+  ) %>% 
   mutate(b = (1 - max(r0)) / max(v_rl),
          cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
 
@@ -47,7 +50,7 @@ v <- with(df_parms, {
     size = mean(range(rl))
   )
   
-  rho <- (1 - unique(nu) * (diam/3))
+  rho <- laplace_rt(nu = unique(nu), mu = diam)#(1 - unique(nu) * (diam/3))
   
   1 + rho * u
 })
@@ -80,11 +83,12 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
                                   g = g0 * v_tp^(-z),
                                   mu0 = mu0_scl,
                                   mu_p = mu_p,
+                                  kernel = kernel,
                                   exact = TRUE) %>% 
                           attr("p_hat")
                       })
                     
-                    tibble(fcl = y,
+                    tibble(o = y,
                            tl = c("prey", "predator")) %>% 
                       bind_cols(df_i)
                   }
@@ -92,28 +96,30 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
 ## export
 saveRDS(df_fcl, "data_fmt/sim_fcl_2sp.rds")
 
-# df_fcl %>%
-#   filter(focus == "rl") %>%
-#   ggplot(
-#     aes(
-#       x = rl,
-#       y = fcl,
-#       color = tl,
-#       linetype = factor(rho0)
-#     )
-#   ) +
-#   geom_line() +
-#   facet_wrap(facets = ~delta0) +
-#   scale_y_continuous(lim = c(0, 1))# +
-#   #scale_x_continuous(trans = "log10")
-# 
-# df_fcl %>%
-#   filter(focus == "lambda") %>%
-#   ggplot(aes(x = lambda,
-#              y = fcl,
-#              color = tl,
-#              linetype = factor(rho0)
-#   )) +
-#   geom_line() +
-#   facet_wrap(facets = ~delta0) +
-#   scale_y_continuous(lim = c(0, 1))
+df_fcl %>%
+  filter(focus == "rl") %>%
+  ggplot(
+    aes(
+      x = rl,
+      y = o,
+      color = tl,
+      linetype = factor(rho0)
+    )
+  ) +
+  geom_line() +
+  facet_wrap(facets = ~delta0) +
+  scale_y_continuous(lim = c(0, 1))# +
+  #scale_x_continuous(trans = "log10")
+
+df_fcl %>%
+  filter(focus == "lambda") %>%
+  ggplot(
+    aes(x = lambda,
+        y = o,
+        color = tl,
+        linetype = factor(rho0)
+    )
+  ) +
+  geom_line() +
+  facet_wrap(facets = ~delta0) +
+  scale_y_continuous(lim = c(0, 1))
