@@ -7,12 +7,12 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-# set parameters ----------------------------------------------------------
-
 ## food web: simple predator-prey system
 w <- matrix(0, 2, 2)
 w[1, 2] <- w[2, 1] <- 1
 v_tp <- c(1, 2)
+
+# for line figures --------------------------------------------------------
 
 ## other parameters
 v_rl <- seq(100, 1000, length = 100)
@@ -24,9 +24,9 @@ df_parms <- bind_rows(
 ) %>% 
   expand_grid(
     h = 1,
-    delta0 = c(0.05, 0.1),
+    delta0 = c(0.01, 0.1),
     r0 = 0.4,
-    rho0 = c(0, 1),
+    rho0 = 1,
     nu = 0.1,
     g0 = 5,
     mu0 = 2.5,
@@ -94,32 +94,85 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
                   }
 
 ## export
-saveRDS(df_fcl, "data_fmt/sim_fcl_2sp.rds")
+saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_line.rds")
 
-df_fcl %>%
-  filter(focus == "rl") %>%
-  ggplot(
-    aes(
-      x = rl,
-      y = o,
-      color = tl,
-      linetype = factor(rho0)
-    )
-  ) +
-  geom_line() +
-  facet_wrap(facets = ~delta0) +
-  scale_y_continuous(lim = c(0, 1))# +
-  #scale_x_continuous(trans = "log10")
+# df_fcl %>%
+#   filter(focus == "rl") %>%
+#   ggplot(
+#     aes(
+#       x = rl,
+#       y = o,
+#       color = tl,
+#       linetype = factor(delta0)
+#     )
+#   ) +
+#   geom_line() +
+#   #facet_wrap(facets = ~delta0) +
+#   scale_y_continuous(lim = c(0, 1))# +
+# #scale_x_continuous(trans = "log10")
+# 
+# df_fcl %>%
+#   filter(focus == "lambda") %>%
+#   ggplot(
+#     aes(x = lambda,
+#         y = o,
+#         color = tl,
+#         linetype = factor(delta0)
+#     )
+#   ) +
+#   geom_line() +
+#   #facet_wrap(facets = ~delta0) +
+#   scale_y_continuous(lim = c(0, 1))
 
-df_fcl %>%
-  filter(focus == "lambda") %>%
-  ggplot(
-    aes(x = lambda,
-        y = o,
-        color = tl,
-        linetype = factor(rho0)
-    )
-  ) +
-  geom_line() +
-  facet_wrap(facets = ~delta0) +
-  scale_y_continuous(lim = c(0, 1))
+# for heatmap -------------------------------------------------------------
+
+## other parameters
+df_parms <- expand_grid(
+    rl = seq(100, 1000, length = 20),
+    lambda = seq(0.2, 1, length = 20),
+    h = 1,
+    delta0 = c(0.05, 0.1),
+    r0 = c(0.4, 0.8),
+    rho0 = 1,
+    nu = 0.1,
+    g0 = 5,
+    mu0 = c(2.5, 5),
+    mu_p = 5,
+    z = 0,
+    kernel = "exp"
+  ) %>% 
+  mutate(b = (1 - max(r0)) / max(v_rl),
+         cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
+
+## occupancy prediction
+df_fcl <- foreach(i = seq_len(nrow(df_parms)),
+                  .combine = bind_rows) %do% {
+                    
+                    df_i <- df_parms[i, ]        
+                    
+                    y <- 
+                      with(df_i, {
+                        rpom::fcl(w = w, 
+                                  lambda = lambda, 
+                                  size = rl,
+                                  h = h,
+                                  delta = delta0 * v_tp^(-z),
+                                  r0 = r0,
+                                  b = b,
+                                  rho0 = rho0,
+                                  nu = nu,
+                                  g = g0 * v_tp^(-z),
+                                  mu0 = mu0,
+                                  mu_p = mu_p,
+                                  kernel = kernel,
+                                  exact = TRUE) %>% 
+                          attr("p_hat")
+                      })
+                    
+                    tibble(o = y,
+                           tl = c("prey", "predator")) %>% 
+                      bind_cols(df_i)
+                  }
+
+## export
+saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_heat.rds")
