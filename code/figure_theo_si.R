@@ -15,7 +15,7 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_heat.rds")
 df_plot_2sp <- df_2sp %>% 
   mutate(
     lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
-    lab_r0 = sprintf("italic(r[0])==%.2f", r0),
+    lab_nu = sprintf("nu==%.2f", nu),
     lab_tl = str_to_sentence(tl) %>% 
       factor(levels = c("Prey", "Predator")),
     lab_delta0 = sprintf("delta==%.2f", delta0)
@@ -28,7 +28,7 @@ g2sp <- df_plot_2sp %>%
              fill = o)) +
   geom_raster(alpha = 1) +
   ggh4x::facet_nested(rows = vars(lab_delta0, lab_mu0),
-                      cols = vars(lab_tl, lab_r0),
+                      cols = vars(lab_tl, lab_nu),
                       labeller = label_parsed,
                       nest_line = element_line(linetype = 3)) +
   geom_vline(xintercept = c(0.4, 0.8),
