@@ -13,9 +13,9 @@ source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
 # figure 1 ----------------------------------------------------------------
+## schematic diagram
 
 ## draw scheme
-#img <- image_read("data_fmt/subfig_scheme.png")
 img <- image_read_pdf("tex/figsub_scheme.pdf")
 
 g_subsch <- ggdraw() +
@@ -36,7 +36,7 @@ df_ce <- tibble(rl = seq(100, 1000, length = 100)) %>%
     d = pdist(lambda = lambda, size = rl, exact = TRUE),
     u = u_length(lambda = lambda, size = rl, exact = TRUE),
     phi = laplace_rayleigh(delta = delta0, mu = d),
-    rho = rpom::laplace_rt(nu = nu, mu = diam, exact = TRUE)
+    rho = laplace_rt(nu = nu, mu = diam, exact = TRUE)
   ) %>% 
   ungroup() %>% 
   mutate(
@@ -89,17 +89,83 @@ g_extn <- df_ce %>%
 
 g_pe <- (g_pgle + labs(tag = "B")) / g_extn
 
-## combine
+## layout
 layout <- "
 AAB
 AAB
 "
 
-## layout ####
-
 (g_scheme <- g_subsch + g_pe +
    plot_layout(design = layout, 
                guides = "collect"))
+
+## export
+ggsave(g_scheme,
+       filename = "tex/fig_theo_scheme.pdf",
+       width = 8,
+       height = 4)
+
+# figure 2 ----------------------------------------------------------------
+## occupancy example
+
+df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>% 
+  pivot_longer(
+    cols = c("lambda", "rl"), 
+    values_to = "x",
+    names_to = "xnm"
+  ) %>% 
+  filter(focus == xnm) %>% 
+  mutate(
+    lab_tl = str_to_sentence(tl) %>% 
+      fct_rev(),
+    lab_delta = ifelse(
+      delta0 == min(delta0),
+      sprintf("Long~dispersal~(delta==%.2f)", delta0),
+      sprintf("Short~dispersal~(delta==%.2f)", delta0)
+    ),
+    lab_focus = case_when(
+      focus == "lambda" ~ "Branching~rate~lambda[b]",
+      focus == "rl" ~ "Total~river~length~italic(L)",
+    ) %>% 
+      fct_rev()
+  )
+  
+(
+  g_pp <- df_2sp %>%
+    ggplot(
+      aes(
+        x = x,
+        y = o,
+        linetype = lab_tl
+      )
+    ) +
+    geom_line() +
+    ggh4x::facet_grid2(
+      rows = vars(lab_delta),
+      cols = vars(lab_focus),
+      scales = "free",
+      labeller = label_parsed,
+      switch = "x",
+      axes = "x"
+    ) +
+    labs(y = "Occupancy") +
+    scale_y_continuous(lim = c(0, 1)) +
+    theme(
+      legend.title = element_blank(),
+      axis.title.x = element_blank(),
+      axis.title.y = element_text(size = 12),
+      strip.background = element_blank(),
+      strip.text = element_text(size = 12),
+      strip.placement = "outside",
+      legend.text = element_text(size = 10)
+    )
+)
+
+## export
+ggsave(g_pp,
+       filename = "tex/fig_theo_2sp.pdf",
+       width = 8,
+       height = 6)
 
 # figure 2 ----------------------------------------------------------------
 
@@ -244,11 +310,6 @@ g_sim_main <- g_heat05 + g_br + g_size +
 
 
 # export ------------------------------------------------------------------
-
-ggsave(g_scheme,
-       filename = "tex/fig_theo_scheme.pdf",
-       width = 8,
-       height = 4)
 
 ggsave(g_sim_main,
        filename = "tex/fig_theo_main.pdf",
