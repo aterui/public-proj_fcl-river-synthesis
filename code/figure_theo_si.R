@@ -22,29 +22,32 @@ df_plot_2sp <- df_2sp %>%
   )
 
 ## figure
-g2sp <- df_plot_2sp %>% 
-  ggplot(aes(y = rl,
-             x = lambda,
-             fill = o)) +
-  geom_raster(alpha = 1) +
-  ggh4x::facet_nested(rows = vars(lab_delta0, lab_mu0),
-                      cols = vars(lab_tl, lab_nu),
-                      labeller = label_parsed,
-                      nest_line = element_line(linetype = 3)) +
-  geom_vline(xintercept = c(0.4, 0.8),
-             color = "white",
-             linetype = "dashed") +
-  scale_fill_viridis_c() +
-  labs(x = expression("Branching rate"~lambda[b]),
-       y = expression("River length"~italic(L)),
-       fill = "Occupancy") +
-  theme_classic() +
-  theme(strip.background = element_blank(),
-        axis.text =  element_text(size = 7))
+(
+  g2sp <- df_plot_2sp %>% 
+    ggplot(aes(y = rl,
+               x = lambda,
+               fill = o)) +
+    geom_raster(alpha = 1) +
+    ggh4x::facet_nested(rows = vars(lab_mu0, lab_nu),
+                        cols = vars(lab_tl, lab_delta0),
+                        labeller = label_parsed,
+                        nest_line = element_line(linetype = 3)) +
+    geom_vline(xintercept = c(0.4, 0.8),
+               color = "white",
+               linetype = "dashed") +
+    scale_fill_viridis_c() +
+    labs(x = expression("Branching rate"~lambda[b]),
+         y = expression("River length"~italic(L)),
+         fill = "Occupancy") +
+    theme_classic() +
+    theme(strip.background = element_blank(),
+          axis.text =  element_text(size = 7))
+)
 
-ggsave(g, filename = filename,
-       height = 4.5,
-       width = 6)
+ggsave(g2sp, 
+       filename = "tex/fig_theo_2sp_heat.pdf",
+       height = 6,
+       width = 8)
 
 # food chain length -------------------------------------------------------
 
