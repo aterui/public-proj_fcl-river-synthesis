@@ -82,7 +82,7 @@ The parameter $f_k$ is assumed to be a realization of a Beta distribution:
     f_k \sim \mbox{Beta}\left(1, \frac{(S + P - 3)(S - P)}{2(N_l - S + P)} - 1\right)
 \end{equation}
 
-This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (Lemma \ref{lemma-beta-tilde}).
+This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (lemma \ref{lemma-beta-tilde}).
 
 The probability of choosing prey $q'$, denoted as $Q_{q'}$, is proportional to trophic distance between $q$ and $q'$:
 
@@ -159,182 +159,252 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
 
 \subsection{Spatial Model Derivation}
 
-\textit{Single patch dynamics} --
-Our model builds upon the deterministic approximation of the continuous-time Markov process \cite{ovaskainen_asymptotically_2006}.
-Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at patch $i$ and time $t$.
-The exact dynamics can be described by a stochastic differential equation:
+% Our model builds upon the deterministic approximation of the continuous-time Markov process \cite{ovaskainen_asymptotically_2006}.
+% Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at habitat $i$ and time $t$.
+% The exact dynamics can be described by a stochastic differential equation:
+
+% \begin{equation}
+%     \pi'_{ik}(t + dt) - \pi'_{ik}(t) = c'_{ik} (1 - \pi'_{ik}(t)) - \mu'_{ik} \pi'_{ik}(t),
+%     \label{eq:sde0}
+% \end{equation}
+
+% where $c'_{ik}$ and $\mu'_{ik}$ are time-independent Bernoulli random variables representing colonization and extinction  of species $k$ at habitat $i$ with means:
+
+% \begin{align}
+%     \begin{split}
+%         \overrightarrow{c'_{ik}} &= c_{ik} dt,\\
+%         \overrightarrow{\mu'_{ik}} &= \mu_{ik} dt.
+%     \end{split}
+% \end{align}
+
+% The notation $\overrightarrow{\cdot}$ denotes the average over an ensemble of stochastic realizations of the temporal Markov process at habitat $i$.
+% We rewrite Equation \ref{eq:sde0} using the means:
+
+% \begin{equation}
+%     d \pi'_{ik} = [c_{ik} (1 - \pi'_{ik}(t)) - \mu_{ik} \pi'_{ik}(t)]dt + d\xi_{ik}(t),
+%     \label{eq:sde1}
+% \end{equation}
+
+% where $d\xi_{ik}(t)$ is the stochastic term given by:
+
+% \begin{equation}
+%     d\xi_{ik}(t) = (c'_{ik} - \overrightarrow{c'_{ik}}) (1 - \pi'_{ik}(t)) - (\mu'_{ik} - \overrightarrow{\mu'_{ik}}) \pi'_{ik}(t).
+% \end{equation}
+
+% Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
+
+\textit{Single habitat dynamics} --
+Let $p_{ik}$ ($0 \le p_{ik} \le 1$) be the probability of habitat $i$ being occupied by species $k$.
+We write the temporal dynamics of $p_{ik}$ as
 
 \begin{equation}
-    \pi'_{ik}(t + dt) - \pi'_{ik}(t) = c'_{ik} (1 - \pi'_{ik}(t)) - \mu'_{ik} \pi'_{ik}(t),
-    \label{eq:sde0}
-\end{equation}
-
-where $c'_{ik}$ and $\mu'_{ik}$ are time-independent Bernoulli random variables representing colonization and extinction  of species $k$ at patch $i$ with means:
-
-\begin{align}
-    \begin{split}
-        \overrightarrow{c'_{ik}} &= c_{ik} dt,\\
-        \overrightarrow{\mu'_{ik}} &= \mu_{ik} dt.
-    \end{split}
-\end{align}
-
-The notation $\overrightarrow{\cdot}$ denotes the average over an ensemble of stochastic realizations of the temporal Markov process at patch $i$.
-We rewrite Equation \ref{eq:sde0} using the means:
-
-\begin{equation}
-    d \pi'_{ik} = [c_{ik} (1 - \pi'_{ik}(t)) - \mu_{ik} \pi'_{ik}(t)]dt + d\xi_{ik}(t),
-    \label{eq:sde1}
-\end{equation}
-
-where $d\xi_{ik}(t)$ is the stochastic term given by:
-
-\begin{equation}
-    d\xi_{ik}(t) = (c'_{ik} - \overrightarrow{c'_{ik}}) (1 - \pi'_{ik}(t)) - (\mu'_{ik} - \overrightarrow{\mu'_{ik}}) \pi'_{ik}(t).
-\end{equation}
-
-Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
-A proxy $\pi_{ik}$ ($0 \le \pi_{ik} \le 1$) is used to approximate the probability of patch $i$ being occupied ($\overrightarrow{\pi'_{ik}(t)}$), leading to the deterministic counterpart of Equation \ref{eq:sde1} expressed as:
-
-\begin{equation}
-    \frac{d \pi_{ik}}{d t} = c_{ik} (1 - \pi_{ik}) - \mu_{ik} \pi_{ik}
+    \frac{d p_{ik}}{d t} = c_{ik} (\eta_i - p_{ik}) - \mu_{ik} p_{ik}
     \label{eq:dm0}
 \end{equation}
 
-In what follows, we use Equation \ref{eq:dm0} as the baseline model that describes the temporal evolution of occupancy probability at a single patch.
+where $c_{ik}$ and $\mu_{ik}$ are colonization and extinction rates, respectively.
+The term $\eta_i \in [0, 1]$ is the variable indicating habitat suitability. 
+For producers, $\eta_i = 1$ for all $i$.
+For consumers, $\eta_i$ is the probability that at least one prey species is available at habitat $i$.
+In what follows, we use Equation \ref{eq:dm0} as the baseline model that describes the temporal evolution of occupancy probability at a single habitat.
+
+
+\begin{table}
+    \caption{Key symbols. Subscript $i$ denotes habitats, whereas subscript $k$ denotes species.}
+    \centering
+    \begin{tabularx}{\textwidth}{llX}
+    \hline
+    Symbol & Interpretation & Specification \\
+    \hline
+    $r_{ik}$ & Establishment probability &
+    Function of $r_0$ and $u_i$ (producers), or relative prey availability (consumers) \\
+    $r_0$ & Baseline resource supply &
+    Constant \\
+    $b$ & Downstream resource accumulation rate &
+    Constant \\
+    $u_i$ & Upstream river length &
+    Determined by the spatial network configuration \\
+    $g_k$ & Number of propagules produced per habitat &
+    Species-level trait \\
+    $\delta_k$ & Mean dispersal distance &
+    Species-level trait \\
+    $d_{ij}$ & Distance between two habitats &
+    Determined by the spatial network configuration \\
+    $s_{ik}$ & Expected number of available prey &
+    Sum of occupancy probabilities for potential prey \\
+    $\tilde{s}_{ik}$ & Expected number of predators present &
+    Sum of occupancy probabilities for potential predators \\
+    $A_k$ & Set of potential prey for species $k$ &
+    Determined by the preferential-prey model \\
+    $\tilde{A}_k$ & Set of potential predators for species $k$ &
+    Determined by the preferential-prey model \\
+    \hline
+    \end{tabularx}
+    \label{tab:symbol-notation}
+\end{table}
 
 \textit{Colonization} --
-We express the colonization rate $c_{ik}$ as a function of ecological and ecosystem attributes.
+We express the colonization rate $c_{ik}$ as a function of spatial connectivity and prey availability.
 We define $c_{ik}$ as follows:
 
 \begin{equation}
-    c_{ik} = r_{ik} \frac{\sum_{j}^N c_{0, jk} \pi_{jk}}{N},
-    \label{eq:clnz}
+    c_{ik} 
+    =
+    r_{ik} \sum_{j}^{N-1} g_{k}(1-\delta_k d_{ij}) p_{jk},
+    \label{eq:clnz-local}
 \end{equation}
 
-where $r_{ik}$ is the establishment probability related to resource supply or prey availability (see below), $c_{0, jk}$ is the number of effective propagules produced by patch $j$, and $N$ is the number of patches in the ecosystem ($N = hL$, where $h$ denotes the habitat density per unit river length).
-The term $\sum_{j}^N c_{0, jk} \pi_{jk}$ represents the total number of propagules produced in the ecosystem (i.e., summed across habitat patches) after accounting for dispersal costs and species reproductive traits.
-We scaled $\sum_{j}^N c_{0, jk} \pi_{ik}$ by $N$ based on the assumption that these surviving propagules are evenly allocated across habitat patches.
-For simplicity, we assume that the number of propagules produced is constant over space ($c_{0, jk} = c_{0, k}$).
-With notation $p_k = N^{-1}\sum_{j}^N \pi_{jk}$, this simplifying assumption yields:
-
-\begin{equation}
-     c_{ik} = r_{ik} c_{0, k} p_k
-\end{equation}
+where $r_{ik}$ is the establishment probability, determined by resource supply or prey availability (see below), $g_{k}$ is the number of propagules produced by species $k$, and $N$ is the total number of habitats in the ecosystem ($N = hL$, where $h$ is the habitat density per unit river length).
+The dispersal kernel $(1-\delta_k d_{ij})$ gives the probability that a single propagule produced in source habitat $j$ successfully reaches target habitat $i$, separated by the network distance $d_{ij}$. 
+Smaller $\delta_k$ ($0 \le \delta \le (\max d_{ij})^{-1}$) indicates greater dispersal capability for species $k$.
+Consequently, this formulation explicitly incorporates dispersal limitation arising from the spatial configuration and connectivity of the river network.
 
 The establishment probability $r_{ik}$ represents different quantities for producers and consumers:
 
 \begin{equation}
-    r_{ik} =
-    \begin{cases}
-    \min(r_{0} + b u_i, 1) & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
-    |A_k|^{-1} \sum_{q \in A_k} \pi_{iq} & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$,}
-    \end{cases}
+    r_{ik} 
+    =
+        \begin{cases}
+        r_0 + bu_i
+        &\text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
+        |A_k|^{-1} s_k 
+        & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$,}
+        \end{cases}
     \label{eq:r-eq}
 \end{equation}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the (minimum) resource supply, and the parameter $b$ ($\ge 0$) expresses the downstream accumulation of resource as a coefficient of the upstream river length at patch $i$ ($u_i$).
-Therefore, this formulation enables the model to capture a downstream increase of primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
-$A_k$ is the set of prey available for species $k$ (and thus $\sum_{q  \in A_k} \pi_{iq}$ represents the expected number of prey species at patch $i$), and $|A_k|$ is the number of prey species consumable for species $k$.
-This formulation assumes that resource or proportional prey availability increases species' establishment.
-The resource supply $r_0$ is assumed to be constant over space.
-
-The number of effective propagules produced by a single occupied patch $c_{0, k}$ is the product of the gross number of propagules $g_{k}$ and the survival probability during dispersal $\phi_k$.
-However, we constrain $c_{0, k}$ by the number of habitat patches $N$ since $N$ is the maximum number of patches that effective propagules can colonize:
-
-\begin{equation}
-    c_{0, k} = 
-    \begin{cases}
-        g_k \phi_k & \text{if $g_k \phi_k < N$},\\
-        N & \text{if $g_k \phi_k \ge N$}.
-    \end{cases}
-    \label{eq:c0-prod}
-\end{equation}
-
-The survival probability during dispersal $\phi_k$ is a function of the species-specific dispersal capability $\delta_k$ and the habitat density $h$:
-
-\begin{equation}
-    \phi_k = 1 - e^{-\delta_k h}.
-    \label{eq:phi}
-\end{equation}
-
-Equation \ref{eq:phi} assumes that propagule survival during dispersal increases with increasing dispersal capability and habitat density.
+where $r_0$ is the (minimum) resource supply, and $u_i$ is the upstream river length at habitat $i$.
+The coefficient $b$ expresses the downstream accumulation rate of resource as a coefficient ($0 \le b \le L^{-1}(1 - r_0)$ to satisfy $r_{ik} \le 1$).
+Therefore, the model captures a downstream increase of primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
+The term $s_k$ represents the expected number of prey species available at habitat $i$ (``prey richness''), which is the sum of occupancy probabilities for potential prey $\sum_{q  \in A_k} p_{iq}$ ($q$ is the prey index; see Table \ref{tab:symbol-notation} for notations).
+We divide the prey richness $s_k$ by the number of potential prey species for species $k$, denoted $|A_k|$, to assume that consumer's establishment is proportional to relative prey availability.
 
 \textit{Extinction} -- 
 We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey scarcity, and predation:
 
 \begin{equation}
-    \mu_{ik} = 
-        \underbrace{\mu_{k}^{(0)} (1 + \rho u_i)}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} \pi_{iq} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} \pi_{iq}}_{\text{Predation}},
+    \mu_{ik} 
+    = 
+    \underbrace{\mu_{k}^{(0)} (1 + \rho_i u_i)}_{\text{Disturbance}} + 
+    \underbrace{\mu_{k}^{(1)} \left(1 - \frac{s_{ik}}{|A_k|} \right)}_{\text{Prey scarcity}} + 
+    \underbrace{\mu_{k}^{(2)} \tilde{s}_{ik}}_{\text{Predation}}.
     \label{eq:extn-local}
 \end{equation}
 
-where $\rho$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at patch $i$, respectively, and $\tilde{A}_k$ is the set of predator species for species $k$.
-
+% where $\rho_i$ and $u_i$ denote the disturbance synchrony probability and the upstream river length at habitat $i$, respectively.
+% The variable $\tilde{s}_{ik}$ is the number of predators present at habitat $i$, whose expectation is the sum of occupancy probabilities for potential predators $\sum_{q \in \tilde{A}_k}p_{ik}$ ($q$ is predator index; see Table \ref{tab:symbol-notation} for notations).
 The disturbance term is composed of two sources.
-The first component is the stochastic disturbance occurring at the patch ($\mu_{k}^{(0)}$).
-The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho u_i$).
-In rivers, any disturbance can cascade downstream as water flows downstream.
-For example, the impact of environmental pollutants may be spatially extensive because they are conveyed through downstream water movement \cite{massoudieh_biogeochemical_2010}.
-Similarly, flood and drought disturbances are highly correlated between up- and downstream reaches \cite{swanson_flood_1998, nakamura_disturbance_2000, sarremejane_drought_2021}, likely causing synchronized extirpation of organisms across space \cite{larsen_geography_2021}.
-Our model assumes that such risks of synchronized disturbance linearly scale with the upstream river length $u_i$, allowing us to capture the essential feature of riverine systems.
-The parameter $\rho$ independently controls the strength of up- and downstream synchronization.
-
-In the second term, we assume that the extinction rate decreases with increasing species richness of available prey at patch $i$.
-Specifically, the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of consumable prey.
-The extinction risk caused by the lack of prey is reduced by the factor $|A_k|^{-1} \sum_{q \in A_{k}} \pi_{iq}$, which is the ratio of the expected species richness of available prey relative to the number of consumable prey $|A_k|$.
-Note that $\mu_{k}^{(1)} = 0$ for producers.
-
-In the predation term, the extinction risk caused by predation is assumed to increase linearly with the species richness of predators at patch $i$.
-The parameter $\mu_{k}^{(2)}$ defines how quickly the extinction rate increases with the expected species richness of predators $\sum_{q \in \tilde{A}_k} \pi_{iq}$.
-
-\textit{Mean field approximation} --
-With notations $\gamma_k = r_{k} c_{0, k}$ and $p_k = N^{-1} \sum_i \pi_{ik}$, we describe the temporal dynamics of the proportion of patches occupied as the spatial mean field approximation of Equation \ref{eq:dm0}, dropping subscript $i$:
+The first component is the stochastic disturbance occurring at the habitat ($\mu_{k}^{(0)}$).
+The second component is the influence of downstream disturbance cascade ($\mu_{k}^{(0)} \rho_i u_i$), which is assumed to linearly scale with the synchrony probability $\rho_i$ and the upstream river length $u_i$.
+In rivers, any disturbance can cascade downstream as water flows downstream \cite{massoudieh_biogeochemical_2010, nakamura_disturbance_2000, sarremejane_drought_2021, larsen_geography_2021}.
+Such a cascade, however, is expected to attenuate as it propagates downstream.
+We therefore assume that the probability of synchronized disturbance at habitat $i$ decreases linearly with downstream travel distance $d_{\rho}$:
 
 \begin{equation}
-    \frac{dp_k}{dt} = \gamma_k p_{k} (1 - p_{k}) - \mu_{k} p_{k},
+    \rho_i = 1 - \nu d_{\rho},
+\end{equation}
+
+where $\nu$ defines the length scale of the downstream disturbance cascade.
+Smaller values of $\nu$ correspond to a slower decay in synchrony and, consequently, a broader spatial extent of the cascade.
+
+In the second term, we assume that the extinction rate decreases with increasing prey richness at habitat $i$.
+Specifically, the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of consumable prey.
+The extinction risk caused by the lack of prey is reduced by the factor $|A_k|^{-1} s_{ik}$, which is the ratio of the available prey richness to the number of potential prey species $|A_k|$.
+We set $\mu_{k}^{(1)} = 0$ for producers.
+
+In the predation term, the extinction risk caused by predation is assumed to increase linearly with the expected predator richness $\tilde{s}_{ik}$ at habitat $i$, which is the sum of occupancy probabilities for potential predators $\sum_{q \in \tilde{A}_k} p_{iq}$ ($q$ is the predator index; see Table \ref{tab:symbol-notation} for notations).
+The parameter $\mu_{k}^{(2)}$ defines how quickly the extinction rate increases with the predator richness.
+
+\textit{Mean field approximation} --
+We describe the temporal dynamics of the fraction of habitats occupied (``occupancy'') as the spatial mean field approximation of Equation \ref{eq:dm0}, dropping the habitat subscript $i$ ($j$).
+Writing $\gamma_k$ and $\mu_k$ as the colonization and extinction rates at the metacommunity level, we yield
+
+\begin{equation}
+    \frac{dp_k}{dt} = \gamma_k p_{k} (\eta_k - p_{k}) - \mu_{k} p_{k}.
     \label{eq:master}
 \end{equation}
 
-where
+The term $\eta_k$ now represents the fraction of habitats that are suitable for colonization.
+For producers, $\eta_k = 1$ as all habitats are colonizable.
+For consumers, $\eta_k = 1 - \prod_{q \in A_k} (1-p_q)$, which represents the fraction of habitats with at least one prey species.
+
+The colonization rate is
+
+\begin{align}
+    \begin{split}
+    \gamma_k 
+    &= 
+    r_k g_k N (1-\delta_k \hat{d})\\
+    &=
+    r_k g_k hL (1-\delta_k \hat{d}) \qquad (\because N = hL),
+    \end{split}
+\end{align}
+
+where $\hat{d}$ is the expected distance between habitats.
+The establishment probability $r_k$ is
 
 \begin{equation}
     r_{k} = 
     \begin{cases}
-        \min(r_0 + b \hat{u}, 1) & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
-        |A_k|^{-1} \sum_{q \in A_k} p_{q} & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$,}
+        r_0 + b \hat{u} & \text{if $k \in \text{producer}~(k = 1, 2, \ldots, P)$,}\\
+        |A_k|^{-1} s_k & \text{if $k \in \text{consumer}~(k = P + 1, P + 2, \ldots, S)$},
     \end{cases}
-    \label{eq:clnz}    
+    \label{eq:mean-clnz}    
 \end{equation}
 
-and
+where $\hat{u}$ is the expected upstream river length and $s_k$ is the sum of prey occupancies $\sum_{k \in A_k} p_q$.
+
+The extinction rate is
 
 \begin{equation}
     \mu_{k} = 
-        \mu_{k}^{(0)} (1 + \rho \hat{u}) + 
-        \mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} p_{q} \right) + 
-        \mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}.
-    \label{eq:extn}    
+        \mu_{k}^{(0)} (1 + \hat{\rho} \hat{u}) + 
+        \mu_{k}^{(1)} \left(1 - \frac{s_k}{|A_k|} \right) + 
+        \mu_{k}^{(2)} \tilde{s}_k,
+    \label{eq:mean-extn}    
 \end{equation}
 
-The parameter $c_{0, k}$ is defined in Equations \ref{eq:c0-prod}. 
-In Equations \ref{eq:clnz} and \ref{eq:extn}, we introduced the expected value of upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
+where $\tilde{s}_k$ is the sum of predator occupancies $\sum_{q \in \tilde{A}_k} p_q$.
+
+In Equations \ref{eq:mean-clnz} and \ref{eq:mean-extn}, we introduced the expected value of upstream river length $\hat{u}$, which can be expressed as a function of total river length $L$ and branching rate $\lambda_b$ (see Section \ref{updist} for derivation).
 
 \newpage
 
-\subsection{Expected Upstream River Length} \label{updist}
+\subsection{Scaling of Key Geometric Properties} \label{updist}
 
-In this section, we derive the expected value of upstream river length, $\mathbb{E}(u)$, at a given habitat patch within a branching network characterized by total river length $L$ and branching rate $\lambda_b$.
+In this section, we derive the expected values of upstream river length $u$, river network diameter $\mathcal{L}$, and network distance between habitats $d$ for a population of branching networks characterized by total river length $L$ and branching rate $\lambda_b$.
+As we will show, these geometric properties asymptotically scale with $L$ and $\lambda_b$.
 Our derivation accounts for all topologically distinct river networks; that is, we consider all possible arrangements of links that form a spanning tree, with each network structure properly weighted according to $L$ and $\lambda_b$.
-Consequently, Proposition \ref{proposition-u} applies broadly to any finite-sized river network with random bifurcations. 
+Consequently, the derivation applies broadly to any river network with random bifurcations. 
+Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
+
+\vspace{0.5cm} 
+\begin{table}
+    \centering
+    \caption{Key symbols for the derivation of expected upstream river length}
+    \begin{tabularx}{\textwidth}{ll}
+        \hline
+        Symbol & Description\\
+        \hline
+        $L$ & Total river length.\\
+        $\lambda_b$ & Branching rate defining the length distribution of individual links.\\
+        $u$ & Upstream river length at a given habitat.\\
+        $\mathcal{L}$ & Network diameter, defined as the network distance from the outlet to a given upstream terminal.\\
+        $d$ & Network distance between two habitats.\\
+        $l$ & Length of a given link. Assumed to follow $l \sim \mbox{Exp}(\lambda_b)$.\\
+        $Z$ & Number of links minus one ($Z = B - 1$).\\
+        $M$ & Network-wide magnitude (the number of exterior source links).\\
+        \hline
+    \end{tabularx}
+    \label{tab:key-symbol}
+\end{table}
+\vspace{0.5cm} 
 
 \begin{definition}
 We use the following key terms: \textit{link} and \textit{magnitude}.
 A link refers to a river segment from one confluence to another or to a terminal point of the river (i.e., the upstream origin or the river mouth; Figure \ref{fig:river-fig}).
 Magnitude $m$ refers to the number of exterior source links (links containing upstream terminals; Figure \ref{fig:river-fig}) flowing into a given link within the network; thus, magnitude is defined for each link and $m=1$ at an exterior source link (Figure \ref{fig:river-fig}).
 We denote by $M$ the network-wide magnitude, which corresponds to the magnitude of the outlet link.
-Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -354,123 +424,118 @@ Thus, $Z \sim \mbox{Pois}(\lambda_b L)$.
 The total number of links $B$ equals $Z + 1$, where adding one accounts for the final event of link termination at length $L$.
 We use these assumptions in the following derivation.
 
-\vspace{0.5cm} 
-\begin{table}
-    \centering
-    \caption{Key symbols for the derivation of expected upstream river length}
-    \begin{tabularx}{\textwidth}{ll}
-        \hline
-        Symbol & Description\\
-        \hline
-        $u$ & Upstream river length at a given habitat patch.\\
-        $L$ & Total river length.\\
-        $\lambda_b$ & Branching rate defining the length distribution of individual links.\\
-        $l$ & Individual link length. Assumed to follow $l \sim \mbox{Exp}(\lambda_b)$.\\
-        $Z$ & Number of links minus one ($Z = B - 1$).\\
-        \hline
-    \end{tabularx}
-    \label{tab:key-symbol}
-\end{table}
-\vspace{0.5cm} 
+To calculate expected values, we condition on the number of branching events as $Z = z$ ($z \in 2\mathbb{Z}_{\ge 0}$), whose randomness is accounted for as the final step of the proof.
+We clarify this conditional assumption by denoting $\cdot \mid z$ in the equations.
 
 \end{definition}
 
 \begin{proposition}
 \label{proposition-u}
-The expected upstream river length $\mathbb{E}(u)$ at a given habitat patch within a random branching network, characterized by total river length $L$ and branching rate $\lambda_b$, can be expressed as a function of $L$ and $\lambda_b$.
+Consider a population of random branching networks with total river length $L$ and branching rate $\lambda_b$.
+Let $u_i$ denote the upstream river length at a random location on a network, and define
+
+\begin{equation}
+    \hat{u} \equiv \mathbb{E}(u).
+\end{equation}
+
+Then the expected upstream river length asymptotically exhibits a scaling relationship with total river length and branching rate,
+
+\begin{equation}
+\hat{u} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}, \qquad \lambda_bL \rightarrow \infty.
+\end{equation}
+
 \end{proposition}
 
 \begin{proof}
-The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s[i]})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat patch) and $l'_{s[i]}$ is the distance from the upstream link end to habitat patch $i$ in link $s$.
-To calculate $\mathbb{E}(u')$ and $\mathbb{E}(l'_{s[i]})$, we condition on the number of branching events as $Z = z$ ($z \in 2\mathbb{Z}_{\ge 0}$) and the number of links as $B = b = z + 1$, whose randomness is accounted for as the final step of the proof.
-We clarify this conditional assumption by denoting $\cdot ~|~ z$ in the equations.
+The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s[i]})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat) and $l'_{s[i]}$ is the distance from the upstream link end to habitat $i$ in link $s$.
 
 The summed length of upstream links $u'$ is the product of the mean length of a single link $\hat{l}$ and the number of upstream links $n$.
-With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s ~|~ z \sim \mbox{Beta}(1, z)$ (Lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s~|~z) = (z + 1)^{-1}$.
+With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s \mid z \sim \mbox{Beta}(1, z)$ (lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s\mid z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
     \begin{split}
-    \hat{l}~|~z = \mathbb{E}(l_s~|~z) &= L \cdot \mathbb{E}(F_s~|~z)\\
-                                      &= L(z + 1)^{-1}\\
-                                      &= Lb^{-1}.
+    \hat{l} \equiv \mathbb{E}(l_s\mid z) &= L \cdot \mathbb{E}(F_s\mid z)\\
+                                      &= L(z + 1)^{-1}.
     \end{split}
+    \label{eq:l-hat}
 \end{align}
 
-In the limit of $\lambda_b L \rightarrow \infty$, the expected value of this quantity, $\mathbb{E}(LB^{-1})$, approaches $\lambda_b^{-1}$ since $\mathbb{E}(B) = \lambda_b L + 1$.
+In the limit of $\lambda_b L \rightarrow \infty$, the expected value of this quantity, $\mathbb{E}(LB^{-1})$, approaches $\lambda_b^{-1}$.
 
 The number of upstream links $n$ requires the consideration of its probability distribution since $n$ depends on the location in a network.
-Here, our approach leverages the known properties of Shreve's topologically distinct channel networks (TDCNs) \cite{shreve_infinite_1967}, a classical framework of bifurcating river networks.
-The probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude TDCNs, $\omega(m; M)$, is described as
+Here, our approach leverages the known properties of Shreve's topologically distinct river networks \cite{shreve_infinite_1967}, a classical framework of bifurcating river networks.
+The probability of drawing a link with magnitude $m$ at random from a population of $M$-magnitude topologically distinct river networks, $\omega(m; M)$, is
 
 \begin{equation}
     \omega(m; M) = \frac{1}{2m - 1} \binom{2m}{m} \binom{2(M - m)}{M - m} \binom{2M}{M}^{-1}.
+    \label{eq:m-pmf}
 \end{equation}
 
 The notation $\binom{\cdot}{\cdot}$ and $\binom{\cdot}{\cdot}^{-1}$ denote a binomial coefficient and its inverse.
-The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of TDCNs.
-Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; Lemma \ref{lemma-m}), we obtain
+The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of topologically distinct river networks.
+Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; lemma \ref{lemma-m}), we obtain
 
 \begin{align}
     \begin{split}
-    \mathbb{E}(n~|~z) 
+    \mathbb{E}(n\mid z) 
         &= \sum_{m=1}^{M} (2m - 2) \omega(m; M)\\
         &= 2 \sum_{m=1}^{M} m~\omega(m; M) - 2\\
-        &= 2 \cdot 4^{M-1} \binom{2M-1}{M}^{-1} - 2\\
-        &= 2^{2M-1} \binom{2M-1}{M}^{-1} - 2.
+        &= 4^{M} \binom{2M}{M}^{-1} - 2.
     \end{split}
     \label{eq:n-hat}
 \end{align}
 
-TDCNs satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \cite{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
+Topologically distinct river networks satisfy the relationship $b = 2M - 1$ because two source links must join to form a single downstream link \cite{shreve_infinite_1967, rodriguez-iturbe_fractal_2001}.
 This means that $M$ is a function of $z$: $M = (b + 1) / 2 = (z + 2) / 2$.
-Using this formulation, the expected value $\mathbb{E}(n~|~z)$ can be rewritten as a function of $z$:
+The expected value $\mathbb{E}(n\mid z)$ can be rewritten as a function of $z$:
 
 \begin{equation}
-    \mathbb{E}(n~|~z) = \hat{n}(z) = 
-    2^{z + 1} \binom{z + 1}{\frac{z + 2}{2}}^{-1} - 2.
+    \hat{n}(z)
+    \equiv \mathbb{E}(n\mid z)
+    = 2^{z + 2} \binom{z + 2}{\frac{z + 2}{2}}^{-1} - 2.
 \end{equation}
 
-In sum, we obtain $\mathbb{E}(u' ~|~ z)$ as
+Since link lengths are independent of the network topology, we obtain $\mathbb{E}(u' \mid z)$ as the product of the mean link length and the number of upstream links
 
 \begin{align}
     \begin{split}
-        \mathbb{E}(u' ~|~ z) 
-        &= \hat{l} \cdot \mathbb{E}(n ~|~ z)\\
-        &= \frac{L \hat{n}(z)}{z + 1}.
+        \mathbb{E}(u' \mid z) 
+        &= \hat{l}~\hat{n}(z).
+        % \\
+        % &= \frac{L}{z + 1} \hat{n}(z).
     \end{split}
 \end{align}
 
-Note that we used $\mathbb{E}(u' ~|~ z)  = \hat{l} \cdot \mathbb{E}(n ~|~ z)$ in light of the lack of covariance between $\hat{l}$ and $n$.
-
-The expected distance $\mathbb{E}(l'_{s[i]}~|~z)$ is calculated as follows.
-Assuming that habitat patches are randomly distributed along the river (i.e., Poisson process), the distance to habitat patch $i$ in link $s$, $l'_{s[i]}$, follows a uniform distribution, i.e.,  $\Pr(l'_{s[i]}~|~z, l_s) = \mbox{Unif}(0, l_s)$.
+The expected distance from the upstream link end to a given habitat, $\mathbb{E}(l'_{s[i]}\mid z)$, is calculated as follows.
+Assuming that habitats are randomly distributed along the river (i.e., Poisson process), the distance to habitat $i$ in link $s$, $l'_{s[i]}$, follows a uniform distribution, i.e.,  $\Pr(l'_{s[i]}\mid z, l_s) = \mbox{Unif}(0, l_s)$.
 Thus, the conditional expectation of the distance is
 
 \begin{equation}
-    \mathbb{E}(l'_{s[i]}~|~z, l_s) = \frac{l_s}{2}.
+    \mathbb{E}(l'_{s[i]}\mid z, l_s) = \frac{l_s}{2}.
 \end{equation}
 
-% Now, we derive the expected distance to a habitat in a focal link $\mathbb{E}(l'_{s[i]}~|~z)$.
-Recall that the conditional probability of the distance to a given patch is $\Pr(l'_{s[i]}~|~z)= \int \Pr(l'_{s[i]}~|~z, l_s) \Pr(l_s~|~z)d l_s$, and that the expected length of link $s$ is $\mathbb{E}(l_s~|~z) = L(z+1)^{-1}$.
+% Now, we derive the expected distance to a habitat in a focal link $\mathbb{E}(l'_{s[i]}\mid z)$.
+Recall that the conditional probability of the distance to a given habitat is $\Pr(l'_{s[i]}\mid z)= \int \Pr(l'_{s[i]}\mid z, l_s) \Pr(l_s\mid z)d l_s$, and that the expected length of link $s$ is $\mathbb{E}(l_s\mid z) = L(z+1)^{-1}$.
 Then, we obtain 
 
 \begin{align}
     \begin{split}
-        \mathbb{E}(l'_{s[i]}~|~z)
-        &= \int l'_{s[i]} \Pr(l'_{s[i]}~|~z) dl'_{s[i]}\\
-        &= \iint l'_{s[i]} \Pr(l'_{s[i]}~|~z, l_s) \Pr(l_s~|~z) dl'_{s[i]} dl_s \\
-        &= \int \frac{l_s}{2} \Pr(l_s~|~z) dl_s \\
-        &= \frac{L}{2(z + 1)}.
+        \mathbb{E}(l'_{s[i]}\mid z)
+        &= \int l'_{s[i]} \Pr(l'_{s[i]}\mid z) dl'_{s[i]}\\
+        &= \iint l'_{s[i]} \Pr(l'_{s[i]}\mid z, l_s) \Pr(l_s\mid z) dl'_{s[i]} dl_s \\
+        &= \frac{1}{2} \int l_s \Pr(l_s\mid z) dl_s \\
+        &= \frac{\hat{l}}{2}.
     \end{split}
 \end{align}
 
-Summing $\mathbb{E}(u' ~|~ z)$ and $\mathbb{E}(l'_{s[i]}~|~z)$ for a network with a given value of $z$ yields
+Summing $\mathbb{E}(u' \mid z)$ and $\mathbb{E}(l'_{s[i]}\mid z)$ with a given value of $z$ yields
 
 \begin{align}
     \begin{split}
-        \mathbb{E}(u ~|~ z) 
-        &= \mathbb{E}(u' ~|~ z) + \mathbb{E}(l'_{s[i]}~|~z)\\
+        \mathbb{E}(u \mid z) 
+        &= \mathbb{E}(u' \mid z) + \mathbb{E}(l'_{s[i]}\mid z)\\
+        &= \hat{l} \left[ \hat{n}(z) + \frac{1}{2} \right]\\
         &= \frac{L}{z+1} \left[ \hat{n}(z) + \frac{1}{2} \right].
     \end{split}
     \label{eq:cu}
@@ -478,36 +543,393 @@ Summing $\mathbb{E}(u' ~|~ z)$ and $\mathbb{E}(l'_{s[i]}~|~z)$ for a network wit
 
 Lastly, we account for the probabilistic nature of the random variable $Z$ by summing $z$ out from Equation \ref{eq:cu}.
 In a bifurcating network, $Z$ must be even so that the total number of links $B$ is odd.
-As such, we must consider a truncated Poisson distribution for $Z$ with zero probabilities for odd integers, denoted as $f'_{\text{pois}}(z; L, \lambda_b)$:
-
-\begin{align}
-    \begin{split}
-    f'_{\text{pois}}(z; L, \lambda_b) 
-    &= \frac{f_{\text{pois}}(z; L, \lambda_b)}{\Pr(Z \in 2\mathbb{Z}_{\ge 0})} \cdot \frac{1 + (-1)^{z}}{2}\\
-    &= f_{\text{pois}}(z; L, \lambda_b) \cdot \frac{1 + (-1)^{z}}{1 + e^{-2\lambda_b L}},
-    \end{split}
-    \label{eq:tpois}
-\end{align}
-
-where $f_{\text{pois}}(z; L, \lambda_b)$ is the probability mass function of a Poisson distribution defined as
+As such, we must consider a truncated Poisson distribution for $Z$ with zero probabilities for odd integers, denoted as $f'_{\text{pois}}(z; L, \lambda_b)$ (lemma \ref{lemma-pois}).
+The exact closure is
 
 \begin{equation}
-    f_{\text{pois}}(z; L, \lambda_b) = \Pr(Z = z) = \frac{(\lambda_b L)^{z} e^{-\lambda_b L}}{z!},
+    \mathbb{E}(u) = \sum_{z \in 2\mathbb{Z}_{\ge 0}} \mathbb{E}(u\mid z) f'_{\text{pois}}(z; L, \lambda_b),
 \end{equation}
 
-and $\Pr(Z \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda_b L})$ (Lemma \ref{lemma-pois}). 
-% In Equation \ref{eq:tpois}, $f_{\text{pois}}(z; L, \lambda_b)$ is divided by the probability of $Z$ taking even integers $\Pr(Z = \text{even})$ so that $\sum_{z=0}^{\infty} f'_{\text{pois}}(z; L, \lambda_b) = 1$.
-Following the definition of expected value, we obtain $\mathbb{E}(u)$ as a function of $L > 0$ and $\lambda_b > 0$:
+which cannot be simplified to an elementary form.
+We therefore approximate the central binomial coefficient of $E(u\mid z)$ using Stirling's approximation, yielding
 
 \begin{align}
     \begin{split}
-        \mathbb{E}(u) = \hat{u}(L, \lambda_b) 
-                    &= \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{L}{z + 1} \left(\hat{n}(z) + \frac{1}{2}\right) f'_{\text{pois}}(z; L, \lambda_b) \right]\\
-                    &= L \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + 
-                    \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})}.
+    E(u\mid z) 
+    &= \frac{L}{z + 1}\left[\underbrace{\left\{\frac{\pi(z + 2)}{2}\right\}^{\frac{1}{2}}\left\{1 + \frac{1}{4(z + 2)} + \mathcal{O}(z^{-2})\right\} - 2}_{\text{Stirling's approximation of }\hat{n}(z)} + \frac{1}{2}\right]\\
+    &= L \left(\frac{\pi}{2}\right)^{\frac{1}{2}} \left(z^{-\frac{1}{2}} + \frac{1}{4}z^{-\frac{3}{2}}\right)-\frac{3L}{2}(z^{-1} - z^{-2}) + \mathcal{O}(z^{-\frac{5}{2}}) \qquad (\because \text{Taylor expansion}).
     \end{split}
 \end{align}
+
+For $\lambda_b L \gg 1$, the conditional random variable $Z\mid(Z \in 2\mathbb{Z}_{\ge0}) \sim \text{Pois}(\lambda_b L)$ has a mean and a variance of $\lambda_b L$ as the truncation becomes negligible for large $\lambda_b L$.
+Using the delta method, we obtain
+
+\begin{equation}
+    \hat{u} \equiv \mathbb{E}(u) = c \left({\frac{L}{\lambda_b}}\right)^{\frac{1}{2}} - \frac{3}{2 \lambda_b} + \mathcal{O}((\lambda_b L)^{-\frac{1}{2}}),
+\end{equation}
+
+where $c = \sqrt{\pi/2}$.
+It follows that
+
+\begin{equation}
+    \hat{u}
+    \propto
+    L^{\frac{1}{2}}\lambda_b^{-\frac{1}{2}},
+    \qquad
+    \lambda_b L \to \infty.
+\end{equation}
+
 \end{proof}
+
+\begin{proposition}
+\label{proposition-diameter}
+Consider a population of random branching networks with total river length $L$ and branching rate $\lambda_b$.
+Let $\mathcal{L}$ denote the network diameter, i.e., the network length from the outlet to a given upstream termination point, and define
+
+\begin{equation}
+    \hat{\mathcal{L}} \equiv \mathbb{E}(\mathcal{L}).
+\end{equation}
+
+Then the expected diameter asymptotically exhibits a scaling relationship with total river length and branching rate,
+
+\begin{equation}
+    \hat{\mathcal{L}}
+    \propto
+    L^{\frac{1}{2}}\lambda_b^{-\frac{1}{2}},
+    \qquad
+    \lambda_b L \to \infty.
+\end{equation}
+
+\end{proposition}
+
+\begin{proof}
+Let $\mathcal{L}_{v}'$ denote the topological length from the outlet link $o$ to exterior source link $v$, defined as the number of links on the unique path connecting them, including both the outlet and source links.
+The topological length can be written as
+
+\begin{equation}
+\mathcal{L}_{v}'
+=
+\sum_{a \in \mathcal{E}}
+\mathbf{1}\{a \in \mathrm{path}(o,v)\},
+\end{equation}
+
+where $\mathcal{E}$ denotes the set of all links in the network, and $\mathbf{1}\{\cdot\}$ is the indicator function.
+Summing over all exterior source links ($=M$) yields
+
+\begin{align}
+    \begin{split}
+    \sum_{v = 1}^M \mathcal{L}_{v}'
+    &= \sum_{v = 1}^M \sum_{a \in \mathcal{E}} \mathbf{1}\{a \in \mathrm{path}(o,v)\} \\
+    &= \sum_{a \in \mathcal{E}} \sum_{v = 1}^M \mathbf{1}\{a \in \mathrm{path}(o,v)\},
+    \end{split}
+\end{align}
+
+where we exchanged the order of summation.
+For each link $a$, the inner sum counts the number of exterior source links whose unique path to the outlet traverses $a$. This quantity is precisely the magnitude of link $a$, denoted by $m_a$. Therefore,
+
+\begin{equation}
+\sum_{v=1}^{M} \mathcal{L}_{v}' = \sum_{a\in\mathcal{E}} m_a.
+\end{equation}
+
+Since the total contribution can be grouped by link magnitude, the right-hand side can be rewritten as
+
+\begin{equation}
+\sum_{a\in\mathcal{E}} m_a = \sum_{m=1}^{M} m B(m),
+\end{equation}
+
+where $B(m)$ denotes the number of links of magnitude $m$.
+Consequently, the expected topological network diameter is
+
+\begin{align}
+\begin{split}
+    \mathbb{E}(\mathcal{L}' \mid z) 
+    &= \frac{1}{M} \sum_{m=1}^{M} m~\mathbb{E}(B(m))\\
+    &= \frac{2M - 1}{M} \sum_{m=1}^{M} m~\omega(m; M)\\
+    &= \frac{2M - 1}{M} \mathbb{E}(m)\\
+    &= \frac{2M - 1}{2M} \cdot 4^{M} \binom{2M}{M}^{-1} \qquad (\because \text{lemma \ref{lemma-m}})\\
+    &= \frac{z+1}{z+2} \cdot 2^{z+2} {\binom{z+2}{\frac{z + 2}{2}}}^{-1},
+\end{split}
+\end{align}
+
+where $\omega(m;M)$ is the probability mass function for link magnitude $m$ (Equation \ref{eq:m-pmf}) and we used the topological relationship $M = 2^{-1}(z + 2)$.
+
+The quantity $\mathbb{E}(\mathcal{L}'\mid z)$ has units of links.
+To convert this quantity into a network distance, link lengths must be taken into account. 
+Assuming that link lengths are independent of network topology, the expected network diameter is given by the product of the mean link length $\hat{l} = L(z+1)^{-1}$ (Equation \ref{eq:l-hat}) and the expected topological diameter.
+As such
+
+\begin{align}
+\begin{split} 
+    \mathbb{E}(\mathcal{L} \mid z) 
+    &= \hat{l}~\mathbb{E}(\mathcal{L}' \mid z)\\
+    &= \frac{L}{z+2} \cdot 2^{z + 2} {\binom{z+2}{\frac{z + 2}{2}}}^{-1}\\
+    &= \frac{L}{z+2} \left[\frac{\pi(z + 2)}{2}\right]^{\frac{1}{2}} \left[1 + \frac{1}{4 (z + 2)}  + \mathcal{O}(z^{-2})\right] \qquad (\because \text{Stirling's approximation})\\
+    &= L \left(\frac{\pi}{2} \right)^{\frac{1}{2}} \left[z^{-\frac{1}{2}} - \frac{3}{4} z^{-\frac{3}{2}} + \mathcal{O}(z^{-\frac{5}{2}}) \right] \qquad (\because \text{Taylor expansion})
+\end{split} 
+\end{align}
+
+Recall that $z$ is a realization of the random variable $Z$, which obeys a truncated Poisson distribution as $Z\mid(Z \in 2\mathbb{Z}_{\ge0}) \sim \text{Pois}(\lambda_b L)$.
+For $\lambda_b L \gg 1$, applying the delta method obtains
+
+\begin{equation}
+\hat{\mathcal{L}} 
+\equiv 
+\mathbb{E}(\mathcal{L}) 
+= 
+c \left(\frac{L}{\lambda_b} \right)^{\frac{1}{2}} + \mathcal{O}\bigl((\lambda_b L)^{-\frac{1}{2}}\bigr),
+\end{equation}
+
+where $c = \sqrt{\pi / 2}$.
+It follows that
+
+\begin{equation}
+    \hat{\mathcal{L}}
+    \propto
+    L^{\frac{1}{2}}\lambda_b^{-\frac{1}{2}},
+    \qquad
+    \lambda_b L \to \infty.
+\end{equation}
+    
+\end{proof}
+
+\begin{proposition}
+\label{proposition-mu-d}
+Consider a population of random branching networks with total river length $L$ and branching rate $\lambda_b$.
+Let $d$ denote the network distance between two random points $i$ and $j$ selected uniformly at random, and define
+
+\begin{equation}
+    \hat{d} \equiv \mathbb{E}\bigl(d(i, j)\bigr).
+\end{equation}
+
+Then the expected pairwise distance asymptotically exhibits a scaling relationship with total river length and branching rate,
+
+\begin{equation}
+    \hat{d}
+    \propto
+    L^{\frac{1}{2}}\lambda_b^{-\frac{1}{2}},
+    \qquad
+    \lambda_b L \to \infty.
+\end{equation}
+
+\end{proposition}
+
+\begin{proof}
+We decompose the distance between two habitats (random points), denoted by $d(i,j)$ along a network, into two cases: (i) both habitats lie on the same link (``within''), and (ii) the habitats are located on different links (``between'').
+We denote the corresponding distances by $d_w(i,j)$ and $d_b(i,j)$, respectively.
+The expected distance between two habitats given $z$ (the number of links minus one) can then be written as
+
+\begin{equation}
+\mathbb{E}\bigl(d(i,j)\mid z\bigr)
+=
+\mathbb{E}_{\{l\}\mid z}
+\left[
+\Pr \bigl(w \mid \{l\} \bigr)\, d_w(i,j \mid \{l\})
++
+\bigl(1 - \Pr(w \mid \{l\})\bigr)\, d_b(i,j \mid z)
+\right],
+\label{eq:mu-d-z}
+\end{equation}
+
+where $\Pr \bigl(w \mid \{l\} \bigr)$ denotes the probability that two habitats are located on the same link, and $\cdot \mid \{l\}$ indicates the conditioning on a realization of link lengths $\{l\} = \{l_1, l_2, ..., l_{z+1}\}$.
+
+The within-link distance, $d_w(i,j \mid \{l\})$, can be derived from the expected distance between two points chosen uniformly at random on a line segment. 
+For a link of length $l_s$, this expected distance is $3^{-1}\,l_s$.
+In our framework, however, link lengths are random and distributed as exponential variables subject to the constraint $\sum_s l_s = L$. 
+Conditioning on the event that both points fall in the same but any link, the probability that two random points lies on link $s$ is
+
+\begin{align}
+    \begin{split}
+    \Pr\bigl(i \in s,\, j\in s\mid\{l\} \bigr)
+    &= 
+    \left(
+        \frac{l_s}{L}
+    \right)^{2} 
+    \left[
+        \sum_{k=1}^{z+1} \left( \frac{l_k}{L}\right)^2
+    \right]^{-1}\\
+    &= 
+    F_s^{2} 
+    \left(
+        \sum_{k=1}^{z+1} F_k^2
+    \right)^{-1}\\
+    &= 
+    F_s^{2} 
+    \bigl[
+        \Pr\bigl(w \mid \{l\}\bigr)
+    \bigr]^{-1},
+    \end{split}
+\end{align}
+
+where $F_s = l_s L^{-1}$ and $\Pr(w \mid \{l\}) = \sum_{k=1}^{z+1} F_k^2$.
+Thus, this conditional probability induces a length-biased weighting proportional to $l_s^2$ since two independent uniform points are more likely to fall on longer links.
+It follows that
+
+\begin{align}
+    \begin{split}
+    \Pr \bigl(w \mid \{l\}\bigr) d_w(i,j \mid \{l\})
+    &= 
+    \Pr \bigl(w \mid \{l\} \bigr) \sum_{s=1}^{z+1} \frac{l_s}{3}\,
+    \Pr \bigl(i \in s, j \in s \mid \{l\}\bigr) \\
+    &=
+    \Pr \bigl(w \mid \{l\} \bigr) \sum_{s=1}^{z+1} \frac{l_s}{3}\, F_s^2 
+    \bigl[\Pr \bigl(w \mid \{l\} \bigr) \bigr]^{-1} \\
+    &= 
+    \frac{L}{3}\,
+    \sum_{s=1}^{z+1} F_s^3.
+    \end{split}
+\end{align}
+
+Taking expectation over the conditional distribution of link lengths yields
+
+\begin{align}
+    \begin{split}
+    \mathbb{E}\bigl(d_w(i,j \mid z) \bigr) 
+    &\equiv 
+    \mathbb{E}_{\{l\}|z} \bigl[\Pr \bigl(w \mid \{l\} \bigr)\, d_w(i,j \mid \{l\})\bigr] \\
+    &= 
+    \frac{L}{3} \sum_{s = 1}^{z+1}\mathbb{E}\bigl(F_s^3\bigr)\\
+    &=\frac{L}{3} \cdot \frac{6(z+1)}{(z+1)(z+2)(z+3)}\\
+    &= \frac{2L}{(z+2)(z+3)}\\
+    &= L \left[ 2z^{-2} + \mathcal{O}(z^{-3}) \right],
+    \end{split}
+\end{align}
+
+where we used the known third moment of a Dirichlet distribution for $\mathbb{E}\bigl(F_s^3\bigr)$ as the set of fractional link lengths $(F_1, F_2,...,F_{z+1})$ follows a Dirichlet distribution (by lemma \ref{lemma-f}).
+
+The between-link distance, $d_b(i,j \mid z)$, can be derived as the product of the topological distance between links and the mean link length.
+We denote $d_b(i,j \mid z)$ without conditioning on a realization of link lengths $\{l\}$ because $d_b(i,j \mid z)$ is deterministic once $z$ is given.
+
+Let $d'_b(s,t \mid z)$ be the topological distance between links, defined as the number of intervening links that must be traversed to go from link $s$ to link $t$ (i.e., the count of links excluding $s$, but including all subsequent links up to $t$).
+The topological distance given $z$ ($z \ge 2$) can be written as
+
+\begin{equation}
+d'_b(s, t \mid z)
+=
+\sum_{a \in \mathcal{E}}
+\mathbf{1}\{a \in \mathrm{path}(s,t)\},
+\end{equation}
+
+where $\mathcal{E}$ denotes the set of all links in the network, and $\mathbf{1}\{\cdot\}$ is the indicator function.
+We conditioned on $z \ge 2$ (the number of links $b \ge 3$) so that we can choose a link pair to define the topological distance.
+
+Summing over all pairs yields
+
+\begin{align}
+    \begin{split}
+    \sum_{s < t} d'_b(s, t \mid z)
+    &= \sum_{s < t} \sum_{a \in \mathcal{E}} \mathbf{1}\{a \in \mathrm{path}(s,t)\} \\
+    &= \sum_{a \in \mathcal{E}} \sum_{s < t} \mathbf{1}\{a \in \mathrm{path}(s,t)\},
+    \end{split}
+\end{align}
+
+where we exchanged the order of summation.
+For each link $a$, the inner sum counts the number of link pairs whose unique path traverses link $a$, equivalently the number of link pairs separated by the removal of the link $a$.
+
+In a bifurcating branching network of magnitude $M$, the total number of links is $2M - 1$.
+For any link $a$, its removal partition the network into subnetworks of magnitudes $m$ and $M - m$.
+The number of link pairs whose unique path traverses $a$ is therefore equal to the product of the number of links in each resulting component, i.e., $(2m - 1)(2M - 2m)$.
+It follows that
+
+\begin{align}
+    \begin{split}
+    \sum_{s < t} d'_b(s, t \mid z)
+    &= \sum_{a \in \mathcal{E}} \sum_{s < t} \mathbf{1}\{a \in \mathrm{path}(s,t)\}\\
+    &= \sum_{m = 1}^M B(m) (2m - 1) (2M - 2m),
+    \end{split}
+\end{align}
+
+where $m$ denotes the magnitude of a subnetwork induced by a link within a $M$-magnitude branching network, and $B(m)$ is the number of links whose magnitude is $m$.
+Assuming that link pairs are uniformly sampled from all possible combinations $C_b = (2M-1)(2M-2)/2$, taking expectation over the distribution of topologically distinct river networks given $M$ obtains
+
+\begin{align}
+    \begin{split}
+    \mathbb{E}\bigl(d'_b(s, t \mid z) \bigr) 
+    &= \frac{\mathbb{E} \bigl(\sum_{m=1}^M B(m)(2m - 1) (2M - 2m)\bigr)}{C_b}\\
+    &= \frac{\sum_{m=1}^M (2M-1)w(m;M)(2m - 1) (2M - 2m)}{C_b}\\
+    &= \frac{(4M + 2) \mathbb{E}(m) - 4 \mathbb{E}(m^2) - 2M}{M-1}\\
+    &= \frac{M}{M-1}\left[4^M {\binom{2M}{M}}^{-1} - 2\right] \qquad (\because \text{lemmas \ref{lemma-m} and \ref{lemma-m2}})\\
+    &= \frac{z+2}{z}\left[2^{z+2} \binom{z+2}{\frac{z+2}{2}}^{-1} - 2\right],
+    \end{split}
+\end{align}
+
+where we used the topological relationship $M = 2^{-1}(z + 2)$ to condition on $z$.
+
+The topological distance $\mathbb{E}\bigl(d'_b(s, t \mid z)\bigr)$ has units of links.
+Converting this quantity into the network distance between two random points $i$ and $j$, $d_b(i, j \mid z)$, requires accounting for the lengths of individual links.
+Under the assumption that link lengths are independent of the network topology, the expected distance decomposes as the product of the mean link length $\hat{l} = L(z+1)^{-1}$ (Equation \ref{eq:l-hat}) and the expected topological distance.
+We yield
+
+\begin{align}
+    \begin{split}
+    \mathbb{E}\bigl(d_b(i, j \mid z)\bigr) 
+    & =
+    \mathbb{E}_{\{l\} \mid z}\bigl(d_b(i, j \mid z)\bigr)\\
+    &= 
+    \hat{l}~\mathbb{E}\bigl(d'_b(s, t \mid z) \bigr)\\
+    &= 
+    \frac{L(z+2)}{z (z + 1)}\left[2^{z+2}  \binom{z+2}{\frac{z+2}{2}}^{-1} - 2\right].
+    \end{split}
+\end{align}
+
+Using Stirling's approximation of the central binomial coefficient, we yield
+
+\begin{align}
+    \begin{split}
+    \mathbb{E}\bigl(d_b(i, j \mid z) \bigr) 
+    &= \frac{L(z+2)}{z(z + 1)}\left[\left( \frac{\pi(z+2)}{2} \right)^{\frac{1}{2}} \left(1 + \frac{1}{4(z+2)} + \mathcal{O}(z^{-2})\right) - 2\right]\\
+    &= L\left[cz^{-\frac{1}{2}} - 2z^{-1} + \mathcal{O}(z^{-\frac{3}{2}})\right] \qquad (\because \text{Taylor expansion}).
+    \end{split}
+\end{align}
+
+where $c = \sqrt{\pi/2}$.
+
+Plugging $\mathbb{E}\bigl(d_w(i,j \mid z)\bigr)$ and $\mathbb{E}\bigl(d_b(i,j \mid z)\bigr)$ into Equation \ref{eq:mu-d-z} yields
+
+\begin{align}
+\begin{split}
+    \mathbb{E}\bigl(d(i,j \mid z)\bigr) 
+    &= 
+    \mathbb{E}\bigl(d_w(i,j \mid z) \bigr) + \bigl[1 - \mathbb{E}_{\{l\} \mid z}\bigl(\Pr(w \mid \{l\})\bigr) \bigr] \mathbb{E}\bigl(d_b(i,j \mid z) \bigr)\\
+    &= 
+    L\left[2z^{-2} + \mathcal{O}(z^{-3})\right] +
+    \frac{z}{z+2} L\left[cz^{-\frac{1}{2}} - 2z^{-1} + \mathcal{O}(z^{-\frac{3}{2}})\right]\\
+    &= 
+    L \left[cz^{-\frac{1}{2}} - 2z^{-1}  + \mathcal{O}(z^{-\frac{3}{2}}) \right],
+\end{split}
+\end{align}
+
+where 
+
+\begin{equation}
+    \mathbb{E}_{\{l\} \mid z}\bigl(\Pr(w \mid \{l\})\bigr) 
+    = 
+    \sum_{s = 1}^{z+1} \mathbb{E}\bigl(F_s^2\bigr) 
+    = 
+    \frac{2}{z + 2},
+\end{equation}
+
+given the known second moment of a Dirichlet distribution (by lemma \ref{lemma-f}).
+
+Recall that $z$ is a realization of the random variable $Z$, which obeys a truncated Poisson distribution as $Z\mid(Z \in 2\mathbb{Z}_{\ge0}) \sim \text{Pois}(\lambda_b L)$.
+For $\lambda_bL \gg 1$, applying the delta method obtains
+
+\begin{equation}
+\hat{d} \equiv \mathbb{E}(d(i, j)) = c\left(\frac{L}{\lambda_b}\right)^{\frac{1}{2}} - \frac{2}{\lambda_b} +  \mathcal{O}\bigl((\lambda_b L)^{-\frac{1}{2}}\bigr),
+\end{equation}
+
+It follows that
+
+\begin{equation}
+    \hat{d}
+    \propto
+    L^{\frac{1}{2}}\lambda_b^{-\frac{1}{2}},
+    \qquad
+    \lambda_b L \to \infty.
+\end{equation}
+
+\end{proof}
+
+\newpage
 
 \begin{lemma}
 \label{lemma-f}
@@ -520,12 +942,12 @@ An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of Gamma d
 Thus, $l_1, l_2, \ldots, l_{z+1}$  follow $\mbox{Ga}(1, \lambda_b)$.
 Let us denote $X_1 = l_s$, $X_2 = \sum_{s'} l_{s'}$ ($s' \in \{1,2, \ldots, z+1\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
 Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
-The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x~|~Y = L)$, is
+The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x\mid Y = L)$, is
 
 \begin{align}
     \begin{split}
-        f_{X_1}(X_1 = x~|~Y = L)
-        &= \frac{f_{X_1}(X_1 = x~|~Y = L) f_{X_2}(X_2 = L - x~|~Y = L)}{f_Y(Y = L)}\\
+        f_{X_1}(X_1 = x\mid Y = L)
+        &= \frac{f_{X_1}(X_1 = x\mid Y = L) f_{X_2}(X_2 = L - x\mid Y = L)}{f_Y(Y = L)}\\
         &= 
         \left[
         \frac{\lambda_b^{1 + z}}{\Gamma(1) \Gamma(z)} (L - x)^{z - 1} e^{-\lambda_b L}
@@ -538,13 +960,57 @@ The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$
     \label{eq:beta}
 \end{align}
 
-Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x~|~Y = 1)$ is the probability density function of $\mbox{Beta}(1, z)$.
-Thus, we obtain
+Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x\mid Y = 1)$ is the probability density function of $\mbox{Beta}(1, z)$.
+We obtain
 
 \begin{equation}
     F_s=\frac{l_s}{L} \sim \mbox{Beta} (1, z).
 \end{equation}
 
+\end{proof}
+
+\begin{lemma}
+\label{lemma-pois}
+Let $X ~ \text{Poisson}(\lambda)$.
+Define the conditional random variable $Y = X \in 2\mathbb{Z}_{\ge 0}~(X~\text{is even})$.
+Then $Y$ takes values in $\{0, 2, 4,...\}$ with probability mass function
+
+\begin{equation}
+    f'_{\text{pois}}(Y;\lambda) = \Pr(Y = 2n) = \frac{\lambda^{2n}}{(2n)!\cosh(\lambda)}, n \in \mathbb{Z}_{\ge 0}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Let \(X \sim \mathrm{Poisson}(\lambda)\), so that
+\begin{equation}
+    \Pr(X=n) = \frac{\lambda^n e^{-\lambda}}{n!}.
+\end{equation}
+
+Define the conditional random variable \(Y = X \mid (X \in 2\mathbb{Z}_{\ge 0})\), i.e., \(Y\) is \(X\) conditioned on being even.
+
+Then for \(n \in \mathbb{Z}_{\ge 0}\),
+\begin{equation}
+    \Pr(Y = 2n)
+    = \frac{\Pr(X=2n)}{\Pr(X \in 2\mathbb{Z}_{\ge 0})}.
+\end{equation}
+
+Using the Poisson pmf,
+\begin{equation}
+    \Pr(X=2n) = \frac{\lambda^{2n} e^{-\lambda}}{(2n)!}.
+\end{equation}
+
+Next, the probability of an even outcome is
+\begin{equation}
+    \Pr(X \in 2\mathbb{Z}_{\ge 0})
+    = \sum_{n=0}^{\infty} \frac{\lambda^{2n} e^{-\lambda}}{(2n)!}
+    = e^{-\lambda} \cosh(\lambda).
+\end{equation}
+
+Therefore,
+\begin{equation}
+    \Pr(Y=2n)
+    = \frac{\lambda^{2n}}{(2n)! \cosh(\lambda)}.
+\end{equation}
 \end{proof}
 
 \begin{lemma}
@@ -558,7 +1024,7 @@ Let $\omega(m; M)$ be a probability mass function defined as
 Then, the expected value of $m$ is given by
 
 \begin{equation}
-    \mathbb{E}(m; M) = \sum_{m = 1}^M m~\omega(m; M) = 4^{M-1} \binom{2M-1}{M}^{-1}.
+    \mathbb{E}(m; M) = \sum_{m = 1}^M m~\omega(m; M) = \frac{4^{M}}{2}\binom{2M}{M}^{-1}.
 \end{equation}
 \end{lemma}
 
@@ -592,33 +1058,58 @@ Using the fact that $\sum_{m = 1}^{M} \omega(m; M) = 1$, the equation above lead
 Considering $\mathbb{E}(m; M = 1) = 1$, we can recursively calculate the expected value:
 
 \begin{equation}
-    \mathbb{E}(m; M) = \frac{2M}{2M - 1} \cdot \frac{2M - 2}{2M - 3} \cdot \ldots \cdot \frac{4}{3} \cdot \mathbb{E}(m; 1) = 4^{M - 1} \frac{M!(M - 1)!}{(2M - 1)!}.
+    \mathbb{E}(m; M) = \frac{2M}{2M - 1} \cdot \frac{2M - 2}{2M - 3} \cdot \ldots \cdot \frac{4}{3} \cdot \mathbb{E}(m; 1) = 4^{M - 1} \frac{M!(M - 1)!}{(2M - 1)!} = \frac{4^{M}}{2}\frac{M!M!}{(2M)!}.
 \end{equation}
 
-Thus, we conclude
+We obtain
 
 \begin{equation}
-    \mathbb{E}(m; M) = 4^{M - 1} \binom{2M - 1}{M}^{-1}.
+    \mathbb{E}(m; M) = \frac{4^{M}}{2}\binom{2M}{M}^{-1}.
 \end{equation}
 \end{proof}
 
-Yutaka Osada and Ryosuke Iritani contributed this Lemma.
+Yutaka Osada and Ryosuke Iritani contributed lemma \ref{lemma-m}.
 
 \begin{lemma}
-\label{lemma-pois}
-Let $f_{\text{pois}}(y; \lambda) = \Pr(Y = y)$ be the probability mass function of a Poisson distribution.
-Then, $\Pr(Y \in 2\mathbb{Z}_{\ge 0}) = 2^{-1}(1 + e^{- 2 \lambda})$.
+\label{lemma-m2}
+Let $\omega(m; M)$ be a probability mass function defined as
+
+\begin{equation}
+    \omega(m; M) = \frac{1}{2m - 1} \binom{2m}{m} \binom{2(M - m)}{M - m} \binom{2M}{M}^{-1}.
+\end{equation}
+
+Then, the expected value of $m^2$ is given by
+
+\begin{equation}
+    \mathbb{E}(m^2; M) = \frac{4^M (M + 1)}{4} {\binom{2M}{M}}^{-1}.
+\end{equation}
 \end{lemma}
+
 \begin{proof}
+
 \begin{align}
     \begin{split}
-        \Pr(Y \in 2\mathbb{Z}_{\ge 0}) 
-        &= \sum_{y = 0}^{\infty} \left[ \frac{\lambda^{y} e^{-\lambda}}{y!} \cdot \frac{1 + (-1)^{y}}{2} \right]\\
-        &= \frac{e^{-\lambda}}{2} \left[ \sum_{y = 0}^{\infty} \frac{\lambda^{y}}{y!} + \sum_{y = 0}^{\infty} \frac{(-\lambda)^{y}}{y!}\right]\\
-        &= \frac{e^{-\lambda}}{2} (e^{\lambda} + e^{-\lambda}) ~ (\because \text{Maclaurin series expansion of exponential function})\\
-        &= \frac{1 + e^{- 2 \lambda}}{2}.
+    \mathbb{E}(m^2) 
+    &= \sum_{m = 1}^M m^2~\omega(m; M) \\
+    &= \sum_{m = 1}^M m^2 \frac{1}{2m - 1} \binom{2m}{m} \binom{2(M - m)}{M - m} \binom{2M}{M}^{-1}\\
+    &= 2 \binom{2M}{M}^{-1} \sum_{m = 1}^M m \binom{2m - 2}{m - 1} \binom{2M-2m}{M-m}.
     \end{split}
 \end{align}
+
+Let $k = m-1$, $n = M-1$, and $C = 2 \binom{2M}{M}^{-1}$. 
+We obtain
+
+\begin{align}
+    \begin{split}
+    \mathbb{E}(m^2) 
+    &= C \sum_{k=0}^n (k + 1) \binom{2k}{k} \binom{2n - 2k}{n - k} \\
+    &= C \left[\sum_{k=0}^n k \binom{2k}{k} \binom{2n - 2k}{n - k} + \sum_{k=0}^n \binom{2k}{k} \binom{2n - 2k}{n - k}\right]\\
+    & = C(\frac{4^nn}{2} + 4^n) \qquad (\because \text{the Cauchy convolution of central binomial coefficients})\\
+    &= 4^n (n + 2) {\binom{2M}{M}}^{-1}\\
+    &= \frac{4^M (M + 1)}{4} {\binom{2M}{M}}^{-1}.
+    \end{split}
+\end{align}
+
 \end{proof}
 
 \newpage
@@ -630,7 +1121,7 @@ Under the condition that $\mu_k^{(2)} = 0$, the system given by Equation \ref{eq
 \end{proposition}
 
 \begin{proof}
-The fraction of patches occupied by species $k$ at equilibrium is written as follows:
+The fraction of habitats occupied by species $k$ at equilibrium is written as follows:
 
 \begin{align}
     \frac{dp_k}{dt} = 0 \Leftrightarrow p_k = 
