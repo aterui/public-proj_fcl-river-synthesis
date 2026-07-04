@@ -141,6 +141,8 @@ df_y <-
                 ## trophic position
                 v_tp <- attr(list_fw[[fw]], "tp")
                 
+                ## propagule
+                ## - fixed by foodweb id, fw
                 v_g <- withr::with_seed(fw, {
                   rnorm(
                     n = length(v_tp),
@@ -150,6 +152,8 @@ df_y <-
                     exp()
                 })
                 
+                ## dispersal
+                ## - fixed by foodweb id, fw
                 v_delta <- withr::with_seed(fw, {
                   rnorm(
                     n = length(v_tp),
@@ -258,10 +262,10 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(g * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
-                }) %>% print()
+                })
                 
                 ## dispersal
                 ## - fixed by foodweb id, fw
@@ -269,7 +273,7 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(delta0 * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })
