@@ -22,8 +22,7 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-# food web ----------------------------------------------------------------
-
+# parameters --------------------------------------------------------------
 ## generate food webs
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
