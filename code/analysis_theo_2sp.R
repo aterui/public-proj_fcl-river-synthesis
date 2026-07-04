@@ -16,7 +16,7 @@ v_tp <- c(1, 2)
 
 ## other parameters
 v_rl <- seq(100, 1000, length = 100)
-v_lambda <- seq(0.2, 0.8, length = 100)
+v_lambda <- seq(0.2, 1, length = 100)
 
 df_parms <- bind_rows(
   focus("lambda", v_lambda, "rl", v_rl, n = 1),
