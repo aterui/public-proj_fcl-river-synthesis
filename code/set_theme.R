@@ -4,5 +4,5 @@
 default_theme <- theme_bw() +
   theme(panel.grid = element_blank(),
         panel.background = element_rect(fill = alpha("steelblue", 0.01)),
-        axis.title = element_text(size = 12),
-        axis.text =  element_text(size = 10))
+        axis.title = element_text(size = 10),
+        axis.text =  element_text(size = 9))
