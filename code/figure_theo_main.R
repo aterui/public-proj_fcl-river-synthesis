@@ -91,11 +91,11 @@ g_pe <- (g_pgle + labs(tag = "B")) / g_extn
 
 ## layout
 layout <- "
-AAB
-AAB
+AAAB
+AAAB
 "
 
-(g_scheme <- g_subsch + g_pe +
+(g_scheme <- g_subsch + g_pe + 
    plot_layout(design = layout, 
                guides = "collect"))
 
@@ -153,11 +153,11 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
     theme(
       legend.title = element_blank(),
       axis.title.x = element_blank(),
-      axis.title.y = element_text(size = 12),
+      axis.title.y = element_text(size = 10),
       strip.background = element_blank(),
-      strip.text = element_text(size = 12),
+      strip.text = element_text(size = 10),
       strip.placement = "outside",
-      legend.text = element_text(size = 10)
+      legend.text = element_text(size = 8)
     )
 )
 
