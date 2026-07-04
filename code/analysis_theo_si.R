@@ -65,6 +65,7 @@ df_parms <-
     mu_c = c(1.25, 2.5),
     estb_type = "prey",
     z = 0.5,
+    svar = 0.1, # species-level variation in g and delta
     fw = seq_len(length(list_fw))
   ) %>% 
   mutate(
@@ -115,7 +116,7 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(g * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })
@@ -125,7 +126,7 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(delta0 * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })
