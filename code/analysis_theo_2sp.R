@@ -23,18 +23,19 @@ df_parms <- bind_rows(
   focus("rl", v_rl, "lambda", v_lambda, n = 1)
 ) %>% 
   expand_grid(
-    h = 1,
-    delta0 = c(0.01, 0.1),
-    r0 = 0.4,
-    rho0 = 1,
+    h = 5,
+    delta0 = c(0.05, 0.1),
+    r0 = 0.5,
+    rho0 = c(0, 1),
     nu = 0.1,
-    g0 = 5,
+    g0 = 1,
     mu0 = 2.5,
     mu_p = 5,
     z = 0,
-    kernel = "exp"
+    kernel = "exp",
+    estb_prob = 0.5,
   ) %>% 
-  mutate(b = (1 - max(r0)) / max(v_rl),
+  mutate(b = 0,
          cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
 
 ## set parameters when no disturbance cascade exists
@@ -84,6 +85,8 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
                                   mu0 = mu0_scl,
                                   mu_p = mu_p,
                                   kernel = kernel,
+                                  estb_type = "const",
+                                  estb_prob = estb_prob,
                                   exact = TRUE) %>% 
                           attr("p_hat")
                       })
@@ -107,10 +110,10 @@ saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_line.rds")
 #     )
 #   ) +
 #   geom_line() +
-#   #facet_wrap(facets = ~delta0) +
+#   facet_wrap(facets = ~cascade) +
 #   scale_y_continuous(lim = c(0, 1))# +
 # #scale_x_continuous(trans = "log10")
-# 
+
 # df_fcl %>%
 #   filter(focus == "lambda") %>%
 #   ggplot(
@@ -130,18 +133,19 @@ saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_line.rds")
 df_parms <- expand_grid(
     rl = seq(100, 1000, length = 20),
     lambda = seq(0.2, 1, length = 20),
-    h = 1,
+    h = 5,
     delta0 = c(0.05, 0.1),
-    r0 = c(0.4, 0.8),
+    r0 = 0.5,
     rho0 = 1,
-    nu = 0.1,
-    g0 = 5,
+    nu = c(0.05, 0.1),
+    g0 = 1,
     mu0 = c(2.5, 5),
     mu_p = 5,
+    estb_prob = 0.5,
     z = 0,
     kernel = "exp"
   ) %>% 
-  mutate(b = (1 - max(r0)) / max(v_rl),
+  mutate(b = 0,
          cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
 
 ## occupancy prediction
@@ -156,15 +160,17 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
                                   lambda = lambda, 
                                   size = rl,
                                   h = h,
-                                  delta = delta0 * v_tp^(-z),
+                                  delta = delta0,
                                   r0 = r0,
                                   b = b,
                                   rho0 = rho0,
                                   nu = nu,
-                                  g = g0 * v_tp^(-z),
+                                  g = g0,
                                   mu0 = mu0,
                                   mu_p = mu_p,
-                                  kernel = kernel,
+                                  kernel = kernel, 
+                                  estb_type = "const",
+                                  estb_prob = estb_prob,
                                   exact = TRUE) %>% 
                           attr("p_hat")
                       })
