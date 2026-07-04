@@ -26,7 +26,8 @@ df_parms <- bind_rows(
     h = 5,
     delta0 = c(0.05, 0.1),
     r0 = 0.5,
-    rho0 = c(0, 1),
+    b = 0,
+    rho0 = 1,
     nu = 0.1,
     g0 = 1,
     mu0 = 2.5,
@@ -34,34 +35,6 @@ df_parms <- bind_rows(
     z = 0,
     kernel = "exp",
     estb_prob = 0.5,
-  ) %>% 
-  mutate(b = 0,
-         cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
-
-## set parameters when no disturbance cascade exists
-v <- with(df_parms, {
-  
-  diam <- rpom::diameter(
-    lambda = mean(range(lambda)),
-    size = mean(range(rl))
-  )
-  
-  u <- rpom::u_length(
-    lambda = mean(range(lambda)),
-    size = mean(range(rl))
-  )
-  
-  rho <- laplace_rt(nu = unique(nu), mu = diam)#(1 - unique(nu) * (diam/3))
-  
-  1 + rho * u
-})
-
-df_parms <- df_parms %>% 
-  mutate(
-    mu0_scl = 
-      ifelse(rho0 == 0,
-             mu0 * v,
-             mu0)
   )
 
 ## occupancy prediction
@@ -76,13 +49,13 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
                                   lambda = lambda, 
                                   size = rl,
                                   h = h,
-                                  delta = delta0 * v_tp^(-z),
+                                  delta = delta0,
                                   r0 = r0,
                                   b = b,
                                   rho0 = rho0,
                                   nu = nu,
-                                  g = g0 * v_tp^(-z),
-                                  mu0 = mu0_scl,
+                                  g = g0,
+                                  mu0 = mu0,
                                   mu_p = mu_p,
                                   kernel = kernel,
                                   estb_type = "const",
@@ -99,34 +72,6 @@ df_fcl <- foreach(i = seq_len(nrow(df_parms)),
 ## export
 saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_line.rds")
 
-# df_fcl %>%
-#   filter(focus == "rl") %>%
-#   ggplot(
-#     aes(
-#       x = rl,
-#       y = o,
-#       color = tl,
-#       linetype = factor(delta0)
-#     )
-#   ) +
-#   geom_line() +
-#   facet_wrap(facets = ~cascade) +
-#   scale_y_continuous(lim = c(0, 1))# +
-# #scale_x_continuous(trans = "log10")
-
-# df_fcl %>%
-#   filter(focus == "lambda") %>%
-#   ggplot(
-#     aes(x = lambda,
-#         y = o,
-#         color = tl,
-#         linetype = factor(delta0)
-#     )
-#   ) +
-#   geom_line() +
-#   #facet_wrap(facets = ~delta0) +
-#   scale_y_continuous(lim = c(0, 1))
-
 # for heatmap -------------------------------------------------------------
 
 ## other parameters
@@ -136,6 +81,7 @@ df_parms <- expand_grid(
     h = 5,
     delta0 = c(0.05, 0.1),
     r0 = 0.5,
+    b = 0,
     rho0 = 1,
     nu = c(0.05, 0.1),
     g0 = 1,
@@ -144,9 +90,7 @@ df_parms <- expand_grid(
     estb_prob = 0.5,
     z = 0,
     kernel = "exp"
-  ) %>% 
-  mutate(b = 0,
-         cascade = ifelse(rho0 == 0, "No cascade", "Cascade"))
+  )
 
 ## occupancy prediction
 df_fcl <- foreach(i = seq_len(nrow(df_parms)),
