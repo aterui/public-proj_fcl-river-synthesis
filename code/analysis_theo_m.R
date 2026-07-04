@@ -46,8 +46,9 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 })
 
 ## fixed parameters
-v_rl <- seq(100, 1000, length = 10)
-v_lambda <- seq(0.2, 1, length = 10)
+resl <- 50
+v_rl <- seq(100, 1000, length = resl)
+v_lambda <- seq(0.2, 1, length = resl)
 
 df_parms <- 
   expand_grid(
