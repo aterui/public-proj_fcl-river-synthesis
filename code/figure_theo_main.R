@@ -2,8 +2,6 @@
 #' Produce scheme figure and main theoretical predictions
 #' Main theoretical predictions include heatmap and line arts
 
-# setup -------------------------------------------------------------------
-
 rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
@@ -157,15 +155,15 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
       strip.background = element_blank(),
       strip.text = element_text(size = 10),
       strip.placement = "outside",
-      legend.text = element_text(size = 8)
+      legend.text = element_text(size = 10)
     )
 )
 
 ## export
 ggsave(g_pp,
        filename = "tex/fig_theo_2sp.pdf",
-       width = 8,
-       height = 6)
+       width = 6.5,
+       height = 4.5)
 
 # figure 2 ----------------------------------------------------------------
 
