@@ -53,10 +53,10 @@ v_r0 <- c(0.4, 0.8)
 parms <- expand.grid(rl = v_rl,
                      lambda = v_lambda,
                      h = 1,
-                     delta0 = 0.05,
+                     delta0 = 0.1,
                      r0 = v_r0,
                      b = (1 - max(v_r0)) / max(v_rl),
-                     g = 150,
+                     g = 5,
                      mu0 = c(2.5, 5),
                      mu_p = 5,
                      mu_c = 0, # must be mu_c = 0 for analytical prediction
