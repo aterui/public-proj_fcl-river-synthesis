@@ -124,6 +124,17 @@ Habitat patches are distributed randomly with density $h$ [river length$^{-1}$] 
 This framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity.
 The results presented below should therefore be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than a limited subset of realized networks.
 
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
+    \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing the branching rate raises ecosystem complexity while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Equation \ref{eq:u-hat} in Methods and \textit{SI Appendix} for derivation).}
+    \label{fig:scheme}
+\end{figure}
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
 Here, we use a metapopulation model for a predator–prey system (a single predator and its prey) to illustrate how colonization-extinction dynamics are regulated by ecosystem size and complexity.
 Let $p_{1}$ and $p_{2}$ be the fractions of habitats occupied (``occupancy'') by a prey and a predator, respectively.
 We write the temporal dynamics as
@@ -322,17 +333,6 @@ In reality, however, non-random geomorphic processes shape the evolution of rive
 % In our framework, the branching rate $\lambda_b$ can be viewed as the average number of links per unit river length, where an individual link (or ``branch'') refers to a river segment (Figure \ref{fig:scheme}A).
 % Due to the bifurcating nature, the number of links $B$ in a network must be odd (Figure \ref{fig:scheme}A).
 % On average, ecosystems with higher branching rates encompass more confluences (see \textbf{Methods} for specific assumptions).
-
-% \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
-%     \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing the branching rate raises ecosystem complexity while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Equation \ref{eq:u-hat} in Methods and \textit{SI Appendix} for derivation).}
-%     \label{fig:scheme}
-% \end{figure}
-
-% \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
 We model the patch occupancy dynamics of multi-trophic communities within the branching river network.
 Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
