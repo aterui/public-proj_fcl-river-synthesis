@@ -94,8 +94,8 @@ AAAB
 "
 
 (g_scheme <- g_subsch + g_pe + 
-   plot_layout(design = layout, 
-               guides = "collect"))
+    plot_layout(design = layout, 
+                guides = "collect"))
 
 ## export
 ggsave(g_scheme,
@@ -127,7 +127,7 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
     ) %>% 
       fct_rev()
   )
-  
+
 (
   g_pp <- df_2sp %>%
     ggplot(
@@ -165,20 +165,59 @@ ggsave(g_pp,
        width = 6.5,
        height = 4.5)
 
-# figure 2 ----------------------------------------------------------------
+# figure 3 ----------------------------------------------------------------
 
 ## heatmap ####
 
 ## read data for heatmap
-## take average for food web replicates
-df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>% 
+# ## take average for food web replicates
+# df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>% 
+#   group_by(
+#     h,
+#     delta0,
+#     r0,
+#     g,
+#     mu0,
+#     mu_p,
+#     mu_c,
+#     rho0,
+#     theta
+#   ) %>%
+#   group_modify(~{
+#     dat <- .x
+#     .x$fit <- predict(loess(fcl ~ rl + lambda, data = dat))
+#     .x
+#   }) %>% 
+#   ungroup() %>%
+#   filter(theta == min(theta)) %>% 
+#   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
+#                           sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
+#                           sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
+#          lab_r0 = ifelse(r0 > min(r0),
+#                          sprintf("italic(r[0])==%.2f~(high)", r0),
+#                          sprintf("italic(r[0])==%.2f~(low)", r0)),
+#          lab_rho = ifelse(rho0 > min(rho0),
+#                           sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
+#                           sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
+#          lab_d = "Disturbance~rate",
+#          lab_r = "Resource~supply",
+#          lambda_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
+#                              mean(range(lambda)),
+#                              NA),
+#          rl_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
+#                          mean(range(rl)),
+#                          NA)
+#   )
+# 
+# 
+df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>%
   group_by(rl, lambda, h, delta0, r0, g, mu0, mu_p, mu_c, rho0, theta) %>%
   summarize(
-    fcl = mean(fcl), 
+    fcl = mean(fcl),
     .groups = "drop"
   ) %>%
   ungroup() %>%
-  filter(theta == min(theta)) %>% 
+  filter(theta == min(theta)) %>%
   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
                           sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
                           sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
@@ -228,24 +267,31 @@ heatmap <- function(data) {
           legend.text = element_text(size = 12))
 }
 
-(g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 0.5)))
+(g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 1)))
 (g_heat0 <- heatmap(data = df_heat %>% filter(rho0 == 0)))
 
 ## lineart ####
 
 ## read data
 df_fcl_line <- readRDS("data_fmt/sim_fcl_m_line.rds") %>% 
-  filter(rsrc == max(rsrc),
+  filter(r0 == max(r0),
          mu0 == max(mu0))
 
-df_fcl_mu <- df_fcl_line %>% 
-  group_by(focus, lambda, rl, rsrc, mu0, rho) %>% 
-  summarize(mu_fcl = mean(fcl),
-            min_fcl = min(fcl),
-            max_fcl = max(fcl)) %>% 
-  ungroup()
+df_fit <- df_fcl_line %>%
+  group_by(focus, rho0) %>%
+  group_modify(~ {
+    form <- switch(
+      .y$focus,
+      "rl" = fcl ~ rl,
+      "lambda" = fcl ~ lambda
+    )
+    
+    .x$mu_fcl <- predict(loess(form, data = .x))
+    .x
+  })
 
-lineart <- function(data1, data2,
+lineart <- function(data1, 
+                    data2,
                     x,
                     x_axis) {
   data1 %>% 
@@ -253,24 +299,25 @@ lineart <- function(data1, data2,
     rename(x0 = all_of(x_axis)) %>% 
     ggplot(aes(x = x0)) + 
     geom_line(aes(y = fcl,
-                  color = factor(rho),
+                  color = factor(rho0),
                   linetype = factor(fw)),
               linewidth = 0.1,
               alpha = 0.3) +
     scale_linetype_manual(values = rep("solid",
                                        n_distinct(data1$fw))) +
-    geom_line(data = data2 %>% 
-                rename(x0 = all_of(x_axis)) %>% 
+    # geom_smooth(method = "loess", se = FALSE) +
+    geom_line(data = data2 %>%
+                rename(x0 = all_of(x_axis)) %>%
                 filter(focus == x),
               aes(y = mu_fcl,
-                  color = factor(rho)),
+                  color = factor(rho0)),
               linetype = "solid",
               linewidth = 1) +
     guides(linetype = "none") +
     scale_color_manual(values = c(`0` = "grey",
-                                  `0.5` = "tomato"),
+                                  `1` = "tomato"),
                        labels = c(`0` = "No cascade",
-                                  `0.5` = "Cascade")) +
+                                  `1` = "Cascade")) +
     theme(axis.title = element_text(size = 14),
           axis.text = element_text(size = 12),
           legend.title = element_text(size = 14),
@@ -279,8 +326,8 @@ lineart <- function(data1, data2,
 
 ## food chain length vs. branching
 g_br <- lineart(df_fcl_line,
-                df_fcl_mu,
-                x = "branch",
+                df_fit,
+                x = "lambda",
                 x_axis = "lambda") +
   labs(x = expression("Branching rate"~lambda[b]),
        y = "Food chain length") +
@@ -288,8 +335,8 @@ g_br <- lineart(df_fcl_line,
 
 ## food chain length vs. size
 g_size <- lineart(df_fcl_line,
-                  df_fcl_mu,
-                  x = "size",
+                  df_fit,
+                  x = "rl",
                   x_axis = "rl") +
   labs(x = expression("Total river length"~italic(L)),
        y = "",
