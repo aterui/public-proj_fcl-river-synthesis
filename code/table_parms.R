@@ -30,10 +30,25 @@ list_parms <- list.files("data_fmt",
   })
 
 ## transform them into tables
-
 df_parms <- lapply(list_parms, FUN = function(x) {
   
-  uv <- sapply(x, function(x) paste(sprintf("%.2f", unique(x)), collapse = ", "))
+  uv <- sapply(x, function(x) {
+    if (any(abs(x) < 1e-3) && any(x != 0)) {
+      u <- unique(x)
+      e <- floor(log10(abs(u)))
+      m <- u / 10^e
+      paste(
+        sprintf("$%.2f \\times 10^{%d}$", m, e),
+        collapse = ","
+      )
+    } else {
+      paste(
+        sprintf("%.2f", unique(x)),
+        collapse = ", "
+      )
+    }
+  })
+
   uv[which(colnames(x) == "g")] <- paste(sprintf("%.0f", unique(x$g)), collapse = ", ")
     
   parms <- names(uv)
@@ -75,7 +90,8 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 ## export
 print(xtable(df_parms %>%
                dplyr::select(-Value.y) %>% 
-               rename(Value = Value.x),
+               rename(Value = Value.x) %>% 
+               filter(Symbol != "$\\mu^{(2)}$"),
              caption = "Parameter descriptions and values used for analytical predictions.",
              label = "tab:parms"),
       tabular.environment = "tabularx", # use \begin{tabularx}
