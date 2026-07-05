@@ -168,48 +168,6 @@ ggsave(g_pp,
 # figure 3 ----------------------------------------------------------------
 
 ## heatmap ####
-
-## read data for heatmap
-# ## take average for food web replicates
-# df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>% 
-#   group_by(
-#     h,
-#     delta0,
-#     r0,
-#     g,
-#     mu0,
-#     mu_p,
-#     mu_c,
-#     rho0,
-#     theta
-#   ) %>%
-#   group_modify(~{
-#     dat <- .x
-#     .x$fit <- predict(loess(fcl ~ rl + lambda, data = dat))
-#     .x
-#   }) %>% 
-#   ungroup() %>%
-#   filter(theta == min(theta)) %>% 
-#   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
-#                           sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
-#                           sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
-#          lab_r0 = ifelse(r0 > min(r0),
-#                          sprintf("italic(r[0])==%.2f~(high)", r0),
-#                          sprintf("italic(r[0])==%.2f~(low)", r0)),
-#          lab_rho = ifelse(rho0 > min(rho0),
-#                           sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
-#                           sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
-#          lab_d = "Disturbance~rate",
-#          lab_r = "Resource~supply",
-#          lambda_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
-#                              mean(range(lambda)),
-#                              NA),
-#          rl_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
-#                          mean(range(rl)),
-#                          NA)
-#   )
-# 
-# 
 df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>%
   group_by(rl, lambda, h, delta0, r0, g, mu0, mu_p, mu_c, rho0, theta) %>%
   summarize(
@@ -325,22 +283,22 @@ lineart <- function(data1,
 }
 
 ## food chain length vs. branching
-g_br <- lineart(df_fcl_line,
-                df_fit,
-                x = "lambda",
-                x_axis = "lambda") +
-  labs(x = expression("Branching rate"~lambda[b]),
-       y = "Food chain length") +
-  guides(color = "none")
+(g_br <- lineart(df_fcl_line,
+                 df_fit,
+                 x = "lambda",
+                 x_axis = "lambda") +
+    labs(x = expression("Branching rate"~lambda[b]),
+         y = "Food chain length") +
+    guides(color = "none"))
 
 ## food chain length vs. size
-g_size <- lineart(df_fcl_line,
-                  df_fit,
-                  x = "rl",
-                  x_axis = "rl") +
-  labs(x = expression("Total river length"~italic(L)),
-       y = "",
-       color = "Disturbance")
+(g_size <- lineart(df_fcl_line,
+                   df_fit,
+                   x = "rl",
+                   x_axis = "rl") +
+    labs(x = expression("Total river length"~italic(L)),
+         y = "",
+         color = "Disturbance"))
 
 ## layout ####
 
