@@ -114,7 +114,7 @@ This study offers an important conceptual basis for understanding how food webs 
 
 \section{Results and Discussion}
 
-\subsection{Predator-Prey Metapopulation Model}
+\subsection{Predator-Prey Model in Branching River Networks}
 
 In our framework, river networks are characterized by total river length $L$ (ecosystem size) and branching rate $\lambda_b$ (ecosystem complexity).
 Total river length, the sum of all tributary lengths within a watershed, serves as a proxy for ecosystem size, as it effectively reflects habitat availability and diversity.
@@ -224,19 +224,17 @@ Setting $dp_k/dt=0$ then yields analytical expressions for the equilibrium occup
 \end{align}
 
 where $\eta_1 = 1$ and $\eta_2 = p_1^*$.
-The purpose of this analysis is to understand the model's behavior under a simplified scenario. 
 To isolate the effects of ecosystem size and complexity, we assumed identical establishment probability ($c_1 = c_2 = c$), propagule production ($g_1 = g_2 = g$), and dispersal abilities ($\delta_1 = \delta_2 = \delta$) for the prey and the predator.
 This simplified formulation highlights the unique contributions of our modeling framework by allowing the effects of river-network structure to be examined without confounding differences in species-specific traits.
 
 % The model predicts that the predator occupancy is always lower than the prey, and that the predator goes extinct before the prey (except in the limit $\mu_k / (c_k\phi_k) \rightarrow 0$).
-Our analysis provided insights into the roles of ecosystem size and complexity in regulating the predator-prey system.
-Increasing branching consistently promoted the occupancies by providing a dual advantage: it shortens dispersal pathways, thereby enhancing colonization, while simultaneously compartmentalizing disturbance propagation and reducing synchronized extirpation.
-
-The influence of ecosystem size was highly context dependent, largely modulated by species dispersal capacity.
-When dispersal range is limited ($\delta = 0.1$), increasing total river length has a neutral to slightly negative effect on the occupancies because the colonization benefits of larger ecosystems are largely offset by the increased risk of downstream disturbance cascades. 
-Increasing dispersal distance ($\delta = 0.05$) shifts the effect of ecosystem size to positive by facilitating colonization from distant source habitats.
-However, this positive effect is confined to very small ecosystems, with occupancy rapidly saturating as ecosystem size increases.
-These patterns remained consistent even when varying the basal disturbance rate $\mu^{(0)}$ and the spatial scale of disturbance cascade $\nu$.
+Our analysis provided insights into the roles of ecosystem size and complexity in regulating predator–prey dynamics.
+Here, we present a representative example (Figure \ref{fig:pp-occ}), while a broader exploration across ecological scenarios is provided in Figure XX (\textit{SI Appendix}). 
+Increasing branching consistently promoted the equilibrium occupancies by providing a dual advantage: it shortens dispersal pathways, thereby enhancing colonization, while simultaneously compartmentalizing disturbance propagation and reducing synchronized extirpation. 
+By contrast, the influence of ecosystem size was neutral because the colonization benefits of larger ecosystems were largely offset by the increased risk of downstream disturbance cascades. 
+Increasing dispersal distance (lower $\delta$) shifted the effect of ecosystem size from neutral to slightly positive by facilitating colonization from distant source habitats. 
+Even so, this positive effect was confined to very small ecosystems, with occupancy rapidly saturating as ecosystem size increased.
+These patterns remained consistent across varying basal disturbance rates ($\mu^{(0)}$) and spatial scales of disturbance cascades ($\nu$). 
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -350,9 +348,10 @@ We generalized the model in Equation~\ref{eq:model-pp} as
 where $\eta_k$ is the fraction of ``suitable'' habitats for species $k$.
 For producers, $\eta_k = 1$ as all habitats are assumed to be habitable.
 For consumers, $\eta_k$ represents the fraction of habitats occupied by at least one prey species, $\eta_k = 1 - \prod_{q \in A_k}(1-p_q)$, where $A_k$ denotes the set of consumable prey for consumer $k$ and $q$ is an index denoting each prey species in $A_k$.
-Consequently, generalist consumers have more suitable habitats than specialist consumers.
+While $\phi_k$ remained as defined in Equation~\ref{eq:phi-pgle}, we allowed propagule production and dispersal capability to vary with species trophic position $\tau_k$ according to $g_k \propto \tau_k^{-\psi}$ and $\delta_k \propto \tau_k^{-\psi}$, respectively. 
+Thus, species at higher trophic positions produce fewer propagules but have greater dispersal capability.
 
-While $\phi_k$ remains as defined in Equation~\ref{eq:phi-pgle}, the establishment probability $c_k$ and the extinction rate $\mu_k$ were extended to capture the trophic complexity of food webs.
+The establishment probability $c_k$ and the extinction rate $\mu_k$ were extended to capture the trophic complexity of food webs.
 As in the predator-prey model, we first specified the ecological processes operating at individual habitats.
 We assumed that establishment depends on the downstream accumulation of resources for producers and on the local richness of consumable prey for consumers.
 Applying the spatial mean-field approximation yields
