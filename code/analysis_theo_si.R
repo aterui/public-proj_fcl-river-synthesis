@@ -46,8 +46,9 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 })
 
 ## fixed parameters
-v_rl <- seq(100, 1000, length = 20)
-v_lambda <- seq(0.2, 1, length = 20)
+resl <- 20
+v_rl <- seq(100, 1000, length = resl)
+v_lambda <- seq(0.2, 1, length = resl)
 
 df_parms <- 
   expand_grid(
@@ -55,7 +56,7 @@ df_parms <-
     lambda = v_lambda,
     h = 1,
     g = 5,
-    delta0 = 0.1,
+    delta0 = c(0.05, 0.1),
     r0 = c(0.4, 0.8),
     rho0 = 1,
     nu = c(0.05, 0.1),
@@ -200,7 +201,7 @@ gc()
 
 # export ------------------------------------------------------------------
 
-df_fcl <- parms %>% 
+df_fcl <- df_parms %>% 
   bind_cols(df_y)
 
 saveRDS(df_fcl, file = "data_fmt/sim_fcl_si.rds")
