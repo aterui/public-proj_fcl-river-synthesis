@@ -305,7 +305,8 @@ lineart <- function(data1,
                    x_axis = "rl") +
     labs(x = expression("Total river length"~italic(L)),
          y = "",
-         color = "Disturbance") +
+         color = "Disturbance",
+         tag = "C") +
     theme(
       legend.position = "inside",
       legend.position.inside = c(0.3, 0.8),
