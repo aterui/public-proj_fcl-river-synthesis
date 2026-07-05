@@ -16,18 +16,17 @@ list_parms <- list.files("data_fmt",
                          pattern = "sim_fcl_m_heat|sim_fcl_si") %>% 
   lapply(FUN = function(x) {
     readRDS(x) %>% 
-      dplyr::select(rsrc, 
-                    zeta,
+      dplyr::select(r0, 
+                    b,
                     g,
                     delta0,
                     h,
                     mu0,
                     mu_p,
                     mu_c,
-                    rho,
+                    nu,
                     z,
-                    theta) %>% 
-      filter(rho != 0)
+                    theta)
   })
 
 ## transform them into tables
@@ -46,26 +45,26 @@ df_parms <- lapply(list_parms, FUN = function(x) {
   return(cout)
 }) %>% 
   reduce(left_join, by = "parms") %>% 
-  mutate(symbol = case_when(parms == "rsrc" ~ "$r_0$",
-                            parms == "zeta" ~ "$b$",
+  mutate(symbol = case_when(parms == "r0" ~ "$r_0$",
+                            parms == "b" ~ "$b$",
                             parms == "g" ~ "$g_0$",
                             parms == "h" ~ "$h$",
                             parms == "delta0" ~ "$\\delta_0$",
                             parms == "mu0" ~ "$\\mu^{(0)}$",
                             parms == "mu_p" ~ "$\\mu^{(1)}$",
                             parms == "mu_c" ~ "$\\mu^{(2)}$",
-                            parms == "rho" ~ "$\\rho$",
+                            parms == "nu" ~ "$\\nu$",
                             parms == "z" ~ "$\\psi$",
                             parms == "theta" ~ "$\\theta$"),
-         description = case_when(parms == "rsrc" ~ "Resource supply [-]",
-                                 parms == "zeta" ~ "Effect of stream size on the establishment of basal species [per unit river length]",
+         description = case_when(parms == "r0" ~ "Resource supply [-]",
+                                 parms == "b" ~ "Downstream accumulation rate of resources [per unit river length]",
                                  parms == "g" ~ "Number of propagules for producers [-]",
                                  parms == "h" ~ "Habitat density [per unit river length]",
                                  parms == "delta0" ~ "Dispersal capability for producers [unit river length]",
                                  parms == "mu0" ~ "Disturbance-induced extinction rate [per unit time]",
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
-                                 parms == "rho" ~ "Synchrony probability [-]",
+                                 parms == "nu" ~ "Spatial scale of disturbance synchrony [per unit river length]",
                                  parms == "z" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
                                  parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
   relocate(symbol, description) %>% 
