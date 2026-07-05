@@ -58,13 +58,13 @@ df_parms <- lapply(list_parms, FUN = function(x) {
                             parms == "theta" ~ "$\\theta$"),
          description = case_when(parms == "r0" ~ "Resource supply [-]",
                                  parms == "b" ~ "Downstream accumulation rate of resources [per unit river length]",
-                                 parms == "g" ~ "Number of propagules for producers [-]",
+                                 parms == "g" ~ "Propagule production for producers [per habitat]",
                                  parms == "h" ~ "Habitat density [per unit river length]",
-                                 parms == "delta0" ~ "Dispersal capability for producers [unit river length]",
+                                 parms == "delta0" ~ "Dispersal decay rate for producers [unit river length]",
                                  parms == "mu0" ~ "Disturbance-induced extinction rate [per unit time]",
                                  parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
                                  parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
-                                 parms == "nu" ~ "Spatial scale of disturbance synchrony [per unit river length]",
+                                 parms == "nu" ~ "Distance decay rate of disturbance synchrony [per unit river length]",
                                  parms == "z" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
                                  parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
   relocate(symbol, description) %>% 
