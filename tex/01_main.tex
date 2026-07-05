@@ -121,7 +121,7 @@ Total river length, the sum of all tributary lengths within a watershed, serves 
 Branching rate quantifies ecosystem complexity, with higher values indicating a greater prevalence of bifurcation within the river network.
 It can be interpreted as the average number of links per unit river length, where an individual link (or ``branch'') refers to a river segment bounded by either two confluences or a confluence and a terminal point (i.e., a headwater or the river outlet; Figure \ref{fig:scheme}A).
 Habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river, resulting in the total number of habitat patches $N = Lh$.
-This framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity.
+This framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity (Figure \ref{fig:scheme}A).
 The results presented below should therefore be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than a limited subset of realized networks.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
@@ -129,7 +129,7 @@ The results presented below should therefore be interpreted as general predictio
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of modeled branching networks. Each link represents a river segment, with confluences indicating where segments meet. Habitat patches (black dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) refers to the portion of the river located upstream from a given habitat patch (the expected value is on the Y-axis in panel B). As ecosystem size increases, total river length ($L$) expands without affecting the branching rate ($\lambda_b$). In contrast, increasing the branching rate raises ecosystem complexity while keeping the total river length constant. (B) The upstream river length $u$ has the expected value $\hat{u}(L, \lambda_b)$, which is a nonlinear function of total river length $L$ and branching rate $\lambda_b$ (see Equation \ref{eq:u-hat} in Methods and \textit{SI Appendix} for derivation).}
+    \caption{Modeling scheme. (A) Schematic representation of the modeled branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) is the portion of the river located upstream of a focal habitat patch (black dot). The network distance $d$ is the distance measured along the river network between two habitat patches (black and open dots). (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. In contrast, the disturbance rate ($\mu^{(0)}(1 + \hat{\rho}\hat{u})$; see Equation \ref{eq:mu-pp}) increases with total river length but decreases with branching rate. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
     \label{fig:scheme}
 \end{figure}
 
@@ -148,7 +148,7 @@ We write the temporal dynamics as
 \end{align}
 
 where the constant $c_k$ is the per-propagule establishment probability, $\phi_{k}$ is the number of effective propagules (i.e., surviving propagules after dispersal), and $\mu_{k}$ is the extinction rate ($k \in \{1,2\}$).
-For the predator, colonization ``attempts'' are restricted to habitat patches occupied by the prey, as represented by the term $p_{1} - p_{2}$ \citep[c.f.][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011}.
+For the predator, colonization attempts are restricted to habitat patches occupied by the prey, as represented by the term $p_{1} - p_{2}$ \citep[c.f.][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011}.
 Consequently, the predator exhibits a nested distribution within the distribution of the prey.
 
 We assumed two key processes governing local occupancy dynamics at individual habitats, from which we analytically derived ecologically meaningful expressions for $\phi_k$ and $\mu_k$ at the metapopulation level. 
@@ -179,8 +179,8 @@ The constant $g_k$ quantifies the propagule production per habitat, such that th
 % The effective propagule $\phi_k$ naturally emerges as an explicit function of ecosystem size and complexity.
 
 Equation \ref{eq:phi-pgle} suggests that total river length $L$ increases the global pool of propagules (recall $N = Lh$); however, the fraction of effective propagules declines with increasing $L$, because many habitats become too distant to function as sources, particularly when dispersal ability is limited (i.e., larger $\delta_k$).
-Consequently, $\phi_k$ saturates with respect to $L$.
-In contrast, increased branching with higher $\lambda_b$ compresses the river network topology, shortening dispersal pathways and enhancing the effective number of propagule sources.
+Consequently, $\phi_k$ saturates with respect to $L$ (Figure \ref{fig:scheme}B).
+Increased branching with higher $\lambda_b$ compresses the river network topology and shortens dispersal pathways (Figure \ref{fig:scheme}A), thereby enhancing the effective number of propagule sources (Figure \ref{fig:scheme}B).
 
 Second, we assumed that disturbance cascades downstream. 
 In rivers, disturbance events originating upstream can propagate downstream via water flow, including the transport of environmental contaminants and the downstream effects of floods and droughts. 
@@ -207,9 +207,9 @@ Writing the expected values as $\hat{u} \equiv \mathbb{E}\bigl(u_i\bigr)$ and $\
 Here, $\hat{u}$ asymptotically scales as $\hat{u} \propto L^{\frac{1}{2}}\,\lambda_b^{-\frac{1}{2}}$ (Proposition XXX in \textit{SI Appendix} for proof), and $\hat{\rho}$ is a non-linear function of $L$ and $\lambda_b$.
 The parameters $\mu^{(0)}$ and $\mu^{(1)}$ determine the baseline contributions of disturbance and prey scarcity to local extinction, respectively (see \textit{SI Appendix} for full derivation).
 
-According to Equation \ref{eq:mu-pp}, the disturbance rate increases with increasing $L$. 
+Equation \ref{eq:mu-pp} predicts that the disturbance term increases with increasing $L$ (Figure \ref{fig:scheme}B). 
 This is because the broader spatial coverage of larger ecosystems (larger $L$) increases the likelihood that an episodic disturbance occurs somewhere in the upstream flow-connected area.
-Meanwhile, branching divides the river network into flow-unconnected sub-networks, thereby dispersing the risk of synchronized extirpation due to flow-mediated disturbances.
+Meanwhile, branching divides the river network into flow-unconnected sub-networks, thereby dispersing the risk of synchronized extirpation due to flow-mediated disturbances (Figure \ref{fig:scheme}A and B).
 
 The metapopulation model in Equation \ref{eq:model-pp} is therefore derived rigorously from the mechanistic assumptions at the local habitat level, rather than being specified heuristically at the metapopulation level.
 Setting $dp_k/dt=0$ then yields analytical expressions for the equilibrium occupancies as a function of ecosystem size ($L$) and complexity ($\lambda_b$) as
@@ -225,7 +225,7 @@ Setting $dp_k/dt=0$ then yields analytical expressions for the equilibrium occup
 
 where $\eta_1 = 1$ and $\eta_2 = p_1^*$.
 To isolate the effects of ecosystem size and complexity, we assumed identical establishment probability ($c_1 = c_2 = c$), propagule production ($g_1 = g_2 = g$), and dispersal abilities ($\delta_1 = \delta_2 = \delta$) for the prey and the predator.
-This simplified formulation highlights the unique contributions of our modeling framework by allowing the effects of river-network structure to be examined without confounding differences in species-specific traits.
+This simplified formulation highlights the unique contributions of river network structure without confounding differences in species-specific traits.
 
 % The model predicts that the predator occupancy is always lower than the prey, and that the predator goes extinct before the prey (except in the limit $\mu_k / (c_k\phi_k) \rightarrow 0$).
 Our analysis provided insights into the roles of ecosystem size and complexity in regulating predator–prey dynamics.
@@ -241,7 +241,7 @@ These patterns remained consistent across varying basal disturbance rates ($\mu^
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{tex/fig_theo_2sp.pdf}
-    \caption{xxx}
+    \caption{Ecosystem size (total river length $L$) and complexity (branching rate $\lambda_b$) dictate equilibrium occupancies of a predator-prey system. Parameters used in this result are: $c = 0.5$, $\delta = 0.1$, $\mu^{(0)} = 2.5$, $\mu^{(1)} = 5$, and $\nu = 0.1$. A broader parameter space was explored in the \textit{SI Appendix}.}
     \label{fig:pp-occ}
 \end{figure}
 
