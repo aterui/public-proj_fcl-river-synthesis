@@ -22,8 +22,7 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-# food web ----------------------------------------------------------------
-
+# parameters --------------------------------------------------------------
 ## generate food webs
 ## - S: number of nodes/species in a community
 ## - theta: degree of omnivory
@@ -47,8 +46,9 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 })
 
 ## fixed parameters
-v_rl <- seq(100, 1000, length = 10)
-v_lambda <- seq(0.2, 1, length = 10)
+resl <- 50
+v_rl <- seq(100, 1000, length = resl)
+v_lambda <- seq(0.2, 1, length = resl)
 
 df_parms <- 
   expand_grid(
@@ -62,6 +62,7 @@ df_parms <-
     mu_c = 0, # must be mu_c = 0 for analytical prediction
     estb_type = "prey",
     z = 0.5,
+    svar = 0.1, # species-level variation in g and delta
     fw = seq_len(length(list_fw))
   ) %>% 
   mutate(
@@ -141,20 +142,24 @@ df_y <-
                 ## trophic position
                 v_tp <- attr(list_fw[[fw]], "tp")
                 
+                ## propagule
+                ## - fixed by foodweb id, fw
                 v_g <- withr::with_seed(fw, {
                   rnorm(
                     n = length(v_tp),
                     mean = log(g * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })
                 
+                ## dispersal
+                ## - fixed by foodweb id, fw
                 v_delta <- withr::with_seed(fw, {
                   rnorm(
                     n = length(v_tp),
                     mean = log(delta0 * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })
@@ -258,10 +263,10 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(g * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
-                }) %>% print()
+                })
                 
                 ## dispersal
                 ## - fixed by foodweb id, fw
@@ -269,7 +274,7 @@ df_y <-
                   rnorm(
                     n = length(v_tp),
                     mean = log(delta0 * v_tp^(-z)),
-                    sd = 0.1
+                    sd = svar
                   ) %>% 
                     exp()
                 })

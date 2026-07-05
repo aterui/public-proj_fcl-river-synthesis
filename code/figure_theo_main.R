@@ -112,20 +112,20 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
     values_to = "x",
     names_to = "xnm"
   ) %>% 
-  filter(focus == xnm) %>% 
+  filter(focus == xnm,
+         delta0 == max(delta0)) %>% 
   mutate(
     lab_tl = str_to_sentence(tl) %>% 
       fct_rev(),
-    lab_delta = ifelse(
-      delta0 == min(delta0),
-      sprintf("Long~dispersal~(delta==%.2f)", delta0),
-      sprintf("Short~dispersal~(delta==%.2f)", delta0)
-    ),
+    # lab_delta = ifelse(
+    #   delta0 == min(delta0),
+    #   sprintf("Long~dispersal~(delta==%.2f)", delta0),
+    #   sprintf("Short~dispersal~(delta==%.2f)", delta0)
+    # ),
     lab_focus = case_when(
       focus == "lambda" ~ "Branching~rate~lambda[b]",
       focus == "rl" ~ "Total~river~length~italic(L)",
-    ) %>% 
-      fct_rev()
+    )
   )
 
 (
@@ -139,15 +139,15 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
     ) +
     geom_line() +
     ggh4x::facet_grid2(
-      rows = vars(lab_delta),
       cols = vars(lab_focus),
       scales = "free",
       labeller = label_parsed,
       switch = "x",
-      axes = "x"
+      axes = "all"
     ) +
     labs(y = "Occupancy") +
     scale_y_continuous(lim = c(0, 1)) +
+    theme_classic() +
     theme(
       legend.title = element_blank(),
       axis.title.x = element_blank(),
@@ -162,54 +162,12 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
 ## export
 ggsave(g_pp,
        filename = "tex/fig_theo_2sp.pdf",
-       width = 6.5,
-       height = 4.5)
+       width = 7,
+       height = 3)
 
 # figure 3 ----------------------------------------------------------------
 
 ## heatmap ####
-
-## read data for heatmap
-# ## take average for food web replicates
-# df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>% 
-#   group_by(
-#     h,
-#     delta0,
-#     r0,
-#     g,
-#     mu0,
-#     mu_p,
-#     mu_c,
-#     rho0,
-#     theta
-#   ) %>%
-#   group_modify(~{
-#     dat <- .x
-#     .x$fit <- predict(loess(fcl ~ rl + lambda, data = dat))
-#     .x
-#   }) %>% 
-#   ungroup() %>%
-#   filter(theta == min(theta)) %>% 
-#   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
-#                           sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
-#                           sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
-#          lab_r0 = ifelse(r0 > min(r0),
-#                          sprintf("italic(r[0])==%.2f~(high)", r0),
-#                          sprintf("italic(r[0])==%.2f~(low)", r0)),
-#          lab_rho = ifelse(rho0 > min(rho0),
-#                           sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
-#                           sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
-#          lab_d = "Disturbance~rate",
-#          lab_r = "Resource~supply",
-#          lambda_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
-#                              mean(range(lambda)),
-#                              NA),
-#          rl_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
-#                          mean(range(rl)),
-#                          NA)
-#   )
-# 
-# 
 df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>%
   group_by(rl, lambda, h, delta0, r0, g, mu0, mu_p, mu_c, rho0, theta) %>%
   summarize(
@@ -219,11 +177,13 @@ df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>%
   ungroup() %>%
   filter(theta == min(theta)) %>%
   mutate(lab_mu0 = ifelse(mu0 > min(mu0),
-                          sprintf("mu^{(0)}==%.2f~(freq.)", mu0),
-                          sprintf("mu^{(0)}==%.2f~(infreq.)", mu0)),
+                          sprintf("High~(mu^{(0)}==%.2f)", mu0),
+                          sprintf("Low~(mu^{(0)}==%.2f)", mu0)) %>% 
+           fct_rev(),
          lab_r0 = ifelse(r0 > min(r0),
-                         sprintf("italic(r[0])==%.2f~(high)", r0),
-                         sprintf("italic(r[0])==%.2f~(low)", r0)),
+                         sprintf("High~(italic(r[0])==%.2f)", r0),
+                         sprintf("Low~(italic(r[0])==%.2f)", r0)) %>% 
+           fct_rev(),
          lab_rho = ifelse(rho0 > min(rho0),
                           sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
                           sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
@@ -267,7 +227,7 @@ heatmap <- function(data) {
           legend.text = element_text(size = 12))
 }
 
-(g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 1)))
+(g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 1)) + labs(tag = "A"))
 (g_heat0 <- heatmap(data = df_heat %>% filter(rho0 == 0)))
 
 ## lineart ####
@@ -278,17 +238,11 @@ df_fcl_line <- readRDS("data_fmt/sim_fcl_m_line.rds") %>%
          mu0 == max(mu0))
 
 df_fit <- df_fcl_line %>%
-  group_by(focus, rho0) %>%
-  group_modify(~ {
-    form <- switch(
-      .y$focus,
-      "rl" = fcl ~ rl,
-      "lambda" = fcl ~ lambda
-    )
-    
-    .x$mu_fcl <- predict(loess(form, data = .x))
-    .x
-  })
+  group_by(focus, rho0, rl, lambda) %>%
+  summarize(
+    mu_fcl = mean(fcl),
+    .groups = "drop"
+  )
 
 lineart <- function(data1, 
                     data2,
@@ -298,14 +252,16 @@ lineart <- function(data1,
     filter(focus == x) %>%
     rename(x0 = all_of(x_axis)) %>% 
     ggplot(aes(x = x0)) + 
-    geom_line(aes(y = fcl,
-                  color = factor(rho0),
-                  linetype = factor(fw)),
-              linewidth = 0.1,
-              alpha = 0.3) +
-    scale_linetype_manual(values = rep("solid",
-                                       n_distinct(data1$fw))) +
-    # geom_smooth(method = "loess", se = FALSE) +
+    geom_line(
+      aes(y = fcl,
+          color = factor(rho0),
+          linetype = factor(fw)),
+      linewidth = 0.1,
+      alpha = 0.3
+    ) +
+    scale_linetype_manual(
+      values = rep("solid", n_distinct(data1$fw))
+    ) +
     geom_line(data = data2 %>%
                 rename(x0 = all_of(x_axis)) %>%
                 filter(focus == x),
@@ -314,33 +270,49 @@ lineart <- function(data1,
               linetype = "solid",
               linewidth = 1) +
     guides(linetype = "none") +
-    scale_color_manual(values = c(`0` = "grey",
-                                  `1` = "tomato"),
-                       labels = c(`0` = "No cascade",
-                                  `1` = "Cascade")) +
-    theme(axis.title = element_text(size = 14),
-          axis.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
-          legend.text = element_text(size = 12))
+    scale_color_manual(
+      values = c(`0` = "grey",
+                 `1` = "tomato"),
+      labels = c(`0` = "No cascade",
+                 `1` = "Cascade")
+    ) +
+    theme_classic() +
+    theme(
+      axis.title = element_text(size = 14),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 14),
+      legend.text = element_text(size = 12)
+    ) +
+    scale_y_continuous(
+      limits = c(min(data1$fcl), max(data1$fcl))
+    )
 }
 
 ## food chain length vs. branching
-g_br <- lineart(df_fcl_line,
-                df_fit,
-                x = "lambda",
-                x_axis = "lambda") +
-  labs(x = expression("Branching rate"~lambda[b]),
-       y = "Food chain length") +
-  guides(color = "none")
+(g_br <- lineart(df_fcl_line,
+                 df_fit,
+                 x = "lambda",
+                 x_axis = "lambda") +
+    labs(x = expression("Branching rate"~lambda[b]),
+         y = "Food chain length",
+         tag = "B") +
+    guides(color = "none"))
 
 ## food chain length vs. size
-g_size <- lineart(df_fcl_line,
-                  df_fit,
-                  x = "rl",
-                  x_axis = "rl") +
-  labs(x = expression("Total river length"~italic(L)),
-       y = "",
-       color = "Disturbance")
+(g_size <- lineart(df_fcl_line,
+                   df_fit,
+                   x = "rl",
+                   x_axis = "rl") +
+    labs(x = expression("Total river length"~italic(L)),
+         y = "",
+         color = "Disturbance") +
+    theme(
+      legend.position = "inside",
+      legend.position.inside = c(0.3, 0.8),
+      legend.title = element_text(size = 12),
+      legend.text = element_text(size = 11)
+    )
+)
 
 ## layout ####
 
@@ -349,13 +321,10 @@ AA
 AA
 BC
 "
-g_sim_main <- g_heat05 + g_br + g_size +
-  plot_layout(design = layout) +
-  plot_annotation(tag_levels = "A")
+(g_sim_main <- g_heat05 + g_br + g_size +
+    plot_layout(design = layout))
 
-
-# export ------------------------------------------------------------------
-
+## export
 ggsave(g_sim_main,
        filename = "tex/fig_theo_main.pdf",
        width = 9,
