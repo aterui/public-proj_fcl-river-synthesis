@@ -7,23 +7,6 @@ rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")
 
-# feow --------------------------------------------------------------------
-
-## from Leroy et al., Journal of Biogeography
-## https://onlinelibrary.wiley.com/doi/full/10.1111/jbi.13674
-sf_bior <- st_read("data_raw/fish_bioregions_per_basin.gpkg") %>% 
-  rmapshaper::ms_simplify() %>% 
-  rmapshaper::ms_dissolve(field = "region.lv2") %>% 
-  st_make_valid() %>% 
-  rename(bior = region.lv2) %>% 
-  mutate(
-    # combine australia and new zealand
-    bior = ifelse(bior %in% c("Australian", "Australasia"),
-                  "Australasia",
-                  bior) %>% 
-      str_to_snake()
-  )
-
 # preformat ---------------------------------------------------------------
 # update as needed
 # FCL data selected
@@ -40,9 +23,7 @@ sf_use_s2(FALSE)
 sf_fcl0 <- readRDS("data_raw/sf_fcl_site.rds") %>%
   st_join(sf_lev01, join = st_nearest_feature) %>% 
   st_join(sf_lev02, join = st_nearest_feature) %>% 
-  st_join(sf_bior, join = st_nearest_feature) %>%
-  relocate(starts_with("hybas"),
-           bior)
+  relocate(starts_with("hybas"))
 sf_use_s2(TRUE)
 
 df_fcl0 <- sf_fcl0 %>%
@@ -103,9 +84,7 @@ df_fcl_local <- df_fcl0 %>%
            oid, 
            huid, 
            hybas_lev01, 
-           hybas_lev02, 
-           bior,
-           ecor) %>% 
+           hybas_lev02) %>% 
   summarize(fcl = mean(fcl),
             tpc = unique(top_predator_collected),
             .groups = "drop") %>% 
@@ -114,8 +93,6 @@ df_fcl_local <- df_fcl0 %>%
   mutate(g = as.numeric(factor(oid)),
          h01 = as.numeric(factor(hybas_lev01)),
          h02 = as.numeric(factor(hybas_lev02)),
-         bior = as.numeric(factor(bior)),
-         ecor = as.numeric(factor(ecor)),
          censoring = ifelse(tpc == "N", 1, 0),
          cut = ifelse(tpc == "N", fcl, Inf)) %>% 
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
@@ -123,8 +100,6 @@ df_fcl_local <- df_fcl0 %>%
     oid, 
     h01,
     h02,
-    bior,
-    ecor,
     g,
     sid,
     fcl,
@@ -143,8 +118,6 @@ df_fcl_wsd <- df_g %>%
              oid, 
              h01,
              h02,
-             bior,
-             ecor,
              g)
   ) %>%
   arrange(g) %>%
@@ -152,8 +125,6 @@ df_fcl_wsd <- df_g %>%
     oid, 
     h01,
     h02,
-    bior,
-    ecor,
     g
   )
 
