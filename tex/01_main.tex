@@ -37,7 +37,7 @@
 \tcbuselibrary{breakable}
 
 % Other utilities
-\usepackage{url, soul, tabularx, fancyhdr, lineno, authblk}  % miscellaneous
+\usepackage{url, soul, tabularx, fancyhdr, lineno, authblk}
 
 % title
 \title{Geometric ecosystem complexity regulates food chains}
@@ -68,11 +68,11 @@
 \textbf{Keywords:} food web, network complexity, stream, metapopulation
 
 \section*{Abstract}
-Since the time of Charles Elton, ecologists have been fascinated by the variation in food chain length among natural communities.
-A prevailing view suggests that the size of an ecosystem is a key factor influencing food chain length (the ecosystem size hypothesis).
+Since the time of Charles Elton, ecologists have been fascinated by the variation in food chain length (FCL) among natural communities.
+A prevailing view suggests that the size of an ecosystem is a key factor influencing FCL (the ecosystem size hypothesis).
 However, contemporary analyses of FCL have lacked robust frameworks addressing the potential influence of spatial ecosystem complexity, a geometric characteristic independent of ecosystem size.
 Here, we use theory and analysis of cross-continental FCL data to demonstrate that ecosystem complexity, rather than ecosystem size, plays a central role in regulating food chains in rivers.
-Our spatial theory suggests that the complex branching patterns of tributaries buffer downstream areas from cascading disturbances like floods, thereby allowing longer food chains to persist.
+Our spatial theory suggests that the complex branching patterns of tributaries create spatial refugia from cascading disturbances like floods, thereby allowing longer food chains to persist.
 However, our theory predicts varied and ambiguous relationships between food chain length and ecosystem size (total river length of an entire watershed).
 An analysis of cross-continental FCL data strongly supported these theoretical findings.
 The complexity of river branching consistently had positive effects on riverine food chains worldwide, whereas the total river length showed no clear relationships.
@@ -116,26 +116,42 @@ This study offers an important conceptual basis for understanding how food webs 
 
 \subsection{Predator-Prey Model in Branching River Networks}
 
-In our framework, river networks are characterized by total river length $L$ (ecosystem size) and branching rate $\lambda_b$ (ecosystem complexity).
+We consider river networks characterized by total river length $L$ (ecosystem size) and branching rate $\lambda_b$ (ecosystem complexity), in which $N$ habitat patches are distributed randomly with density $h$ along the river ($N = Lh$).
 Total river length, the sum of all tributary lengths within a watershed, serves as a proxy for ecosystem size, as it effectively reflects habitat availability and diversity.
 Branching rate quantifies ecosystem complexity, with higher values indicating a greater prevalence of bifurcation within the river network.
 It can be interpreted as the average number of links per unit river length, where an individual link (or ``branch'') refers to a river segment bounded by either two confluences or a confluence and a terminal point (i.e., a headwater or the river outlet; Figure \ref{fig:scheme}A).
-Habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river, resulting in the total number of habitat patches $N = Lh$.
-This framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity (Figure \ref{fig:scheme}A).
-The results presented below should therefore be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than a limited subset of realized networks.
+Evidence suggests that the branching rate captures the fractal nature of river networks, as this metric shows scaling properties over network resolution \citep{terui_revisiting_2024} and stream orders \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, kovchegov_random_2022}.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of the modeled branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. The upstream river length $u$ (black solid lines) is the portion of the river located upstream of a focal habitat patch (black dot). The network distance $d$ is the distance measured along the river network between two habitat patches (black and open dots). (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. In contrast, the disturbance rate ($\mu^{(0)}(1 + \hat{\rho}\hat{u})$; see Equation \ref{eq:mu-pp}) increases with total river length but decreases with branching rate. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
+    \caption{Modeling scheme. (A) Schematic representation of the modeled branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. The network distance $d$ is the distance measured along the river network between two habitat patches (black and open dots). The upstream river length $u$ (black solid lines) is the portion of the river located upstream of a focal habitat patch (black dot). The network diameter $\mathcal{L}$ is the network distance from the outlet to a given upstream terminal. (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. In contrast, the disturbance rate ($\mu^{(0)}(1 + \hat{\rho}\hat{u})$; see Equation \ref{eq:mu-pp}) increases with total river length but decreases with branching rate. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
     \label{fig:scheme}
 \end{figure}
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
-Here, we use a metapopulation model for a predator–prey system (a single predator and its prey) to illustrate how colonization-extinction dynamics are regulated by ecosystem size and complexity.
+Our framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity (Figure~\ref{fig:scheme}A; see \textit{SI Appendix} for mathematical details). 
+In these randomly-bifurcating networks, we found that ecosystem structure ($L$ and $\lambda_b$) scales ecologically relevant network properties, that is, network distance $d$, upstream river length $u$, and network diameter $\mathcal{L}$ (Figure \ref{fig:scheme}A and Table \ref{tab:scaling}). 
+Below, we use a patch occupancy model for a predator–prey system (one predator and its prey) to illustrate how these network properties regulate colonization–extinction dynamics under realistic ecological assumptions, thereby linking ecosystem structure to predator–prey dynamics.
+
+\begin{table}
+    \caption{Scaling relationships for network distance, upstream river length, and network diameter emerge under the single assumption of random bifurcation of river networks. These results hold to order $\mathcal{O}\bigl((\lambda_b L)^{-1/2}\bigr)$, with scaling constant $C = \sqrt{\pi/2}$. Exact expressions and proofs are provided in the corresponding propositions.}
+    \centering
+    \begin{tabular}{llll}
+        \hline
+        Network property & Leading order & Related process & Proposition\\
+        \hline
+         Network distance $\hat{d}$ & $\hat{d} \sim C\sqrt{L/\lambda_b} - 2/ \lambda_b$ & Dispersal & 1.4.1 \\
+         Upstream river length $\hat{u}$ & $\hat{u} \sim C\sqrt{L/\lambda_b} - 3/(2 \lambda_b)$ & Disturbance & 1.4.2 \\
+         Network diameter $\hat{\mathcal{L}}$ & $\hat{\mathcal{L}} \sim C\sqrt{L/\lambda_b}$ & Disturbance & 1.4.3 \\
+         \hline
+    \end{tabular}
+    \label{tab:scaling}
+\end{table}
+
 Let $p_{1}$ and $p_{2}$ be the fractions of habitats occupied (``occupancy'') by a prey and a predator, respectively.
 We write the temporal dynamics as
 
@@ -147,13 +163,13 @@ We write the temporal dynamics as
 \label{eq:model-pp}
 \end{align}
 
-where the constant $c_k$ is the per-propagule establishment probability, $\phi_{k}$ is the number of effective propagules (i.e., surviving propagules after dispersal), and $\mu_{k}$ is the extinction rate ($k \in \{1,2\}$).
+where the constant $c_k$ is the establishment probability, $\phi_{k}$ is the number of effective propagules (i.e., surviving propagules after dispersal), and $\mu_{k}$ is the extinction rate ($k \in \{1,2\}$).
 For the predator, colonization attempts are restricted to habitat patches occupied by the prey, as represented by the term $p_{1} - p_{2}$ \citep[c.f.][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011}.
 Consequently, the predator exhibits a nested distribution within the distribution of the prey.
 
 We assumed two key processes governing local occupancy dynamics at individual habitats, from which we analytically derived ecologically meaningful expressions for $\phi_k$ and $\mu_k$ at the metapopulation level. 
 First, propagules disperse through the river network according to an exponential dispersal kernel, $\exp(-\delta_k d_{ij})$, such that the probability of a propagule successfully reaching target habitat $i$ from source habitat $j$ declines with network distance $d_{ij}$ at rate $\delta_k$.
-Without imposing any additional assumptions, the spatial mean-field approximation yields the effective propagule $\phi_k$ as a function of the expected network distance $\hat{d} \equiv \mathbb{E}\bigl(d_{ij}\bigr)$, which exhibits the asymptotic scaling with $L$ and $\lambda_b$ (Proposition XXX for proof):
+Without imposing any additional assumptions, the spatial mean-field approximation yields the effective propagule $\phi_k$ as a function of the expected network distance $\hat{d} \equiv \mathbb{E}\bigl(d_{ij}\bigr)$, which exhibits the asymptotic scaling with $L$ and $\lambda_b$ (Table \ref{tab:scaling}):
 
 \begin{equation}
     \phi_k
@@ -176,7 +192,6 @@ Without imposing any additional assumptions, the spatial mean-field approximatio
 
 where $\mathrm{erfcx}(\cdot)$ is the scaled complementary error function.
 The constant $g_k$ quantifies the propagule production per habitat, such that the product $g_k N$ represents the global pool of dispersing propagules in the ecosystem.
-% The effective propagule $\phi_k$ naturally emerges as an explicit function of ecosystem size and complexity.
 
 Equation \ref{eq:phi-pgle} suggests that total river length $L$ increases the global pool of propagules (recall $N = Lh$); however, the fraction of effective propagules declines with increasing $L$, because many habitats become too distant to function as sources, particularly when dispersal ability is limited (i.e., larger $\delta_k$).
 Consequently, $\phi_k$ saturates with respect to $L$ (Figure \ref{fig:scheme}B).
@@ -204,7 +219,7 @@ Writing the expected values as $\hat{u} \equiv \mathbb{E}\bigl(u_i\bigr)$ and $\
 \label{eq:mu-pp}
 \end{align}
 
-Here, $\hat{u}$ asymptotically scales as $\hat{u} \propto L^{\frac{1}{2}}\,\lambda_b^{-\frac{1}{2}}$ (Proposition XXX in \textit{SI Appendix} for proof), and $\hat{\rho}$ is a non-linear function of $L$ and $\lambda_b$.
+Here, $\hat{u}$ asymptotically scales as $\hat{u} \propto L^{\frac{1}{2}}\,\lambda_b^{-\frac{1}{2}}$ (Table \ref{tab:scaling}), and $\hat{\rho}$ is a non-linear function of network diameter $\hat{\mathcal{L}}$.
 The parameters $\mu^{(0)}$ and $\mu^{(1)}$ determine the baseline contributions of disturbance and prey scarcity to local extinction, respectively (see \textit{SI Appendix} for full derivation).
 
 Equation \ref{eq:mu-pp} predicts that the disturbance term increases with increasing $L$ (Figure \ref{fig:scheme}B). 
@@ -234,7 +249,7 @@ Increasing branching consistently promoted the equilibrium occupancies by provid
 By contrast, the influence of ecosystem size was neutral because the colonization benefits of larger ecosystems were largely offset by the increased risk of downstream disturbance cascades. 
 Increasing dispersal distance (lower $\delta$) shifted the effect of ecosystem size from neutral to slightly positive by facilitating colonization from distant source habitats. 
 Even so, this positive effect was confined to very small ecosystems, with occupancy rapidly saturating as ecosystem size increased.
-These patterns remained consistent across varying basal disturbance rates ($\mu^{(0)}$) and spatial scales of disturbance cascades ($\nu$). 
+These patterns remained consistent across varying baseline disturbance rates ($\mu^{(0)}$) and spatial scales of disturbance cascades ($\nu$). 
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -247,7 +262,8 @@ These patterns remained consistent across varying basal disturbance rates ($\mu^
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
-Our approach required several simplifying assumptions for the sake of analytical tractability.
+The results presented above should be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than from a limited subset of realized networks (Figure \ref{fig:scheme}A).
+Nevertheless, our approach required several simplifying assumptions for the sake of analytical tractability.
 First, we assumed symmetric dispersal, whereas dispersal in riverine organisms may be biased downstream.
 Second, we assumed that all network topologies are equally likely to occur (i.e., random).
 In reality, however, non-random geomorphic processes shape the evolution of river networks, making some topological configurations more probable than others. 
@@ -341,19 +357,31 @@ This extension accommodates the trophic complexity of natural food webs, in whic
 We generalized the model in Equation~\ref{eq:model-pp} as
 
 \begin{equation}
-    \frac{dp_k}{dt} = c_{k} \phi_k p_k (\eta_k - p_k) - \mu_k p_k,
+    \frac{dp_k}{dt} = c_{k} \phi_k p_k (\eta_k - p_k) - \mu_k p_k.
     \label{eq:model-fw}
 \end{equation}
 
-where $\eta_k$ is the fraction of ``suitable'' habitats for species $k$.
+The term $\eta_k$ denotes the fraction of ``suitable'' habitats for species $k$, defined as
+
+\begin{align}
+\eta_k 
+= 
+    \begin{cases}
+        1 &\text{for producers},\\
+        1 - \prod_{q \in A_k}(1-p_q) &\text{for consumers.}
+    \end{cases}
+    \label{eq:eta}
+\end{align}
+
+where $A_k$ is the set of consumable prey for consumer $k$ and $q$ is an index denoting each prey species in $A_k$.
 For producers, $\eta_k = 1$ as all habitats are assumed to be habitable.
-For consumers, $\eta_k$ represents the fraction of habitats occupied by at least one prey species, $\eta_k = 1 - \prod_{q \in A_k}(1-p_q)$, where $A_k$ denotes the set of consumable prey for consumer $k$ and $q$ is an index denoting each prey species in $A_k$.
-While $\phi_k$ remained as defined in Equation~\ref{eq:phi-pgle}, we allowed propagule production and dispersal capability to vary with species trophic position $\tau_k$ according to $g_k \propto \tau_k^{-\psi}$ and $\delta_k \propto \tau_k^{-\psi}$, respectively. 
+For consumers, $\eta_k$ represents the fraction of habitats occupied by at least one prey species. 
+While $\phi_k$ remained as defined in Equation~\ref{eq:phi-pgle}, we allowed propagule production and dispersal capability to vary with species trophic position $\tau_k$ according to $g_k \propto \tau_k^{-\psi}$ and $\delta_k \propto \tau_k^{-\psi}$, respectively (Methods). 
 Thus, species at higher trophic positions produce fewer propagules but have greater dispersal capability.
 
 The establishment probability $c_k$ and the extinction rate $\mu_k$ were extended to capture the trophic complexity of food webs.
 As in the predator-prey model, we first specified the ecological processes operating at individual habitats.
-We assumed that establishment depends on the downstream accumulation of resources for producers and on the local richness of consumable prey for consumers.
+We assumed that establishment depends on the downstream accumulation of resource for producers and on the local richness of consumable prey ($s_{ik}$) for consumers.
 Applying the spatial mean-field approximation yields
 
 \begin{align}
@@ -363,49 +391,44 @@ Applying the spatial mean-field approximation yields
         r_0 + b \hat{u}, \qquad &\text{for producers},\\
         \hat{s}_k |A_k|^{-1}, \qquad &\text{for consumers},\\
     \end{cases}
+    \label{eq:estb-prob}
 \end{align}
 
-where $r_0$ is the resource supply, $b$ is the downstream accumulation rate of resources, $\hat{s}_k$ is the expected richness of consumable prey for consumer $k$, and $|A_k|$ is the number of consumable prey (or ``diet breadth'').
+where $r_0$ is the resource supply, $b$ is the downstream accumulation rate of resource, $\hat{s}_k$ is the expected richness of consumable prey for consumer $k$, and $|A_k|$ is the number of consumable prey (or ``diet breadth'').
 The expected prey richness $\hat{s}_k \equiv \mathbb{E}\bigl(s_{ik}\bigr)$ equals $\sum_{q \in A_k} p_q$ as a natural outcome of the spatial mean-field approximation.
-The division by the $k$'s diet breath $|A_k|$ expresses that consumer's establishment is proportional to relative prey availability.
+The division by the $k$'s diet breath $|A_k|$ expresses that consumer's establishment is proportional to relative prey availability, naturally introducing a trade-off between generalist and specialist consumers.
 
-The bottom-up influence of prey on extinction was assumed to depend on the relative scarcity of prey at individual habitats, yielding the following expression at the metapopulation level:
+The trophic influence on extinction was assumed to depend on the relative scarcity of prey and predator richness at individual habitats, yielding the following expression at the metapopulation level:
 
 \begin{equation}
     \mu_{k} = 
-        \underbrace{\mu^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
-        \underbrace{\mu_k^{(1)} \left(1 - \frac{\hat{s}_k}{|A_{k}|}\right)}_{\text{Prey scarcity}}.
+        \underbrace{\mu^{(0)} (1 + \hat{\rho} \hat{u})}_{\text{Disturbance}} + 
+        \underbrace{\mu_k^{(1)} \left(1 - \frac{\hat{s}_k}{|A_{k}|}\right)}_{\text{Prey scarcity}} +
+        \underbrace{\mu_k^{(2)} \hat{s}_k'}_{\text{Predation}} .
     \label{eq:extn-main}    
 \end{equation}
 
-In this formulation, the extinction rate increases as $\hat{s}_k$ decreases, while the effect of losing a single prey species is smaller for consumers with broader diets (i.e., larger $|A_k|$).
-Thus, despite its simplicity, this formulation captures species-specific vulnerability to prey limitation.
-For simplicity, the prey effect $\mu_k^{(1)}$ was assumed to be identical for all consumers ($\mu_k^{(1)} = \mu^{(1)}$) and absent for all producers ($\mu_k^{(1)} = 0$).
+where $\hat{s}_k' \equiv \mathbb{E}\bigl(s_{ik}'\bigr)$ is the expected predator richness, which equals the summed occupancy $\sum_{q \in A_k'} p_q$ at the metapopulation level ($A_k'$ denotes the set of predators for species $k$).
+The effect of losing a single prey species is smaller for consumers with broader diets (i.e., larger $|A_k|$), whereas predator effects accumulate with predator richness in the habitat.
+Thus, despite its simplicity, this formulation captures species-specific vulnerability to trophic interactions.
+For simplicity, we assumed that the prey effect was identical across all consumers ($\mu_k^{(1)} = \mu^{(1)}$) and absent for producers ($\mu_k^{(1)} = 0$).
+Likewise, we assumed that the predator effect was identical across all species ($\mu_k^{(2)} = \mu^{(2)}$).
 
-We analyzed the generalized model (Equation \ref{eq:model-fw}) using 20 replicas of simulated food webs.
-We used the prey-preference model, which generates acyclic food webs with omnivory.
-It allows the set of consumable prey species to vary among consumers, capturing the trophic complexity characteristic of natural food webs.
-These simulated food webs comprise 32 trophic species and vary in the number of trophic links and producers, allowing us to account for potential variations in food web structure.
-The unique FCL at stable equilibrium can be determined analytically by recursively solving Equation \ref{eq:model-fw} for $p_k$ from the base to the apex of the food web (Methods and \textit{SI Appendix}).
-
-Our model analysis predicts that the effects of ecosystem structure are transmitted through predator–prey interactions, extending the mechanisms identified in the simple predator–prey system to food chains. 
-The dual effect of branching, i.e., enhanced connectivity and reduced spatial coherence of disturbances, consistently increased FCL across ecological scenarios. 
-In contrast, the effect of ecosystem size (total river length $L$) was largely neutral (Figure \ref{fig:sim-main}A and B), with positive effects emerging only within a limited range where increased propagule supply outweighs the elevated risk of disturbance cascades.
-Resource supply ($r_0$) increased FCL, whereas disturbance rate ($\mu_0$) decreased FCL.
-However, these effects did not alter the qualitative relationships between FCL and ecosystem structures.
-
-The analytical predictions require the assumption of no predation effects on the occupancy dynamics.
-However, numerical simulations suggest that our analytical results are robust even when including predation on the extinction rate and allowing variation in other key ecological parameters, including dispersal scale ($\delta_k$), prey effect ($\mu^{(1)}$), the spatial scale of disturbance cascades ($\nu$), and trophic omnivory ($\theta$).
-The positive relationship between FCL and ecosystem complexity (branching rate) was consistent across all cases, whereas the influence of ecosystem size on FCL remained negligible to weakly positive (Figures S2–S9, \textit{SI Appendix}).
-% An exception occurred only when high propagule production of producers ($g_0 = 150$) coincided with weak disturbance cascades ($\rho = 0.25$ and $\mu^{(0)} = 2.5$).
-% In these cases, nearly all species persisted regardless of ecosystem size and complexity, producing little variation in FCL.
+We analyzed the generalized model (Equation \ref{eq:model-fw}) using 20 simulated food webs from the preferential prey model \citep{shibasaki_food_2024, johnson_trophic_2014}.
+This model generates acyclic food webs with omnivory, allowing the set of consumable prey species to vary among consumers and thereby capturing the trophic complexity characteristic of natural food webs.
+Each simulated food web comprised 32 trophic species but varied in the number of trophic links and producers, enabling us to account for variation in food web structure (Methods).
 
 \vspace{0.5cm}
 \input{tex/table_main}
 \vspace{0.5cm}
 
-Disturbance cascades play a central role in generating the weak effect of ecosystem size. When their influence is removed from the model by treating the disturbance term in Equation \ref{eq:extn-main} as constant (see \textit{SI Appendix} for details), the predicted relationship reduces to classical expectations: ecosystem size exerts a strong positive effect on FCL (Figures \ref{fig:sim-main}C and S10). This result is consistent with established food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019} and empirical observations in systems where spatially cascading disturbances are weak, such as lake ecosystems \citep{post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009}.
-Notably, ecosystem complexity continues to promote FCL even under this modified assumption, reflecting its persistent role in enhancing connectivity and facilitating colonization among habitats.
+We first analyzed the ``donor-control'' scenario, in which the predation has a negligible influence on the lower trophic levels (i.e., $\mu^{(2)} = 0$; see Table \ref{tab:parms} for parameter values).
+In this case, the unique FCL at stable equilibrium can be determined analytically by recursively solving Equation \ref{eq:model-fw} for $p_k$ from the base to the apex of the food web (Methods).
+Our model predicted that the effects of ecosystem structure are transmitted through predator–prey interactions, extending the mechanisms identified in the simple predator–prey system to food chains. 
+The dual effect of branching, i.e., enhanced connectivity and reduced spatial coherence of disturbances, consistently increased FCL across ecological scenarios (Figure \ref{fig:sim-main}A and B). 
+In contrast, the effect of ecosystem size (total river length $L$) was largely neutral, with positive effects emerging only within a limited range where increased propagule supply outweighs the elevated risk of disturbance cascades (Figure \ref{fig:sim-main}A and C).
+Resource supply ($r_0$) increased FCL, whereas disturbance rate ($\mu_0$) decreased FCL.
+However, these effects did not alter the qualitative relationships between FCL and ecosystem structures.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -417,6 +440,13 @@ Notably, ecosystem complexity continues to promote FCL even under this modified 
 \end{figure}
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+Numerical simulations demonstrated that our analytical predictions were robust to the inclusion of predation effects in the extinction term and to variation in key ecological parameters, including dispersal ($\delta_k$), prey effect ($\mu^{(1)}$), the spatial scale of disturbance cascades ($\nu$), and trophic omnivory ($\theta$). Across all cases, FCL increased with ecosystem complexity (branching rate), whereas the effect of ecosystem size remained negligible or weakly positive (Figures S2–S9, \textit{SI Appendix}).
+
+Disturbance cascades play a central role in generating the weak effect of ecosystem size. 
+When their influence was removed from the model by treating the disturbance term in Equation \ref{eq:extn-main} as constant (see \textit{SI Appendix} for details), the predicted relationship reduced to classical expectations: ecosystem size exerted a strong positive effect on FCL (Figures \ref{fig:sim-main}C and S10).
+This result is consistent with established food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019} and empirical observations in systems where spatially cascading disturbances are weak, such as lake ecosystems \citep{post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009}.
+Notably, ecosystem complexity continues to promote FCL even under this modified assumption, reflecting its persistent role in enhancing connectivity and facilitating colonization among habitats.
 
 % We model the patch occupancy dynamics of multi-trophic communities within the branching river network.
 % Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
@@ -473,46 +503,49 @@ Notably, ecosystem complexity continues to promote FCL even under this modified 
 \subsection{Empirical Evidence}
 
 We empirically validate our theoretical predictions using stable isotope data on $\delta^{15}N$ from existing literature.
-Our synthesis builds upon but distinguishes itself from similar previous studies in its extent, extracting FCL estimates at 317 sites across 115 watersheds worldwide (Figure \ref{fig:fcl-obs}A).
-To facilitate comparison with our theoretical predictions, ecosystem size and complexity were measured at the watershed level, where the total river length and the branching rate represent the properties of an entire watershed within which sampling sites are located (Methods).
-While watershed area can be an alternative proxy for ecosystem size \citep[e.g.,][]{sabo_role_2010}, total river length is strongly and linearly correlated with watershed area (Pearson's r = 0.99). 
+Our synthesis builds upon, but distinguishes itself from, similar previous studies in its extent, extracting FCL estimates at 317 sites across 115 watersheds worldwide (Figure \ref{fig:fcl-obs}A).
 These watersheds are separated by the ocean or lentic water bodies (e.g., lake), posing challenges to traverse across watersheds for lotic species (see Methods for watershed definition).
 However, they are small enough (26 to $\sim$5,000 km$^2$) to assume that top predators can disperse therein at a multi-generation time scale \citep{comte_fish_2018}.
+To facilitate comparison with our theoretical predictions, ecosystem size and complexity were measured at the watershed level, where total river length and branching rate represent the whole-watershed properties (Methods).
+Although watershed area can also serve as a proxy for ecosystem size \citep[e.g.,][]{sabo_role_2010}, it is strongly and linearly correlated with total river length (Pearson's $r = 0.99$). 
 
-We employed Bayesian hierarchical modeling to evaluate the effects of ecosystem size (total river length [km]) and complexity (branching rate [km$^{-1}$]) on FCL.
-We also accounted for potential influences of resource supply, disturbance, and human impacts through relevant proxy variables (elevation, precipitation, and human footprint index, respectively; Methods).
-The absolute Pearson’s correlation between these predictors was less than $0.4$ for all pairs, suggesting that multicollinearity is unlikely to be influential.
+We used Bayesian hierarchical modeling to evaluate the effects of ecosystem size (total river length [km]) and ecosystem complexity (branching rate [km$^{-1}$]) on FCL.
+We also accounted for potential effects of resource supply, disturbance, and human impacts using relevant proxy variables (elevation, precipitation, and the human footprint index, respectively; Methods). 
+The absolute Pearson correlation coefficient among all predictors was less than 0.4, indicating that multicollinearity was unlikely to affect the analysis.
 
-The results indicate that ecosystem complexity, rather than ecosystem size, is a key driver of FCL.
-The analysis provided strong statistical support for the positive effect of branching rate (Figure \ref{fig:fcl-obs}B), with a high probability that the regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure \ref{fig:ridge} and Table S3).
-Conversely, the effect of total river length was ambiguous (Figure \ref{fig:fcl-obs}C), characterized by the posterior distribution of its coefficient centered around zero (Figure \ref{fig:ridge}).
-Interestingly, despite regional uniqueness in ecological communities and distinct evolutionary histories, a model comparison suggests that the regression coefficients for these ecosystem properties does not vary among geographic regions.
-That is, the model assuming constant slopes across geographic regions had the lower WAIC \citep{watanabe_asymptotic_2010} than the region-specific slope model ($-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
+The results indicate that ecosystem complexity is a key determinant of FCL, whereas ecosystem size has only a weak effect.
+The analysis provided strong statistical support for a positive effect of branching rate (Figure~\ref{fig:fcl-obs}B), with a high posterior probability that its regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure~\ref{fig:ridge} and Table~S3). 
+In contrast, the effect of total river length was ambiguous (Figure~\ref{fig:fcl-obs}C), with the posterior distribution of its regression coefficient centered near zero (Figure~\ref{fig:ridge}; $\Pr(\beta > 0) = XXX$).
+Interestingly, despite substantial regional differences in ecological communities, model comparison suggested that the effects of these ecosystem properties did not vary among geographic regions.
+That is, the model assuming common regression slopes across regions was better supported than the region-specific slope model (Widely Applicable Information Criterion \citep{watanabe_asymptotic_2010}: $-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
 This result suggests the generality of our findings. 
 
-Our theory predicts that ecosystem complexity regulates FCL by dispersing the risk of disturbance cascades.
-This buffering mechanism may explain the observed effect of branching because the wealth of observations suggests the prevalence of disturbance cascades in rivers \citep{swanson_flood_1998, nakamura_disturbance_2000, berghuijs_growing_2019, sarremejane_drought_2021, sharma_spatial_2024}.
-For instance, in the Blue River watershed in the northwestern United States, half a century of records show that a significant proportion of debris flows travel over long distances, originating from confined mountain streams and cascading into larger downstream rivers \citep{nakamura_disturbance_2000}.
-Recent studies unveiled an expanding range of spatial flood synchrony \citep{berghuijs_growing_2019, sharma_spatial_2024}, suggesting that the disturbance cascades will be increasingly important under climate change due to larger and more intense precipitation events.
-Such hydrological processes are linked to the common occurrence of synchronized population dynamics \citep{sarremejane_drought_2021, larsen_geography_2021}.
-An exemplary work by Larsen et al. \citep{larsen_geography_2021} demonstrated that fish population dynamics in flow-connected sites are highly synchronized, based on an analysis of over 34,000 pairs of fish population time series across Europe.
-Under these regimes, tributaries serve as refugia from spatial disturbance cascades \citep[e.g.,][]{koizumi_fishermen_2013}, with confluences supporting longer food chains \citep{sabo_pulsed_2018, sullivan_ecosystem_2015}. 
+Our theory suggests two complementary mechanisms underlying the positive effects of ecosystem complexity: enhanced connectivity and flow-unconnected refugia.
+The first mechanism is supported by abundant evidence that propagule flux among tributaries enhances metapopulation stability and facilitates resource subsidies \citep{grant_living_2007, grant_use_2010, mari_metapopulation_2014, tsuboi_small_2022, terui_metapopulation_2018, uno_mainstemtributary_2015}. 
+Consistent with this mechanism, species diversity and local food chains are enhanced near tributary junctions \citep{uno_bridging_2026, sullivan_ecosystem_2015} and recover more rapidly following disturbance \citep{sabo_pulsed_2018}.
+Our results may emerge from these spatial processes, showing that enhanced connectivity elevates local FCL on average and shapes food web organization at the watershed scale.
+
+The second mechanism, flow-unconnected refugia, likely operates in synergy with enhanced connectivity because populations that persist in refugia during major disturbances can subsequently recolonize impacted habitats through dispersal \citep{pomeranz_ecosystem_2023, koizumi_fishermen_2013}.
+Extensive evidence supports the existence of disturbance cascades in river networks \citep{allan_stream_2007, swanson_flood_1998, nakamura_disturbance_2000, berghuijs_growing_2019, sarremejane_drought_2021, sharma_spatial_2024}, indicating that flow-unconnected tributaries often serve as colonization sources following disturbance. 
+For example, half a century of observations from the Blue River watershed in the northwestern United States showed that many debris flows originate in confined mountain streams and propagate long distances into larger downstream rivers \citep{nakamura_disturbance_2000}.
+Recent studies have further documented an expanding spatial extent of flood synchrony \citep{berghuijs_growing_2019, sharma_spatial_2024}, suggesting that disturbance cascades will become increasingly important under climate change. 
+These hydrological processes are linked to widespread spatial synchrony of aquatic population dynamics \citep{sarremejane_drought_2021, larsen_geography_2021, tamario_barriers_2025}. For example, an exemplary work by Larsen et al. \citep{larsen_geography_2021} found that fish populations at flow-connected sites exhibit highly synchronized dynamics based on more than 34,000 population time series across Europe.
 
 It is therefore reasonable that our data support the strong impact of precipitation on FCL (Figure \ref{fig:ridge}), which serves as a watershed-level proxy for disturbance regimes.
 Our independent analysis of river discharge and precipitation suggested that extreme flow anomalies are more likely to occur in areas with higher precipitation (\textit{SI Appendix}).
-Such anomalies, whether in the form of high or low flow, can increase the likelihood of species extirpation and shorten FCL \citep{sabo_food_2009}.
-In parallel, high flow variability may weaken predator-prey interactions, reducing energy transfer efficiency within a food web \citep{baruch_food_2023}.
-These processes may act in concert to constrain FCL in rivers with high precipitation.
+Thus, increased precipitation is associated with more frequent spate events, likely causing species extirpation and shortening FCL \citep{sabo_food_2009, sabo_role_2010}. 
+High flow variability has also been shown to reduce energy transfer efficiency, thereby limiting an ecosystem's capacity to support longer food chains \citep{baruch_food_2023}. 
+Together, these mechanisms may explain why FCL is shorter in rivers with high precipitation.
 
-The unclear effect of ecosystem size is consistent with our theoretical predictions.
-In contrast, several empirical studies have reported that ecosystem size can regulate riverine food chains \citep{mchugh_dual_2010, mcintosh_capacity_2018, sabo_role_2010}.
-Our findings contradict these observations.
+The effect of ecosystem size was only weakly positive and associated with substantial statistical uncertainty.
+According to our theory, this pattern is expected when species dispersal is limited to a fraction of the ecosystem while disturbance cascades remain extensive (Figure \ref{fig:sim-main}).
+This condition is likely met in our study system because the typical movement distances of stream fishes, which are often the top predators in these ecosystems, are substantially shorter than mean network distances, even though some highly mobile individuals can occasionally reach distant habitats \citep{comte_evidence_2018, radinger_patterns_2014, terui_non-random_2021, laroque_body_2026}.
+However, our findings contradict previous observations because some studies have reported that ecosystem size can regulate riverine food chains \citep{mchugh_dual_2010, mcintosh_capacity_2018, sabo_role_2010}.
 They, however, consider the effect of ecosystem size within an explicitly local context.
 For example, McHugh et al. \citep{mchugh_dual_2010} used local stream size (e.g., the cross-sectional area of the study reach) as a metric of ecosystem size (hereafter, ``habitat'' size).
 At this spatial scale, theory predicts that FCL should increase with increasing habitat size \textit{via} frequent colonization to larger habitats (i.e., target effects) \citep{shibasaki_food_2024}, metabolic scaling \citep{mcintosh_capacity_2018}, or weakened omnivory \citep{ward_mechanistic_2017}.
-% The site-level predictor of our hierarchical model captured some of these local effects of habitat size (see Methods) because FCL was longer in low-elevation streams with wide and open channels (Figure \ref{fig:ridge}).
 The total river length quantifies the size influences at a broader spatial scale (i.e., watershed scale), where landscape-level processes may attenuate local variations. 
-Thus, the present study speaks to the importance of spatial scale when examining the effect of ecosystem size on FCL, and this mechanism could also explain inconsistent effects of ecosystem size observed in other systems \citep{takimoto_environmental_2013}.
+Thus, the present study speaks to the importance of spatial scale when examining the effect of ecosystem size on FCL, and the inconsistency of spatial scale among studies could also explain varied effects of ecosystem size observed in other systems \citep{takimoto_environmental_2013}.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -532,13 +565,16 @@ Additionally, lower water temperatures and nutrient availability in high elevati
 Although we could not yield direct measures of stream productivity at FCL sites, the negative influence of elevation provides indirect support for the resource availability hypothesis in rivers.
 
 Our advanced statistical modeling accounted for common challenges in analyzing data collated from the literature, such as outliers, unequal and non-random sampling efforts, and the imperfect sampling of stable isotope data (see Methods for details).
+In particular, the use of hierarchical Bayesian modeling, coupled with censored regression, allowed us to accommodate 
 This quantitative technique is crucial for our analysis, as it accommodates the variability in sampling schemes found in previous studies.
 In addition, we statistically controlled the potential confounding effects of human influences by including the human footprint index, an integrated variable that summarizes eight pressure factors such as population density, land transformation, and infrastructures \citep{mu_global_2022}.
 As such, including the human footprint index would also enable the model to account for river fragmentation, which is often linked to road crossings and land transformation.
 
-However, as with any empirical research, our findings should be interpreted with caveat.
-We cannot rule out the possibility of spurious correlations, and experimental manipulations are warranted to confirm biological causality.
-Although watershed-scale experiments are practically impossible, small-scale experiments of micro-organisms may provide an alternative means to test the causality \citep{altermatt_big_2015, green_long_2023}.
+However, as with any correlative analysis, our findings should be interpreted with caution. Although our theoretical framework suggests plausible ecological mechanisms underlying the observed patterns, these mechanisms are unlikely to be the only processes involved.
+For example, more complex stream networks may increase interactions with surrounding terrestrial ecosystems, enhancing nutrient inputs and resource subsidies that could also influence FCL. 
+In addition, we cannot rule out the possibility of spurious correlations inherent in observational analyses. 
+Experimental manipulations are therefore needed to establish biological causality. 
+Although watershed-scale experiments are largely impractical, controlled experiments using microbial microcosms or other small-scale systems may provide a feasible alternative for testing the proposed and other mechanisms \citep{altermatt_big_2015, green_long_2023}.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -562,10 +598,6 @@ For example, forests exhibit complex vertical and horizontal structures, creatin
 Similarly, reef topography influences spatial disturbance patterns in marine systems \citep{connell_30year_1997}.
 Therefore, the role of ecosystem complexity should be seen as the rule, not the exception.
 
-% Despite growing recognition of ecosystem-based conservation \citep{schindler_portfolio_2015}, it remains uncommon to consider the diverse habitat portfolios that complex ecosystems encompass.
-% However, without comprehensive frameworks, human activities risk simplifying ecosystem structures \citep{turner_landscape_2015, grill_mapping_2019} and compromise their inherent resilience to rapid environmental changes \citep{turner_landscape_2015}.
-% Our discovery illuminated the underappreciated role of ecosystem complexity in fostering resilient ecosystems, laying the groundwork for designing future conservation efforts.
-
 % \newpage
 
 \section{Methods}
@@ -577,6 +609,7 @@ Therefore, the role of ecosystem complexity should be seen as the rule, not the 
 We used the preferential prey model to generate initial food webs \citep{johnson_trophic_2014}.
 We chose this method because it generates (i) acyclic food webs, (ii) food web structures comparable to those observed in nature, and (iii) plausible ranges of FCL with parameter values informed by empirical food webs \citep{shibasaki_food_2024}.
 Although the niche model \citep{williams_simple_2000} is used widely in food web research, this algorithm is unsuitable for our study because it may create loops and cannibalism in a food web, which prevent us from defining trophic positions and FCL \citep{shibasaki_food_2024}.
+Here, we provide an overview of this method, and full details are provided in \textit{SI Appendix}.
 
 The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $P$, the expected number of trophic links $N_l$, and trophic omnivory $\theta$ ($\theta > 0$).
 In this model, a food web begins with $P$ primary producers, indexed as species $k = 1, 2, ..., P$.
@@ -602,148 +635,177 @@ consumer trophic positions are given as the average of prey trophic positions pl
 \end{align}
 
 where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for species $k$, respectively.
-See \textit{SI Appendix} for further details.
 
-\subsubsection{Spatial model}
-
-Our spatial model of a branching ecosystem is an extension of the finite random topology model \citep{shreve_infinite_1967}.
-A simulation study has shown that random branching networks can produce ecological dynamics similar to those in Optimal Channel Networks (OCNs) \citep{lee_river_2022}, both giving rise to geometric planar features resembling real river networks \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001}.
-While OCNs are a viable option, we chose random branching networks because their model parameters allow direct control of river network topology \citep{lee_river_2022, terui_metapopulation_2018, terui_emergent_2021}.
-
-We consider a bifurcating branching ecosystem of total river length $L$ and branching rate $\lambda_b$, in which $N$ habitat patches are distributed randomly with density $h$ [river length$^{-1}$] along the river (i.e., $N = Lh$).
-In this system, the branching rate is a statistical parameter controlling the length of an individual ``link'' (Figure \ref{fig:scheme}A).
-Specifically, the length of link $s$, denoted as $l_s$, is assumed to follow an exponential distribution as $l_s \sim \mbox{Exp}(\lambda_b)$ \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}, but is conditional on $\sum_s^B l_s = L$ ($B$ denotes the number of links).
-The average link length approaches $\lambda_b^{-1}$ as $\lambda_b L \rightarrow \infty$.
-Evidence suggests that the branching rate captures the fractal nature of river networks, as this metric shows scaling properties over network resolution \citep{terui_revisiting_2024} and stream orders \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, kovchegov_random_2022}.
-
-Here, we use the extension of the Levins metapopulation model to dictate the patch occupancy dynamics of interacting species within the branching river network \citep{calcagno_constraints_2011, takimoto_effects_2012, guo_towards_2023}.
-Our spatial model represents a spatial mean-field approximation of local food web dynamics, where the richness of prey and predator species within a local habitat influences colonization and extinction dynamics over time (\citep{shibasaki_food_2024}; see \textit{SI Appendix} for derivation).
-Let $p_k$ denote the proportion of habitat patches occupied for species $k$.
-We describe the temporal dynamics as:
-
-\begin{equation}
-    \frac{dp_k}{dt} = \gamma_{k} p_k (1 - p_k) - \mu_k p_k,
-\end{equation}
-
-where $\gamma_k$ and $\mu_k$ denote colonization and extinction rates, respectively.
-We express these parameters as functions of ecological processes and spatial ecosystem structure, followed by the analytical solution of the key term, the expected river length $\hat{u}$, that connects river branching structure to food web dynamics.
-
-\textit{Colonization}. The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
-We assumed that the establishment probability is proportional to resource supply for producers or prey availability for consumers:
+Once the structural trophic position $\tau_k$ was determined for each realized food web, species-specific propagule production ($g_k$) and dispersal parameter ($\delta_k$) were assigned as
 
 \begin{align}
-    r_{k} = 
-    \begin{cases}
-        \min(r_0 + b \hat{u}, 1) & ~\text{for producers}~ (k=1, 2, \ldots, P)\\
-        |A_{k}|^{-1} \sum_{q~\in A_{k}} p_{q} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S)
-    \end{cases}
+\begin{split}
+    \ln g_k &\sim \mathrm{Normal}(\ln g_0 - \psi\,\tau_k, 0.01),\\
+    \ln \delta_k &\sim \mathrm{Normal}(\ln \delta_0 - \psi\,\tau_k, 0.01),
+\end{split}
 \end{align}
 
-where $r_0$ ($0 \le r_0 \le 1$) is the (minimum) resource supply, and the parameter $b$ ($\ge 0$) quantifies how resource supply increases downstream as a function of the expected upstream river length $\hat{u}$ (truncated at one to represent a probability).
-Therefore, this formulation enables the model to capture a downstream increase of primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
-The term $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the summed occupancy of prey for consumer $k$.
-Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable prey.
+where $g_0$ and $\delta_0$ denote the propagule production and dispersal parameter of producer species, respectively, and $\psi$ is the scaling exponent.
+Consequently, species at higher trophic positions produce fewer propagules but possess greater dispersal capability.
+These assumptions are consistent with empirical relationships between trophic position and production \citep{finlay_stream_2011}, as well as between trophic position and dispersal ability \citep{mccann_dynamics_2005}.
 
-Effective propagule $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
-We impose a habitat constraint on $c_{0,k}$ because $N$ is the maximum number of habitat patches that effective propagules can colonize \citep{takimoto_effects_2012, terui_spatial_2019}:
+% Our spatial model of a branching ecosystem is an extension of the finite random topology model \citep{shreve_infinite_1967}.
+% A simulation study has shown that random branching networks can produce ecological dynamics similar to those in Optimal Channel Networks (OCNs) \citep{lee_river_2022}, both giving rise to geometric planar features resembling real river networks \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001}.
+% While OCNs are a viable option, we chose random branching networks because their model parameters allow direct control of river network topology \citep{lee_river_2022, terui_metapopulation_2018, terui_emergent_2021}.
 
-\begin{align}
-    c_{0, k} = 
-    \begin{cases}
-        N & \text{if $g_k \phi_k \ge N$},\\
-        g_k \phi_k & \text{if $g_k \phi_k < N$}.
-    \end{cases}
-    \label{eq:c0-prod-method}
-\end{align}
+% We modeled river networks as bifurcating branching ecosystems parameterized by total river length $L$ and branching rate $\lambda_b$ (Figure \ref{fig:scheme}A). 
+% Individual link lengths, $l_s$, were assumed to follow an exponential distribution, $l_s \sim \mathrm{Exp}(\lambda_b)$, conditional on $\sum_{s=1}^{B} l_s = L$, where $B$ is the number of links \citep{peckham_reformulation_1999, terui_metapopulation_2018, terui_emergent_2021}.
+% Habitats were distributed randomly along the network with density $h$, yielding $N=Lh$ habitats. 
+% Evidence suggests that the branching rate captures the fractal nature of river networks, as this metric shows scaling properties over network resolution \citep{terui_revisiting_2024} and stream orders \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, kovchegov_random_2022}.
 
-The survival probability is described as $\phi_k = 1 - e^{-\delta_k h}$ so that dispersal capability $\delta_k$ and habitat density $h$ increase the survival during dispersal.
-This assumption has two merits.
-First, it makes biological sense because the mean distance between a pair of adjacent habitat patches decreases with habitat density.
-Second, this formulation relaxes a common assumption of global dispersal in analytical metapopulation models. 
-We assumed that $g_k$ and $\delta_k$ scale with the species' structural trophic position $\tau_k$ as $\ln g_k = \ln g_0 - \psi \ln \tau_k$ and $\ln \delta_k = \ln \delta_0 + \psi \ln \tau_k$, where $g_0$ and $\delta_0$ represent the propagule and dispersal values for producers.
-This assumption aligns with the known relationships of trophic position (or level) versus production \citep{finlay_stream_2011} and versus dispersal ability \citep{mccann_dynamics_2005}.
+% We describe the general form of our model, which can be reduced to Equations \ref{eq:model-pp} and \ref{eq:model-fw} as spetial cases.
+% Although we present only the resulting metapopulation equations here,  it is derived from ecological processes operating at individual habitats. 
+% The derivation and underlying assumptions at the local habitat level are provided in \textit{SI Appendix}.
 
-\textit{Extinction}. We express the extinction rate $\mu_k$ as a function of disturbance, prey scarcity, and predation:
+% Let $p_k$ denote the fraction of habitats occupied by species $k$.
+% We describe the temporal dynamics as
 
-\begin{equation}
-    \mu_{k} = 
-        \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_{k}|}\sum_{q\in A_{k}} p_{q}\right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_{k}} p_{q}}_{\text{Predation}},
-    \label{eq:extn}    
-\end{equation}
+% \begin{equation}
+%     \frac{dp_k}{dt} = c_{k} \phi_k p_k (\eta_k - p_k) - \mu_k p_k,
+% \end{equation}
 
-where $\tilde{A}_{k}$ is the set of predators for species $k$.
-The disturbance term comprises two potential sources, $\mu^{(0)}_k$ and $\mu^{(0)}_k \rho \hat{u}$.
-The first component $\mu^{(0)}_k$ is the stochastic disturbance occurring at the patch of interest.
-The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstream disturbance cascade, where $\rho$ and $\hat{u}$ denote the disturbance synchrony probability and the expected upstream river length at a given habitat patch, respectively.
-The parameter $\rho$ is a constant that controls the likelihood of co-extirpation between upstream and downstream habitats connected by flow.
+% where parameter interpretations are defined in Equation \ref{eq:model-fw}.
+% The establishment probability $c_k$ is modeled as
 
-In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with the summed occupancy of prey, and the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(1)} = 0$ for producers).
-Predation pressure is assumed to increase linearly with the summed occupancy of predators $\sum_{q \in \tilde{A}_{k}} p_{q}$.
-The parameter $\mu_{k}^{(2)}$ defines how quickly the predator-induced extinction rate increases with the summed predator occupancy.
+% \begin{align}
+%     c_k 
+%     &=
+%     \begin{cases}
+%         r_0 + b \hat{u}, \qquad &\text{for producers},\\
+%         \hat{s}_k |A_k|^{-1}, \qquad &\text{for consumers},\\
+%     \end{cases}
+% \end{align}
 
-\textit{Upstream river length.}
-In both colonization and extinction processes, the key element is the expected value of upstream river length $\hat{u}$.
-Although often overlooked, metapopulation models are a spatial mean field approximation of local colonization and extinction dynamics \citep{ovaskainen_speciesarea_2003, ovaskainen_asymptotically_2006}. 
-Therefore, when we model these dynamic processes as a function of upstream river length, its expected value $\hat{u}$ must be carefully derived.
-Here, assuming a finite total river length $L > 0$ with random branching at a rate $\lambda_b > 0$, we derived that the expected value $\hat{u}$ is a nonlinear function of $L$ and $\lambda_b$ (see Figure \ref{fig:scheme}B for visual representation and \textit{SI Appendix} for derivation), linking river branching structure to food web dynamics:
 
-\begin{equation}
-    \hat{u}(L, \lambda_b) = L \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
-    \label{eq:u-hat}
-\end{equation}
+% We express these parameters as functions of ecological processes and spatial ecosystem structure, followed by the analytical solution of the key term, the expected river length $\hat{u}$, that connects river branching structure to food web dynamics.
 
-where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers.
-The constraint $z \in 2\mathbb{Z}_{\ge 0}$ arises from the requirement that the number of links be odd in a bifurcating river network.
-The functions $\hat{n}(z)$ and $f'_{\text{pois}}(z; L, \lambda_b)$ represent, respectively, the expected number of upstream links and the probability mass function of a truncated Poisson distribution, defined as:
+% \textit{Colonization}. The colonization rate $\gamma_k$ is a product of establishment probability $r_k$ and the number of effective propagules $c_{0,k}$ ($\gamma_k = r_k c_{0,k}$).
+% We assumed that the establishment probability is proportional to resource supply for producers or prey availability for consumers:
 
-\begin{equation}
-    \hat{n}(z) = 2^{z + 1} \binom{z + 1}{\frac{z + 2}{2}}^{-1} - 2,
-    \label{eq:n-hat}
-\end{equation}
+% \begin{align}
+%     r_{k} = 
+%     \begin{cases}
+%         \min(r_0 + b \hat{u}, 1) & ~\text{for producers}~ (k=1, 2, \ldots, P)\\
+%         |A_{k}|^{-1} \sum_{q~\in A_{k}} p_{q} & ~\text{for consumers}~ (k=P+1, P+2, \ldots, S)
+%     \end{cases}
+% \end{align}
 
-where $\binom{\cdot}{\cdot}$ denotes a binomial coefficient, and
+% where $r_0$ ($0 \le r_0 \le 1$) is the (minimum) resource supply, and the parameter $b$ ($\ge 0$) quantifies how resource supply increases downstream as a function of the expected upstream river length $\hat{u}$ (truncated at one to represent a probability).
+% Therefore, this formulation enables the model to capture a downstream increase of primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
+% The term $\sum_{q \in A_{k}} p_{q}$ ($q \ne k$) is the summed occupancy of prey for consumer $k$.
+% Despite its simplicity, this formulation naturally accounts for the trade-off between specialist and generalist consumers because the impact of single prey species scales with the number of consumable prey.
 
-\begin{equation}
-    f'_{\text{pois}}(z; L, \lambda_b) = \frac{(\lambda_b L)^z e^{-\lambda_b L}}{z!} \cdot \frac{1 + (-1)^{z}}{1 + e^{-2\lambda_b L}}.
-    \label{eq:t-poisson}
-\end{equation}
+% Effective propagule $c_{0,k}$ is a product of the gross number of propagules $g_k$ and survival probability during dispersal $\phi_k$.
+% We impose a habitat constraint on $c_{0,k}$ because $N$ is the maximum number of habitat patches that effective propagules can colonize \citep{takimoto_effects_2012, terui_spatial_2019}:
 
-It is important to note that Equations \ref{eq:u-hat}–\ref{eq:t-poisson} represent an analytical solution that holds for any finite-sized river network with random bifurcations.
-Thus, this formulation does not impose any built-in assumptions that predetermine the relationships between FCL and spatial ecosystem properties.
+% \begin{align}
+%     c_{0, k} = 
+%     \begin{cases}
+%         N & \text{if $g_k \phi_k \ge N$},\\
+%         g_k \phi_k & \text{if $g_k \phi_k < N$}.
+%     \end{cases}
+%     \label{eq:c0-prod-method}
+% \end{align}
 
-\textit{Equilibrium.} In the absence of predator-induced extinction ($\mu_{k}^{(2)}=0$), the equilibrium of the system can be derived analytically.
-According to  Equation \ref{eq:model0}, the fraction of patches occupied by species $k$ at equilibrium is written as follows:
+% The survival probability is described as $\phi_k = 1 - e^{-\delta_k h}$ so that dispersal capability $\delta_k$ and habitat density $h$ increase the survival during dispersal.
+% This assumption has two merits.
+% First, it makes biological sense because the mean distance between a pair of adjacent habitat patches decreases with habitat density.
+% Second, this formulation relaxes a common assumption of global dispersal in analytical metapopulation models. 
+% We assumed that $g_k$ and $\delta_k$ scale with the species' structural trophic position $\tau_k$ as $\ln g_k = \ln g_0 - \psi \ln \tau_k$ and $\ln \delta_k = \ln \delta_0 + \psi \ln \tau_k$, where $g_0$ and $\delta_0$ represent the propagule and dispersal values for producers.
+% This assumption aligns with the known relationships of trophic position (or level) versus production \citep{finlay_stream_2011} and versus dispersal ability \citep{mccann_dynamics_2005}.
 
-\begin{equation}
-    \frac{dp_k}{dt} = 0 \Leftrightarrow p_k = \left\{\begin{array}{c}
-         0,\\
-         p_{k}^{*}, 
-    \end{array}
-    \right.
-\end{equation}
+% \textit{Extinction}. We express the extinction rate $\mu_k$ as a function of disturbance, prey scarcity, and predation:
 
-where $p_{k}^{*} = 1 - \mu_k / \gamma_k$. 
-For producers ($k=1, 2, \ldots, P$), $\gamma_k$ and $\mu_k$ are constants.
-The occupancy at equilibrium is therefore either persistent ($p_k = p_k^* > 0$) or extinct ($p_k = 0$).
-For consumers ($k = P+1, P+2, \ldots, S$), the occupancies of species $q = 1, 2, \ldots, k - 1$ potentially affect $p_k$, but not $q = k + 1, \ldots, S$.
-Although this implies many possible combinations of equilibrium states (i.e., binary permutations of persistent or extinct), we demonstrated that the system has a unique stable equilibrium (see \textit{SI Appendix}).
-This results in a single realized FCL at stable equilibrium (Equation \ref{eq:def_tp}).
+% \begin{equation}
+%     \mu_{k} = 
+%         \underbrace{\mu_{k}^{(0)} (1 + \rho \hat{u})}_{\text{Disturbance}} + 
+%         \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_{k}|}\sum_{q\in A_{k}} p_{q}\right)}_{\text{Prey scarcity}} + 
+%         \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_{k}} p_{q}}_{\text{Predation}},
+%     \label{eq:extn}    
+% \end{equation}
+
+% where $\tilde{A}_{k}$ is the set of predators for species $k$.
+% The disturbance term comprises two potential sources, $\mu^{(0)}_k$ and $\mu^{(0)}_k \rho \hat{u}$.
+% The first component $\mu^{(0)}_k$ is the stochastic disturbance occurring at the patch of interest.
+% The second component $\mu^{(0)}_k \rho \hat{u}$ is the influence of the downstream disturbance cascade, where $\rho$ and $\hat{u}$ denote the disturbance synchrony probability and the expected upstream river length at a given habitat patch, respectively.
+% The parameter $\rho$ is a constant that controls the likelihood of co-extirpation between upstream and downstream habitats connected by flow.
+
+% In the second term of Equation \ref{eq:extn}, we assume that the extinction rate decreases with the summed occupancy of prey, and the parameter $\mu_{k}^{(1)}$ denotes the extinction rate in the complete absence of prey ($\mu_{k}^{(1)} = 0$ for producers).
+% Predation pressure is assumed to increase linearly with the summed occupancy of predators $\sum_{q \in \tilde{A}_{k}} p_{q}$.
+% The parameter $\mu_{k}^{(2)}$ defines how quickly the predator-induced extinction rate increases with the summed predator occupancy.
+
+% \textit{Upstream river length.}
+% In both colonization and extinction processes, the key element is the expected value of upstream river length $\hat{u}$.
+% Although often overlooked, metapopulation models are a spatial mean field approximation of local colonization and extinction dynamics \citep{ovaskainen_speciesarea_2003, ovaskainen_asymptotically_2006}. 
+% Therefore, when we model these dynamic processes as a function of upstream river length, its expected value $\hat{u}$ must be carefully derived.
+% Here, assuming a finite total river length $L > 0$ with random branching at a rate $\lambda_b > 0$, we derived that the expected value $\hat{u}$ is a nonlinear function of $L$ and $\lambda_b$ (see Figure \ref{fig:scheme}B for visual representation and \textit{SI Appendix} for derivation), linking river branching structure to food web dynamics:
+
+% \begin{equation}
+%     \hat{u}(L, \lambda_b) = L \sum_{z \in 2\mathbb{Z}_{\ge 0}} \left[ \frac{\hat{n}(z)}{z + 1} f'_{\text{pois}}(z; L, \lambda_b)\right] + \frac{1 - e^{-2 \lambda_b L}}{2 \lambda_b (1 + e^{-2 \lambda_b L})},
+%     \label{eq:u-hat}
+% \end{equation}
+
+% where $z$ is the number of links minus one and $2\mathbb{Z}_{\ge 0}$ denotes the set of positive even integers.
+% The constraint $z \in 2\mathbb{Z}_{\ge 0}$ arises from the requirement that the number of links be odd in a bifurcating river network.
+% The functions $\hat{n}(z)$ and $f'_{\text{pois}}(z; L, \lambda_b)$ represent, respectively, the expected number of upstream links and the probability mass function of a truncated Poisson distribution, defined as:
+
+% \begin{equation}
+%     \hat{n}(z) = 2^{z + 1} \binom{z + 1}{\frac{z + 2}{2}}^{-1} - 2,
+%     \label{eq:n-hat}
+% \end{equation}
+
+% where $\binom{\cdot}{\cdot}$ denotes a binomial coefficient, and
+
+% \begin{equation}
+%     f'_{\text{pois}}(z; L, \lambda_b) = \frac{(\lambda_b L)^z e^{-\lambda_b L}}{z!} \cdot \frac{1 + (-1)^{z}}{1 + e^{-2\lambda_b L}}.
+%     \label{eq:t-poisson}
+% \end{equation}
+
+% It is important to note that Equations \ref{eq:u-hat}–\ref{eq:t-poisson} represent an analytical solution that holds for any finite-sized river network with random bifurcations.
+% Thus, this formulation does not impose any built-in assumptions that predetermine the relationships between FCL and spatial ecosystem properties.
 
 %We consider the feasible case where $p_{k}^{*} > 0$ for all $k=1, 2, \ldots, S$.This is a necessary and sufficient condition for the local stability of the feasible equilibrium (\textit{SI Appendix}).Next, we show that the feasible equilibrium is, if exists, unique. For producers ($k=1,2,\ldots, P$), $\mu_k$ and $\gamma_k$ are independent of $\Vec{p}=\left(p_1, p_2, \ldots, p_S\right)$. Thus, $\hat{p}_k$ is unique for all producers.For consumers ($k=P+1,P+2,\ldots, S$), $\mu_k$ and $\gamma_k$ \textit{depend} on $\Vec{p}$. Nevertheless, because we assume acyclic food webs, $\mu_k$ and $\gamma_k$ depend only on $\left(p_1,p_2, \ldots, p_P,\ldots, p_{k-1} \right)$. This allows us to obtain $\hat{p_k}$ recursively. For example, $\hat{p_{P+1}}$ is unique because $\left(p_1, p_2, \ldots, p_P\right)$ is unique. Then, $p_{P+2}$ is also unique. This calculation can be continued until $k=S$.
 
-\subsubsection{Model analysis}
+\subsubsection{Model derivation and analysis}
 
-In our analytical exploration, we considered 20 replicas of food webs comprising 32 species ($S = 32$) with the omnivory level observed in the wild ($\theta = 0.25$) \cite{johnson_trophic_2014}.
+\textit{Derivation.} Our model builds on previous spatial food chain models \citep[e.g.,][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011, terui_spatial_2019}, but is substantially extended to incorporate the spatial effects of river network structure. 
+The generalized model in Equation~\ref{eq:model-fw} is derived from mechanistic assumptions at the level of individual habitats and then scaled up to metapopulation dynamics using a spatial mean-field approximation \citep{ovaskainen_asymptotically_2006}. 
+The patch occupancy model for a predator--prey system was recovered as a special case of Equation~\ref{eq:model-fw}, in which the establishment probability $c_k$, dispersal decay rate $\delta$, and propagule production rate $g$ were assumed to be constant across species.
+For brevity, the derivation is provided in the \textit{SI Appendix}.
+
+\textit{Analytical prediction.} In the absence of predation effects ($\mu^{(2)} = 0$), the equilibrium of the system defined by Equation \ref{eq:model-fw} can be derived analytically as
+
+\begin{equation}
+    \frac{dp_k}{dt} = 0 
+    \Leftrightarrow 
+    p_k 
+    = 
+    \begin{cases}
+         0,\\
+         p_{k}^{*} = \eta_k - \frac{\mu_k}{c_k \phi_k}, 
+    \end{cases}
+\end{equation}
+
+where $c_k$, $\eta_k$, $\phi_k$, and $\mu_k$ are defined in Equations \ref{eq:phi-pgle} and \ref{eq:eta} -- \ref{eq:extn-main}, and exact expressions for $\hat{d}$, $\hat{u}$ and $\hat{\rho}$ are available in \textit{SI Appendix}.
+For producers ($k=1, 2, \ldots, P$), $c_k \phi_k$ and $\mu_k$ are constants.
+The occupancy at equilibrium is therefore either persistent ($p_k = p_k^* > 0$) or extinct ($p_k = 0$).
+For consumers ($k = P+1, P+2, \ldots, S$), the occupancies of species $q = 1, 2, \ldots, k - 1$ potentially affect $p_k$, but not $q = k + 1, \ldots, S$.
+Although this implies many possible combinations of equilibrium states (i.e., binary permutations of persistent or extinct), we proved that the system has a unique stable equilibrium (see \textit{SI Appendix}).
+This results in a single realized FCL at stable equilibrium (Equation \ref{eq:def_tp}).
+
+In our analytical exploration, we considered 20 simulated food webs, each comprising 32 species ($S = 32$) with the omnivory level observed in the wild ($\theta = 0.25$) \cite{johnson_trophic_2014}.
 These food webs are simulated with different parameter values, which are drawn randomly as $P \sim \mbox{Pois}(0.19 \times S)$ (the number of producers) and $N_l \sim \mbox{Pois}(0.11 \times S^2)$ (the expected number of trophic links).
-The expected means of these parameters were determined to reflect the typical values for the proportion of producers ($P / S \approx 0.19$) \citep{briand_community_1984} and connectance in nature ($N_l / S^2 \approx 0.11$) \citep{dunne_food-web_2002}.
+The expected means of these parameters were determined to reflect the typical values of the proportion of producers ($P / S \approx 0.19$) \citep{briand_community_1984} and connectance in nature ($N_l / S^2 \approx 0.11$) \citep{dunne_food-web_2002}.
 We crossed these 20 food webs with resource supply ($r_0 \in \{0.4, 0.8\}$) and disturbance levels ($\mu^{(0)} \in \{2.5, 5.0\}$) with other parameter values summarized in Table \ref{tab:parms}.
-In each simulation scenario, we systematically varied total river length $L$ and branching rate $\lambda_b$ as $L \in [10, 100]$ and $\lambda_b \in [0.1, 1.0]$ (50 values with an equal interval) to assess their influences.
+In each simulation scenario, we systematically varied total river length $L$ and branching rate $\lambda_b$ as $L \in [100, 1000]$ and $\lambda_b \in [0.2, 1.0]$ (50 values with equal intervals) to assess their influences.
 This analytical exploration results in $20 \times 2^2 \times 50^2 = 200,000$ runs.
-Note that we explored a broader parameter space using numerical analysis in \textit{SI Appendix}.
 
-At (quasi)equilibrium, we calculated the realized trophic position $\tau^{(w)}$ for persistent species as follows.
+At equilibrium, we calculated the realized trophic position $\tau^{(w)}$ for persistent species as follows.
 Producers are assigned $\tau^{(w)} = 1$.
 Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trophic positions plus one:
 
@@ -753,7 +815,14 @@ Consumer's $\tau^{(w)}$ is calculated as the weighted average of the prey's trop
 \end{equation}
 
 We report the maximum value of $\tau_k^{(w)}$ as the predicted FCL in a given environmental context.
-The analysis was performed in R 4.5.2 \citep{r_program}.
+
+\textit{Numerical prediction.}
+To evaluate the robustness of our analytical predictions to the inclusion of predation effects, we analyzed Equation \ref{eq:model-fw} numerically across an expanded parameter space. 
+In addition to resource supply and disturbance rate, we varied the distance decay rate of disturbance synchrony ($\nu$), the prey effect ($\mu^{(1)}$), the predation effect ($\mu^{(2)}$), and the degree of omnivory ($\theta$). 
+We then calculated FCL as defined in Equation~\ref{eq:def_tp} using equilibrium occupancy values. 
+Parameter values and simulation results are reported in \textit{SI Appendix}.
+
+Theoretical analysis was performed in R 4.5.2 \citep{r_program}.
 
 \subsection{Empirical Analysis}
 
