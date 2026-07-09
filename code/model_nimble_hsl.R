@@ -52,7 +52,7 @@ m1 <- nimble::nimbleCode({
   U[1:R,1:R] <- uppertri_mult_diag(Ustar[1:R, 1:R], sigma_b[1:R]) 
   rho[1:R, 1:R] <- t(Ustar[1:R, 1:R]) %*% Ustar[1:R, 1:R]
   
-  ## - other covariates
+  # - other covariates
   for (k in 1:(K2 - R)) {
     b_prime[k] ~ dnorm(0, sd = sigma0)
   }
