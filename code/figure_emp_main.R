@@ -2,81 +2,116 @@
 #' Produce empirical figures for maintext
 #' Map/prediction plots, and posterior distributions
 
-# setup -------------------------------------------------------------------
-
 rm(list = ls())
 source("code/set_library.R")
-
-## - sourced `format_data4jags.R` in the following script
 source("code/format_emp_est2figure.R")
 
-# format data -------------------------------------------------------------
-
-## latent variables
+# pull posterior median estimates of the latent z parameters (z[1], z[2], ...)
 z <- df_est %>% 
   filter(str_detect(parms, "z\\[.\\]")) %>% 
   pull(median)
 
+# summarize a0 (log-scale FCL intercepts) from the best-fitting model's MCMC samples,
+# back-transform to natural scale, and join with observed FCL/weighting data
 df_mu_est <- list_est[[id_best]]$mcmc %>% 
-  ggmcmc::ggs() %>% 
-  filter(str_detect(Parameter, "a0\\[.{1,}\\]")) %>% 
+  ggmcmc::ggs() %>%                                    # convert coda/mcmc object to tidy long format
+  filter(
+    str_detect(Parameter, "a0\\[.{1,}\\]")             # keep only a0[g] parameters
+  ) %>%   
   group_by(Parameter) %>% 
-  summarize(fcl_est = exp(median(value))) %>% 
-  mutate(g = str_extract(Parameter, "\\[.{1,}\\]") %>% 
-           str_remove_all("\\[|\\]") %>% 
-           as.numeric()) %>% 
-  right_join(df_fcl_wsd) %>% 
-  mutate(w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2)),
-         scl_w = w / max(w))
-
+  summarize(fcl_est = exp(median(value))) %>%          # posterior median, exponentiated back to response scale
+  mutate(
+    g = str_extract(Parameter, "\\[.{1,}\\]") %>%      # extract group index from parameter name, e.g. "a0[3]" -> 3
+      str_remove_all("\\[|\\]") %>% 
+      as.numeric()
+  ) %>% 
+  right_join(df_fcl_wsd) %>%                           # join to FCL/site summary data by group index
+  mutate(
+    w = (n_site^z[1] * exp(-z[2] * (d_ratio - 1)^2)),  # site-weighting function using latent z params
+    scl_w = w / max(w)
+  )                                                    # rescale weights to max = 1
 
 # first figure ------------------------------------------------------------
 
-## map ####################################################################
+## fcl data
+# ecoregion / basin lookup table, keyed by outlet id (oid)
+df_ecor <- readRDS("data_fmt/data_fcl_reg.rds")[[2]] %>% 
+  dplyr::select(
+    oid, 
+    ecor, 
+    hybas_id
+  ) %>% 
+  mutate(region = case_when(ecor == 1 ~ "Africa",
+                            ecor == 2 ~ "Europe and Middle East",
+                            ecor == 3 ~ "Asia",
+                            ecor == 4 ~ "Australia and Pacific",
+                            ecor == 5 ~ "South America",
+                            ecor == 6 ~ "North and Central America",
+                            ecor == 7 ~ "Arctic")
+  )
 
 ## map layer
-sf_lev01 <- readRDS("data_raw/wgs84_region_lev01.rds") %>% 
+# level-01 HydroBASINS polygons, repaired for invalid geometries
+sf_lev01 <- readRDS("data_raw/sf_hybas_lev01.rds") %>% 
   st_make_valid()
 
 ## site layer
-sf_site <- readRDS("data_raw/wgs84_outlet.rds") %>%
-  left_join(readRDS("data_raw/wgs84_wsd_sub.rds") %>% 
-              as_tibble() %>% 
-              dplyr::select(uid, oid),
+# outlet points joined to ecoregion info, restricted to sites included in the analysis
+sf_site <- readRDS("data_raw/sf_outlet.rds") %>%
+  left_join(df_ecor,
             by = "oid") %>%
-  filter(uid %in% uid_incl) %>% 
-  dplyr::select(NULL) %>% 
-  st_join(sf_lev01) %>% 
-  mutate(h = as.numeric(factor(id_lev01)))
+  filter(oid %in% oid_incl)
 
-df_site_ref <- sf_site %>% 
-  as_tibble() %>% 
-  dplyr::select(-geometry) %>% 
-  distinct(id_lev01, h) %>% 
-  arrange(id_lev01)
-
+# simplified + validity-checked basin polygons used as the background map layer
 sf_region <- sf_lev01  %>% 
-  rmapshaper::ms_simplify() %>%
-  left_join(df_site_ref) %>% 
+  rmapshaper::ms_simplify() %>% 
   st_make_valid()
 
+# extract x/y from sf geometry since geom_mark_ellipse isn't sf-aware
+site_coords <- sf_site %>%
+  mutate(
+    x = st_coordinates(.)[, 1],
+    y = st_coordinates(.)[, 2]
+  )
+
+# build the map: basin polygons + site points colored by ecoregion +
+# ellipses summarizing the spatial extent of each ecoregion's sites
 g_map <- ggplot(sf_region) +
-  geom_sf(aes(fill = factor(h)),
-          alpha = 0.5) +
-  geom_sf(data = sf_site,
-          aes(color = factor(h)),
-          size = 1) +
-  guides(color = "none",
-         fill = "none") +
-  coord_sf(xlim = c(-163.8, 163.8)) +
+  geom_sf(
+    alpha = 0.5                        # background basin polygons, semi-transparent
+  ) +
+  geom_sf(
+    data = sf_site,
+    aes(color = region),         # site points colored by ecoregion
+    size = 1
+  ) +
+  ggforce::geom_mark_ellipse(
+    data = site_coords,
+    aes(
+      x = x, 
+      y = y, 
+      color = region,
+      fill = region
+    ),
+    alpha = 0.15,
+    expand = unit(2, "mm")             # padding around enclosed points; smaller = tighter ellipse
+  ) + 
+  labs(
+    fill = "Region"
+  ) +
+  guides(
+    color = "none"                      # suppress fill legend
+  ) +
+  coord_sf(xlim = c(-163.8, 163.8)) +  # restrict longitude extent of the map
   theme_bw() +
-  theme(axis.text = element_text(size = 12),
-        axis.ticks = element_blank(),
-        panel.border = element_blank())
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_text(size = 12),
+    axis.ticks = element_blank(),
+    panel.border = element_blank()
+  )
 
-
-## prediction plot #######################################################
-
+## prediction plot 
 source("code/set_theme.R")
 ggplot2::theme_set(default_theme)
 
@@ -84,7 +119,7 @@ ggplot2::theme_set(default_theme)
 (g_size <- df_mu_est %>% 
     ggplot(aes(x = r_length,
                y = fcl_est)) +
-    geom_point(aes(color = factor(h),
+    geom_point(aes(color = factor(ecor),
                    size = scl_w),
                alpha = 0.5) + 
     # geom_line(data = filter(df_yh, focus == "scl_r_length"),
@@ -113,19 +148,19 @@ ggplot2::theme_set(default_theme)
 (g_b <- df_mu_est %>% 
     ggplot(aes(x = lambda,
                y = fcl_est)) +
-    geom_point(aes(color = factor(h),
+    geom_point(aes(color = factor(ecor),
                    size = scl_w),
                alpha = 0.4) +
-    geom_line(data = filter(df_yh, focus == "scl_lambda"),
+    geom_line(data = filter(df_yh, focus == "scl_log_lambda"),
               aes(x = lambda,
                   y = y,
-                  color = factor(h)),
+                  color = factor(ecor)),
               alpha = 1,
               linetype = "dashed") + 
-    geom_line(data = filter(df_y, focus == "scl_lambda"),
+    geom_line(data = filter(df_y, focus == "scl_log_lambda"),
               aes(x = lambda,
                   y = y)) +
-    geom_ribbon(data = filter(df_y, focus == "scl_lambda"),
+    geom_ribbon(data = filter(df_y, focus == "scl_log_lambda"),
                 aes(y = y,
                     ymin = y_low,
                     ymax = y_high,
@@ -133,13 +168,14 @@ ggplot2::theme_set(default_theme)
                 alpha = 0.1) +
     scale_x_continuous(trans = "log10") +
     scale_y_continuous(trans = "log10") +
-    labs(y = "Food chain length",
-         x = expression("Branching rate ("*km^-1*")")) +
+    labs(
+      y = "Food chain length",
+      x = expression("Branching rate ("*km^-1*")")
+    ) +
     guides(size = "none",
            color = "none"))
 
-## arrange ################################################################
-
+## arrange 
 layout <- "
 AAAA
 BBCC
@@ -188,23 +224,33 @@ var_level <- df_ridge %>%
 
 g_ridge <- df_ridge %>% 
   mutate(var = factor(var, levels = var_level)) %>% 
-  ggplot(aes(x = value,
-             y = var,
-             fill = 0.5 - abs(0.5 - after_stat(ecdf)))) +
-  ggridges::stat_density_ridges(quantile_lines = TRUE,
-                                calc_ecdf = TRUE,
-                                geom = "density_ridges_gradient",
-                                quantiles = 0.5,
-                                color = grey(0, 0.2), 
-                                size = 0.25,
-                                scale = 0.95) +
-  scale_fill_gradient(low = "white",
-                      high = "salmon",
-                      name = "Tail prob.") +
-  geom_vline(xintercept = 0, 
-             linetype = "dashed",
-             color = grey(0.5, 0.5),
-             linewidth = 0.25) +
+  ggplot(
+    aes(
+      x = value,
+      y = var,
+      fill = 0.5 - abs(0.5 - after_stat(ecdf))
+    )
+  ) +
+  ggridges::stat_density_ridges(
+    quantile_lines = TRUE,
+    calc_ecdf = TRUE,
+    geom = "density_ridges_gradient",
+    quantiles = 0.5,
+    color = grey(0, 0.2), 
+    size = 0.25,
+    scale = 0.95
+  ) +
+  scale_fill_gradient(
+    low = "white",
+    high = "salmon",
+    name = "Tail prob."
+  ) +
+  geom_vline(
+    xintercept = 0, 
+    linetype = "dashed",
+    color = grey(0.5, 0.5),
+    linewidth = 0.25
+  ) +
   ggridges::theme_ridges() +
   theme(axis.title.x = element_text(hjust = 0.5),  # center x-axis label
         axis.title.y = element_text(hjust = 0.5)   # center y-axis label
