@@ -84,7 +84,8 @@ df_fcl_local <- df_fcl0 %>%
            oid, 
            huid, 
            hybas_lev01, 
-           hybas_lev02) %>% 
+           hybas_lev02,
+           ecor) %>% 
   summarize(fcl = mean(fcl),
             tpc = unique(top_predator_collected),
             .groups = "drop") %>% 
@@ -93,6 +94,7 @@ df_fcl_local <- df_fcl0 %>%
   mutate(g = as.numeric(factor(oid)),
          h01 = as.numeric(factor(hybas_lev01)),
          h02 = as.numeric(factor(hybas_lev02)),
+         ecor = as.numeric(factor(ecor)),
          censoring = ifelse(tpc == "N", 1, 0),
          cut = ifelse(tpc == "N", fcl, Inf)) %>% 
   mutate(fcl_obs = ifelse(tpc == "N", NA, fcl)) %>% 
@@ -100,6 +102,7 @@ df_fcl_local <- df_fcl0 %>%
     oid, 
     h01,
     h02,
+    ecor,
     g,
     sid,
     fcl,
@@ -118,6 +121,7 @@ df_fcl_wsd <- df_g %>%
              oid, 
              h01,
              h02,
+             ecor,
              g)
   ) %>%
   arrange(g) %>%
@@ -125,6 +129,7 @@ df_fcl_wsd <- df_g %>%
     oid, 
     h01,
     h02,
+    ecor,
     g
   )
 

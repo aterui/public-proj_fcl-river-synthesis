@@ -15,7 +15,6 @@ source("code/set_function.R")
 list_fcl <- readRDS("data_fmt/data_fcl_reg.rds")
 
 df_x <- list_fcl[[1]] %>% 
-  rename(local_hfp = hfp) %>% 
   left_join(list_fcl[[2]] %>% 
               dplyr::select(oid,
                             r_length,
@@ -24,6 +23,7 @@ df_x <- list_fcl[[1]] %>%
                             temp,
                             hfp)) %>% 
   dplyr::select(h01,
+                ecor,
                 g,
                 local_area,
                 local_elev,
@@ -40,6 +40,7 @@ df_x <- list_fcl[[1]] %>%
                    r_length,
                    lambda)) %>% 
   relocate(h01,
+           ecor,
            g,
            log_area,
            local_elev,
