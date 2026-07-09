@@ -243,7 +243,8 @@ df_stats <- df_ridge %>%
   group_by(var) %>% 
   summarize(
     b = median(value),
-    pp = sprintf(fmt = "%.2f", mean(value > 0))
+    pp = sprintf(fmt = "%.2f", mean(value > 0)),
+    pn = sprintf(fmt = "%.2f", mean(value < 0))
   ) 
 
 var_level <- df_stats %>% 
@@ -286,6 +287,15 @@ var_level <- df_stats %>%
       aes(x = Inf, y = var, label = pp),
       inherit.aes = FALSE,
       hjust = 1.0,
+      vjust = -0.3,
+      size = 3
+    ) +
+    geom_text(
+      data = df_stats %>%
+        mutate(var = factor(var, levels = var_level)),
+      aes(x = -Inf, y = var, label = pn),
+      inherit.aes = FALSE,
+      hjust = -1.0,
       vjust = -0.3,
       size = 3
     ) +
