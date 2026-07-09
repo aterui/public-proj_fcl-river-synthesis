@@ -62,7 +62,7 @@ B <- unname(rbind(v_r, m_b))
 cnm <- c("scl_log_rl", "scl_log_lambda", "scl_temp", "scl_prec", "scl_hfp")
 
 ## set group-specific means for each predictor
-df_x <- df_fcl_wsd %>% 
+df_x0g <- df_fcl_wsd %>% 
   group_by(ecor) %>% 
   reframe(
     across(
@@ -73,6 +73,9 @@ df_x <- df_fcl_wsd %>%
 
 df_yh0 <- foreach(j = seq_len(length(cnm)),
                   .combine = bind_rows) %do% {
+                    
+                    ## reset df_x
+                    df_x <- df_x0g
                     
                     ## get min-max range for a focus predictor
                     cid <- which(colnames(df_fcl_wsd) %in% c("ecor", cnm[j]))
@@ -119,8 +122,10 @@ df_yh0 <- foreach(j = seq_len(length(cnm)),
 
 ## get unscaled values
 df_yh <- df_yh0 %>% 
-  mutate(r_length = exp(scl_log_rl * sd(df_fcl_wsd$log_rl) + 
-                          mean(df_fcl_wsd$log_rl)),
+  mutate(r_length = 
+           exp(
+             scl_log_rl * sd(df_fcl_wsd$log_rl) + mean(df_fcl_wsd$log_rl)
+           ),
          lambda = exp(scl_log_lambda * sd(df_fcl_wsd$log_lambda) + 
                         mean(df_fcl_wsd$log_lambda)),
          prec = scl_prec * sd(df_fcl_wsd$prec) + mean(df_fcl_wsd$prec),
@@ -141,7 +146,7 @@ X <- with(df_fcl_wsd,
                 x))
 
 ## set mean values for each predictor
-df_x <- df_fcl_wsd %>% 
+df_x0 <- df_fcl_wsd %>% 
   dplyr::select(all_of(c("ecor", cnm))) %>% 
   reframe(
     across(all_of(cnm),
@@ -159,6 +164,9 @@ mcmc_b <- with(list_est[[id_best]],
 
 df_y <- foreach(j = seq_len(length(cnm)),
                 .combine = bind_rows) %do% {
+                  
+                  ## reset df_x
+                  df_x <- df_x0
                   
                   ## get min-max range for a focus predictor
                   cid <- which(colnames(df_fcl_wsd) %in% c("ecor", cnm[j]))
