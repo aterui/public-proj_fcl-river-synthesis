@@ -271,6 +271,7 @@ For consumers, the term $s_{ik}$ denotes prey richness, defined as the expected 
 $s_{ik}=\sum_{q \in A_k}p_{iq}$,
 where $q$ indexes prey species in the set $A_k$ (see Table~\ref{tab:symbol-notation}).
 We normalize prey richness by the total number of potential prey species $|A_k|$ so that consumer establishment is proportional to relative prey availability.
+We did not include predation effects on the establishment probability because newly colonizing prey populations are expected to occur at low densities, where predation pressure should be weak given that many consumers exhibit functional responses targeting more abundant prey \citep{dunn_predator_2020}.
 
 We express the number of effective propagules $\phi_{ik}'$ as
 
@@ -1431,25 +1432,25 @@ This ``no cascade'' model is identical to the one presented in the main text, ex
 
 \begin{equation}
     \mu_{k} = 
-        \underbrace{\mu_{k}^{(0)} o}_{\text{Disturbance}} + 
-        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{1}{|A_k|}\sum_{q \in A_k} p_{q} \right)}_{\text{Prey scarcity}} + 
-        \underbrace{\mu_{k}^{(2)} \sum_{q \in \tilde{A}_k} p_{q}}_{\text{Predation}}.
+        \underbrace{\mu_{k}^{(0)} (1 + \hat{\rho}_c \hat{u}_c)}_{\text{Disturbance}} + 
+        \underbrace{\mu_{k}^{(1)} \left(1 - \frac{\hat{s}_k}{|A_k|} \right)}_{\text{Prey scarcity}} + 
+        \underbrace{\mu_{k}^{(2)} \hat{s}_k'}_{\text{Predation}}.
 \end{equation}
 
-Here, $o$ is a constant used to ensure that the disturbance rate is comparable to the rates explored in the model with spatial disturbance cascades.
-We assumed $o = 1 + \rho \hat{u}~(L = 55, \lambda_b = 0.55)$, and other parameter values are specified as described in Table 1 (analytical).
+where the constants $\hat{\rho}_c$ and $\hat{u}_c$ are the values of $\hat{\rho}$ and $\hat{u}$ evaluated at $L = 550$ and $\lambda_b = 0.60$.
+All other parameter values are specified in Table 1 of the main text.
 Model predictions are displayed in Figure \ref{fig:no-cascade}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.75\textwidth]{fig_theo_rho0.pdf}
 \caption{Analytical prediction with no disturbance cascade. Heatmaps of
-FCL are expressed as a function of ecosystem size (river length, \(L\))
-and complexity (branching rate, \(\lambda_b\)), with rows and columns
+FCL are expressed as a function of ecosystem size (river length, $L$)
+and complexity (branching rate, $\lambda_b$), with rows and columns
 reflecting different disturbance and resource supply regimes. Each cell
 represents the average FCL of 20 food webs. White dashed lines indicate
-specific scenarios, explored in Figure 2B and 2C in the main text.
-Additional parameter values are provided in Table 1.}
+specific scenarios explored in Figure~3B and 3C of the main text.
+Additional parameter values are provided in Table~1.}
 \label{fig:no-cascade}
 \end{figure}
 
