@@ -33,10 +33,16 @@ df_fcl_wsd <- list_fcl[[2]]
 ## set data for JAGS
 ## - local level data
 X1 <- df_fcl_local %>% 
-  mutate(log_area = log(local_area)) %>% 
-  dplyr::select(local_elev) %>% 
-  mutate(across(.cols = everything(),
-                .fns = function(x) c(scale(x)))) %>% 
+  mutate(
+    log_area = log(local_area)
+  ) %>% 
+  dplyr::select(
+    local_elev,
+  ) %>% 
+  mutate(
+    across(.cols = everything(),
+           .fns = function(x) c(scale(x)))
+  ) %>% 
   data.matrix()
 
 list_const_local <- with(df_fcl_local,
@@ -49,15 +55,21 @@ list_const_local <- with(df_fcl_local,
 
 ## - watershed level data
 df_x2 <- df_fcl_wsd %>% 
-  mutate(log_rl = log(r_length),
-         log_lambda = log(lambda)) %>% 
-  dplyr::select(log_rl,
-                log_lambda,
-                temp,
-                prec,
-                hfp) %>% 
-  mutate(across(.cols = everything(),
-                .fns = function(x) c(scale(x))))
+  mutate(
+    log_rl = log(r_length),
+    log_lambda = log(lambda)
+  ) %>% 
+  dplyr::select(
+    log_rl,
+    log_lambda,
+    temp,
+    prec,
+    hfp
+  ) %>% 
+  mutate(
+    across(.cols = everything(),
+           .fns = function(x) c(scale(x)))
+  )
 
 X2 <- model.matrix(~ ., df_x2)
 
@@ -97,8 +109,8 @@ source("code/model_nimble_hi.R")
 ## initial value
 f_inits_h0 <- function() {
   with(df_fcl_local,
-       list(z = runif(2, min = 0.5, max = 0.55),
-            nu = runif(1, min = 4, max = 5),
+       list(z = runif(2, min = 0.5, max = 1.5),
+            nu = runif(1, min = 2, max = 10),
             a = rnorm(ncol(X1), sd = s0),
             b = rnorm(ncol(X2), sd = s0),
             sigma = runif(3, min = 0.05, max = 0.1),
@@ -185,19 +197,19 @@ R <- 3
 ## initial value
 f_inits_h1 <- function() {
   with(df_fcl_local,
-       list(z = runif(2, min = 0.5, max = 0.55),
-            nu = runif(1, min = 4, max = 5),
+       list(z = runif(2, min = 0.5, max = 1.5),
+            nu = runif(1, min = 2, max = 10),
             a = rnorm(ncol(X1), sd = s0),
-            b = matrix(rnorm(n_distinct(h) * R,
+            b = matrix(rnorm(n_distinct(ecor) * R,
                              sd = s0),
-                       nrow = n_distinct(h),
+                       nrow = n_distinct(ecor),
                        ncol = ncol(X2)),
             b_mu = rnorm(R, sd = s0),
             b_prime = rnorm(ncol(X2) - R, sd = s0),
             sigma = runif(2, min = 0.05, max = 0.1),
             sigma_b = runif(R, min = 0.05, max = 0.1),
             Ustar = diag(ncol(X2)),
-            a0 = rnorm(n_distinct(uid),
+            a0 = rnorm(n_distinct(oid),
                        mean = mean(log(fcl_obs),
                                    na.rm = TRUE),
                        sd = s0),
@@ -294,7 +306,7 @@ if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {
 #             sigma = runif(2, min = 0.05, max = 0.1),
 #             sigma_b = runif(R, min = 0.05, max = 0.1),
 #             Ustar = diag(ncol(X2)),
-#             a0 = rnorm(n_distinct(uid),
+#             a0 = rnorm(n_distinct(oid),
 #                        mean = mean(log(fcl_obs),
 #                                    na.rm = TRUE),
 #                        sd = s0),
@@ -395,7 +407,7 @@ if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {
 #             sigma = runif(2, min = 0.05, max = 0.1),
 #             sigma_b = runif(R, min = 0.05, max = 0.1),
 #             Ustar = diag(ncol(X2)),
-#             a0 = rnorm(n_distinct(uid),
+#             a0 = rnorm(n_distinct(oid),
 #                        mean = mean(log(fcl_obs),
 #                                    na.rm = TRUE),
 #                        sd = s0),
