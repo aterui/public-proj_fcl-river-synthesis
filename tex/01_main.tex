@@ -199,10 +199,10 @@ Increased branching with higher $\lambda_b$, in contrast, compresses the river n
 Therefore, ecosystem size and complexity both increase $\phi_k$ but through different mechanisms.
 
 Second, we assumed that disturbance cascades downstream. 
-In rivers, disturbance events originating upstream propagate downstream via water flow, including the transport of environmental contaminants and the downstream effects of floods and droughts \citep{allan_stream_2007, swanson_flood_1998, nakamura_disturbance_2000, massoudieh_biogeochemical_2010, berghuijs_growing_2019, sarremejane_drought_2021, sharma_spatial_2024}. 
-This propagation induces synchronized local extirpation among flow-connected habitats \citep{larsen_geography_2021, sarremejane_drought_2021}. 
+In river networks, disturbances originating upstream propagate downstream via water flow, including the transport of contaminants and the downstream effects of floods and droughts \citep{swanson_flood_1998, nakamura_disturbance_2000, gomi_understanding_2002, massoudieh_biogeochemical_2010, messager_global_2021}.
+Such propagation exposes flow-connected habitats to the same cascading disturbance simultaneously, generating synchronized demographic responses of riverine organisms over distances of several kilometers or more \citep{larsen_geography_2021, sarremejane_drought_2021, tamario_barriers_2025, terui_metapopulation_2018}. 
 To capture this process, we assumed that the risk of disturbance cascading to focal habitat $i$ is proportional to its upstream river length, $u_i$, while the probability of synchronized extirpation $\rho_i$ declines exponentially with distance from the upstream disturbance origin at rate $\nu$.
-Assuming that predator extinction depends on prey availability within the habitat (i.e., state-dependent), applying the spatial mean-field approximation obtains $\mu_k$ as
+Assuming that predator extinction depends on prey availability within the habitat (i.e., state-dependent), applying the spatial mean-field approximation as above obtains $\mu_k$ as
 
 \begin{align}
     \begin{split}
@@ -302,7 +302,7 @@ Thus, species at higher trophic positions produce fewer propagules but have grea
 The establishment probability $c_k$ and the extinction rate $\mu_k$ were extended to capture the trophic complexity of food webs.
 As in the predator-prey model, we first specified the ecological processes operating at individual habitats.
 We assumed that establishment depends on the downstream accumulation of resource for producers and on the local richness of consumable prey ($s_{ik}$) for consumers.
-Applying the spatial mean-field approximation yields
+At the metapopulation level, we yield
 
 \begin{align}
     c_k 
@@ -315,7 +315,7 @@ Applying the spatial mean-field approximation yields
 \end{align}
 
 where $\hat{u}$ is defined in Equation \ref{eq:mu-pp}, $r_0$ is the resource supply, $b$ is the downstream accumulation rate of resource, $\hat{s}_k$ is the expected richness of consumable prey for consumer $k$, and $|A_k|$ is the number of consumable prey (or ``diet breadth'').
-The expected prey richness $\hat{s}_k \equiv \mathbb{E}\bigl(s_{ik}\bigr)$ equals $\sum_{q \in A_k} p_q$ as a natural outcome of the spatial mean-field approximation.
+The expected prey richness $\hat{s}_k \equiv \mathbb{E}\bigl(s_{ik}\bigr)$ equals $\sum_{q \in A_k} p_q$ as a natural outcome of the spatial mean-field approximation (\textit{SI Appendix}).
 The division by the $k$'s diet breath $|A_k|$ expresses that consumer's establishment is proportional to relative prey availability, naturally introducing a trade-off between generalist and specialist consumers.
 
 The trophic influence on extinction was assumed to depend on the relative scarcity of prey and predator richness at individual habitats, yielding the following expression at the metapopulation level:
@@ -362,7 +362,7 @@ Notably, ecosystem complexity continues to promote FCL even under this modified 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{tex/fig_theo_main.pdf}
-    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (total river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Additional parameter values are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity, but not size, significantly increases FCL in the presence of spatial disturbance cascades (red lines). The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (see \textit{SI Appendix} for details), the positive effect of ecosystem size is recovered (the gray lines in panel C), while the effect of ecosystem complexity remains positive (the gray lines in panel B).}
+    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (total river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Additional parameter values are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity significantly increases FCL in the presence of spatial disturbance cascades (red lines), whereas the effect of ecosystem size was largely neutral. The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (see \textit{SI Appendix} for details), the positive effect of ecosystem size is recovered (the gray lines in panel C), while the effect of ecosystem complexity remains positive (the gray lines in panel B).}
     \label{fig:sim-main}
 \end{figure}
 
@@ -382,9 +382,9 @@ We also accounted for potential effects of resource supply, disturbance, and hum
 The absolute Pearson correlation coefficient among all predictors was less than 0.4, indicating that multicollinearity was unlikely to affect the analysis.
 
 The analysis provided strong statistical support for a positive effect of branching rate (Figure~\ref{fig:fcl-obs}B), with a high posterior probability that its regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure~\ref{fig:ridge} and Table~S3). 
-In contrast, the effect of total river length was weak (Figure~\ref{fig:fcl-obs}C), with the posterior distribution of its regression coefficient centered near zero (Figure~\ref{fig:ridge}; $\Pr(\beta > 0) = XXX$).
+In contrast, the effect of total river length was only weakly positive (Figure~\ref{fig:fcl-obs}C), with the posterior distribution of its regression coefficient centered near zero (Figure~\ref{fig:ridge}; $\Pr(\beta > 0) = 0.69$).
 Interestingly, despite substantial regional differences in ecological communities, model comparison suggested that the effects of these ecosystem properties did not vary among geographic regions.
-That is, the model assuming common regression slopes across regions was better supported than the region-specific slope model (WAIC \citep{watanabe_asymptotic_2010}: $-251.4$ vs. $-250.4$; see \textit{SI Appendix} for the competing model).
+That is, the model assuming common regression slopes across regions was better supported than the region-specific slope model (WAIC \citep{watanabe_asymptotic_2010}: $-252.4$ vs. $-252.3$; see \textit{SI Appendix} for the competing model).
 This result suggests the generality of our findings. 
 
 Our theory suggests two complementary mechanisms underlying the positive effect of ecosystem complexity: enhanced connectivity and flow-unconnected refugia.
@@ -430,7 +430,7 @@ Thus, the present study speaks to the importance of spatial scale when examining
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{tex/fig_emp_ridge.pdf}
-    \caption{Posterior distributions of the standardized regression coefficients from the Bayesian model explaining variation in food chain length. Predictor variables are shown on the y-axis. Colors represent tail probabilities, and vertical lines indicate posterior median estimates. Numbers on the right denote the posterior probability that the regression coefficient is positive ($\Pr(\beta > 0)$).}
+    \caption{Posterior distributions of the standardized regression coefficients from the Bayesian model explaining variation in food chain length. Predictor variables are shown on the y-axis. Colors represent tail probabilities, and vertical lines indicate posterior median estimates. Numbers on the right (left) denote the posterior probability that the regression coefficient is positive (negative).}
     \label{fig:ridge}
 \end{figure}
 
@@ -749,7 +749,7 @@ Our stable isotope data provide suitable estimates of FCL only when top predator
 Otherwise, the estimates are imperfect and represent only a possible minimum at the site (i.e., right censored).
 We accounted for this imperfect sampling with censored regression \citep{terui_stream_2018, lunn_bugs_2012}.
 Let $y_i$ denote the suitable estimate of FCL at site $i$ after log transformation.
-Our observed FCL estimate $Y_i$ (log transformed) is linked to $y_i$ as:
+Our observed FCL estimate $Y_i$ (log transformed) is linked to the latent variable $y_i$ as:
 
 \begin{align}
     y_i 
@@ -783,7 +783,10 @@ We related watershed-specific intercept $\alpha_{0, w}$ (the expected average FC
     \label{eq:watershed-avarage}
 \end{equation}
 
-where $\beta_0$ is the global intercept, $\beta_m$ the regression coefficient for the $m$-th watershed-level predictor $x'_{m, w}$, $\eta_{u[w]}$ the random effect accounting for geographic variations, with $u$ denoting the index for each geographic region defined by HydroBASINS level-1 (Lehner et al. \citep{lehner_global_2013}; see Figure \ref{fig:fcl-obs}A).
+where $\beta_0$ is the global intercept, $\beta_m$ the regression coefficient for the $m$-th watershed-level predictor $x'_{m, w}$, $\eta_{u[w]}$ the random effect accounting for geographic variations, with $u$ denoting the index for each geographic region (see Figure \ref{fig:fcl-obs}A).
+Geographic regions were defined based on HydroBASINS level-1 \citep{lehner_global_2013}, with the exception of sites from Borneo. 
+Borneo was originally included in the Australia and Pacific region but was reassigned to the Asia region based on the Wallace Line.
+
 At this level, we considered ecosystem size (log-transformed total river length), ecosystem complexity (log-transformed branching rate), climatic conditions (mean annual air temperature and annual precipitation amount), and human influences (human footprint index).
 Precipitation was included as a proxy for disturbance regimes because of its established relationship with flow variability in rivers (see \textit{SI Appendix} for supporting analysis).
 Human footprint index accounts for any cross-watershed heterogeneity in human activities, including the likelihood of river fragmentation due to road crossings.
