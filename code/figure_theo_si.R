@@ -32,12 +32,12 @@ df_plot_2sp <- df_2sp %>%
                         cols = vars(lab_tl, lab_delta0),
                         labeller = label_parsed,
                         nest_line = element_line(linetype = 3)) +
-    geom_vline(xintercept = c(0.4, 0.8),
-               color = "white",
-               linetype = "dashed") +
+    # geom_vline(xintercept = c(0.4, 0.8),
+    #            color = "white",
+    #            linetype = "dashed") +
     scale_fill_viridis_c() +
     labs(x = expression("Branching rate"~lambda[b]),
-         y = expression("River length"~italic(L)),
+         y = expression("Total river length"~italic(L)),
          fill = "Occupancy") +
     theme_classic() +
     theme(strip.background = element_blank(),
