@@ -34,7 +34,7 @@ df_ce <- tibble(rl = seq(100, 1000, length = 100)) %>%
     d = pdist(lambda = lambda, size = rl, exact = TRUE),
     u = u_length(lambda = lambda, size = rl, exact = TRUE),
     phi = laplace_rayleigh(delta = delta0, mu = d),
-    rho = laplace_rt(nu = nu, mu = diam, exact = TRUE)
+    rho = laplace_rt(nu = nu, mu = diam)
   ) %>% 
   ungroup() %>% 
   mutate(

@@ -92,8 +92,7 @@ v <- with(df_parms, {
   
   rho <- laplace_rt(
     nu = unique(nu), 
-    mu = diam, 
-    exact = TRUE
+    mu = diam
   )
   
   1 + rho * u
