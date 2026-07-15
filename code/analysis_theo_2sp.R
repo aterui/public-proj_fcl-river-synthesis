@@ -15,7 +15,7 @@ v_tp <- c(1, 2)
 # for line figures --------------------------------------------------------
 
 ## other parameters
-v_rl <- seq(100, 1000, length = 100)
+v_rl <- seq(100, 5000, length = 100)
 v_lambda <- seq(0.2, 1, length = 100)
 
 df_parms <- bind_rows(
@@ -76,7 +76,7 @@ saveRDS(df_fcl, "data_fmt/sim_fcl_2sp_line.rds")
 
 ## other parameters
 df_parms <- expand_grid(
-    rl = seq(100, 1000, length = 20),
+    rl = seq(100, 5000, length = 20),
     lambda = seq(0.2, 1, length = 20),
     h = 5,
     delta0 = c(0.05, 0.1),
