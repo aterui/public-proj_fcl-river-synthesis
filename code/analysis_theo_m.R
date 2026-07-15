@@ -47,7 +47,7 @@ list_fw <- lapply(seq_len(length(v_theta)), function(i) {
 
 ## fixed parameters
 resl <- 50
-v_rl <- seq(100, 1000, length = resl)
+v_rl <- seq(100, 5000, length = resl)
 v_lambda <- seq(0.2, 1, length = resl)
 
 df_parms <- 
@@ -98,14 +98,12 @@ v <- with(df_parms, {
   1 + rho * u
 })
 
-# heatmap -----------------------------------------------------------------
-
 ## for heatmap
 df_heat <- df_parms %>% 
   expand_grid(
     rl = v_rl,
     lambda = v_lambda,
-    r0 = c(0.4, 0.8),
+    r0 = c(0.25, 0.5),
     mu0 = c(2.5, 5)
   ) %>% 
   mutate(
@@ -116,6 +114,28 @@ df_heat <- df_parms %>%
       mu0
     )
   )
+
+## for line art
+df_line <- 
+  bind_rows(
+    focus("lambda", v_lambda, "rl", v_rl, n = 1),
+    focus("rl", v_rl, "lambda", v_lambda, n = 1)
+  ) %>% 
+  mutate(
+    r0 = max(df_heat[["r0"]]),
+    mu0 = max(df_heat[["mu0"]])
+  ) %>% 
+  expand_grid(df_parms) %>% 
+  mutate(
+    b = (1 - max(r0)) / max(rl),
+    mu0_scl = ifelse(
+      rho0 == 0,
+      mu0 * v,
+      mu0
+    )
+  )
+
+# heatmap -----------------------------------------------------------------
 
 ## RUN
 n_workers <- floor(0.8 * detectCores())
@@ -210,26 +230,6 @@ df_fcl_heat <- df_heat %>%
 saveRDS(df_fcl_heat, file = "data_fmt/sim_fcl_m_heat.rds")
 
 # line art ----------------------------------------------------------------
-
-## for line art
-df_line <- 
-  bind_rows(
-    focus("lambda", v_lambda, "rl", v_rl, n = 1),
-    focus("rl", v_rl, "lambda", v_lambda, n = 1)
-  ) %>% 
-  mutate(
-    r0 = 0.8,
-    mu0 = 5
-  ) %>% 
-  expand_grid(df_parms) %>% 
-  mutate(
-    b = (1 - max(r0)) / max(rl),
-    mu0_scl = ifelse(
-      rho0 == 0,
-      mu0 * v,
-      mu0
-    )
-  )
 
 ## RUN
 n_workers <- floor(0.8 * detectCores())
