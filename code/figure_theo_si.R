@@ -56,11 +56,24 @@ df_fcl_sim <- readRDS("data_fmt/sim_fcl_si.rds")
 
 ## take average for food web replicates
 df_plot <- df_fcl_sim %>% 
-  group_by(rl, lambda, h, delta0, rsrc, g, mu0, mu_p, mu_c, rho, theta) %>% 
-  summarize(fcl = mean(fcl)) %>% 
-  ungroup() %>% 
+  group_by(
+    rl, 
+    lambda, 
+    r0, 
+    mu0, 
+    mu_p, 
+    mu_c, 
+    delta0, 
+    nu,
+    rho0, 
+    theta
+  ) %>% 
+  summarize(
+    fcl = mean(fcl),
+    .groups = "drop"
+  ) %>% 
   mutate(lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
-         lab_rsrc = sprintf("italic(r[0])==%.2f", rsrc),
+         lab_r0 = sprintf("italic(r[0])==%.2f", r0),
          lab_mu_p = ifelse(mu_p > min(mu_p),
                            sprintf("mu^{(1)}==%.2f~(strong~prey~effect)", mu_p),
                            sprintf("mu^{(1)}==%.2f~(weak~prey~effect)", mu_p)),
@@ -68,39 +81,52 @@ df_plot <- df_fcl_sim %>%
                            sprintf("mu^{(2)}==%.2f~(weak~predation)", mu_c),
                            sprintf("mu^{(2)}==%.2f~(strong~predation)", mu_c)))
 
-df_parms <- df_plot %>% 
-  distinct(rho, g, theta) %>% 
-  arrange(desc(rho))
+df_case <- df_plot %>% 
+  distinct(delta0, nu, theta) %>% 
+  arrange(desc(delta0), desc(nu))
 
 ## figure
-
-list_g <- foreach(i = 1:nrow(df_parms)) %do% {
+list_g <- foreach(i = seq_len(nrow(df_case))) %do% {
   
   g <- df_plot %>% 
-    filter(rho == df_parms$rho[i],
-           g == df_parms$g[i],
-           theta == df_parms$theta[i]) %>% 
-    ggplot(aes(y = rl,
-               x = lambda,
-               fill = fcl)) +
+    filter(
+      nu == df_case$nu[i],
+      delta0 == df_case$delta0[i],
+      theta == df_case$theta[i]
+    ) %>% 
+    ggplot(
+      aes(
+        y = rl,
+        x = lambda,
+        fill = fcl
+      )
+    ) +
     geom_raster(alpha = 1) +
-    ggh4x::facet_nested(rows = vars(lab_mu_p, lab_mu0),
-                        cols = vars(lab_mu_c, lab_rsrc),
-                        labeller = label_parsed,
-                        nest_line = element_line(linetype = 3)) +
-    MetBrewer::scale_fill_met_c("Hiroshige",
-                                direction = -1) +
-    labs(x = expression("Branching rate"~lambda[b]),
-         y = expression("River length"~italic(L)),
-         fill = "FCL") +
+    ggh4x::facet_nested(
+      rows = vars(lab_mu_p, lab_mu0),
+      cols = vars(lab_mu_c, lab_r0),
+      labeller = label_parsed,
+      nest_line = element_line(linetype = 3)
+    ) +
+    MetBrewer::scale_fill_met_c(
+      "Hiroshige",
+      direction = -1
+    ) +
+    labs(
+      x = expression("Branching rate"~lambda[b]),
+      y = expression("River length"~italic(L)),
+      fill = "FCL"
+    ) +
     theme_classic() +
-    theme(strip.background = element_blank(),
-          axis.text =  element_text(size = 7))
+    theme(
+      strip.background = element_blank(),
+      axis.text =  element_text(size = 7)
+    )
   
-  filename <- with(df_parms[i, ],
-                   paste0("tex/fig_theo_",
-                          "rho", rho,
-                          "_g", g,
+  filename <- with(df_case[i, ],
+                   paste0("tex/fig_theo",
+                          "_delta", delta0,
+                          "_nu", nu,
                           "_theta", theta)) %>% 
     str_remove_all("\\.") %>% 
     paste0(".pdf")
