@@ -73,7 +73,7 @@ for(i in seq_len(nrow(df_grt))) {
   knit_chunk <- paste0(
     "\\begin{figure}\n",
     "\\centering\n",
-    "\\includegraphics[keepaspectratio]{", pdf[i], "}\n",
+    "\\includegraphics[width=1\\linewidth]{", pdf[i], "}\n",
     "\\caption{", cap[i], "}\n",
     "\\label{fig:fig-num", i, "}\n",
     "\\end{figure}\n",
