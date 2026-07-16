@@ -23,13 +23,13 @@ df_parms <- bind_rows(
   focus("rl", v_rl, "lambda", v_lambda, n = 1)
 ) %>% 
   expand_grid(
-    h = 5,
+    h = 1,
     delta0 = c(0.05, 0.1),
     r0 = 0.5,
     b = 0,
     rho0 = 1,
     nu = 0.1,
-    g0 = 1,
+    g0 = 5,
     mu0 = 2.5,
     mu_p = 5,
     z = 0,
