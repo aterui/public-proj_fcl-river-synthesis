@@ -1567,7 +1567,7 @@ and complexity (branching rate, $\lambda_b$), with rows and columns
 reflecting different disturbance and resource supply regimes. Each cell
 represents the average FCL of 20 food webs. White dashed lines indicate
 specific scenarios explored in Figure~3B and 3C of the main text.
-Additional parameter values are provided in Table~1.}
+Other parameter values are provided in Table~1.}
 \label{fig:no-cascade}
 \end{figure}
 
@@ -1627,8 +1627,8 @@ We used a Student's t-distribution for the error structure, as it better capture
 The degree of freedom, $\nu_d$, characterizes the thickness of the tails, with smaller values indicating a higher likelihood of extreme high or low flows relative to seasonal expectations (i.e., fatter tails).
 As $\nu_d$ approaches infinity, the Student's t-distribution converges to a normal distribution.
 
-We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., the watershed average; see Methods) using a linear mixed-effects model with random effects for watershed ID and hydrological region.
-The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 16.84 - 2.02 \cdot \ln \text{precipitation} + \text{error}$ (SE for intercept: 4.01, SE for slope: 0.57).
+We regressed the log-transformed degrees of freedom ($\ln \nu_d$) on the log-transformed regional precipitation (i.e., watershed average; see Methods) using a linear mixed-effects model with random effects for watershed ID and hydrological region (see Figure 4).
+The model revealed a significant negative scaling relationship, described by the equation $\ln \nu_d = 15.58 - 1.84 \, \ln \text{Precipitation} + \text{error}$ (SE for intercept: 3.99, SE for slope: 0.57).
 This result suggests that watersheds with higher precipitation are more likely to experience extreme high or low flows relative to seasonal norms.
 
 \subsection{Distance Ratio}
@@ -1653,7 +1653,7 @@ The hierarchical model presented in the main text is a random intercept model, w
 Specifically, we modified the watershed-level regression equation as follows:
 
 \begin{equation}
-    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} L_w + \beta_{2, u[w]} \lambda_{b, w} + \sum_{m=3} \beta_m x'_{m, w} + \varepsilon_{w},
+    \alpha_{0, w} = \beta_{0, u[w]} + \beta_{1, u[w]} \ln L_w + \beta_{2, u[w]} \ln \lambda_{b, w} + \sum_{m=3} \beta_m x'_{m, w} + \varepsilon_{w},
     \label{eq:watershed-average}
 \end{equation}
 
