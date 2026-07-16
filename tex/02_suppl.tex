@@ -83,7 +83,7 @@ The parameter $f_k$ is assumed to be a realization of a Beta distribution:
     f_k \sim \mbox{Beta}\left(1, \frac{(S + P - 3)(S - P)}{2(N_l - S + P)} - 1\right)
 \end{equation}
 
-This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (lemma \ref{lemma-beta-tilde}).
+This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (Lemma \ref{lemma-beta-tilde}).
 
 The probability of choosing prey $q'$, denoted as $Q_{q'}$, is proportional to trophic distance between $q$ and $q'$:
 
@@ -402,21 +402,25 @@ The extinction rate becomes
 \end{equation}
 
 where $\hat{s}_k' \equiv \mathbb{E}(s_{ik}' = \sum_{q \in A_k'} p_q)$ is the metapopulation-level expression of predator richness, obtained by summing the occupancies of potential predator species.
-The expected synchrony probability $\hat{\rho}$ is a nonlinear function of network diameter $\hat{\mathcal{L}}$,
+By Corollary~\ref{collorary-rho}, the expected synchrony probability $\hat{\rho}$ is a nonlinear function of network diameter $\hat{\mathcal{L}}$,
 
 \begin{equation}
-    \hat{\rho} \equiv \mathbb{E}\bigl(\exp({-\nu\,d_{\rho}})\bigr)
+    \hat{\rho} \equiv \mathbb{E}\bigl(\exp({-\nu d_{\rho}})\bigr)
     \approx
-    \pi
-    \left(
-        \frac{1}{\nu \hat{\mathcal{L}}} + 
-        \frac{I(\nu)}{\nu^2 \hat{\mathcal{L}}^2}
-    \right),
+    \frac{2}{\nu \hat{\mathcal{L}}} 
+            - 
+            \frac{\pi}{\nu^2 \hat{\mathcal{L}}^2} 
+            \left[
+                1 
+                - 
+                \mathrm{erfcx}
+                \left(
+                \frac{\nu \hat{\mathcal{L}}}{\sqrt{\pi}}
+                \right)
+            \right],
     \qquad
-    \lambda_b L \gg 1,
+    \lambda_b L \gg 1.
 \end{equation}
-
-where $I(\nu)$ is an integral that cannot be simplified to an elementary form (see Corollary~\ref{collorary-rho}).
 
 Finally, factoring $p_k$ out of $\phi_k'$ ($\phi_k' = \phi_k p_k$) yields the metapopulation model presented in the main text,
 
@@ -457,6 +461,7 @@ Thus, our model explicitly links ecosystem structure to the colonization--extinc
     \end{equation}
 
     where $\mathrm{erfcx}(\cdot)$ denotes the scaled complementary error function.
+    It follows that the Laplace transform of $d_{ij}$ is an explicit function of $L$ and $\lambda_b$ given the asymptotic scaling $\hat{d} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ (Proposition \ref{proposition-mu-d}).
 \end{corollary}
 
 \begin{proof}
@@ -474,6 +479,8 @@ Therefore, the Laplace transform of $d_{ij}$ can be approximated by that of the 
     \lambda_b L \gg 1.
 \end{equation}
 
+It follows that the Laplace transform of $d_{ij}$ is an explicit function of $L$ and $\lambda_b$ given the asymptotic scaling $\hat{d} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ (Proposition \ref{proposition-mu-d}).
+
 \end{proof}
 
 \begin{corollary}
@@ -485,26 +492,34 @@ Therefore, the Laplace transform of $d_{ij}$ can be approximated by that of the 
     \begin{equation}
         \mathbb{E}\bigl(\exp({-\nu\,d_{\rho}})\bigr)
         \approx
-        \pi
-        \left(
-            \frac{1}{\nu \hat{\mathcal{L}}} + 
-            \frac{I(\nu)}{\nu^2 \hat{\mathcal{L}}^2}
-        \right),
+        \frac{2}{\nu \hat{\mathcal{L}}} 
+        - 
+        \frac{\pi}{\nu^2 \hat{\mathcal{L}}^2} 
+        \left[
+           1 
+           - 
+           \mathrm{erfcx}
+           \left(
+           \frac{\nu \hat{\mathcal{L}}}{\sqrt{\pi}}
+           \right)
+        \right],
         \qquad
         \lambda_b L \gg 1,
     \end{equation}
 \end{corollary}
 
-which is an explicit function of $L$ and $\lambda_b$ given the asymptotic scaling $\hat{\mathcal{L}} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ (Proposition \ref{proposition-diameter})
+where $\mathrm{erfcx}(\cdot)$ denotes the scaled complementary error function.
+It follows that the Laplace transform of $d_{\rho}$ is an explicit function of $L$ and $\lambda_b$ given the asymptotic scaling $\hat{\mathcal{L}} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ (Proposition \ref{proposition-diameter}).
 
 \begin{proof}
-    Consider a disturbance event occurring along a given flow-connected path.
+    Consider a disturbance event randomly occurring along a given flow path.
     The full extent of this path, from its upstream to downstream endpoints, defines the network diameter $\mathcal{L}$.
-    Assuming that habitats are randomly distributed along the path according to a Poisson point process, the distance from the disturbance origin to a given habitat is equivalent to the distance between two randomly selected points on a line segment of length $\mathcal{L}$.
+    Assuming that habitats are randomly distributed along the path according to a Poisson point process, the distance from the upstream disturbance origin to a given downstream habitat is equivalent to the distance between two randomly selected points on a line segment of length $\mathcal{L}$.
     Therefore, conditional on the path length, the probability density function of the distance ($d_{\rho})$, denoted by $f(d_{\rho} \mid \mathcal{L})$, is
 
     \begin{equation}
-        f(d_{\rho} \mid \mathcal{L}) = \frac{2}{\mathcal{L}}\left(1 - \frac{d_{\rho}}{\mathcal{L}}\right).
+        f(d_{\rho} \mid \mathcal{L}) = \frac{2}{\mathcal{L}}\left(1 - \frac{d_{\rho}}{\mathcal{L}}\right),
+        \qquad (\because \text{Lemma \ref{lemma-d-rho-dist}}).
     \end{equation}
     
     The conditional Laplace transform given $\mathcal{L}$ is
@@ -515,14 +530,22 @@ which is an explicit function of $L$ and $\lambda_b$ given the asymptotic scalin
             &= 
             \int_0^{\mathcal{L}} \exp({-\nu d_{\rho}}) f(d_{\rho} \mid \mathcal{L}) dd_{\rho}\\
             &= 
-            \frac{2}{\nu \mathcal{L}}\bigl[1 - \exp(-\nu L)\bigr] -
-            \frac{2}{\nu^2 \mathcal{L}^2}\bigl[1 - (1 + \nu L) \exp(-\nu L) \bigr].    
+            \frac{2}{\nu \mathcal{L}}\bigl[1 - \exp(-\nu \mathcal{L})\bigr] -
+            \frac{2}{\nu^2 \mathcal{L}^2}\bigl[1 - (1 + \nu \mathcal{L}) \exp(-\nu \mathcal{L}) \bigr]\\
+            &= 
+            \frac{2}{\nu \mathcal{L}}
+            -
+            \frac{2}{\nu^2 \mathcal{L}^2}
+            +
+            \frac{2}{\nu^2 \mathcal{L}^2} \exp(-\nu \mathcal{L})
+            .    
         \end{split}
     \end{align}
     
     Under the assumption of random bifurcation, the distribution of $\mathcal{L}$ converges to a Rayleigh distribution in the regime $\lambda_b L \gg 1$ \citep{ojeda_distance_2022}.
-    With $\sigma$ denoting the scale parameter of the Rayleigh distribution, taking expectation over $\mathcal{L}$ yields
-    
+    However, because disturbance events are assumed to occur uniformly per unit river length, longer flow paths have a proportionally higher probability of containing the disturbance origin. Therefore, the relevant distribution of path lengths is length-biased, with weighting function $w(\mathcal{L}) = \mathcal{L}/\hat{\mathcal{L}}$, where $\hat{\mathcal{{L}}} \equiv \mathbb{E}(\mathcal{L})$.
+    With $\sigma$ denoting the scale parameter of the Rayleigh distribution, taking expectation over this length-biased distribution gives
+
     \begin{align}
         \begin{split}
             \mathbb{E}\bigl(\exp({-\nu d_{\rho}}) \bigr)
@@ -530,40 +553,134 @@ which is an explicit function of $L$ and $\lambda_b$ given the asymptotic scalin
             \int_0^{\infty} 
                 \mathbb{E}\bigl(\exp({-\nu d_{\rho}}) \mid \mathcal{L} \bigr) 
                 \underbrace{
-                \frac{\mathcal{L}}{\sigma^2} \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
-                }_{\text{Rayleigh}}
+                w(\mathcal{L}) \frac{\mathcal{L}}{\sigma^2} \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
+                }_{\text{Length-bias corrected Rayleigh}}
             d \mathcal{L}\\
             &= 
-            \frac{2}{\nu \sigma^2}
+            \frac{2}{\nu \hat{\mathcal{L}}}
             \int_0^{\infty} 
+                \frac{\mathcal{L}}{\sigma^2}
                 \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
-            d \mathcal{L} +
-            \frac{2}{\nu^2 \sigma^2}
-            \underbrace{
+            d \mathcal{L} 
+            -
+            \frac{2}{\nu^2 \hat{\mathcal{L}} \sigma^2}
             \int_0^{\infty} 
-                \left[
-                \frac{1 - \exp(-\nu \mathcal{L})}{\mathcal{L}}
-                \right]
                 \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
             d \mathcal{L}
-            }_{I(\nu)}
+            +
+            \frac{2}{\nu^2 \hat{\mathcal{L}} \sigma^2}
+            \int_0^{\infty} 
+                \exp(-\nu \mathcal{L} -\frac{\mathcal{L}^2}{2 \sigma^2})
+            d \mathcal{L}
             \\
             &=
-            \frac{2}{\nu \sigma} \left(\frac{\pi}{2}\right)^{\frac{1}{2}} +
-            \frac{2 I(\nu)}{\nu^2 \sigma^2}\\
-            &=
-            \pi
-            \left(
-                \frac{1}{\nu \hat{\mathcal{L}}} + 
-                \frac{I(\nu)}{\nu^2 \hat{\mathcal{L}}^2}
-            \right)
-            \qquad (\because \hat{\mathcal{L}} \equiv \mathbb{E}(\mathcal{L}) = \sigma \sqrt{\pi/2}).
+            \frac{2}{\nu \hat{\mathcal{L}}} 
+            - 
+            \frac{\pi}{\nu^2 \hat{\mathcal{L}}^2} 
+            \left[
+                1 
+                - 
+                \mathrm{erfcx}
+                \left(
+                \frac{\nu \hat{\mathcal{L}}}{\sqrt{\pi}}
+                \right)
+            \right],
+            \qquad (\because \hat{\mathcal{L}} = \sigma \sqrt{\pi/2}),
         \end{split}
     \end{align}
+    
+    % \begin{align}
+    %     \begin{split}
+    %         \mathbb{E}\bigl(\exp({-\nu d_{\rho}}) \bigr)
+    %         &\approx
+    %         \int_0^{\infty} 
+    %             \mathbb{E}\bigl(\exp({-\nu d_{\rho}}) \mid \mathcal{L} \bigr) 
+    %             \underbrace{
+    %             \frac{\mathcal{L}}{\sigma^2} \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
+    %             }_{\text{Rayleigh}}
+    %         d \mathcal{L}\\
+    %         &= 
+    %         \frac{2}{\nu \sigma^2}
+    %         \int_0^{\infty} 
+    %             \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
+    %         d \mathcal{L} 
+    %         -
+    %         \frac{2}{\nu^2 \sigma^2}
+    %         \underbrace{
+    %         \int_0^{\infty} 
+    %             \left[
+    %             \frac{1 - \exp(-\nu \mathcal{L})}{\mathcal{L}}
+    %             \right]
+    %             \exp(-\frac{\mathcal{L}^2}{2 \sigma^2})
+    %         d \mathcal{L}
+    %         }_{I(\nu)}
+    %         \\
+    %         &=
+    %         \frac{2}{\nu \sigma} \left(\frac{\pi}{2}\right)^{\frac{1}{2}} 
+    %         -
+    %         \frac{2 I(\nu)}{\nu^2 \sigma^2}\\
+    %         &=
+    %         \pi
+    %         \left(
+    %             \frac{1}{\nu \hat{\mathcal{L}}} 
+    %             - 
+    %             \frac{I(\nu)}{\nu^2 \hat{\mathcal{L}}^2}
+    %         \right)
+    %         \qquad (\because \hat{\mathcal{L}} \equiv \mathbb{E}(\mathcal{L}) = \sigma \sqrt{\pi/2}).
+    %     \end{split}
+    % \end{align}
 
     It follows that the Laplace transform of $d_{\rho}$ is an explicit function of $L$ and $\lambda_b$ given the asymptotic scaling $\hat{\mathcal{L}} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ (Proposition \ref{proposition-diameter}).
     
 \end{proof}
+
+\begin{lemma}
+\label{lemma-d-rho-dist}
+Consider a flow path of length $\mathcal{L}$, where disturbance origins and habitat locations are independently and uniformly distributed along the path. Conditional on a disturbance occurring upstream of a habitat, the distance $d_{\rho}$ between the disturbance origin and the habitat has probability density
+
+\begin{equation}
+    f(d_{\rho} \mid \mathcal{L})
+    =
+    \frac{2}{\mathcal{L}}
+    \left(
+        1-\frac{d_{\rho}}{\mathcal{L}}
+    \right).
+    \qquad
+    0\leq d_{\rho} \leq \mathcal{L}.
+\end{equation}
+
+\end{lemma}
+
+\begin{proof}
+Let $X$ and $Y$ denote the locations of a disturbance origin and a habitat, respectively. 
+Since both are uniformly distributed on $[0,\mathcal{L}]$, their joint probability density is uniform over the square $[0,\mathcal{L}]^2$. 
+Conditioning on flow connectivity ($X<Y$, assuming larger coordinates correspond to downstream locations) restricts the distribution to the upper triangular region, yielding
+
+\[
+f_{X,Y}(x,y\mid X<Y)
+=
+\frac{2}{\mathcal{L}^2},
+\qquad
+0<x<y<\mathcal{L}.
+\]
+
+Let $d_{\rho} = Y-X$. 
+Transforming variables from $(X,Y)$ to $(X,d_{\rho})$ and integrating over the allowable range $0<x<\mathcal{L}-d_{\rho}$ gives
+
+\begin{equation}
+    f(d_{\rho} \mid \mathcal{L})
+    =
+    \int_0^{\mathcal{L}-d_{\rho}}
+    \frac{2}{\mathcal{L}^2}\,dx
+    =
+    \frac{2}{\mathcal{L}}
+    \left(
+    1-\frac{d_{\rho}}{\mathcal{L}}
+    \right).
+\end{equation}
+
+\end{proof}
+
 \newpage
 
 \subsection{Scaling of Key Geometric Properties} \label{updist}
@@ -724,7 +841,7 @@ Taking expectation over the conditional distribution of link lengths yields
     \end{split}
 \end{align}
 
-where we used the known third moment of a Dirichlet distribution for $\mathbb{E}\bigl(F_s^3\bigr)$ as the set of fractional link lengths $(F_1, F_2,...,F_{z+1})$ follows a Dirichlet distribution (by lemma \ref{lemma-f}).
+where we used the known third moment of a Dirichlet distribution for $\mathbb{E}\bigl(F_s^3\bigr)$ as the set of fractional link lengths $(F_1, F_2,...,F_{z+1})$ follows a Dirichlet distribution (by Lemma \ref{lemma-f}).
 
 The between-link distance, $d_b(i,j \mid z)$, can be derived as the product of the topological distance between links and the mean link length.
 We denote $d_b(i,j \mid z)$ without conditioning on a realization of link lengths $\{l\}$ because $d_b(i,j \mid z)$ is deterministic once $z$ is given.
@@ -777,7 +894,7 @@ Assuming that link pairs are uniformly sampled from all possible combinations $C
     &= \frac{\mathbb{E} \bigl(\sum_{m=1}^M B(m)(2m - 1) (2M - 2m)\bigr)}{C_b}\\
     &= \frac{\sum_{m=1}^M (2M-1)w(m;M)(2m - 1) (2M - 2m)}{C_b}\\
     &= \frac{(4M + 2) \mathbb{E}(m) - 4 \mathbb{E}(m^2) - 2M}{M-1}\\
-    &= \frac{M}{M-1}\left[4^M {\binom{2M}{M}}^{-1} - 2\right] \qquad (\because \text{lemmas \ref{lemma-m} and \ref{lemma-m2}})\\
+    &= \frac{M}{M-1}\left[4^M {\binom{2M}{M}}^{-1} - 2\right] \qquad (\because \text{Lemmas \ref{lemma-m} and \ref{lemma-m2}})\\
     &= \frac{z+2}{z}\left[2^{z+2} \binom{z+2}{\frac{z+2}{2}}^{-1} - 2\right],
     \end{split}
 \end{align}
@@ -838,7 +955,7 @@ where
     \frac{2}{z + 2},
 \end{equation}
 
-given the known second moment of a Dirichlet distribution (by lemma \ref{lemma-f}).
+given the known second moment of a Dirichlet distribution (by Lemma \ref{lemma-f}).
 
 Recall that $z$ is a realization of the random variable $Z$, which obeys a truncated Poisson distribution as $Z \sim \text{Pois}(\lambda_b L)$ conditioned on $Z \in 2\mathbb{Z}_{\ge0}$.
 The exact closure is:
@@ -847,7 +964,7 @@ The exact closure is:
     \mathbb{E}\bigl(d(i,j)\bigr) = \sum_{z \in 2\mathbb{Z}_{\ge 0}} \mathbb{E}\bigl(d(i,j \mid z)\bigr) f'_{\text{pois}}(z; L, \lambda_b),
 \end{equation}
 
-where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (lemma \ref{lemma-pois}).
+where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
 For $\lambda_bL \gg 1$, applying the delta method obtains
 
 \begin{equation}
@@ -887,7 +1004,7 @@ Then the expected upstream river length asymptotically exhibits a scaling relati
 The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s[i]})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat) and $l'_{s[i]}$ is the distance from the upstream link end to habitat $i$ in link $s$.
 
 The summed length of upstream links $u'$ is the product of the mean length of a single link $\hat{l}$ and the number of upstream links $n$.
-With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s \mid z \sim \mbox{Beta}(1, z)$ (lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s\mid z) = (z + 1)^{-1}$.
+With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s \mid z \sim \mbox{Beta}(1, z)$ (Lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s\mid z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
@@ -911,7 +1028,7 @@ The probability of drawing a link with magnitude $m$ at random from a population
 
 The notation $\binom{\cdot}{\cdot}$ and $\binom{\cdot}{\cdot}^{-1}$ denote a binomial coefficient and its inverse.
 The number of upstream links $n$ has a linear relationship with link magnitude $m$ as $n = 2m - 2$ due to the bifurcating nature of topologically distinct river networks.
-Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; lemma \ref{lemma-m}), we obtain
+Using the expected value of $m$ ($\sum_{m=1}^{M} m~\omega(m; M)$; Lemma \ref{lemma-m}), we obtain
 
 \begin{align}
     \begin{split}
@@ -995,7 +1112,7 @@ The exact closure is:
     \mathbb{E}(u) = \sum_{z \in 2\mathbb{Z}_{\ge 0}} \mathbb{E}(u\mid z) f'_{\text{pois}}(z; L, \lambda_b),
 \end{equation}
 
-where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (lemma \ref{lemma-pois}).
+where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
 For $\lambda_b L \gg 1$, applying the delta method yields
 
 \begin{equation}
@@ -1080,7 +1197,7 @@ Consequently, the expected topological network diameter is
     &= \frac{1}{M} \sum_{m=1}^{M} m~\mathbb{E}(B(m))\\
     &= \frac{2M - 1}{M} \sum_{m=1}^{M} m~\omega(m; M)\\
     &= \frac{2M - 1}{M} \mathbb{E}(m)\\
-    &= \frac{2M - 1}{2M} \cdot 4^{M} \binom{2M}{M}^{-1} \qquad (\because \text{lemma \ref{lemma-m}})\\
+    &= \frac{2M - 1}{2M} \cdot 4^{M} \binom{2M}{M}^{-1} \qquad (\because \text{Lemma \ref{lemma-m}})\\
     &= \frac{z+1}{z+2} \cdot 2^{z+2} {\binom{z+2}{\frac{z + 2}{2}}}^{-1},
 \end{split}
 \end{align}
@@ -1109,7 +1226,7 @@ The exact closure is:
     \mathbb{E}(\mathcal{L})  = \sum_{z \in 2\mathbb{Z}_{\ge 0}} \mathbb{E}(\mathcal{L} \mid z) f'_{\text{pois}}(z; L, \lambda_b),
 \end{equation}
 
-where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (lemma \ref{lemma-pois}).
+where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
 For $\lambda_b L \gg 1$, applying the delta method obtains
 
 \begin{equation}
@@ -1271,7 +1388,7 @@ We obtain
 \end{equation}
 \end{proof}
 
-Yutaka Osada and Ryosuke Iritani contributed lemma \ref{lemma-m}.
+Yutaka Osada and Ryosuke Iritani contributed Lemma \ref{lemma-m}.
 
 \begin{lemma}
 \label{lemma-m2}
