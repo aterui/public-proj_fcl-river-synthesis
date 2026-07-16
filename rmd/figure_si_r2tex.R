@@ -20,7 +20,7 @@ df_grt <- readRDS(here::here("data_fmt/sim_fcl_si.rds")) %>%
 ## text setup
 cap <- with(df_grt, {
   
-  title0 <- paste0("Numerical prediction with ",
+  title0 <- paste0("Numerical predictions with ",
                    ifelse(
                      delta0 == max(delta0),
                      paste0("dispersal decay rate $\\delta_0 = ", delta0, "$ (for producers), "),

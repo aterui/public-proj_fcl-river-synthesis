@@ -85,7 +85,7 @@ df_parms <- expand_grid(
     rho0 = 1,
     nu = c(0.05, 0.1),
     g0 = 1,
-    mu0 = c(2.5, 5),
+    mu0 = c(5, 10),
     mu_p = 5,
     estb_prob = 0.5,
     z = 0,
