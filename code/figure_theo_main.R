@@ -333,5 +333,5 @@ ggsave(g_sim_main,
 
 ggsave(g_heat0,
        filename = "tex/fig_theo_rho0.pdf",
-       width = 6,
-       height = 5)
+       width = 9,
+       height = 7)
