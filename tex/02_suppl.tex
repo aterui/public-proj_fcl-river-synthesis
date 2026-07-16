@@ -1525,8 +1525,15 @@ Therefore, the system given by Equation \ref{eq:master} has a unique stable equi
 
 \subsection{Numerical Analysis}
 
-We performed a numerical sensitivity analysis to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), propagule size ($g_0$), synchrony probability ($\rho$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
+\textbf{Predatory-prey.}
+We explored a broader parameter space of the predator–prey metapopulation model (Equation 1 in the main text). 
+Specifically, we varied the dispersal decay rate ($\delta \in {0.05, 0.1}$), disturbance decay rate ($\nu \in {0.05, 0.1}$), and prey-induced extinction rate ($\mu^{(1)} \in {5, 10}$). 
+Other parameters were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. 
+Model predictions are shown in Figure \ref{fig:2sp-heat}.
+
+\textbf{Food web.}
+We performed a numerical sensitivity analysis of the generalized model (Equation 5 in the main text) to validate the robustness of analytical predictions in broader ecological contexts.
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), dispersal rate ($\delta_0$), disturbance decay rate ($\nu$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
 In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
@@ -1537,6 +1544,15 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
 \vspace{0.5cm} 
 \input{tex/table_si_theo}
 \vspace{0.5cm} 
+
+\newpage
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{tex/fig_theo_2sp_heat.pdf}
+    \caption{Model predictions of predator--prey occupancies across ecosystem size ($L$) and complexity ($\lambda_b$). We varied the dispersal decay rate ($\delta$), disturbance decay rate ($\nu$), and prey-induced extinction rate ($\mu^{(1)}$). Parameters not being varied were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, disturbance rate $\mu^{(0)} = 2.5$, dispersal decay rate $\delta = 0.1$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$.}
+    \label{fig:2sp-heat}
+\end{figure}
 
 \newpage
 
