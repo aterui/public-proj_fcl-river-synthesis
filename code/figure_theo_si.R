@@ -120,7 +120,7 @@ list_g <- foreach(i = seq_len(nrow(df_case))) %do% {
     ) +
     labs(
       x = expression("Branching rate"~lambda[b]),
-      y = expression("River length"~italic(L)),
+      y = expression("Total river length"~italic(L)),
       fill = "FCL"
     ) +
     theme_classic() +
