@@ -90,8 +90,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 ## export
 print(xtable(df_parms %>%
                dplyr::select(-Value.y) %>% 
-               rename(Value = Value.x) %>% 
-               filter(Symbol != "$\\mu^{(2)}$"),
+               rename(Value = Value.x),
              caption = "Parameter descriptions and values used for analytical predictions.",
              label = "tab:parms"),
       tabular.environment = "tabularx", # use \begin{tabularx}
