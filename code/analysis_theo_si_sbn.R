@@ -10,14 +10,19 @@ source("code/set_function.R")
 list_sbn <- readRDS("data_fmt/sim_sbn.rds")
 
 df_parms <- expand_grid(
-  theta_u = c(20, 40),
+  theta = c(40, 80),
+  kappa = c(0.5, 0.8),
   nu = c(0.1, 0.05),
   mu0 = c(2.5, 5),
   cp = 0.5,
   mu_p = 5,
   nid = seq_len(length(list_sbn)) # network id
 ) %>% 
-  mutate(theta_d = 2 * theta_u, .after = theta_u)
+  mutate(
+    theta_d = kappa * theta,
+    theta_u = (1 - kappa) * theta,
+    .after = theta
+  )
 
 
 # simulation run ----------------------------------------------------------
@@ -73,7 +78,7 @@ df_sim <-
         ## - length-bias correction "w", then take expectations
         ## - '(1 - exp(-nu * D2t)) / (nu * D2t)' is E(exp(-nu d)) when the disturbance origin is uniform over the flow path
         idx <- which(V(sbn)$u == 1) # tip index
-        D2t <- up[, idx]
+        D2t <- up[, idx, drop = FALSE]
         D2t[down[, idx] > 0] <- NA
         w <- D2t / rowSums(D2t, na.rm = TRUE)
         rho <- rowSums(w * ((1 - exp(-nu * D2t)) / (nu * D2t)), na.rm = TRUE)
@@ -87,8 +92,10 @@ df_sim <-
           u = u, # upstream river length
           rho = rho,
           intv = 1,
-          threshold = 1E-5
+          threshold = 1E-5,
+          n_timestep = 100
         )
+        
       })
       
       v_p <- m_p[nrow(m_p), -1]
