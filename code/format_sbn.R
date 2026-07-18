@@ -8,9 +8,9 @@ source("code/set_function.R")
 # generate networks -------------------------------------------------------
 
 ## parameters
-v_n <- seq(50, 250, by = 50)
-v_lambda <- seq(0.2, 1, by = 0.2)
-v_rep <- seq_len(4)
+v_n <- seq(50, 250, length = 11)
+v_lambda <- seq(0.2, 1, length = 11)
+v_rep <- seq_len(3)
 
 df_parms <- expand_grid(
   n = v_n,
