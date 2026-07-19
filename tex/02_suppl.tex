@@ -76,11 +76,16 @@ In this model, a food web begins with $P$ primary producers, indexed as species 
 Then, consumer species with index $k = P + 1, P + 2, ..., S$ are sequentially introduced and given their first prey $q$ randomly from those introduced earlier.
 Consumer species $k$ choose, if any, additional prey $q'$ ($q' \ne q$) according to the trophic position of the first prey.
 
-The number of additional prey, denoted as $\kappa_k$, is drawn randomly from a binomial distribution $\mbox{Bin}(a_k - 1, f_k)$, where $a_k$ is the number of species present upon the introduction of species $k$ and $f_k$ is the probability that existing species serving as prey for species $k$.
+The number of additional prey, denoted as $\kappa_k$, is drawn randomly from a binomial distribution $\mathrm{Bin}(a_k - 1, f_k)$, where $a_k$ is the number of species present upon the introduction of species $k$ and $f_k$ is the probability that existing species serving as prey for species $k$.
 The parameter $f_k$ is assumed to be a realization of a Beta distribution:
 
 \begin{equation}
-    f_k \sim \mbox{Beta}\left(1, \frac{(S + P - 3)(S - P)}{2(N_l - S + P)} - 1\right)
+    f_k 
+    \sim 
+    \mathrm{Beta}
+    \left(
+        1, \frac{(S + P - 3)(S - P)}{2(N_l - S + P)} - 1
+    \right)
 \end{equation}
 
 This parameterization ensures that the realized number of trophic links $n_l$ has the expected value $\mathbb{E}(n_l) = N_l$ over an ensemble of food webs (Lemma \ref{lemma-beta-tilde}).
@@ -88,7 +93,12 @@ This parameterization ensures that the realized number of trophic links $n_l$ ha
 The probability of choosing prey $q'$, denoted as $Q_{q'}$, is proportional to trophic distance between $q$ and $q'$:
 
 \begin{equation}
-    Q_{q'} \propto e^{-\theta^{-1} |\tau_{q'} - \tau_q|},
+    Q_{q'} 
+    \propto 
+    \exp
+    \left(
+    -\frac{|\tau_{q'} - \tau_q|}{\theta}
+    \right),
 \end{equation}
 
 where $\tau_q$ is the structural trophic position of species $q$.
@@ -96,10 +106,12 @@ The trophic position of producers is one, and
 consumer trophic positions are given as the average of prey trophic positions plus one:
 
 \begin{equation}
-    \tau_k = 
+\tau_k = 
     \begin{cases}
-    1 & ~\text{for producers}~ (k=1, 2, \ldots, P),\\
-    1 + |A_{k}|^{-1} \sum_{q \in A_{k}} \tau_q & ~\text{for consumers}~ (k = P+1, P+2, \ldots, S),
+    1 
+    & ~\text{for producers}~ (k=1, 2, \ldots, P),\\
+    1 + |A_{k}|^{-1} \sum_{q \in A_{k}} \tau_q 
+    & ~\text{for consumers}~ (k = P+1, P+2, \ldots, S),
     \end{cases}
     % \label{eq:def_tp}
 \end{equation}
@@ -111,7 +123,7 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
     Let $f_k$ be a random variable that follows a Beta distribution as:
 
     \begin{equation}
-        f_k \sim \mbox{Beta}(1, \tilde{\beta}),
+        f_k \sim \mathrm{Beta}(1, \tilde{\beta}),
     \end{equation}
 
     where
@@ -134,7 +146,7 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
         \end{split}
     \end{align}
 
-    Recall that $\kappa_k \sim \mbox{Bin}(a_k - 1, f_k)$ and $f_k \sim \mbox{Beta}(1, \tilde{\beta})$.
+    Recall that $\kappa_k \sim \mathrm{Bin}(a_k - 1, f_k)$ and $f_k \sim \mathrm{Beta}(1, \tilde{\beta})$.
     Then, statistical theory suggests that the variable $\kappa_k$ follows a Beta-binomial distribution as $\kappa_k \sim \mbox{Beta-binomial}(a_k - 1, 1, \tilde{\beta})$, whose expected value is $\mathbb{E}(\kappa_k) = (a_k - 1) / (1 + \tilde{\beta})$.
     Thus, we obtain
 
@@ -158,7 +170,7 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
 
 \newpage
 
-\subsection{Spatial Model Derivation}
+\subsection{Model Derivation}
 
 % Our model builds upon the deterministic approximation of the continuous-time Markov process \cite{ovaskainen_asymptotically_2006}.
 % Let $\pi'_{ik}(t)$ be the binary random variable ($\pi'_{ik}(t) \in \{0, 1\}$) that denotes the presence (1) / absence (0) of species $k$ at habitat $i$ and time $t$.
@@ -194,11 +206,11 @@ where $A_{k}$ and $|A_{k}|$ denote the set and the number of consumable prey for
 
 % Here, we set $d\xi_{ik}(t) = 0$ considering the stationary state of the Markov process and focus on the deterministic component of Equation \ref{eq:sde1}, which approximates the temporal behavior of the stochastic model.
 
-\subsubsection{Habitat-level occupancy dynamics}
+\subsubsection{Local occupancy dynamics}
 Our model presented in the main text was derived from mechanistic assumptions operating at the level of individual habitats.
 We first specify ecologically realistic processes governing establishment, dispersal, and extinction at this local scale, and then scale these processes to metapopulation occupancy dynamics using a spatial mean-field approximation \citep{ovaskainen_asymptotically_2006}.
 Thus, the resulting metapopulation model is not formulated heuristically but emerges directly from the underlying habitat-level ecological dynamics, as described below.
-Table \ref{tab:symbol-notation} lists key parameters in our model with their interpretations and specifications.
+Table \ref{tab:symbol-model} lists key parameters in our model with their interpretations and specifications.
 
 Let $p_{ik}$ ($0 \le p_{ik} \le 1$) be the probability of habitat $i$ being occupied by species $k$.
 We write the temporal dynamics of $p_{ik}$ as
@@ -228,13 +240,13 @@ In what follows, we use Equation~\ref{eq:dm0} as the baseline model describing t
     $b$ & Downstream accumulation rate of resources &
     Constant \\
     $u_i$ & Upstream river length &
-    Determined by the spatial network configuration \\
+    Determined by spatial network configuration \\
     $g_k$ & Propagule production &
     Species-level trait \\
     $\delta_k$ & Dispersal decay rate &
     Species-level trait \\
     $d_{ij}$ & Distance between two habitats &
-    Determined by the spatial network configuration \\
+    Determined by spatial network configuration \\
     $s_{ik}$ & Local richness of consumable prey &
     Sum of occupancy probabilities for potential prey \\
     $s_{ik}'$ & Local richness of predators &
@@ -245,7 +257,7 @@ In what follows, we use Equation~\ref{eq:dm0} as the baseline model describing t
     Determined by the preferential prey model \\
     \hline
     \end{tabularx}
-    \label{tab:symbol-notation}
+    \label{tab:symbol-model}
 \end{table}
 
 \textit{Colonization} --
@@ -269,7 +281,7 @@ $0 \le b \le L^{-1}(1-r_0)$ to ensure that $0 \le c_{ik}\le 1$.
 Therefore, the model captures a downstream increase in primary production, a widespread pattern observed in river networks \citep{allan_stream_2007, finlay_stream_2011}.
 For consumers, the term $s_{ik}$ denotes prey richness, defined as the expected number of prey species available at habitat $i$:
 $s_{ik}=\sum_{q \in A_k}p_{iq}$,
-where $q$ indexes prey species in the set $A_k$ (see Table~\ref{tab:symbol-notation}).
+where $q$ indexes prey species in the set $A_k$ (see Table~\ref{tab:symbol-model}).
 We normalize prey richness by the total number of potential prey species $|A_k|$ so that consumer establishment is proportional to relative prey availability.
 We did not include predation effects on the establishment probability because newly colonizing prey populations are expected to occur at low densities, where predation pressure should be weak given that many consumers exhibit functional responses targeting more abundant prey \citep{dunn_predator_2020}.
 
@@ -299,10 +311,10 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
     \label{eq:extn-local}
 \end{equation}
 
-The disturbance component consists of local stochastic disturbance and downstream disturbance cascades.
+The disturbance term consists of $\mu_k^{(0)}$ and $\mu_k^{(0)} \rho_i u_i$.
 The first component represents disturbance occurring independently at each habitat.
 The second component represents additional extinction risk caused by downstream disturbance cascades, which increases with the synchrony probability $\rho_i$ and upstream river length $u_i$.
-We assume this formulation because disturbances can propagate downstream as water flows \cite{massoudieh_biogeochemical_2010, nakamura_disturbance_2000, sarremejane_drought_2021, larsen_geography_2021, allan_stream_2007}.
+We assume this formulation because disturbances can propagate downstream as water flows \cite{stanley_ecosystem_1997, swanson_flood_1998, nakamura_disturbance_2000, massoudieh_biogeochemical_2010, messager_global_2021}.
 Such cascades, however, are expected to attenuate with travel distance.
 We therefore assume that the probability of synchronized disturbance at habitat $i$ declines exponentially with downstream travel distance $d_\rho$ from the disturbance origin:
 
@@ -313,17 +325,17 @@ We therefore assume that the probability of synchronized disturbance at habitat 
 where $\nu$ defines the distance decay rate of the downstream disturbance cascade.
 Smaller values of $\nu$ correspond to slower decay in synchrony and, consequently, a broader spatial extent of the cascade.
 
-In the second term, we assume that extinction risk decreases with increasing prey richness at habitat $i$.
+In the prey term, we assume that extinction risk decreases with increasing prey richness at habitat $i$ \citep{shibasaki_food_2024}.
 Specifically, $\mu_k^{(1)}$ denotes the extinction rate in the complete absence of consumable prey.
 The extinction risk caused by prey scarcity is reduced by the factor $|A_k|^{-1}s_{ik}$, which represents the ratio of available prey richness to the total number of potential prey species (diet breadth).
 We set $\mu_k^{(1)}=0$ for producers because they do not require prey for persistence.
 This modeling approach differs from previous models, in which predators experience higher extinction rates than prey regardless of local patch conditions at the level of individual habitats (i.e., whether prey are present or absent) \citep[e.g.,][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011}.
 Although such a simplified formulation may be appropriate for systems consisting of simple food chains, it is unsuitable for realistic food webs in which consumers can maintain populations through interactions with multiple prey species.
 
-In the predation term, extinction risk is assumed to increase linearly with expected predator richness $s_{ik}'$ at habitat $i$, defined as the sum of occupancy probabilities for potential predators:
+In the predation term, extinction risk is assumed to increase linearly with expected predator richness $s_{ik}'$ at habitat $i$ \citep{shibasaki_food_2024}, defined as the sum of occupancy probabilities for potential predators:
 $s_{ik}'=\sum_{q \in A_k'}p_{iq}$,
-where $q$ indexes predator species in the set $A_k'$ (see Table~\ref{tab:symbol-notation}).
-The parameter $\mu_k^{(2)}$ determines the strength of the effect of predator richness on extinction risk.
+where $q$ indexes predator species in the set $A_k'$ (see Table~\ref{tab:symbol-model}).
+The parameter $\mu_k^{(2)}$ determines the effect size of predator richness.
 
 \subsubsection{Mean-field approximation}
 We describe the temporal dynamics of the fraction of habitats occupied (hereafter, ``occupancy'') by applying a spatial mean-field approximation to Equation~\ref{eq:dm0}, thereby dropping the habitat subscripts $i$ and $j$ \citep{ovaskainen_asymptotically_2006}.
@@ -366,7 +378,7 @@ where $\hat{u} \equiv \mathbb{E}(u_i)$ is the expected upstream river length, an
 $\hat{s}_k \equiv \mathbb{E}(s_{ik}) = \sum_{q \in A_k} p_q$ is the metapopulation-level expression of prey richness.
 Under the spatial mean-field approximation, prey richness is represented by the summed occupancy of all potential prey species.
 
-By Corollary~\ref{collorary-d}, the effective propagule supply $\phi_k'$ can be expressed as a function of the expected network distance $\hat{d} \equiv \mathbb{E}(d_{ij})$ as
+By Corollary~\ref{collorary-d}, the effective propagule supply $\phi_k'$ becomes a function of the expected network distance $\hat{d} \equiv \mathbb{E}(d_{ij})$ as
 
 \begin{align}
     \begin{split}
@@ -432,7 +444,7 @@ Finally, factoring $p_k$ out of $\phi_k'$ ($\phi_k' = \phi_k p_k$) yields the me
 In this model, $c_k$, $\phi_k$, and $\mu_k$ are functions of $\hat{d}$, $\hat{u}$, and/or $\hat{\mathcal{L}}$, which characterize the geometric structure of the river network.
 These network properties scale as
 $\hat{d}, \hat{u}, \hat{\mathcal{L}} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ in the regime $\lambda_b L \gg 1$ (Propositions \ref{proposition-mu-d}, \ref{proposition-u}, and \ref{proposition-diameter}).
-Thus, our model explicitly links ecosystem structure to the colonization--extinction dynamics of constituent species.
+Thus, our model explicitly links the ecosystem structures to the colonization-extinction dynamics of constituent species.
 
 \newpage
 
@@ -685,11 +697,11 @@ Transforming variables from $(X,Y)$ to $(X,d_{\rho})$ and integrating over the a
 
 \subsection{Scaling of Key Geometric Properties} \label{updist}
 
-In this section, we derive the expected values of network distance between habitats $d$, upstream river length $u$, and river network diameter $\mathcal{L}$ for a population of branching networks characterized by total river length $L$ and branching rate $\lambda_b$.
+In this section, we derive the expected values of network distance $d$, upstream river length $u$, and river network diameter $\mathcal{L}$ for a population of branching networks characterized by total river length $L$ and branching rate $\lambda_b$.
 As we will show, these geometric properties asymptotically scale with $L$ and $\lambda_b$.
 Our derivation accounts for all topologically distinct river networks; that is, we consider all possible arrangements of links that form a spanning tree, with each network structure properly weighted according to $L$ and $\lambda_b$.
 Consequently, the derivation applies broadly to any river network with random bifurcations. 
-Table \ref{tab:key-symbol} lists the key mathematical symbols used in this section.
+Table \ref{tab:symbol-nw} lists the key mathematical symbols used in this section.
 
 \vspace{0.5cm} 
 \begin{table}
@@ -704,12 +716,12 @@ Table \ref{tab:key-symbol} lists the key mathematical symbols used in this secti
         $u$ & Upstream river length at a given habitat.\\
         $\mathcal{L}$ & Network diameter, defined as the network distance from the outlet to a given upstream terminal.\\
         $d$ & Network distance between two habitats.\\
-        $l$ & Length of a given link. Assumed to follow $l \sim \mbox{Exp}(\lambda_b)$.\\
+        $l$ & Length of a given link. Assumed to follow $l \sim \mathrm{Exp}(\lambda_b)$.\\
         $Z$ & Number of links minus one ($Z = B - 1$).\\
         $M$ & Network-wide magnitude (the number of exterior source links).\\
         \hline
     \end{tabularx}
-    \label{tab:key-symbol}
+    \label{tab:symbol-nw}
 \end{table}
 \vspace{0.5cm} 
 
@@ -729,7 +741,7 @@ We denote by $M$ the network-wide magnitude, which corresponds to the magnitude 
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
-We assume that the length of individual link $s$, denoted $l_s$, follows an exponential distribution $l_s \sim \mbox{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
+We assume that the length of individual link $s$, denoted $l_s$, follows an exponential distribution $l_s \sim \mathrm{Exp}(\lambda_b)$ with the constraint $\sum_{s = 1}^{B} l_s = L$ ($B$ denotes the number of links).
 The length $l_s$ can be interpreted as the ``waiting time'' to a branching event (or termination events for upstream sources), such that the number of branching events $Z$ within the given length $L$ follows a Poisson distribution.
 The total number of links $B$ is given by $Z+1$, where the additional link accounts for the final termination event at network length $L$.
 Because a bifurcating network requires an odd number of links, $Z$ must be even, ensuring that $B$ satisfies this topological constraint.
@@ -782,7 +794,7 @@ where $\Pr \bigl(w \mid \{l\} \bigr)$ denotes the probability that two habitats 
 The within-link distance, $d_w(i,j \mid \{l\})$, can be derived from the expected distance between two points chosen uniformly at random on a line segment. 
 For a link of length $l_s$, this expected distance is $3^{-1}\,l_s$.
 In our framework, however, link lengths are random and distributed as exponential variables subject to the constraint $\sum_s l_s = L$. 
-Conditioning on the event that both points fall in the same but any link, the probability that two random points lies on link $s$ is
+Conditioning on the event that both points fall in the same but any link, the probability that two random points lies on link $s$, $\Pr\bigl(\exists s: i, j\in s\mid\{l\} \bigr)$, is
 
 \begin{align}
     \begin{split}
@@ -816,7 +828,7 @@ It follows that
     \Pr \bigl(w \mid \{l\}\bigr) d_w(i,j \mid \{l\})
     &= 
     \Pr \bigl(w \mid \{l\} \bigr) \sum_{s=1}^{z+1} \frac{l_s}{3}\,
-    \Pr \bigl(i \in s, j \in s \mid \{l\}\bigr) \\
+    \Pr\bigl(\exists s: i, j\in s\mid\{l\} \bigr) \\
     &=
     \Pr \bigl(w \mid \{l\} \bigr) \sum_{s=1}^{z+1} \frac{l_s}{3}\, F_s^2 
     \bigl[\Pr \bigl(w \mid \{l\} \bigr) \bigr]^{-1} \\
@@ -857,7 +869,7 @@ d'_b(s, t \mid z)
 \end{equation}
 
 where $\mathcal{E}$ denotes the set of all links in the network, and $\mathbf{1}\{\cdot\}$ is the indicator function.
-We conditioned on $z \ge 2$ (the number of links $b \ge 3$) so that we can choose a link pair to define the topological distance.
+We conditioned on $z \ge 2$ (the number of links $\ge 3$) so that we can choose a link pair to define the topological distance.
 
 Summing over all pairs yields
 
@@ -923,8 +935,25 @@ Using Stirling's approximation of the central binomial coefficient, we yield
 \begin{align}
     \begin{split}
     \mathbb{E}\bigl(d_b(i, j \mid z) \bigr) 
-    &= \frac{L(z+2)}{z(z + 1)}\left[\left( \frac{\pi(z+2)}{2} \right)^{\frac{1}{2}} \left(1 + \frac{1}{4(z+2)} + \mathcal{O}(z^{-2})\right) - 2\right]\\
-    &= L\left[C z^{-\frac{1}{2}} - 2z^{-1} + \mathcal{O}(z^{-\frac{3}{2}})\right] \qquad (\because \text{Taylor expansion}).
+    &= 
+    \frac{L(z+2)}{z(z + 1)}
+    \left[
+    \underbrace{
+        \left\{\frac{\pi(z+2)}{2} \right\}^{\frac{1}{2}} 
+        \left\{
+        1 + \frac{1}{4(z+2)} + \mathcal{O}(z^{-2})
+        \right\}
+    }_{\text{Stirling's approximation}}
+    - 2
+    \right]\\
+    &= 
+    L
+    \left[
+        C z^{-\frac{1}{2}} - 2z^{-1} + 
+        \mathcal{O} (z^{-\frac{3}{2}})
+    \right] 
+    \qquad 
+    (\because \text{Taylor expansion}).
     \end{split}
 \end{align}
 
@@ -936,21 +965,31 @@ Substituting $\mathbb{E}\bigl(d_w(i,j \mid z)\bigr)$ and $\mathbb{E}\bigl(d_b(i,
 \begin{split}
     \mathbb{E}\bigl(d(i,j \mid z)\bigr) 
     &= 
-    \mathbb{E}\bigl(d_w(i,j \mid z) \bigr) + \bigl[1 - \mathbb{E}_{\{l\} \mid z}\bigl(\Pr(w \mid \{l\})\bigr) \bigr] \mathbb{E}\bigl(d_b(i,j \mid z) \bigr)\\
+    \mathbb{E}\bigl(d_w(i,j \mid z) \bigr) + 
+    \bigl[
+        1 - \mathbb{E}_{\{l\} \mid z}
+        \bigl(\Pr(w \mid \{l\})\bigr) 
+    \bigr] 
+    \mathbb{E} \bigl(d_b(i,j \mid z) \bigr)\\
     &= 
-    L\left[2z^{-2} + \mathcal{O}(z^{-3})\right] +
-    \frac{z}{z+2} L\left[C z^{-\frac{1}{2}} - 2z^{-1} + \mathcal{O}(z^{-\frac{3}{2}})\right]\\
+    L\left[2z^{-2} + 
+    \mathcal{O}(z^{-3})\right] +
+    \frac{z}{z+2} L
+    \left[
+        C z^{-\frac{1}{2}} - 2z^{-1} + \mathcal{O}(z^{-\frac{3}{2}})
+    \right]\\
     &= 
     L \left[Cz^{-\frac{1}{2}} - 2z^{-1}  + \mathcal{O}(z^{-\frac{3}{2}}) \right],
 \end{split}
 \end{align}
 
-where 
+where we used
 
 \begin{equation}
-    \mathbb{E}_{\{l\} \mid z}\bigl(\Pr(w \mid \{l\})\bigr) 
+    \mathbb{E}_{\{l\} \mid z}
+    \bigl(\Pr(w \mid \{l\})\bigr) 
     = 
-    \sum_{s = 1}^{z+1} \mathbb{E}\bigl(F_s^2\bigr) 
+    \sum_{s = 1}^{z+1} \mathbb{E} \bigl(F_s^2\bigr) 
     = 
     \frac{2}{z + 2},
 \end{equation}
@@ -965,7 +1004,7 @@ The exact closure is:
 \end{equation}
 
 where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
-For $\lambda_bL \gg 1$, applying the delta method obtains
+In the regime $\lambda_b L \gg 1$, applying the delta method obtains
 
 \begin{equation}
 \hat{d} \equiv \mathbb{E}\bigl(d(i, j)\bigr) = C\left(\frac{L}{\lambda_b}\right)^{\frac{1}{2}} - \frac{2}{\lambda_b} +  \mathcal{O}\bigl((\lambda_b L)^{-\frac{1}{2}}\bigr),
@@ -1004,7 +1043,7 @@ Then the expected upstream river length asymptotically exhibits a scaling relati
 The expected upstream river length, $\mathbb{E}(u)$, can be decomposed as $\mathbb{E}(u) = \mathbb{E}(u') + \mathbb{E}(l'_{s[i]})$, where $u'$ is the summed length of upstream links (excluding the link containing the habitat) and $l'_{s[i]}$ is the distance from the upstream link end to habitat $i$ in link $s$.
 
 The summed length of upstream links $u'$ is the product of the mean length of a single link $\hat{l}$ and the number of upstream links $n$.
-With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s \mid z \sim \mbox{Beta}(1, z)$ (Lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s\mid z) = (z + 1)^{-1}$.
+With the known sum $\sum_{s=1}^b l_s = L$, the fraction of single link length $F_s$ (= $l_s L^{-1}$) follows a Beta distribution as $F_s \mid z \sim \mathrm{Beta}(1, z)$ (Lemma \ref{lemma-f}), whose expected value is $\mathbb{E}(F_s\mid z) = (z + 1)^{-1}$.
 Thus, we obtain an intuitive solution for the expectation of mean length as
 
 \begin{align}
@@ -1062,7 +1101,7 @@ Since link lengths are independent of the network topology, we obtain $\mathbb{E
 \end{align}
 
 The expected distance from the upstream link end to a given habitat, $\mathbb{E}(l'_{s[i]}\mid z)$, is calculated as follows.
-Assuming that habitats are randomly distributed along the river (i.e., Poisson process), the distance to habitat $i$ in link $s$, $l'_{s[i]}$, follows a uniform distribution, i.e.,  $\Pr(l'_{s[i]}\mid z, l_s) = \mbox{Unif}(0, l_s)$.
+Assuming that habitats are randomly distributed along the river (i.e., Poisson process), the distance to habitat $i$ in link $s$, $l'_{s[i]}$, follows a uniform distribution, i.e.,  $\Pr(l'_{s[i]}\mid z, l_s) = \mathrm{Unif}(0, l_s)$.
 Thus, the conditional expectation of the distance is
 
 \begin{equation}
@@ -1095,13 +1134,33 @@ Summing $\mathbb{E}(u' \mid z)$ and $\mathbb{E}(l'_{s[i]}\mid z)$ with a given v
     \label{eq:cu}
 \end{align}
 
-Using Stirling's approximation for the central binomial coefficient of $E(u\mid z)$, we obtain
+Using Stirling's approximation for the central binomial coefficient of $\hat{n}(z)$, we obtain
 
 \begin{align}
     \begin{split}
-    E(u\mid z) 
-    &= \frac{L}{z + 1}\left[\underbrace{\left\{\frac{\pi(z + 2)}{2}\right\}^{\frac{1}{2}}\left\{1 + \frac{1}{4(z + 2)} + \mathcal{O}(z^{-2})\right\} - 2}_{\text{Stirling's approximation of }\hat{n}(z)} + \frac{1}{2}\right]\\
-    &= L \left(\frac{\pi}{2}\right)^{\frac{1}{2}} \left(z^{-\frac{1}{2}} + \frac{1}{4}z^{-\frac{3}{2}}\right)-\frac{3L}{2}(z^{-1} - z^{-2}) + \mathcal{O}(z^{-\frac{5}{2}}) \qquad (\because \text{Taylor expansion}).
+    E(u \mid z) 
+    &= 
+    \frac{L}{z + 1}
+    \left[
+        \underbrace{
+            \left\{
+            \frac{\pi(z + 2)}{2}\right\}^{\frac{1}{2}}
+            \left\{1 + \frac{1}{4(z + 2)} + \mathcal{O}(z^{-2})
+            \right\}
+        }_{\text{Stirling's approximation}}
+        - 2
+        + \frac{1}{2}
+    \right]\\
+    &= 
+    L \left(\frac{\pi}{2}\right)^{\frac{1}{2}} 
+    \left(
+        z^{-\frac{1}{2}} + 
+        \frac{1}{4}z^{-\frac{3}{2}}
+    \right) -
+    \frac{3L}{2}(z^{-1} - z^{-2}) + 
+    \mathcal{O}(z^{-\frac{5}{2}}) 
+    \qquad 
+    (\because \text{Taylor expansion}).
     \end{split}
 \end{align}
 
@@ -1113,7 +1172,7 @@ The exact closure is:
 \end{equation}
 
 where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
-For $\lambda_b L \gg 1$, applying the delta method yields
+In the regime $\lambda_b L \gg 1$, applying the delta method yields
 
 \begin{equation}
     \hat{u} \equiv \mathbb{E}(u) = C \left({\frac{L}{\lambda_b}}\right)^{\frac{1}{2}} - \frac{3}{2 \lambda_b} + \mathcal{O}((\lambda_b L)^{-\frac{1}{2}}),
@@ -1227,7 +1286,7 @@ The exact closure is:
 \end{equation}
 
 where $f'_{\text{pois}}(z; L, \lambda_b)$ denotes the probability mass function for the truncated Poisson distribution (Lemma \ref{lemma-pois}).
-For $\lambda_b L \gg 1$, applying the delta method obtains
+In the regime $\lambda_b L \gg 1$, applying the delta method obtains
 
 \begin{equation}
 \hat{\mathcal{L}} 
@@ -1252,15 +1311,15 @@ It follows that
 
 \begin{lemma}
 \label{lemma-f}
-Let link length $l_1, l_2, \ldots, l_{z+1}$ be independent random variables, each following $\mbox{Exp}(\lambda_b)$, where $z+1$ is the number of links in the network.
-If the total length is given as $\sum_{s=1}^{z+1} l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mbox{Beta}(1, z)$.
+Let link length $l_1, l_2, \ldots, l_{z+1}$ be independent random variables, each following $\mathrm{Exp}(\lambda_b)$, where $z+1$ is the number of links in the network.
+If the total length is given as $\sum_{s=1}^{z+1} l_s = L$, the fraction of single link length $F_s = l_s L^{-1}$ follows a Beta distribution $\mathrm{Beta}(1, z)$.
 \end{lemma}
 
 \begin{proof}
-An exponential distribution $\mbox{Exp}(\lambda_b)$ is a special case of Gamma distribution, i.e., $\mbox{Ga}(1, \lambda_b)$.
-Thus, $l_1, l_2, \ldots, l_{z+1}$  follow $\mbox{Ga}(1, \lambda_b)$.
+An exponential distribution $\mathrm{Exp}(\lambda_b)$ is a special case of Gamma distribution, i.e., $\mathrm{Ga}(1, \lambda_b)$.
+Thus, $l_1, l_2, \ldots, l_{z+1}$  follow $\mathrm{Ga}(1, \lambda_b)$.
 Let us denote $X_1 = l_s$, $X_2 = \sum_{s'} l_{s'}$ ($s' \in \{1,2, \ldots, z+1\} \setminus \{s\}$), and $X_1 + X_2 = Y$.
-Given the reproductive property of Gamma distribution, $X_2 \sim \mbox{Ga}(z, \lambda_b)$ and $Y \sim \mbox{Ga}(z + 1, \lambda_b)$.
+Given the reproductive property of Gamma distribution, $X_2 \sim \mathrm{Ga}(z, \lambda_b)$ and $Y \sim \mathrm{Ga}(z + 1, \lambda_b)$.
 The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$, denoted as $f_{X_1}(X_1 = x\mid Y = L)$, is
 
 \begin{align}
@@ -1279,11 +1338,11 @@ The conditional probability density of $X_1 = x$ ($0 \le x \le L$) given $Y = L$
     \label{eq:beta}
 \end{align}
 
-Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x\mid Y = 1)$ is the probability density function of $\mbox{Beta}(1, z)$.
+Equation \ref{eq:beta} indicates that $f_{X_1}(X_1 = x\mid Y = 1)$ is the probability density function of $\mathrm{Beta}(1, z)$.
 We obtain
 
 \begin{equation}
-    F_s=\frac{l_s}{L} \sim \mbox{Beta} (1, z).
+    F_s=\frac{l_s}{L} \sim \mathrm{Beta} (1, z).
 \end{equation}
 
 \end{proof}
@@ -1505,7 +1564,7 @@ For producer species ($k=1,2,\ldots, P$), $\gamma_k-\mu_k$ is constant as follow
     \gamma_k-\mu_k = c_{k}\phi_k - \mu_{k}^{(0)} (1 + \hat{\rho} \hat{u}).
 \end{align}
 
-This indicates the unique combination of the persistent and extinct producers at a stable equilibrium (Table \ref{tab:symbol-notation} for notations).
+This indicates the unique combination of the persistent and extinct producers at a stable equilibrium (Table \ref{tab:symbol-model} for notations).
 For consumer species ($k = P+1, P+2,\ldots, S$), $\gamma_k-\mu_k$ depends on $p_1, p_2, \ldots, p_{k-1}$ as follows:
 
 \begin{align}
@@ -1518,7 +1577,7 @@ For consumer species ($k = P+1, P+2,\ldots, S$), $\gamma_k-\mu_k$ depends on $p_
     \mu_{k}^{(1)} ,
 \end{align}
 
-where $\hat{s}_k = \sum_{q \in A_k} p_q$ (subscript $q$ indexes each prey in the set $A_k$; Table \ref{tab:symbol-notation} for notations).
+where $\hat{s}_k = \sum_{q \in A_k} p_q$ (subscript $q$ indexes each prey in the set $A_k$; Table \ref{tab:symbol-model} for notations).
 
 Recall that $A_k$ does not include species $q = k, k+1, \ldots, S$ because the food web is acyclic.
 For species $k = P+1$, the value of $\mu_k - \gamma_k$ at equilibrium is uniquely determined by the equilibrium occupancies of the producer species ($p_1, p_2, \ldots, p_P$), since $\sum_{q \in A_k} p_q$ is uniquely determined.
@@ -1532,13 +1591,98 @@ Therefore, Equation~\ref{eq:master} has a unique stable equilibrium.
 
 \subsection{Sensitivity Analysis}
 
-\textbf{Predatory-prey.}
-We explored a broader parameter space of the predator–prey metapopulation model (Equation 1 in the main text). 
+\subsubsection{Predatory-prey model}
+
+\textit{\textbf{Spatially implicit model.}}
+We performed an analytical sensitivity analysis of the predator-prey metapopulation model (Equation 1 in the main text). 
 Specifically, we varied dispersal decay rate ($\delta \in \{0.05, 0.1\}$), disturbance decay rate ($\nu \in \{0.05, 0.1\}$), and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$). 
-Other parameters were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. 
+Other parameters were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$.
+For each parameter combination, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
 Model predictions are shown in Figure \ref{fig:2sp-heat}.
 
-\textbf{Food web.}
+\textit{\textbf{Spatially explicit model.}}
+We developed a spatially explicit version of the predator-prey metapopulation model to examine the potential influence of dispersal asymmetry. 
+In this analysis, we adopted the discrete realization of river networks, in which each unit length of river was represented as a habitat node \citep{yeakel_synchronisation_2014, terui_metapopulation_2018, anderson_effects_2018, terui_emergent_2021}, because this approach is better suited for the implementation of the spatially explicit model.
+At each node, the link branches into two upstream habitat nodes (or terminate if exterior source links) with probability $P_b$. 
+Otherwise, the link continues to grow without branching with probability $1 - P_b$.
+We repeated this branching process until the total number of habitat nodes reached $N$.
+Consequently, the number of habitat nodes per link asymptotically follows a geometric distribution (in the regime $NP_b \gg 1$), the discrete analogue of an exponential distribution. 
+In this framework, the total number of habitat nodes, $N$, represents a proxy for ecosystem size ($N=L$, because each habitat node has unit length), whereas the branching probability $P_b$ represents ecosystem complexity. 
+This modeling framework is detailed in Terui et al. 2018 \citep{terui_metapopulation_2018} and 2021 \citep{terui_emergent_2021} with graphical aids.
+
+We considered river networks across $11 \times 11$ combinations of ecosystem size and complexity, with $N \in [50,250]$ and $\lambda_b \in [0.2,1.0]$ sampled at equal intervals. 
+The branching rate was converted to a branching probability using the relationship $P_b = 1 - \exp(-\lambda_b)$.
+For each combination of $N$ and $\lambda_b$, we generated three replicate river networks, yielding a total of $363$ realized river networks.
+
+We analyzed the spatially-explicit model in these realized networks.
+Let $p_{i1}$ and $p_{i2}$ be the occupancy probability of the prey and the predator at habitat $i$, respectively.
+We write the temporal dynamics as
+
+\begin{align}
+\begin{split}
+    \frac{d p_{i1}}{dt} 
+    &= 
+    c_1 
+    \theta
+    \bigl[
+    \xi \, W^{(d)}_{ij} + 
+    (1 - \xi) \, W^{(u)}_{ij}
+    \bigr]\,
+    p_{j1} (1 - p_{i1}) 
+    - 
+    \bigl[
+    \mu^{(0)}(1 + \rho_iu_i)
+    \bigr]\,p_{i1},\\
+    \frac{d p_{i2}}{dt} 
+    &= 
+    c_2 
+    \theta
+    \bigl[
+    \xi \, W^{(d)}_{ij} + 
+    (1 - \xi) \, W^{(u)}_{ij}
+    \bigr]\,
+    p_{i2} \, (p_{i1} - p_{i2}) 
+    - 
+    \bigl[
+    \mu^{(0)}(1 + \rho_iu_i) +
+    \mu^{(1)}(1 - p_{i1})
+    \bigr]\,p_{i2},
+\label{eq:se-model}
+\end{split}
+\end{align}
+
+where $\xi$ is the asymmetry factor ($\xi \in [0,1]$), $\theta$ is the dispersal rate, and $W_{ij}^{(d)}$ and $W_{ij}^{(u)}$ are binary variables indicating whether habitats $i$ and $j$ are adjacent in the downstream and upstream directions, respectively. 
+This formulation introduces dispersal asymmetry through $\xi$, with $\xi > 0.5$ indicating downstream-biased dispersal.
+Notation for the remaining parameters is provided in Table \ref{tab:symbol-model}.
+
+In this spatially explicit model, we directly calculated the upstream river length $u_i$ and synchrony probability $\rho_i$ for each habitat from the realized spatial configuration of the river network. 
+Because the network is represented as a discrete set of connected nodes, we calculated $u_i$ as the number of upstream nodes, assuming that each node represents one unit of river length.
+The synchrony probability is defined as
+
+\begin{align}
+\begin{split}
+    \rho_i 
+    &= 
+    \sum_v w(\mathcal{D}_{iv}) 
+    \underbrace{\int_0^{\mathcal{D}_{iv}} \exp(-\nu d_{\rho}) d d_{\rho}}_{\text{Expectation over disturbance origins}}\\
+    &= \sum_v w(\mathcal{D}_{iv}) 
+    \frac{1 - \exp(-\nu \mathcal{D}_{iv})}{\nu \mathcal{D}_{iv}}
+    \label{eq:se-rho}
+\end{split}
+\end{align}
+
+where $\mathcal{D}_{iv}$ is the distance from flow-connected upstream terminal $v$ to habitat $i$, and $w(\mathcal{D}_{iv})$ is the length-bias weight, defined as $w(\mathcal{D}_{iv}) = \mathcal{D}_{iv}/\sum_v \mathcal{D}_{iv}$.
+We introduced the length-bias weight under the assumption that the likelihood of a disturbance event is proportional to the length of the flow path $\mathcal{D}_{iv}$.
+Because the integration takes expectation over the possible locations of disturbance origins, Equation \ref{eq:se-rho} gives the expected synchrony probability for a given spatial configuration of the realized network.
+
+We numerically solved Equation \ref{eq:se-model} and obtained equilibrium occupancy probabilities at each habitat for the prey and the predator ($p^*_{i1}$ and $p^*_{i1}$).
+Then, we averaged the equilibrium occupancies across habitats.
+We considered the following parameter combinations: dispersal asymmetry $\xi \in \{0.5, 0.8\}$, dispersal rate $\theta \in \{40, 80\}$, disturbance decay rate $\nu \in \{0.05, 0.1\}$, and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$).
+We included the symmetric dispersal scenario ($\xi = 0.5$) for a comparison with the asymmetric (downstream-biased) dispersal scenario ($\xi = 0.8$).
+Model predictions are presented in Figure XX.
+
+\subsubsection{Spatial food chain model (disturbance cascade)}
+
 We performed a numerical sensitivity analysis of the generalized model (Equation 5 in the main text) to validate the robustness of analytical predictions in broader ecological contexts.
 Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), dispersal rate ($\delta_0$), disturbance decay rate ($\nu$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
@@ -1557,7 +1701,7 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{tex/fig_theo_2sp_heat.pdf}
-    \caption{Model predictions of predator--prey occupancies across ecosystem size ($L$) and complexity ($\lambda_b$). Predicted occupancies are shown as heatmaps. The two left columns display prey occupancy, and the two right columns display predator occupancy. We varied dispersal decay rate ($\delta$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Parameters not being varied were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, disturbance rate $\mu^{(0)} = 2.5$, dispersal decay rate $\delta = 0.1$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$.}
+    \caption{Model predictions of predator-prey occupancies across ecosystem size ($L$) and complexity ($\lambda_b$). Predicted occupancies are shown as heatmaps. The two left columns display prey occupancy, and the two right columns display predator occupancy. We varied dispersal decay rate ($\delta$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Lower values of $\delta$ and $\nu$ indicate the broader scales of dispersal and disturbance, respectively. Parameters not being varied were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, disturbance rate $\mu^{(0)} = 2.5$, dispersal decay rate $\delta = 0.1$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$.}
     \label{fig:2sp-heat}
 \end{figure}
 
@@ -1565,7 +1709,7 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
 
 \input{tex/figure_si}
 
-\subsection{No Cascade Model}
+\subsubsection{Spatial food chain model (no disturbance cascade)}
 
 To investigate how disturbance cascades alter the qualitative predictions, we developed a model without disturbance cascades.
 This ``no cascade'' model is identical to the one presented in the main text, except for the extinction rate $\mu_k$, which was modified as follows:
@@ -1584,8 +1728,8 @@ Model predictions are displayed in Figure \ref{fig:no-cascade}.
 \begin{figure}
 \centering
 \includegraphics[width=0.75\textwidth]{fig_theo_rho0.pdf}
-\caption{Analytical prediction with no disturbance cascade. Heatmaps of
-FCL are expressed as a function of ecosystem size (river length, $L$)
+\caption{Analytical predictions with no disturbance cascade. Heatmaps of
+food chain length (FCL) are expressed as a function of ecosystem size (river length, $L$)
 and complexity (branching rate, $\lambda_b$), with rows and columns
 reflecting different disturbance and resource supply regimes. Each cell
 represents the average FCL of 20 food webs. White dashed lines indicate
@@ -1621,15 +1765,6 @@ Categories \textbf{4} and \textbf{5} were excluded from our analysis.
 \input{tex/table_si_list}
 \vspace{0.5cm} 
 
-\subsection{Parameter Estimate}
-
-Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
-The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
-
-\vspace{0.5cm} 
-\input{tex/table_si_emp}
-\vspace{0.5cm} 
-
 \subsection{Discharge-Precipitation Relationship}
 We used daily river discharge data from 2000 to 2015, simulated by the Global Hydrodynamics model \textit{CaMa-Flood}, to estimate flow variability  \cite{yamazaki_deriving_2009, kimura_methodology_2023, lin_global_2019}.
 The discharge data is available at a 0.1-degree resolution (approximately 10 km at the equator) and was extracted from the nearest flow-connected cell for each site; however, discharge data could not be obtained for two headwater stream sites, which were excluded from further analysis.
@@ -1640,12 +1775,12 @@ To model this variability, we fitted a Generalized Additive Model (GAM) as follo
 
 \begin{align}
     \begin{split}
-    D_i &= \alpha_d + s(\mbox{Julian}_i) + \varepsilon_i,\\
+    D_i &= \alpha_d + s(\mathrm{Julian}_i) + \varepsilon_i,\\
     \varepsilon_i &\sim t(0, \sigma_d^2, \nu_d),
     \end{split}
 \end{align}
 
-where $D_i$ represents the scaled daily discharge, ``$\mbox{Julian}_i$'' refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing function.
+where $D_i$ represents the scaled daily discharge, ``$\mathrm{Julian}_i$'' refers to the Julian date (with the first day of the year as the origin), and $s(\cdot)$ denotes the smoothing function.
 We used a Student's t-distribution for the error structure, as it better captures the fat-tailed nature of the discharge data.
 The degree of freedom, $\nu_d$, characterizes the thickness of the tails, with smaller values indicating a higher likelihood of extreme high or low flows relative to seasonal expectations (i.e., fatter tails).
 As $\nu_d$ approaches infinity, the Student's t-distribution converges to a normal distribution.
@@ -1683,12 +1818,12 @@ Specifically, we modified the watershed-level regression equation as follows:
 and
 
 \begin{equation}
-    \boldsymbol{\beta_u} \sim \mbox{MVN}(\boldsymbol{\mu_{\beta}}, \Omega),
+    \boldsymbol{\beta_u} \sim \mathrm{MVN}(\boldsymbol{\mu_{\beta}}, \Omega),
 \end{equation}
 
 where $\boldsymbol{\beta_u} = \{\beta_{0, u}, \beta_{1, u}, \beta_{2, u}\}$. Here, $\boldsymbol{\mu_{\beta}}$ represents the mean vector, and $\Omega$ denotes the variance-covariance matrix.
-We used weakly informative priors for the mean vector $\boldsymbol{\mu_{\beta}}$, the standard deviations $\sigma_{\beta, m}$ for $\boldsymbol{\beta_u}$ (= diagonal elements in $\Omega$), and the upper-triangular Cholesky factor $U_{\Omega}$ for $\Omega$:  $\boldsymbol{\mu_{\beta}} \sim \mbox{Normal}(0, 5^2)$, $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$), and $U_{\Omega} \sim \mbox{LkjCholesky}(2.0)$.
-The Cholesky LKJ correlation prior implies $U_{\Omega}^T U_{\Omega} = R_{\Omega} \sim \mbox{Lkj}(2.0)$, where $R_{\Omega}$ corresponds to the correlation matrix from $\Omega$. 
+We used weakly informative priors for the mean vector $\boldsymbol{\mu_{\beta}}$, the standard deviations $\sigma_{\beta, m}$ for $\boldsymbol{\beta_u}$ (= diagonal elements in $\Omega$), and the upper-triangular Cholesky factor $U_{\Omega}$ for $\Omega$:  $\boldsymbol{\mu_{\beta}} \sim \mathrm{Normal}(0, 5^2)$, $\sigma_{\beta, m} \sim t^+(0, 1, 10)$ ($m \in \{0, 1, 2\}$), and $U_{\Omega} \sim \mathrm{LkjCholesky}(2.0)$.
+The Cholesky LKJ correlation prior implies $U_{\Omega}^T U_{\Omega} = R_{\Omega} \sim \mathrm{Lkj}(2.0)$, where $R_{\Omega}$ corresponds to the correlation matrix from $\Omega$. 
 Other priors were specified as described in the main text.
 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
@@ -1696,6 +1831,15 @@ converged.
 The total number of MCMC iterations per chain was 60,000, in which MCMC samples were saved every 60 steps after the initial 30,000 burn-in period.
 As a result, we used a total of $500 \times 4 = 2,000$ MCMC samples for the estimation of posterior distributions.
 Convergence was assessed by examining whether the R-hat indicator of each parameter approached < 1.1.
+
+\subsection{Parameter Estimate}
+
+Table \ref{tab:parms-est} presents the parameter estimates of the random-intercept model detailed in the main text.
+The 95\% credible intervals and posterior probabilities are estimated based on 2,000 posterior MCMC samples.
+
+\vspace{0.5cm} 
+\input{tex/table_si_emp}
+\vspace{0.5cm} 
 
 \newpage
 
