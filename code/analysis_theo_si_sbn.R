@@ -56,7 +56,7 @@ df_sim <-
       sbn <- list_sbn[[nid]]
       
       ## read sbn (igraph object)
-      m <- as_adjacency_matrix(sbn) |>
+      m <- as_adjacency_matrix(sbn) %>% 
         as.matrix()
       n <- vcount(sbn)
       
