@@ -21,7 +21,7 @@ g_subsch <- ggdraw() +
   labs(tag = "A")
 
 ## colonization-extinction
-df_ce <- tibble(rl = seq(100, 1000, length = 100)) %>% 
+df_ce <- tibble(rl = seq(100, 5000, length = 100)) %>% 
   expand_grid(
     lambda = seq(0.2, 1, by = 0.2),
     delta0 = 0.1,
@@ -55,6 +55,9 @@ g_pgle <- df_ce %>%
   labs(
     y = "Effective propagule",
   ) +
+  scale_x_continuous(
+    breaks = c(0, 2500, 5000)
+  ) +
   MetBrewer::scale_color_met_c(
     "Hiroshige",
     direction = -1
@@ -79,6 +82,9 @@ g_extn <- df_ce %>%
     x = expression("Total river length"~italic(L)),
     y = "Disturbance rate",
     color = expression(lambda[b])
+  ) +
+  scale_x_continuous(
+    breaks = c(0, 2500, 5000)
   ) +
   MetBrewer::scale_color_met_c(
     "Hiroshige",
