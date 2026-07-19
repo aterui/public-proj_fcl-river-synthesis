@@ -14,34 +14,55 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_heat.rds")
 ## take average for food web replicates
 df_plot_2sp <- df_2sp %>% 
   mutate(
-    lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
-    lab_nu = sprintf("nu==%.2f", nu),
     lab_tl = str_to_sentence(tl) %>% 
       factor(levels = c("Prey", "Predator")),
-    lab_delta0 = sprintf("delta==%.2f", delta0)
+    lab_mu0 = 
+      ifelse(mu0 == max(mu0),
+             sprintf("High~disturbance~(mu^{(0)}==%.2f)", mu0),
+             sprintf("Low~disturbance~(mu^{(0)}==%.2f)", mu0)
+      ) %>% 
+      fct_rev(),
+    lab_nu = 
+      ifelse(
+        nu == max(nu),
+        sprintf("atop(Fast~decay,nu==%.2f)", nu),
+        sprintf("atop(Slow~decay,nu==%.2f)", nu)
+      ) %>% 
+      fct_rev(),
+    lab_delta0 = 
+      ifelse(
+        delta0 == max(delta0),
+        sprintf("atop(Short~range~dispersal,delta==%.2f)", delta0),
+        sprintf("atop(Long~range~dispersal,delta==%.2f)", delta0)
+      )
   )
 
 ## figure
 (
   g2sp <- df_plot_2sp %>% 
-    ggplot(aes(y = rl,
-               x = lambda,
-               fill = o)) +
+    ggplot(
+      aes(y = rl,
+          x = lambda,
+          fill = o)
+    ) +
     geom_raster(alpha = 1) +
-    ggh4x::facet_nested(rows = vars(lab_mu0, lab_nu),
-                        cols = vars(lab_tl, lab_delta0),
-                        labeller = label_parsed,
-                        nest_line = element_line(linetype = 3)) +
-    # geom_vline(xintercept = c(0.4, 0.8),
-    #            color = "white",
-    #            linetype = "dashed") +
+    ggh4x::facet_nested(
+      rows = vars(lab_mu0, lab_nu),
+      cols = vars(lab_tl, lab_delta0),
+      labeller = label_parsed,
+      nest_line = element_line(linetype = 3)
+    ) +
     scale_fill_viridis_c() +
-    labs(x = expression("Branching rate"~lambda[b]),
-         y = expression("Total river length"~italic(L)),
-         fill = "Occupancy") +
+    labs(
+      x = expression("Branching rate"~lambda[b]),
+      y = expression("Total river length"~italic(L)),
+      fill = "Occupancy"
+    ) +
     theme_classic() +
-    theme(strip.background = element_blank(),
-          axis.text =  element_text(size = 7))
+    theme(
+      strip.background = element_blank(),
+      axis.text =  element_text(size = 7)
+    )
 )
 
 ggsave(g2sp, 
@@ -52,26 +73,117 @@ ggsave(g2sp,
 
 # spatially explicit model ------------------------------------------------
 
-df_sbn <- readRDS("data_fmt/sim_fcl_2sp_nspom.rds") %>% 
-  mutate(tl = str_to_sentence(tl))
+## set theme
+source("code/set_theme.R")
+set_theme(default_theme)
 
-df_sbn %>% 
-  ggplot(
-    aes(x = n,
-        y = p,
-        color = tl,
-        fill = tl)
-  ) +
-  geom_jitter(
-    size = 0.5,
-    alpha = 0.1,
-    width = 0.01
-  ) +
-  geom_smooth() +
-  facet_grid(
-    rows = vars(mu0, nu),
-    cols = vars(theta, kappa)
+## read data
+df_sbn <- readRDS("data_fmt/sim_fcl_2sp_nspom.rds") %>% 
+  mutate(
+    lab_tl = str_to_sentence(tl) %>% 
+      factor(levels = c("Prey", "Predator")),
+    lab_mu0 = 
+      ifelse(mu0 == max(mu0),
+             sprintf("High~disturbance~(mu^{(0)}==%.2f)", mu0),
+             sprintf("Low~disturbance~(mu^{(0)}==%.2f)", mu0)
+      ) %>% 
+      fct_rev(),
+    lab_nu = 
+      ifelse(
+        nu == max(nu),
+        sprintf("atop(Fast~decay,nu==%.2f)", nu),
+        sprintf("atop(Slow~decay,nu==%.2f)", nu)
+      ) %>% 
+      fct_rev(),
+    lab_theta = 
+      ifelse(
+        theta == max(theta),
+        sprintf("High~dispersal~(theta[d]==%.2f)", theta),
+        sprintf("Low~dispersal~(theta[d]==%.2f)", theta)
+      ) %>% 
+      fct_rev(),
+    lab_xi = 
+      ifelse(
+        kappa == max(kappa),
+        sprintf("atop(Downstream~biased,xi==%.2f)", kappa),
+        sprintf("atop(Symmetric, xi==%.2f)", kappa)
+      ) %>% 
+      fct_rev()
   )
+
+## ecosystem size
+(
+  g_se_n <- df_sbn %>% 
+    ggplot(
+      aes(x = n,
+          y = p,
+          color = lab_tl,
+          fill = lab_tl)
+    ) +
+    geom_point(
+      size = 0.5,
+      alpha = 0.1
+    ) +
+    geom_smooth(linewidth = 0.5)  +
+    ggh4x::facet_nested(
+      rows = vars(lab_mu0, lab_nu),
+      cols = vars(lab_theta, lab_xi),
+      labeller = label_parsed,
+      nest_line = element_line(linetype = 3)
+    ) +
+    theme(
+      strip.background = element_blank(),
+      axis.text =  element_text(size = 7)
+    ) +
+    labs(
+      x = "Number of habitats N",
+      y = "Occupancy",
+      color = "Trophic level",
+      fill = "Trophic level"
+    )
+)
+
+## ecosystem complexity
+(
+  g_se_br <- df_sbn %>% 
+    ggplot(
+      aes(x = lambda,
+          y = p,
+          color = lab_tl,
+          fill = lab_tl)
+    ) +
+    geom_point(
+      size = 0.5,
+      alpha = 0.1
+    ) +
+    geom_smooth(linewidth = 0.5)  +
+    ggh4x::facet_nested(
+      rows = vars(lab_mu0, lab_nu),
+      cols = vars(lab_theta, lab_xi),
+      labeller = label_parsed,
+      nest_line = element_line(linetype = 3)
+    ) +
+    theme(
+      strip.background = element_blank(),
+      axis.text =  element_text(size = 7)
+    ) +
+    labs(
+      x = expression("Branching rate"~lambda[b]),
+      y = "Occupancy",
+      color = "Trophic level",
+      fill = "Trophic level"
+    )
+)
+
+ggsave(g_se_n, 
+       filename = "tex/fig_theo_2sp_sem_n.pdf",
+       height = 6,
+       width = 8)
+
+ggsave(g_se_br, 
+       filename = "tex/fig_theo_2sp_sem_br.pdf",
+       height = 6,
+       width = 8)
 
 
 # food chain length -------------------------------------------------------
