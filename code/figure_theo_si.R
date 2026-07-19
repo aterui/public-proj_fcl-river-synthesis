@@ -49,6 +49,31 @@ ggsave(g2sp,
        height = 6,
        width = 8)
 
+
+# spatially explicit model ------------------------------------------------
+
+df_sbn <- readRDS("data_fmt/sim_fcl_2sp_nspom.rds") %>% 
+  mutate(tl = str_to_sentence(tl))
+
+df_sbn %>% 
+  ggplot(
+    aes(x = n,
+        y = p,
+        color = tl,
+        fill = tl)
+  ) +
+  geom_jitter(
+    size = 0.5,
+    alpha = 0.1,
+    width = 0.01
+  ) +
+  geom_smooth() +
+  facet_grid(
+    rows = vars(mu0, nu),
+    cols = vars(theta, kappa)
+  )
+
+
 # food chain length -------------------------------------------------------
 
 ## read data
