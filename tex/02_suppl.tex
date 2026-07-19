@@ -1675,26 +1675,27 @@ where $\mathcal{D}_{iv}$ is the distance from flow-connected upstream terminal $
 We introduced the length-bias weight under the assumption that the likelihood of a disturbance event is proportional to the length of the flow path $\mathcal{D}_{iv}$.
 Because the integration takes expectation over the possible locations of disturbance origins, Equation \ref{eq:se-rho} gives the expected synchrony probability for a given spatial configuration of the realized network.
 
-We numerically solved Equation \ref{eq:se-model} and obtained equilibrium occupancy probabilities at each habitat for the prey and the predator ($p^*_{i1}$ and $p^*_{i1}$).
-Then, we averaged the equilibrium occupancies across habitats.
+We numerically solved Equation \ref{eq:se-model} to obtain equilibrium occupancy probabilities  for the prey and the predator at each habitat, denoted as$p^*_{i1}$ and $p^*_{i2}$, respectively.
+We then estimated the equilibrium occupancy of each species by averaging these probabilities across habitats.
 We considered the following parameter combinations: dispersal asymmetry $\xi \in \{0.5, 0.8\}$, dispersal rate $\theta \in \{40, 80\}$, disturbance decay rate $\nu \in \{0.05, 0.1\}$, and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$).
 We included the symmetric dispersal scenario ($\xi = 0.5$) for a comparison with the asymmetric (downstream-biased) dispersal scenario ($\xi = 0.8$).
-Model predictions are presented in Figure XX.
+Parameters not varied were fixed at: establishment probability $c_1 = c_2 = 0.5$ and prey-induced extinction rate $\mu^{(1)} = 5$.
+Model predictions are presented in Figures \ref{fig:sem-br} and \ref{fig:sem-n}.
 
 \subsubsection{Spatial food chain model (disturbance cascade)}
 
 We performed a numerical sensitivity analysis of the generalized model (Equation 5 in the main text) to validate the robustness of analytical predictions in broader ecological contexts.
 Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), dispersal rate ($\delta_0$), disturbance decay rate ($\nu$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
 
+\vspace{0.5cm} 
+\input{tex/table_si_theo}
+\vspace{0.5cm} 
+
 In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
 In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
 An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
 This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
 Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
-
-\vspace{0.5cm} 
-\input{tex/table_si_theo}
-\vspace{0.5cm} 
 
 \newpage
 
@@ -1703,6 +1704,24 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
     \includegraphics[width=1\linewidth]{tex/fig_theo_2sp_heat.pdf}
     \caption{Model predictions of predator-prey occupancies across ecosystem size ($L$) and complexity ($\lambda_b$). Predicted occupancies are shown as heatmaps. The two left columns display prey occupancy, and the two right columns display predator occupancy. We varied dispersal decay rate ($\delta$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Lower values of $\delta$ and $\nu$ indicate the broader scales of dispersal and disturbance, respectively. Parameters not being varied were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, and prey-induced extinction rate $\mu^{(1)} = 5$.}
     \label{fig:2sp-heat}
+\end{figure}
+
+\newpage
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{tex/fig_theo_2sp_sem_br.pdf}
+    \caption{Model predictions from the spatially explicit predator-prey model. The figure shows the effects of ecosystem complexity, quantified by branching rate $\lambda_b$, on prey (red) and predator (blue) occupancies. Dots represent predicted values for a given realized river network, whereas lines and shaded areas show LOESS curves and their associated standard errors. We contrast symmetric and downstream-biased dispersal scenarios ($\xi$; columns), while varying the dispersal rate ($\theta_d$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Lower values of $\nu$ indicate disturbances that extend over broader spatial scales. Parameters not varied were fixed at: establishment probability $c = 0.5$ and prey-induced extinction rate $\mu^{(1)} = 5$.}
+    \label{fig:sem-br}
+\end{figure}
+
+\newpage
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{tex/fig_theo_2sp_sem_n.pdf}
+    \caption{Model predictions from the spatially explicit predator-prey model. The figure shows the effects of ecosystem size, quantified by the number of habitats $N$, on prey (red) and predator (blue) occupancies. Dots represent predicted values for a given realized river network, whereas lines and shaded areas show LOESS curves and their associated standard errors. We contrast symmetric and downstream-biased dispersal scenarios ($\xi$; columns), while varying the dispersal rate ($\theta_d$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Lower values of $\nu$ indicate disturbances that extend over broader spatial scales. Parameters not varied were fixed at: establishment probability $c = 0.5$ and prey-induced extinction rate $\mu^{(1)} = 5$.}
+    \label{fig:sem-n}
 \end{figure}
 
 \newpage

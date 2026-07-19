@@ -150,7 +150,7 @@ Evidence suggests that the branching rate captures the fractal nature of river n
 \vspace{0.5cm}
 
 Our framework uses probabilistic theory to account for stochastic variation in network topology and link lengths under a given level of ecosystem size and complexity (Figure~\ref{fig:scheme}A; see \textit{SI Appendix} for mathematical details). 
-In these randomly-bifurcating networks, we found that the ecosystem structures ($L$ and $\lambda_b$) scale key network properties: network distance $d$, upstream river length $u$, and network diameter $\mathcal{L}$ (see Figure \ref{fig:scheme}A for definitions and Table \ref{tab:scaling} for scaling properties). 
+In these randomly-bifurcating networks, we found that the ecosystem structural properties ($L$ and $\lambda_b$) scale key network properties: network distance $d$, upstream river length $u$, and network diameter $\mathcal{L}$ (see Figure \ref{fig:scheme}A for definitions and Table \ref{tab:scaling} for scaling properties). 
 Below, we use a metapopulation model for a predator–prey system (one predator and its prey) to illustrate how ecosystem size and complexity regulate colonization–extinction dynamics through the scaling of these network properties.
 
 Let $p_{1}$ and $p_{2}$ be the fractions of habitats occupied (``occupancy'') by a prey and a predator, respectively.
@@ -249,19 +249,26 @@ To isolate the effects of ecosystem size and complexity, we assumed identical es
 This simplified formulation highlights the unique contributions of river network structure without confounding differences in species-specific traits.
 
 Our analysis provided insights into the roles of ecosystem size and complexity in regulating predator–prey dynamics.
-We here present an exemplary case in Figure \ref{fig:pp-occ}, while a broader exploration across ecological scenarios is provided in Figure S2 (\textit{SI Appendix}). 
+Here, we present an exemplary case in Figure \ref{fig:pp-occ}, while a broader exploration across ecological scenarios is provided in Figure S2 (\textit{SI Appendix}). 
 Increasing branching consistently promoted the equilibrium occupancies by providing a dual advantage: it shortens dispersal pathways with increased colonization, while simultaneously compartmentalizing disturbance propagation and reducing synchronized extirpation (Figure \ref{fig:pp-occ} and Figure S2). 
 By contrast, the influence of ecosystem size was neutral because the colonization benefits of larger ecosystems were largely offset by the increased risk of downstream disturbance cascades (Figure \ref{fig:pp-occ}). 
-Increasing dispersal distance (lower $\delta$), however, shifted the effect of ecosystem size from neutral to slightly positive by facilitating colonization from distant source habitats (Figure S2). 
-This positive effect was confined to small- to intermediate-sized ecosystems, with occupancy rapidly saturating as ecosystem size increased.
+However, increasing dispersal range (lower $\delta$) shifted the effect of ecosystem size from neutral to slightly positive by facilitating colonization from distant source habitats (Figure S2). 
+This positive effect appeared in small- to intermediate-sized ecosystems, with occupancy rapidly saturating as ecosystem size increased.
 These patterns remained consistent across varying baseline disturbance rates ($\mu^{(0)}$) and spatial scales of disturbance cascades ($\nu$). 
 
-The results presented above should be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than from a limited subset of realized networks (Figure \ref{fig:scheme}A).
-Nevertheless, our approach required several simplifying assumptions for the sake of analytical tractability.
-First, we assumed symmetric dispersal, whereas dispersal in riverine organisms may be biased downstream.
-Second, we assumed that all network topologies are equally likely to occur (i.e., random).
-In reality, however, non-random geomorphic processes shape the evolution of river networks, making some topological configurations more probable than others. 
-[ADD SIMULATION RESULTS THAT CONFIRM THE VALIDITY OF OUR ANALYTICAL PREDICTIONS]
+The metapopulation model for the predator–prey system assumes symmetric dispersal, whereas dispersal in riverine organisms can be biased downstream \citep[e.g.,][]{terui_asymmetric_2014}. 
+We therefore relaxed the assumption of dispersal symmetry in a spatially explicit version of the metapopulation model (\textit{SI Appendix}). 
+Although strong downstream-biased dispersal (four times higher in the downstream direction) slightly decreased prey and predator occupancies, incorporating dispersal asymmetry did not alter the qualitative effects of ecosystem size and complexity across a range of ecological scenarios (Figures S3 and S4, \textit{SI Appendix}). 
+Ecosystem complexity consistently increased both prey and predator occupancies, whereas ecosystem size exhibited neutral effects.
+These results indicate that our metapopulation model provides a robust framework for analyzing the effects of ecosystem properties.
+
+
+The results from Equation \ref{eq:model-pp} should be interpreted as general predictions emerging from the full ensemble of possible river network configurations, rather than from a limited subset of realized networks (Figure \ref{fig:scheme}A).
+This analytical generalization is made possible by assuming that all network topologies are equally likely to occur \citep{shreve_infinite_1967}. 
+In reality, however, non-random geomorphic processes may shape the evolution of fluvial landscapes, making some topological configurations more probable than others.
+Numerical frameworks based on Optimal Channel Networks (OCNs) \citep{rodriguez-iturbe_fractal_2001} can better capture the nonrandom formation of river networks. 
+Nevertheless, a simulation study has shown that models with random topology can generate ecological dynamics resembling those observed in both OCNs and real river networks \citep{lee_network_2022}. 
+As such, although incorporating non-random network formation represents an interesting avenue, we leave this extension to future work.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -276,7 +283,7 @@ In reality, however, non-random geomorphic processes shape the evolution of rive
 
 \subsection{Extensions to Food Webs}
 
-We next extend our framework to food webs to understand how the ecosystem structures regulate food-chain length.
+We next extend our framework to food webs to understand how the ecosystem structure regulates food-chain length.
 This extension accommodates the trophic complexity of natural food webs, in which consumers differ in their sets of potential prey and omnivory is common.
 We generalized the model in Equation~\ref{eq:model-pp} as
 
@@ -347,7 +354,7 @@ Our model predicted that the effects of ecosystem structure are transmitted thro
 The dual effect of branching, i.e., enhanced connectivity and reduced spatial coherence of disturbances, consistently increased FCL across ecological scenarios (Figure \ref{fig:sim-main}A and B). 
 In contrast, the effect of ecosystem size (total river length $L$) was largely neutral (Figure \ref{fig:sim-main}A), with its weak signal masked by the substantial variation among simulated food webs (thin lines in Figure \ref{fig:sim-main}C).
 Resource supply ($r_0$) increased FCL, whereas disturbance rate ($\mu_0$) decreased FCL.
-However, these effects did not alter the qualitative relationships between FCL and the ecosystem structures.
+However, these effects did not alter the qualitative relationships between FCL and ecosystem properties.
 
 \vspace{0.5cm}
 \input{tex/table_main}
@@ -357,11 +364,6 @@ Disturbance cascades play a central role in generating the weak effect of ecosys
 When their influence was removed from the model by treating the disturbance term in Equation \ref{eq:extn-main} as constant (see \textit{SI Appendix} for details), the predicted relationship reduced to classical expectations: ecosystem size exerted a strong positive effect on FCL (Figures \ref{fig:sim-main}C; Figure S10, \textit{SI Appendix} for heatmaps).
 This result is consistent with established food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019} and empirical observations in systems where spatially cascading disturbances are negligible, such as lake ecosystems \citep{post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009}.
 Notably, ecosystem complexity continues to promote FCL even under this modified assumption, reflecting its persistent role in enhancing connectivity and facilitating colonization among habitats.
-
-Numerical simulations demonstrated that our analytical predictions are robust to the inclusion of predation effects in the extinction term and to variation in key ecological parameters, including prey effect ($\mu^{(1)}$), the spatial scale of disturbance cascades ($\nu$), and the degree of trophic omnivory ($\theta$). 
-Across all cases, FCL increased with ecosystem complexity, whereas the effect of ecosystem size remained largely neutral or slightly negative (Figures S3--S6, \textit{SI Appendix}).
-However, when we increased the dispersal distance (lower $\delta_0$), FCL responded positively to increasing ecosystem size, and this shift was clearer than in the simple predator-prey system (Figures S7--S10, \textit{SI Appendix}). 
-This is likely because consumer species can feed on multiple prey species, allowing the cumulative effect of ecosystem size across prey species to emerge more strongly at higher trophic levels. As before, this effect was limited to a narrow range of ecosystem sizes (typically $L < 1000$).
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -373,6 +375,12 @@ This is likely because consumer species can feed on multiple prey species, allow
 \end{figure}
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+Numerical simulations demonstrated that our analytical predictions are robust to the inclusion of predation effects in the extinction term and to variation in key ecological parameters, including prey effect ($\mu^{(1)}$), the spatial scale of disturbance cascades ($\nu$), and the degree of trophic omnivory ($\theta$). 
+Across all cases, FCL increased with ecosystem complexity, whereas the effect of ecosystem size remained largely neutral or slightly negative (Figures S5--S8, \textit{SI Appendix}).
+However, when we increased the dispersal range (lower $\delta_0$), FCL responded positively to increasing ecosystem size, and this shift was clearer than in the simple predator-prey system (Figures S9--S12, \textit{SI Appendix}). 
+This is likely because consumer species can feed on multiple prey species, allowing the cumulative effect of ecosystem size across prey species to emerge more strongly at higher trophic levels.
+As before, this effect was limited to a narrow range of ecosystem sizes (typically $L < 1000$).
 
 \subsection{Empirical Evidence}
 
