@@ -191,7 +191,7 @@ lapply(1:2,
                       " (", m, ") ",
                       "with corresponding 95\\% credible intervals (CIs) and posterior probabilities ($\\Pr(\\cdot)$), representing the uncertainty around each parameter estimate." 
                     ),
-                  label = "tab:parms-est"),
+                  label = paste0("tab:parms-est", i)),
            tabular.environment = "tabularx", # use \begin{tabularx}
            width = "\\textwidth", # scale table with \textwidth
            sanitize.text.function = function(x) x, # for math mode
