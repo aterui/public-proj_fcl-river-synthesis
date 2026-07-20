@@ -100,7 +100,7 @@ Current frameworks, however, lack the ability to illuminate the role of geometri
 Known as fractals, many natural systems display spatially complex structure characterized by repeating geometric patterns across scales \citep{rodriguez-iturbe_fractal_2001, turner_landscape_2015}.
 For example, dendritic ecosystems such as trees and rivers show deep self-similarity in branching patterns \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, terui_revisiting_2024}, making this geometric feature largely independent of ecosystem size \citep{terui_revisiting_2024}.
 Consequently, the branching architecture provides a unique physical template for habitat heterogeneity and spatial connectivity, underpinning emergent stability of metapopulation dynamics \citep{yeakel_synchronisation_2014, mari_metapopulation_2014, moore_emergent_2015, terui_metapopulation_2018} and spatial coexistence of competing species \citep{carrara_dendritic_2012, terui_emergent_2021, rinaldo_river_2018}.
-These influences of ecosystem complexity should propagate through predator-prey interactions and shape the vertical organization of food webs \citep{pomeranz_ecosystem_2023, anderson_effects_2018}.
+These influences of ecosystem complexity should propagate through predator-prey interactions and shape the vertical organization of food webs \citep{pomeranz_ecosystem_2023, anderson_effects_2018, green_long_2023}.
 Yet, previous studies on FCL predominantly assumed simplified landscapes for tractability, leaving this important question unanswered.
 
 Here, we show that ecosystem complexity plays a central role in regulating food chains in rivers.
@@ -398,7 +398,7 @@ The absolute Pearson correlation coefficient among all predictors was less than 
 The analysis provided strong statistical support for the positive effect of branching rate (Figure~\ref{fig:fcl-obs}B), with a high posterior probability that its regression coefficient is positive ($\Pr(\beta > 0) = 0.95$; Figure~\ref{fig:ridge} and Table~S3). 
 In contrast, the effect of total river length was only weakly positive (Figure~\ref{fig:fcl-obs}C), with the posterior distribution of its regression coefficient centered near zero (Figure~\ref{fig:ridge}; $\Pr(\beta > 0) = 0.69$).
 Interestingly, despite substantial regional differences in ecological communities, there was little evidence that the effects of these ecosystem properties differed among geographic regions. 
-That is, the model assuming common regression slopes across regions was slightly better supported than the region-specific slope model (WAIC \citep{watanabe_asymptotic_2010}: $-252.4$ vs. $-252.3$; see \textit{SI Appendix} for the competing model). 
+That is, the model assuming common regression slopes across regions was slightly better supported than the region-specific slope model (WAIC \citep{watanabe_asymptotic_2010}: $-252.5$ vs. $-252.4$; see \textit{SI Appendix} for the competing model). 
 This result suggests that the relationships between ecosystem properties and food chain length are broadly consistent across geographic regions.
 
 Our theory suggests two complementary mechanisms underlying the positive effect of ecosystem complexity: enhanced connectivity and flow-unconnected refugia.
@@ -407,7 +407,7 @@ Consistent with this mechanism, both species diversity and food chain length are
 Our results suggest that these spatial processes generate an emergent effect of ecosystem complexity, whereby increases in local FCL scale up to shape food web organization at the watershed scale.
 
 The second mechanism, the creation of flow-unconnected refugia, likely operates in synergy with enhanced connectivity because populations that persist in refugia during major disturbances can subsequently recolonize impacted habitats through dispersal \citep{pomeranz_ecosystem_2023, koizumi_fishermen_2013}.
-Disturbance cascades are widely observed in river networks \citep{swanson_flood_1998, stanley_ecosystem_1997, nakamura_disturbance_2000, gomi_understanding_2002, messager_global_2021}, indicating that flow-unconnected tributaries often serve as colonization sources following disturbance. 
+Spatial disturbance cascades are widely observed in river networks \citep{stanley_ecosystem_1997, swanson_flood_1998, nakamura_disturbance_2000, gomi_understanding_2002, messager_global_2021}, indicating that flow-unconnected tributaries often serve as colonization sources following disturbance. 
 For example, half a century of observations from the Blue River watershed in the northwestern United States showed that many debris flows originate in confined mountain streams and propagate long distances into larger downstream rivers \citep{nakamura_disturbance_2000}.
 Recent studies have further documented an expanding spatial extent of flood and drought synchrony \citep{berghuijs_growing_2019, sharma_spatial_2024}, suggesting that disturbance cascades will become increasingly important under climate change. 
 These hydrological processes are linked to widespread spatial synchrony of aquatic population dynamics \citep{sarremejane_drought_2021, larsen_geography_2021, tamario_barriers_2025}. 
@@ -462,7 +462,7 @@ In addition, we statistically controlled the potential confounding effects of hu
 As such, including the human footprint index would also enable the model to account for river fragmentation, which is often linked to road crossings and land transformation.
 
 However, as with any correlative analysis, our findings should be interpreted with caution. Although our theoretical framework suggests plausible ecological mechanisms underlying the observed patterns, these mechanisms are unlikely to be the only processes involved.
-For example, more complex stream networks may increase interactions with surrounding terrestrial ecosystems, enhancing nutrient inputs and resource subsidies that could also influence FCL. 
+For example, more complex stream networks may increase interactions with surrounding terrestrial ecosystems \citep{gomi_understanding_2002}, potentially enhancing nutrient inputs and resource subsidies that could also influence FCL.
 In addition, we cannot rule out the possibility of spurious correlations inherent in observational analyses. 
 Experimental manipulations are therefore needed to establish biological causality. 
 Although watershed-scale experiments are largely impractical, controlled experiments using microbial microcosms or other small-scale systems may provide a feasible alternative for testing the proposed and other mechanisms \citep{altermatt_big_2015, green_long_2023}.
@@ -746,6 +746,7 @@ where $\delta^{15}N_{\text{top}}$ and $\delta^{15}N_{\text{base}}$ are the stabl
 $\Delta_{N}$ denotes the trophic enrichment factor, while $\tau_{\text{base}}$ represents the trophic position of the baseline species (one for primary producers and two for primary consumers). 
 In this study, we assumed a trophic enrichment factor of $\Delta_{N} = 3.4$ following Post \citep{post_using_2002}.
 For any instances where FCL estimates were originally calculated using a different $\Delta_{N}$ value but raw $\delta^{15}N$ values are not available, we recalculated these estimates using $\Delta_{N} = 3.4$ to maintain consistency across studies.
+Equation \ref{eq:fcl-si} has been shown to provide FCL values consistent with theoretical FCL \citep{vagnon_integrating_2026}.
 
 \subsubsection{Environmental variables}
 
@@ -786,7 +787,7 @@ Our observed FCL estimate $Y_i$ (log transformed) is linked to the latent variab
 Writing $f(\cdot;\Theta)$ as the probability density of a specified model with parameter vector $\Theta$, each observed data point contributes $f(Y_i;\Theta)$ to the likelihood of $\Theta$ whereas a censored data point provides a contribution of $\Pr(y_i > Y_i~|~\Theta) = \int_{Y_i}^{\infty} f(y_i;\Theta) dy_i$.
 With this formulation, the censored regression corrects for possible biases in statistical inference (e.g., coefficients) \citep{terui_stream_2018, lunn_bugs_2012}, allowing us to use the data from imperfect sampling.
 
-Our model assumed that $y_i$ follows a Student's t distribution as $y_i \sim t(\mu_{y,i}, \sigma^2, v)$.
+At the site level, we assumed that $y_i$ follows a Student's t distribution as $y_i \sim t(\mu_{y,i}, \sigma^2, v)$.
 We chose a Student's t distribution as an error structure because uncontrollable data anomalies may exist due to the nature of published data sources.
 A Student's t distribution is robust to outliers, thereby providing conservative estimates of regression parameters \citep{lunn_bugs_2012}.
 The expected value $\mu_{y,i}$ is related to site-level linear predictor(s) as:
