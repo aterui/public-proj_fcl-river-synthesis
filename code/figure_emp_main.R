@@ -266,7 +266,7 @@ var_level <- df_stats %>%
       geom = "density_ridges_gradient",
       quantiles = 0.5,
       color = grey(0, 0.2), 
-      size = 0.25,
+      linewidth = 0.25,
       scale = 0.95
     ) +
     scale_fill_gradient(
