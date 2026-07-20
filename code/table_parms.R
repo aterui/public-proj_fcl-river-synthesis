@@ -178,7 +178,7 @@ list_table <- lapply(list_est, function(data) {
 })
 
 ## export
-m <- c("random intercept", "random intercept and slope")
+m <- c("random intercept", "random intercept and slopes")
 
 lapply(1:2, 
        function(i) {
@@ -188,7 +188,7 @@ lapply(1:2,
                   caption = 
                     paste0(
                       "Parameter estimates of the hierarchical Bayesian model",
-                      " (", m, ") ",
+                      " (", m[i], ") ",
                       "with corresponding 95\\% credible intervals (CIs) and posterior probabilities ($\\Pr(\\cdot)$), representing the uncertainty around each parameter estimate." 
                     ),
                   label = paste0("tab:parms-est", i)),
