@@ -1,12 +1,9 @@
 #' DESCRIPTION:
 #' Create tables for parameter values
 
-# setup -------------------------------------------------------------------
-
 rm(list = ls())
 source("code/set_library.R")
 options(xtable.comment = FALSE)
-
 
 # table -------------------------------------------------------------------
 
@@ -117,66 +114,94 @@ print(xtable(df_parms %>%
 
 # Bayesian model estimate -------------------------------------------------
 
-list_est <- readRDS("data_fmt/output_model_h0.rds")
+h0 <- readRDS("data_fmt/output_model_h0.rds")
+h1 <- readRDS("data_fmt/output_model_h1.rds")
 
-df_sum <- list_est[[1]] %>% 
-  filter(!str_detect(parms, "b0")) %>% 
-  mutate(varname = case_when(parms == "a[1]" ~ "$\\alpha_1$",
-                             parms == "b[1]" ~ "$\\beta_0$",
-                             parms == "b[2]" ~ "$\\beta_1$",
-                             parms == "b[3]" ~ "$\\beta_2$",
-                             parms == "b[4]" ~ "$\\beta_3$",
-                             parms == "b[5]" ~ "$\\beta_4$",
-                             parms == "b[6]" ~ "$\\beta_5$",
-                             parms == "nu" ~ "$\\nu$",
-                             parms == "sigma[1]" ~ "$\\sigma$",
-                             parms == "sigma[2]" ~ "$\\sigma_{\\varepsilon}$",
-                             parms == "sigma[3]" ~ "$\\sigma_{\\eta}$",
-                             parms == "z[1]" ~ "$\\xi_{1}$",
-                             parms == "z[2]" ~ "$\\xi_{2}$"),
-         description = case_when(parms == "a[1]" ~ "Elevation",
-                                 parms == "b[1]" ~ "Intercept",
-                                 parms == "b[2]" ~ "ln Total river length",
-                                 parms == "b[3]" ~ "ln Branching rate",
-                                 parms == "b[4]" ~ "Air temperature",
-                                 parms == "b[5]" ~ "Precipitation",
-                                 parms == "b[6]" ~ "Human footprint",
-                                 parms == "nu" ~ "Degrees of freedom",
-                                 parms == "sigma[1]" ~ "Site-level residual SD",
-                                 parms == "sigma[2]" ~ "Watershed-level SD (random effect)",
-                                 parms == "sigma[3]" ~ "Region-level SD (random effect)",
-                                 parms == "z[1]" ~ "Scaling exponent for the number of sites",
-                                 parms == "z[2]" ~ "Scaling parameter for spatial sampling randomness"),
-         estimate = sprintf("$%.2f$", median),
-         ci = paste0("[",
-                     sprintf("$%.2f$", low),
-                     ", ",
-                     sprintf("$%.2f$", high),
-                     "]"),
-         pr_neg = sprintf("$%.2f$", pr_neg),
-         pr_pos = sprintf("$%.2f$", pr_pos)) %>% 
-  dplyr::select(Symbol = varname,
-                Description = description,
-                Estimate = estimate,
-                `95\\% CI` = ci,
-                `$\\Pr(< 0)$` = pr_neg,
-                `$\\Pr(> 0)$` = pr_pos)
+list_est <- 
+  list(
+    h0[[1]], 
+    h1[[1]]
+  )
+
+list_table <- lapply(list_est, function(data) {
+  
+  data %>% 
+    filter(!str_detect(parms, "b0")) %>% 
+    mutate(symbol = case_when(varname == "local_elev" ~ "$\\alpha_1$",
+                              varname == "(Intercept)" ~ "$\\beta_0$",
+                              varname == "log_rl" ~ "$\\beta_1$",
+                              varname == "log_lambda" ~ "$\\beta_2$",
+                              varname == "temp" ~ "$\\beta_3$",
+                              varname == "prec" ~ "$\\beta_4$",
+                              varname == "hfp" ~ "$\\beta_5$",
+                              parms == "nu" ~ "$\\nu$",
+                              parms == "sigma[1]" ~ "$\\sigma$",
+                              parms == "sigma[2]" ~ "$\\sigma_{\\varepsilon}$",
+                              parms == "sigma[3]" ~ "$\\sigma_{\\eta}$",
+                              parms == "sigma_b[1]" ~ "$\\sigma_{\beta1}$",
+                              parms == "sigma_b[2]" ~ "$\\sigma_{\beta2}$",
+                              parms == "sigma_b[3]" ~ "$\\sigma_{\beta3}$",
+                              parms == "z[1]" ~ "$\\xi_{1}$",
+                              parms == "z[2]" ~ "$\\xi_{2}$"),
+           description = case_when(varname == "local_elev" ~ "Elevation",
+                                   varname == "(Intercept)" ~ "Intercept",
+                                   varname == "log_rl" ~ "ln Total river length",
+                                   varname == "log_lambda" ~ "ln Branching rate",
+                                   varname == "temp" ~ "Air temperature",
+                                   varname == "prec" ~ "Precipitation",
+                                   varname == "hfp" ~ "Human footprint",
+                                   parms == "nu" ~ "Degrees of freedom",
+                                   parms == "sigma[1]" ~ "Site-level residual SD",
+                                   parms == "sigma[2]" ~ "Watershed-level SD (random effect)",
+                                   parms == "sigma[3]" ~ "Region-level SD (random effect)",
+                                   parms == "sigma_b[1]" ~ "Region-level SD (intercept)",
+                                   parms == "sigma_b[2]" ~ "Region-level SD (ln Total river length)",
+                                   parms == "sigma_b[3]" ~ "Region-level SD (ln Branching rate)",
+                                   parms == "z[1]" ~ "Scaling exponent for the number of sites",
+                                   parms == "z[2]" ~ "Scaling parameter for spatial sampling randomness"),
+           estimate = sprintf("$%.2f$", median),
+           ci = paste0("[",
+                       sprintf("$%.2f$", low),
+                       ", ",
+                       sprintf("$%.2f$", high),
+                       "]"),
+           pr_neg = sprintf("$%.2f$", pr_neg),
+           pr_pos = sprintf("$%.2f$", pr_pos)) %>% 
+    filter(!is.na(symbol)) %>% 
+    dplyr::select(Symbol = symbol,
+                  Description = description,
+                  Estimate = estimate,
+                  `95\\% CI` = ci,
+                  `$\\Pr(< 0)$` = pr_neg,
+                  `$\\Pr(> 0)$` = pr_pos)
+  
+})
 
 ## export
-print(xtable(df_sum,
-             caption = "Parameter estimates of the hierarchical Bayesian model 
-             with corresponding 95\\% credible intervals (CIs) and 
-             posterior probabilities ($\\Pr(\\cdot)$), 
-             representing the uncertainty around each parameter estimate.",
-             label = "tab:parms-est"),
-      tabular.environment = "tabularx", # use \begin{tabularx}
-      width = "\\textwidth", # scale table with \textwidth
-      sanitize.text.function = function(x) x, # for math mode
-      include.rownames = FALSE,
-      caption.placement = "top",
-      size = "\\small",
-      file = "tex/table_si_emp.tex")
+m <- c("random intercept", "random intercept and slope")
 
+lapply(1:2, 
+       function(i) {
+         
+         print(
+           xtable(list_table[[i]],
+                  caption = 
+                    paste0(
+                      "Parameter estimates of the hierarchical Bayesian model",
+                      " (", m, ") ",
+                      "with corresponding 95\\% credible intervals (CIs) and posterior probabilities ($\\Pr(\\cdot)$), representing the uncertainty around each parameter estimate." 
+                    ),
+                  label = "tab:parms-est"),
+           tabular.environment = "tabularx", # use \begin{tabularx}
+           width = "\\textwidth", # scale table with \textwidth
+           sanitize.text.function = function(x) x, # for math mode
+           include.rownames = FALSE,
+           caption.placement = "top",
+           size = "\\small",
+           file = paste0("tex/table_si_emp", i, ".tex")
+         ) # print
+         
+       })
 
 # table for meta-analysis sources -----------------------------------------
 
