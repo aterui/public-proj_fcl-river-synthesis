@@ -1,8 +1,6 @@
 #' DESCRIPTION:
 #' Correlation analysis of predictors
 
-# setup -------------------------------------------------------------------
-
 rm(list = ls())
 source("code/set_library.R")
 source("code/set_function.R")

@@ -38,18 +38,24 @@ X1 <- df_fcl_local %>%
     local_elev,
   ) %>% 
   mutate(
-    across(.cols = everything(),
-           .fns = function(x) c(scale(x)))
+    across(
+      .cols = everything(),
+      .fns = function(x) c(scale(x))
+    )
   ) %>% 
   data.matrix()
 
-list_const_local <- with(df_fcl_local,
-                         list(logCut = log(cut),
-                              X1 = X1,
-                              G = g,
-                              K1 = ncol(X1),
-                              Ns = length(fcl),
-                              Nw = n_distinct(g)))
+list_const_local <- 
+  with(df_fcl_local,
+       list(
+         logCut = log(cut),
+         X1 = X1,
+         G = g,
+         K1 = ncol(X1),
+         Ns = length(fcl),
+         Nw = n_distinct(g)
+       )
+  )
 
 ## - watershed level data
 df_x2 <- df_fcl_wsd %>% 
@@ -71,13 +77,17 @@ df_x2 <- df_fcl_wsd %>%
 
 X2 <- model.matrix(~ ., df_x2)
 
-list_const_wsd <- with(df_fcl_wsd,
-                       list(X2 = X2,
-                            K2 = ncol(X2),
-                            H = ecor,
-                            Nh = n_distinct(ecor),
-                            Ratio = d_ratio,
-                            N_site = n_site))
+list_const_wsd <- 
+  with(df_fcl_wsd,
+       list(
+         X2 = X2,
+         K2 = ncol(X2),
+         H = ecor,
+         Nh = n_distinct(ecor),
+         Ratio = d_ratio,
+         N_site = n_site
+       )
+  )
 
 ## combine
 list_data <- with(df_fcl_local,
@@ -107,19 +117,24 @@ source("code/model_nimble_hi.R")
 ## initial value
 f_inits_h0 <- function() {
   with(df_fcl_local,
-       list(z = runif(2, min = 0.5, max = 1.5),
-            nu = runif(1, min = 2, max = 10),
-            a = rnorm(ncol(X1), sd = s0),
-            b = rnorm(ncol(X2), sd = s0),
-            sigma = runif(3, min = 0.05, max = 0.1),
-            r = rnorm(n_distinct(ecor), sd = s0),
-            a0 = rnorm(n_distinct(oid),
-                       mean = mean(log(fcl_obs),
-                                   na.rm = TRUE),
-                       sd = s0),
-            logY = ifelse(censoring == 1,
-                          log(cut + 1),
-                          NA))
+       list(
+         z = runif(2, min = 0.5, max = 1.5),
+         nu = runif(1, min = 2, max = 10),
+         a = rnorm(ncol(X1), sd = s0),
+         b = rnorm(ncol(X2), sd = s0),
+         sigma = runif(3, min = 0.05, max = 0.1),
+         r = rnorm(n_distinct(ecor), sd = s0),
+         a0 = rnorm(
+           n_distinct(oid),
+           mean = mean(log(fcl_obs), na.rm = TRUE),
+           sd = s0
+         ),
+         logY = ifelse(
+           censoring == 1,
+           log(cut + 1),
+           NA
+         )
+       )
   ) 
 }
 
@@ -132,34 +147,46 @@ parms <- c("a",
            "z")
 
 ## model setup as nimbleModel
-post_h0 <- nimbleMCMC(code = m0,
-                      constants = list_const,
-                      data = list_data,
-                      inits = f_inits_h0,
-                      niter = n_iter, 
-                      nburnin = n_burn,
-                      thin = n_thin,
-                      nchains = n_chain,
-                      monitors = parms,
-                      progressBar = TRUE,
-                      samplesAsCodaMCMC = TRUE,
-                      WAIC = TRUE,
-                      setSeed = TRUE)
+post_h0 <- nimbleMCMC(
+  code = m0,
+  constants = list_const,
+  data = list_data,
+  inits = f_inits_h0,
+  niter = n_iter, 
+  nburnin = n_burn,
+  thin = n_thin,
+  nchains = n_chain,
+  monitors = parms,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  WAIC = TRUE,
+  setSeed = TRUE
+)
 
-(df_est_h0 <- MCMCvis::MCMCsummary(post_h0$samples,
-                                   func = function(x) mean(x < 0),
-                                   func_name = "pr_neg") %>%  
+(
+  df_est_h0 <- 
+    MCMCvis::MCMCsummary(
+      post_h0$samples,
+      func = function(x) mean(x < 0),
+      func_name = "pr_neg"
+    ) %>%  
     as_tibble(rownames = "parms") %>% 
     filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
-    transmute(parms,
-              median = `50%`,
-              low = `2.5%`,
-              high = `97.5%`,
-              rhat = Rhat,
-              pr_neg = pr_neg,
-              pr_pos = 1 - pr_neg) %>% 
-    relocate(pr_neg, pr_pos,
-             .before = rhat))
+    transmute(
+      parms,
+      median = `50%`,
+      low = `2.5%`,
+      high = `97.5%`,
+      rhat = Rhat,
+      pr_neg = pr_neg,
+      pr_pos = 1 - pr_neg
+    ) %>% 
+    relocate(
+      pr_neg, 
+      pr_pos,
+      .before = rhat
+    )
+)
 
 ## append variable names
 vn <- with(list_const, c(colnames(X1), colnames(X2)))
@@ -195,25 +222,31 @@ R <- 3
 ## initial value
 f_inits_h1 <- function() {
   with(df_fcl_local,
-       list(z = runif(2, min = 0.5, max = 1.5),
-            nu = runif(1, min = 2, max = 10),
-            a = rnorm(ncol(X1), sd = s0),
-            b = matrix(rnorm(n_distinct(ecor) * R,
-                             sd = s0),
-                       nrow = n_distinct(ecor),
-                       ncol = R),
-            b_mu = rnorm(R, sd = s0),
-            b_prime = rnorm(ncol(X2) - R, sd = s0),
-            sigma = runif(2, min = 0.05, max = 0.1),
-            sigma_b = runif(R, min = 0.05, max = 0.1),
-            Ustar = diag(R),
-            a0 = rnorm(n_distinct(oid),
-                       mean = mean(log(fcl_obs),
-                                   na.rm = TRUE),
-                       sd = s0),
-            logY = ifelse(censoring == 1,
-                          log(cut + 1),
-                          NA))
+       list(
+         z = runif(2, min = 0.5, max = 1.5),
+         nu = runif(1, min = 2, max = 10),
+         a = rnorm(ncol(X1), sd = s0),
+         b = matrix(
+           rnorm(n_distinct(ecor) * R, sd = s0),
+           nrow = n_distinct(ecor),
+           ncol = R
+         ),
+         b_mu = rnorm(R, sd = s0),
+         b_prime = rnorm(ncol(X2) - R, sd = s0),
+         sigma = runif(2, min = 0.05, max = 0.1),
+         sigma_b = runif(R, min = 0.05, max = 1),
+         Ustar = diag(R),
+         a0 = rnorm(
+           n_distinct(oid),
+           mean = mean(log(fcl_obs), na.rm = TRUE),
+           sd = s0
+         ),
+         logY = ifelse(
+           censoring == 1,
+           log(cut + 1),
+           NA
+         )
+       )
   )
 }
 
@@ -230,34 +263,45 @@ parms <- c("a",
 ## model setup as nimbleModel
 list_const$R <- R
 
-post_h1 <- nimbleMCMC(code = m1,
-                      constants = list_const,
-                      data = list_data,
-                      inits = f_inits_h1,
-                      niter = n_iter, 
-                      nburnin = n_burn,
-                      thin = n_thin,
-                      nchains = n_chain,
-                      monitors = parms,
-                      progressBar = TRUE,
-                      samplesAsCodaMCMC = TRUE,
-                      WAIC = TRUE,
-                      setSeed = TRUE)
+post_h1 <- nimbleMCMC(
+  code = m1,
+  constants = list_const,
+  data = list_data,
+  inits = f_inits_h1,
+  niter = n_iter, 
+  nburnin = n_burn,
+  thin = n_thin,
+  nchains = n_chain,
+  monitors = parms,
+  progressBar = TRUE,
+  samplesAsCodaMCMC = TRUE,
+  WAIC = TRUE,
+  setSeed = TRUE
+)
 
-(df_est_h1 <- MCMCvis::MCMCsummary(post_h1$samples,
-                                   func = function(x) mean(x < 0),
-                                   func_name = "pr_neg") %>% 
+(
+  df_est_h1 <- MCMCvis::MCMCsummary(
+    post_h1$samples,
+    func = function(x) mean(x < 0),
+    func_name = "pr_neg"
+  ) %>% 
     as_tibble(rownames = "parms") %>% 
     filter(!str_detect(parms, "a0\\[.{1,}\\]")) %>% 
-    transmute(parms,
-              median = `50%`,
-              low = `2.5%`,
-              high = `97.5%`,
-              rhat = Rhat,
-              pr_neg = pr_neg,
-              pr_pos = 1 - pr_neg) %>% 
-    relocate(pr_neg, pr_pos,
-             .before = rhat))
+    transmute(
+      parms,
+      median = `50%`,
+      low = `2.5%`,
+      high = `97.5%`,
+      rhat = Rhat,
+      pr_neg = pr_neg,
+      pr_pos = 1 - pr_neg
+    ) %>% 
+    relocate(
+      pr_neg, 
+      pr_pos,
+      .before = rhat
+    )
+)
 
 ## append variable names
 vn <- with(list_const, c(colnames(X1), colnames(X2)))
