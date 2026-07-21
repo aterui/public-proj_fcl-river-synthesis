@@ -210,8 +210,20 @@ df_plot <- df_fcl_sim %>%
     .groups = "drop"
   ) %>% 
   mutate(
-    lab_mu0 = sprintf("mu^{(0)}==%.2f", mu0),
-    lab_r0 = sprintf("italic(r[0])==%.2f", r0),
+    lab_mu0 = 
+      ifelse(
+        mu0 == max(mu0),
+        sprintf("atop(High~disturbance, mu^{(0)}==%.2f)", mu0),
+        sprintf("atop(Low~disturbance, mu^{(0)}==%.2f)", mu0)
+      ) %>% 
+      fct_rev(),
+    lab_r0 = 
+      ifelse(
+        r0 == max(r0),
+        sprintf("atop(High~resource, italic(r[0])==%.2f)", r0),
+        sprintf("atop(Low~resource, italic(r[0])==%.2f)", r0)
+      ) %>% 
+      fct_rev(),
     lab_mu_p = ifelse(
       mu_p == max(mu_p),
       sprintf("Strong~prey~effect~(mu^{(1)}==%.2f)", mu_p),
