@@ -80,7 +80,7 @@ g_extn <- df_ce %>%
   geom_line() +
   labs(
     x = expression("Total river length"~italic(L)),
-    y = "Disturbance rate",
+    y = "Disturbance term",
     color = expression(lambda[b])
   ) +
   scale_x_continuous(
@@ -193,7 +193,7 @@ df_heat <- readRDS("data_fmt/sim_fcl_m_heat.rds") %>%
          lab_rho = ifelse(rho0 > min(rho0),
                           sprintf("rho[0]==%.2f~(disturbance~cascade)", rho0),
                           sprintf("rho[0]==%.2f~(no~disturbance~cascade)", rho0)),
-         lab_d = "Disturbance~term",
+         lab_d = "Disturbance~rate",
          lab_r = "Resource~supply",
          lambda_mid = ifelse(r0 == max(r0) & mu0 == max(mu0),
                              mean(range(lambda)),
