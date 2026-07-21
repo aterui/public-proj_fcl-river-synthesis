@@ -9,7 +9,6 @@
 % Graphics & figures
 \usepackage{import, graphicx, wrapfig, sidecap}
 \sidecaptionvpos{figure}{t}      % top-aligned side captions
-\graphicspath{{./tex/}}
 
 % Spacing & layout
 \usepackage{parskip, geometry}
@@ -125,7 +124,7 @@ Evidence suggests that the branching rate captures the fractal nature of river n
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{tex/fig_theo_scheme.pdf}
+    \includegraphics[width=\textwidth]{fig_theo_scheme.pdf}
     \caption{Modeling scheme. (A) Schematic representation of the random branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. Key network properties are defined as follows. Network distance $d$: the distance measured along the river network between two habitats (the gray broken line connecting black and open dots). Upstream river length $u$: the portion of the river located upstream of a focal habitat patch (the black solid lines above black dots). Network diameter $\mathcal{L}$: the rive length from the outlet to a given upstream terminal (the gray broken line connecting the outlet and an upstream terminal). (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. Disturbance term $\mu^{(0)}(1 + \hat{\rho}\hat{u})$ (Equation \ref{eq:mu-pp}) increases with $L$ but decreases with $\lambda_b$. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
     \label{fig:scheme}
 \end{figure}
@@ -272,7 +271,7 @@ As such, although incorporating non-random network formation represents an inter
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{tex/fig_theo_2sp.pdf}
+    \includegraphics[width=\textwidth]{fig_theo_2sp.pdf}
     \caption{Ecosystem size (total river length $L$) and complexity (branching rate $\lambda_b$) dictate equilibrium occupancies of a predator-prey system. Parameters used in this result are: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. In each panel, one ecosystem property was held constant (left: $L = 2550$; right: $\lambda_b = 0.6$) while the other was varied along the x-axis. A broader parameter space was explored in the \textit{SI Appendix}.}
     \label{fig:pp-occ}
 \end{figure}
@@ -354,7 +353,31 @@ Resource supply ($r_0$) increased FCL, whereas disturbance rate ($\mu_0$) decrea
 However, these effects did not alter the qualitative relationships between FCL and ecosystem properties.
 
 \vspace{0.5cm}
-\input{tex/table_main}
+% \input{tex/table_main}
+\begin{table}[ht]
+\centering
+\caption{Parameter descriptions and values used for analytical predictions.} 
+\label{tab:parms}
+\begingroup\small
+\begin{tabularx}{\textwidth}{lll}
+  \hline
+Symbol & Description & Value \\ 
+  \hline
+$r_0$ & Resource supply [-] & 0.25, 0.50 \\ 
+  $b$ & Downstream accumulation rate of resources [per unit river length] & $1.00 \times 10^{-4}$ \\ 
+  $g_0$ & Propagule production for producers [per habitat] & 5 \\ 
+  $\delta_0$ & Dispersal decay rate for producers [unit river length] & 0.10 \\ 
+  $h$ & Habitat density [per unit river length] & 1.00 \\ 
+  $\mu^{(0)}$ & Disturbance-induced extinction rate [per unit time] & 2.50, 5.00 \\ 
+  $\mu^{(1)}$ & Maximum prey-induced extinction rate [per unit time] & 5.00 \\ 
+  $\mu^{(2)}$ & Predator-induced extinction rate [per unit time] & 0.00 \\ 
+  $\nu$ & Distance decay rate of disturbance synchrony [per unit river length] & 0.10 \\ 
+  $\psi$ & Scaling exponent for propagule and dispersal parameters [per unit ln trophic position] & 0.50 \\ 
+  $\theta$ & Degree of omnivory [per unit trophic position] & 0.25 \\ 
+   \hline
+\end{tabularx}
+\endgroup
+\end{table}
 \vspace{0.5cm}
 
 Disturbance cascades play a central role in generating the weak effect of ecosystem size. 
@@ -366,7 +389,7 @@ Notably, ecosystem complexity continued to promote FCL even under this modified 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{tex/fig_theo_main.pdf}
+    \includegraphics[width=0.8\textwidth]{fig_theo_main.pdf}
     \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (total river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Parameter values not varied are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity significantly increases FCL in the presence of spatial disturbance cascades (red lines), whereas the effect of ecosystem size was largely neutral. The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (\textit{SI Appendix} for details), the positive effect of ecosystem size is recovered (the gray lines in panel C), while the effect of ecosystem complexity remains positive (the gray lines in panel B).}
     \label{fig:sim-main}
 \end{figure}
@@ -420,7 +443,7 @@ Together, these mechanisms may explain why FCL is shorter in rivers with high pr
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.9\linewidth]{tex/fig_emp_fcl.pdf}
+    \includegraphics[width=0.9\linewidth]{fig_emp_fcl.pdf}
     \caption{Empirical regression analysis of food chain length (FCL) reveals the influence of ecosystem complexity. (A) Global map of sampling locations, with points representing outlet coordinates of 115 study watersheds. Colors indicate geographic regions primarily categorized by HydroBASINS (level one) \citep{lehner_global_2013} (see Methods for exception). (B, C) Weighted robust regression. Points show FCL estimates averaged for each watershed (i.e., parameter $\alpha_{0,w}$ in Equation \ref{eq:watershed-avarage}), and greater weights (proportional to point size) were given to watersheds with more sampling sites and spatially random sampling (Methods). Colors in the regression plots match the geographic region colors in panel A. The solid line represents the global model prediction with its 95\% credible interval (gray shade), while dashed lines show region-specific predictions (note: no regression lines in panel C due to weak statistical evidence). Note that the branching rate and the total river length represent the value of an entire watershed within which sampling sites are located.}
     \label{fig:fcl-obs}
 \end{figure}
@@ -441,7 +464,7 @@ Thus, the present study speaks to the importance of spatial scale when examining
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{tex/fig_emp_ridge.pdf}
+    \includegraphics[width=0.75\linewidth]{fig_emp_ridge.pdf}
     \caption{Posterior distributions of the standardized regression coefficients from the Bayesian model explaining variation in food chain length. Predictor variables are shown on the y-axis. Colors represent tail probabilities, and vertical lines indicate posterior median estimates. Numbers on the right (left) denote the posterior probability that the regression coefficient is positive (negative).}
     \label{fig:ridge}
 \end{figure}
@@ -459,7 +482,7 @@ In addition, we statistically controlled the potential confounding effects of hu
 As such, including the human footprint index would also enable the model to account for river fragmentation, which is often linked to road crossings and land transformation.
 
 However, as with any correlative analysis, our findings should be interpreted with caution. Although our theoretical framework suggests plausible ecological mechanisms underlying the observed patterns, these mechanisms are unlikely to be the only processes involved.
-For example, more complex stream networks may increase interactions with surrounding terrestrial ecosystems \citep{gomi_understanding_2002}, potentially enhancing nutrient inputs and resource subsidies that could also influence FCL.
+For example, complex stream branching might increase interactions with surrounding terrestrial ecosystems \citep{gomi_understanding_2002}, potentially enhancing nutrient inputs and resource subsidies that could also influence FCL \citep{terui_stream_2018}.
 In addition, we cannot rule out the possibility of spurious correlations inherent in observational analyses. 
 Experimental manipulations are therefore needed to establish biological causality. 
 Although watershed-scale experiments are largely impractical, controlled experiments using microbial microcosms or other small-scale systems may provide a feasible alternative for testing the proposed and other mechanisms \citep{altermatt_big_2015, green_long_2023}.
