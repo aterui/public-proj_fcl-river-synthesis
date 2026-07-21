@@ -340,7 +340,7 @@ The parameter $\mu_k^{(2)}$ determines the effect size of predator richness.
 \subsubsection{Mean-field approximation}
 We describe the temporal dynamics of the fraction of habitats occupied (hereafter, ``occupancy'') by applying a spatial mean-field approximation to Equation~\ref{eq:dm0}, thereby dropping the habitat subscripts $i$ and $j$ \citep{ovaskainen_asymptotically_2006}.
 As shown below, this approximation naturally expresses the establishment probability $c_k$, effective propagule supply $\phi_k$, and extinction rate $\mu_k$ as explicit functions of total river length $L$ and branching rate $\lambda_b$.
-Importantly, no additional ecological assumptions are introduced at this stage; the metapopulation model follows directly from the mechanistic habitat-level processes specified above.
+Importantly, no additional ecological assumptions are introduced at this stage; the metapopulation model is derived directly from the habitat-level processes specified above.
 
 Let $p_k$ denote the fraction of habitats occupied by species $k$.
 The occupancy dynamics are
@@ -413,7 +413,7 @@ The extinction rate becomes
     \label{eq:mean-extn}    
 \end{equation}
 
-where $\hat{s}_k' \equiv \mathbb{E}(s_{ik}' = \sum_{q \in A_k'} p_q)$ is the metapopulation-level expression of predator richness, obtained by summing the occupancies of potential predator species.
+where $\hat{s}_k' \equiv \mathbb{E}(s_{ik}') = \sum_{q \in A_k'} p_q$ is the metapopulation-level expression of predator richness, which equals the summed occupancy of potential predator species.
 By Corollary~\ref{collorary-rho}, the expected synchrony probability $\hat{\rho}$ is a nonlinear function of network diameter $\hat{\mathcal{L}}$,
 
 \begin{equation}
