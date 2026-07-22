@@ -1483,7 +1483,7 @@ We obtain
     \mathbb{E}(m^2) 
     &= C \sum_{k=0}^n (k + 1) \binom{2k}{k} \binom{2n - 2k}{n - k} \\
     &= C \left[\sum_{k=0}^n k \binom{2k}{k} \binom{2n - 2k}{n - k} + \sum_{k=0}^n \binom{2k}{k} \binom{2n - 2k}{n - k}\right]\\
-    & = C(\frac{4^nn}{2} + 4^n) \qquad (\because \text{the Cauchy convolution of central binomial coefficients})\\
+    & = C(\frac{4^nn}{2} + 4^n) \qquad (\because \text{the convolution of central binomial coefficients})\\
     &= 4^n (n + 2) {\binom{2M}{M}}^{-1}\\
     &= \frac{4^M (M + 1)}{4} {\binom{2M}{M}}^{-1}.
     \end{split}
@@ -1675,7 +1675,7 @@ where $\mathcal{D}_{iv}$ is the distance from flow-connected upstream terminal $
 We introduced the length-bias weight under the assumption that the likelihood of a disturbance event is proportional to the length of the flow path $\mathcal{D}_{iv}$.
 Because the integration takes expectation over the possible locations of disturbance origins, Equation \ref{eq:se-rho} gives the expected synchrony probability for a given spatial configuration of the realized network.
 
-We numerically solved Equation \ref{eq:se-model} to obtain equilibrium occupancy probabilities  for the prey and the predator at each habitat, denoted as$p^*_{i1}$ and $p^*_{i2}$, respectively.
+We numerically solved Equation \ref{eq:se-model} to obtain equilibrium occupancy probabilities  for the prey and the predator at each habitat, denoted as $p^*_{i1}$ and $p^*_{i2}$, respectively.
 We then estimated the equilibrium occupancy of each species by averaging these probabilities across habitats.
 We considered the following parameter combinations: dispersal asymmetry $\xi \in \{0.5, 0.8\}$, dispersal rate $\theta \in \{40, 80\}$, disturbance decay rate $\nu \in \{0.05, 0.1\}$, and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$).
 We included the symmetric dispersal scenario ($\xi = 0.5$) for a comparison with the asymmetric (downstream-biased) dispersal scenario ($\xi = 0.8$).
