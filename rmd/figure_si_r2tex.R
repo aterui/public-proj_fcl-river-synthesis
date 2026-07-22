@@ -34,11 +34,11 @@ cap <- with(df_grt, {
                    ifelse(
                      theta == max(theta),
                      paste0("and strong omnivory $\\theta = ", theta, "$."),
-                     paste0("and weak omnivory $\\theta = ", theta, "$. ")
+                     paste0("and weak omnivory $\\theta = ", theta, "$.")
                    )
   )
   
-  c_text0 <- "Heatmaps of food chain length (FCL) are expressed as a function of ecosystem size (total river length, $L$)
+  c_text0 <- " Heatmaps of food chain length (FCL) are expressed as a function of ecosystem size (total river length, $L$)
 and complexity (branching rate, $\\lambda_b$), with rows and columns displaying
 different combinations of resource supply ($r_0$), disturbance regime
 ($\\mu^{(0)}$), prey effect ($\\mu^{(1)}$), and predation effect ($\\mu^{(2)}$).
