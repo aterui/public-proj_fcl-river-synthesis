@@ -314,9 +314,9 @@ We express the extinction rate $\mu_{ik}$ as a function of disturbance, prey sca
 The disturbance term consists of $\mu_k^{(0)}$ and $\mu_k^{(0)} \rho_i u_i$.
 The first component represents disturbance occurring independently at each habitat.
 The second component represents additional extinction risk caused by downstream disturbance cascades, which increases with the synchrony probability $\rho_i$ and upstream river length $u_i$.
-We assume this formulation because disturbances can propagate downstream as water flows \cite{stanley_ecosystem_1997, swanson_flood_1998, nakamura_disturbance_2000, massoudieh_biogeochemical_2010, messager_global_2021}.
-Such cascades, however, are expected to attenuate with travel distance.
-We therefore assume that the probability of synchronized disturbance at habitat $i$ declines exponentially with downstream travel distance $d_\rho$ from the disturbance origin:
+We assume this formulation because disturbances can propagate downstream as water flows \citep{swanson_flood_1998, nakamura_disturbance_2000, gomi_understanding_2002, massoudieh_biogeochemical_2010, messager_global_2021}.
+Such cascades, however, are expected to attenuate with travel distance \citep{larsen_geography_2021, sarremejane_drought_2021, tamario_barriers_2025}.
+We therefore assume that the probability of synchronized disturbance at habitat $i$ declines exponentially with downstream travel distance $d_\rho$ from a disturbance origin:
 
 \begin{equation}
     \rho_i = \exp(- \nu d_{\rho}),
@@ -339,7 +339,7 @@ The parameter $\mu_k^{(2)}$ determines the effect size of predator richness.
 
 \subsubsection{Mean-field approximation}
 We describe the temporal dynamics of the fraction of habitats occupied (hereafter, ``occupancy'') by applying a spatial mean-field approximation to Equation~\ref{eq:dm0}, thereby dropping the habitat subscripts $i$ and $j$ \citep{ovaskainen_asymptotically_2006}.
-As shown below, this approximation naturally expresses the establishment probability $c_k$, effective propagule supply $\phi_k$, and extinction rate $\mu_k$ as explicit functions of total river length $L$ and branching rate $\lambda_b$.
+As shown below, this approximation naturally expresses the establishment probability $c_k$, effective propagule $\phi_k$, and extinction rate $\mu_k$ as explicit functions of total river length $L$ and branching rate $\lambda_b$.
 Importantly, no additional ecological assumptions are introduced at this stage; the metapopulation model is derived directly from the habitat-level processes specified above.
 
 Let $p_k$ denote the fraction of habitats occupied by species $k$.
@@ -445,6 +445,8 @@ In this model, $c_k$, $\phi_k$, and $\mu_k$ are functions of $\hat{d}$, $\hat{u}
 These network properties scale as
 $\hat{d}, \hat{u}, \hat{\mathcal{L}} \propto L^{\frac{1}{2}} \lambda_b^{-\frac{1}{2}}$ in the regime $\lambda_b L \gg 1$ (Propositions \ref{proposition-mu-d}, \ref{proposition-u}, and \ref{proposition-diameter}).
 Thus, our model explicitly links the ecosystem structures to the colonization-extinction dynamics of constituent species.
+
+The metapopulation model for a predator-prey system can be recovered as a special case of Equation~\ref{eq:master}, in which the establishment probability $c_k$, dispersal decay rate $\delta_k$, and propagule production $g_k$ are assumed to be constant for the prey and the predator.
 
 \newpage
 
