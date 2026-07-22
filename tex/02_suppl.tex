@@ -1626,6 +1626,7 @@ We write the temporal dynamics as
     &= 
     c_1 
     \theta_d
+    \sum_{j \ne i}^N 
     \bigl[
     \xi \, W^{(d)}_{ij} + 
     (1 - \xi) \, W^{(u)}_{ij}
@@ -1639,6 +1640,7 @@ We write the temporal dynamics as
     &= 
     c_2 
     \theta_d
+    \sum_{j \ne i}^N 
     \bigl[
     \xi \, W^{(d)}_{ij} + 
     (1 - \xi) \, W^{(u)}_{ij}
@@ -1653,7 +1655,7 @@ We write the temporal dynamics as
 \end{split}
 \end{align}
 
-where $\xi$ is the asymmetry factor ($\xi \in [0,1]$), $\theta$ is the dispersal rate, and $W_{ij}^{(d)}$ and $W_{ij}^{(u)}$ are binary variables indicating whether habitats $i$ and $j$ are adjacent in the downstream and upstream directions, respectively. 
+where $\xi$ is the asymmetry factor ($\xi \in [0,1]$), $\theta$ is the dispersal rate, and $W_{ij}^{(d)}$ and $W_{ij}^{(u)}$ are binary variables indicating whether habitats $i$ and $j$ are adjacent in the downstream (i.e., upstream $j$ to downstream $i$) and upstream directions (i.e., downstream $j$ to upstream $i$), respectively. 
 This formulation introduces dispersal asymmetry through $\xi$, with $\xi > 0.5$ indicating downstream-biased dispersal.
 Notation for the remaining parameters is provided in Table \ref{tab:symbol-model}.
 
