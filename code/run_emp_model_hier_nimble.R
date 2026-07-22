@@ -175,7 +175,7 @@ post_h0 <- nimbleMCMC(
     transmute(
       parms,
       median = `50%`,
-      se = sd,
+      sd = sd,
       low = `2.5%`,
       high = `97.5%`,
       rhat = Rhat,
@@ -291,7 +291,7 @@ post_h1 <- nimbleMCMC(
     transmute(
       parms,
       median = `50%`,
-      se = sd,
+      sd = sd,
       low = `2.5%`,
       high = `97.5%`,
       rhat = Rhat,

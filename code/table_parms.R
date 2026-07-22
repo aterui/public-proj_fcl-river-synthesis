@@ -160,7 +160,7 @@ list_table <- lapply(list_est, function(data) {
                                    parms == "z[1]" ~ "Scaling exponent for the number of sites",
                                    parms == "z[2]" ~ "Scaling parameter for spatial sampling randomness"),
            estimate = sprintf("$%.2f$", median),
-           se = sprintf("$%.2f$", se),
+           sd = sprintf("$%.2f$", sd),
            ci = paste0("[",
                        sprintf("$%.2f$", low),
                        ", ",
@@ -172,7 +172,7 @@ list_table <- lapply(list_est, function(data) {
     dplyr::select(Symbol = symbol,
                   Description = description,
                   Estimate = estimate,
-                  SE = se,
+                  SD = sd,
                   #`95\\% CI` = ci,
                   `$\\Pr(< 0)$` = pr_neg,
                   `$\\Pr(> 0)$` = pr_pos)
@@ -191,9 +191,9 @@ lapply(1:2,
                     paste0(
                       "Parameter estimates of the hierarchical Bayesian model",
                       " (", m[i], ") ",
-                      "with corresponding standard errors (SEs) ",
+                      "with corresponding posterior standard deviations (SDs) ",
                       #"with corresponding 95\\% credible intervals (CIs)",
-                      "and posterior probabilities ($\\Pr(\\cdot)$), representing the uncertainty around each parameter estimate." 
+                      "and probabilities ($\\Pr(\\cdot)$), representing the uncertainty around each parameter estimate." 
                     ),
                   label = paste0("tab:parms-est", i)),
            tabular.environment = "tabularx", # use \begin{tabularx}
