@@ -127,3 +127,69 @@ gc()
 
 ## export
 saveRDS(df_sim, "data_fmt/sim_fcl_2sp_nspom.rds")
+
+
+# scaling exponent test ---------------------------------------------------
+
+n <- 500
+lambda <- c(0.4, 0.55, 0.7)
+p <- 1 - exp(-lambda)
+
+n_workers <- length(p)
+plan(multisession, workers = n_workers)
+registerDoFuture()
+handlers(global = TRUE)
+
+df_pr <- foreach(
+  i = seq_along(p),
+  .combine = bind_rows,
+  .options.future = 
+    list(seed = TRUE)
+) %dofuture% {
+  
+  a <- replicate(10, {
+    net <- mcbrnet::brnet(n_patch = n, p_branch = p[i])
+    net$df_patch$n_patch_upstream    
+  }) |>
+    as.vector()
+  
+  f <- ecdf(a)
+  x <- seq(1, max(a), by = 1)
+  
+  tibble(
+    pr = 1 - f(x),
+    a = seq_len(max(a)),
+    p = p[i],
+    lambda = lambda[i]
+  )
+}
+
+plan(sequential)
+gc()
+
+split(df_pr, df_pr$lambda) %>% 
+  lapply(function(data) {
+    
+    lm(log(pr) ~ log(a), filter(data, a <= ceiling(n * 0.025)))
+    
+  })
+
+df_pr %>% 
+  filter(a < max(a)) %>% 
+  ggplot() +
+  geom_point(
+    aes(
+      x = a,
+      y = pr,
+      color = factor(lambda)
+    )
+  ) +
+  scale_x_log10() +
+  scale_y_log10() +
+  labs(
+    y = "Pr(A > a)",
+    x = "a",
+    color = expression(lambda[b])
+  ) +
+  geom_vline(xintercept = ceiling(n * 0.02))
+
