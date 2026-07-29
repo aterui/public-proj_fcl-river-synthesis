@@ -172,7 +172,7 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
 ## export
 ggsave(g_pp,
        filename = "tex/fig_theo_2sp.pdf",
-       width = 3,
+       width = 3.5,
        height = 6)
 
 # figure 3 ----------------------------------------------------------------
@@ -307,7 +307,7 @@ lineart <- function(data1,
                  x = "lambda",
                  x_axis = "lambda") +
     labs(x = expression("Branching rate"~lambda[b]),
-         y = "Food chain length",
+         y = "FCL",
          tag = "B") +
     guides(color = "none"))
 
@@ -317,7 +317,7 @@ lineart <- function(data1,
                    x = "rl",
                    x_axis = "rl") +
     labs(x = expression("Total river length"~italic(L)),
-         y = "",
+         y = "FCL",
          color = "Disturbance",
          tag = "C") +
     theme(
