@@ -276,13 +276,6 @@ $r_0$ & Resource supply [-] & 0.25, 0.50 \\
 % \endgroup
 \end{table*}
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=0.45\textwidth]{fig_theo_main.pdf}
-    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (total river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Parameter values not varied are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity significantly increases FCL in the presence of spatial disturbance cascades (red lines), whereas the effect of ecosystem size was largely neutral except in smallest headwater systems. The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (\textit{SI Appendix} for details), the positive effect of ecosystem size is recovered (the gray lines in panel C), while the effect of ecosystem complexity remains positive (the gray lines in panel B).}
-    \label{fig:sim-main}
-\end{figure*}
-
 We next extend our framework to food webs to understand how the ecosystem structure regulates food-chain length.
 This extension accommodates the trophic complexity of natural food webs, in which consumers differ in their sets of potential prey and omnivory is common.
 We generalized the model in Equation~\ref{eq:model-pp} as
@@ -366,6 +359,13 @@ However, when we increased the dispersal range (lower $\delta_0$), FCL responded
 This is likely because consumer species can feed on multiple prey species, allowing the cumulative effect of ecosystem size across prey species to emerge more strongly at higher trophic levels.
 This effect appeared in a narrow range of ecosystem sizes (typically $L < 1000$).
 
+\begin{figure*}
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig_theo_main.pdf}
+    \caption{Theoretical predictions of food chain length (FCL) based on ecosystem size and complexity. (A) Heatmap of FCL as a function of ecosystem size (total river length, $L$) and complexity (branching rate, $\lambda_b$), with rows and columns reflecting different disturbance and resource supply regimes. Each cell represents the average FCL of 20 food webs. White dashed lines indicate specific scenarios, explored in panels B (horizontal) and C (vertical). Parameter values not varied are provided in Table \ref{tab:parms}. (B, C) Ecosystem complexity significantly increases FCL in the presence of spatial disturbance cascades (red lines), whereas the effect of ecosystem size was largely neutral except in smallest headwater systems. The thick lines represent the average FCL of 20 food webs, while the thin lines depict individual food web predictions. When spatial disturbance cascades are removed by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (\textit{SI Appendix} for details), the positive effect of ecosystem size is recovered (the gray lines in panel C), while the effect of ecosystem complexity remains positive (the gray lines in panel B).}
+    \label{fig:sim-main}
+\end{figure*}
+
 \subsection*{Empirical Evidence}
 
 \begin{figure*}
@@ -406,7 +406,7 @@ An exemplary work by Larsen et al. \citep{larsen_geography_2021} found that fish
 
 \begin{figure*}
     \centering
-    \includegraphics[width=0.75\linewidth]{fig_emp_ridge.pdf}
+    \includegraphics[width=0.8\linewidth]{fig_emp_ridge.pdf}
     \caption{Posterior distributions of the standardized regression coefficients from the Bayesian model explaining variation in food chain length. Predictor variables are shown on the y-axis. Colors represent tail probabilities, and vertical lines indicate posterior median estimates. Numbers on the right (left) denote the posterior probability that the regression coefficient is positive (negative).}
     \label{fig:ridge}
 \end{figure*}
@@ -488,8 +488,8 @@ consumer trophic positions are given as the average of prey trophic positions pl
 \begin{align}
     \tau_k = 
     \begin{cases}
-    1 & ~\text{for producers}~ (k=1, 2, \ldots, P),\\
-    1 + |A_{k}|^{-1} \sum_{q \in A_{k}} \tau_q & ~\text{for consumers}~ (k = P+1, P+2, \ldots, S),
+    1 & ~\text{for producers},\\
+    1 + |A_{k}|^{-1} \sum_{q \in A_{k}} \tau_q & ~\text{for consumers},
     \end{cases}
 \end{align}
 
