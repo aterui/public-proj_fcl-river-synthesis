@@ -159,6 +159,7 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
       legend.title = element_blank(),
       legend.position = "inside",
       legend.position.inside = c(0.2, 0.95),
+      legend.background = element_rect(fill = "transparent", color = NA),
       axis.title.x = element_blank(),
       axis.title.y = element_text(size = 10),
       strip.background = element_blank(),
@@ -171,8 +172,8 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
 ## export
 ggsave(g_pp,
        filename = "tex/fig_theo_2sp.pdf",
-       width = 4,
-       height = 7)
+       width = 3,
+       height = 6)
 
 # figure 3 ----------------------------------------------------------------
 
