@@ -708,16 +708,16 @@ Table \ref{tab:symbol-nw} lists the key mathematical symbols used in this sectio
 \vspace{0.5cm} 
 \begin{table}
     \centering
-    \caption{Key symbols for the derivation of expected upstream river length}
+    \caption{Key symbols for the derivation of expected values}
     \begin{tabularx}{\textwidth}{ll}
         \hline
         Symbol & Description\\
         \hline
         $L$ & Total river length.\\
         $\lambda_b$ & Branching rate defining the length distribution of individual links.\\
+        $d$ & Network distance between two habitats.\\
         $u$ & Upstream river length at a given habitat.\\
         $\mathcal{L}$ & Network diameter, defined as the network distance from the outlet to a given upstream terminal.\\
-        $d$ & Network distance between two habitats.\\
         $l$ & Length of a given link. Assumed to follow $l \sim \mathrm{Exp}(\lambda_b)$.\\
         $Z$ & Number of links minus one ($Z = B - 1$).\\
         $M$ & Network-wide magnitude (the number of exterior source links).\\
@@ -1593,9 +1593,9 @@ Therefore, Equation~\ref{eq:master} has a unique stable equilibrium.
 
 \subsection{Sensitivity Analysis}
 
-\subsubsection{Predatory-prey model}
+\subsubsection{Predator-prey model}
 
-\textit{\textbf{Spatially implicit model.}}
+\textit{\textbf{Mean-field metapopulation model.}}
 We performed an analytical sensitivity analysis of the predator-prey metapopulation model (Equation 1 in the main text). 
 Specifically, we varied dispersal decay rate ($\delta \in \{0.05, 0.1\}$), disturbance decay rate ($\nu \in \{0.05, 0.1\}$), and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$). 
 Other parameters were fixed at: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, and prey-induced extinction rate $\mu^{(1)} = 5$.
@@ -1627,11 +1627,14 @@ We write the temporal dynamics as
     c_1 
     \theta_d
     \sum_{j \ne i}^N 
-    \bigl[
+    \left[
+    \bigl\{
     \xi \, W^{(d)}_{ij} + 
     (1 - \xi) \, W^{(u)}_{ij}
-    \bigr]\,
-    p_{j1} (1 - p_{i1}) 
+    \bigr\}
+    p_{j1} 
+    \right]\,
+    (1 - p_{i1}) 
     - 
     \bigl[
     \mu^{(0)}(1 + \rho_iu_i)
@@ -1641,11 +1644,14 @@ We write the temporal dynamics as
     c_2 
     \theta_d
     \sum_{j \ne i}^N 
-    \bigl[
+    \left[
+    \bigl\{
     \xi \, W^{(d)}_{ij} + 
     (1 - \xi) \, W^{(u)}_{ij}
-    \bigr]\,
-    p_{i2} \, (p_{i1} - p_{i2}) 
+    \bigr\}\,
+    p_{j2} 
+    \right]\,
+    \, (p_{i1} - p_{i2}) 
     - 
     \bigl[
     \mu^{(0)}(1 + \rho_iu_i) +
@@ -1681,25 +1687,10 @@ Because the integration takes expectation over the possible locations of disturb
 
 We numerically solved Equation \ref{eq:se-model} to obtain equilibrium occupancy probabilities  for the prey and the predator at each habitat, denoted as $p^*_{i1}$ and $p^*_{i2}$, respectively.
 We then estimated the equilibrium occupancy of each species by averaging these probabilities across habitats.
-We considered the following parameter combinations: dispersal asymmetry $\xi \in \{0.5, 0.8\}$, dispersal rate $\theta \in \{40, 80\}$, disturbance decay rate $\nu \in \{0.05, 0.1\}$, and disturbance rate ($\mu^{(0)} \in \{2.5, 5\}$).
+We considered the following parameter combinations: dispersal asymmetry $\xi \in \{0.5, 0.8\}$, dispersal rate $\theta \in \{40, 80\}$, disturbance decay rate $\nu \in \{0.05, 0.1\}$, and disturbance rate $\mu^{(0)} \in \{2.5, 5\}$.
 We included the symmetric dispersal scenario ($\xi = 0.5$) for a comparison with the asymmetric (downstream-biased) dispersal scenario ($\xi = 0.8$).
 Parameters not varied were fixed at: establishment probability $c_1 = c_2 = 0.5$ and prey-induced extinction rate $\mu^{(1)} = 5$.
 Model predictions are presented in Figures \ref{fig:sem-br} and \ref{fig:sem-n}.
-
-\subsubsection{Spatial food chain model (disturbance cascade)}
-
-We performed a numerical sensitivity analysis of the generalized model (Equation 5 in the main text) to validate the robustness of analytical predictions in broader ecological contexts.
-Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), dispersal rate ($\delta_0$), disturbance decay rate ($\nu$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
-
-\vspace{0.5cm} 
-\input{tex/table_si_theo}
-\vspace{0.5cm} 
-
-In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
-In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
-An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
-This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
-Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
 
 \newpage
 
@@ -1727,6 +1718,23 @@ Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-nu
     \caption{Model predictions from the spatially explicit predator-prey model. The figure shows the effects of ecosystem size, quantified by the number of habitats $N$, on prey (red) and predator (blue) occupancies. Dots represent predicted values for a given realized river network, whereas lines and shaded areas show LOESS curves and their associated standard errors. We contrast symmetric and downstream-biased dispersal scenarios ($\xi$; columns), while varying the dispersal rate ($\theta_d$; columns), disturbance decay rate ($\nu$; rows), and disturbance rate ($\mu^{(0)}$; rows). Lower values of $\nu$ indicate disturbances that extend over broader spatial scales. Parameters not varied were fixed at: establishment probability $c = 0.5$ and prey-induced extinction rate $\mu^{(1)} = 5$.}
     \label{fig:sem-n}
 \end{figure}
+
+\newpage
+
+\subsubsection{Spatial food chain model (disturbance cascade)}
+
+We performed a numerical sensitivity analysis of the generalized model (Equation 5 in the main text) to validate the robustness of analytical predictions in broader ecological contexts.
+Specifically, we allowed additional variations in prey and predation influences ($\mu^{(1)}$ and $\mu^{(2)}$), dispersal rate ($\delta_0$), disturbance decay rate ($\nu$), and omnivory level ($\theta$), resulting in 128 simulation scenarios (Table \ref{tab:parms-num}).
+
+In each simulation scenario, we considered 20 values of total river length $L$ and branching rate $\lambda_b$ within the value ranges identical to the main analysis (see Methods).
+In light of the broader parameter space and the computational costs of numerical analysis, we simulated five replicas of food webs through the procedure described in the main text.
+An absorbing condition for this numerical analysis is $10^{-5}$, meaning that species with $p_k < 10^{-5}$ are removed (extinct) from the simulation run.
+This numerical exploration results in $5 \times 128~\times~20^2 = 256,000$ runs.
+Model predictions are displayed in Figures \ref{fig:fig-num1} -- \ref{fig:fig-num8}.
+
+\vspace{0.5cm} 
+\input{tex/table_si_theo}
+\vspace{0.5cm} 
 
 \newpage
 
