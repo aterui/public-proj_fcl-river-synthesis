@@ -161,7 +161,10 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
       legend.position.inside = c(0.2, 0.95),
       legend.background = element_rect(fill = "transparent", color = NA),
       axis.title.x = element_blank(),
-      axis.title.y = element_text(size = 10),
+      axis.title.y = element_text(
+        size = 10,
+        margin = margin(r = 10)
+      ),
       strip.background = element_blank(),
       strip.text = element_text(size = 10),
       strip.placement = "outside",
