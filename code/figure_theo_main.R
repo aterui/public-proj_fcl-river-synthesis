@@ -144,11 +144,12 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
       )
     ) +
     geom_line() +
-    ggh4x::facet_grid2(
-      cols = vars(lab_focus),
+    facet_wrap(
+      ncol = 1,
+      facet =~ lab_focus,
       scales = "free",
       labeller = label_parsed,
-      switch = "x",
+      strip.position = "bottom",
       axes = "all"
     ) +
     labs(y = "Occupancy") +
@@ -156,6 +157,8 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
     theme_classic() +
     theme(
       legend.title = element_blank(),
+      legend.position = "inside",
+      legend.position.inside = c(0.2, 0.95),
       axis.title.x = element_blank(),
       axis.title.y = element_text(size = 10),
       strip.background = element_blank(),
@@ -168,8 +171,8 @@ df_2sp <- readRDS("data_fmt/sim_fcl_2sp_line.rds") %>%
 ## export
 ggsave(g_pp,
        filename = "tex/fig_theo_2sp.pdf",
-       width = 7,
-       height = 3)
+       width = 4,
+       height = 7)
 
 # figure 3 ----------------------------------------------------------------
 
@@ -225,12 +228,15 @@ heatmap <- function(data) {
          y = expression("Total river length"~italic(L)),
          fill = "FCL") +
     theme_classic() +
-    theme(strip.background = element_blank(),
-          strip.text = element_text(size = 14),
-          axis.title = element_text(size = 14),
-          axis.text = element_text(size = 12),
-          legend.title = element_text(size = 14),
-          legend.text = element_text(size = 12))
+    theme(
+      legend.position = "left",
+      strip.background = element_blank(),
+      strip.text = element_text(size = 14),
+      axis.title = element_text(size = 14),
+      axis.text = element_text(size = 12),
+      legend.title = element_text(size = 14),
+      legend.text = element_text(size = 12)
+    )
 }
 
 (g_heat05 <- heatmap(data = df_heat %>% filter(rho0 == 1)) + labs(tag = "A"))
@@ -324,9 +330,8 @@ lineart <- function(data1,
 ## layout ####
 
 layout <- "
-AA
-AA
-BC
+AAB
+AAC
 "
 (g_sim_main <- g_heat05 + g_br + g_size +
     plot_layout(design = layout))
@@ -334,8 +339,8 @@ BC
 ## export
 ggsave(g_sim_main,
        filename = "tex/fig_theo_main.pdf",
-       width = 9,
-       height = 10)
+       width = 12,
+       height = 7)
 
 ggsave(g_heat0,
        filename = "tex/fig_theo_rho0.pdf",
