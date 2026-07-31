@@ -105,7 +105,7 @@ Yet, previous studies on FCL predominantly assumed simplified landscapes for tra
 Here, we show that ecosystem complexity plays a central role in regulating food chains in rivers.
 We develop a theoretical model that explicitly accounts for dispersal limitation and large-scale disturbance cascades, both ubiquitous phenomena in riverscapes \citep{radinger_patterns_2014, laroque_body_2026, gomi_understanding_2002, messager_global_2021}.
 The model predicted that intricate river branching increases colonization potential through enhanced connectivity while simultaneously creating tributary refugia from landscape-scale cascading disturbances (e.g., floods and drying).
-This dual mechanism promoted the persistence of long food chains under common structural properties of river networks.
+This dual mechanism underpinned the persistence of long food chains under common structural properties of river networks.
 However, the relationship between FCL and ecosystem size was expected to remain weak across diverse ecological scenarios.
 These predictions were supported by cross-continental FCL data, providing strong empirical evidence for the role of ecosystem complexity in controlling FCL.
 Our findings highlight the overlooked role of ecosystem complexity in shaping the vertical organization of food webs and offer a conceptual foundation for future conservation strategies.
@@ -133,15 +133,15 @@ Evidence suggests that the branching rate captures the fractal nature of river n
 
 \vspace{0.5cm}
 \begin{table}
-    \caption{Scaling relationships for network distance, upstream river length, and network diameter emerge under the single assumption of random bifurcation of river networks. These results hold to order $\mathcal{O}\bigl((\lambda_b L)^{-1/2}\bigr)$, with scaling constant $C = \sqrt{\pi/2}$. Exact expressions and proofs are provided in the corresponding propositions (\textit{SI Appendix}).}
+    \caption{Scaling relationships for network distance, upstream river length, and network diameter emerge under random bifurcation of river networks. These results hold to order $\mathcal{O}\bigl((\lambda_b L)^{-1/2}\bigr)$, with scaling constant $C = \sqrt{\pi/2}$. Exact expressions and proofs are provided in the corresponding propositions (\textit{SI Appendix}).}
     \centering
-    \begin{tabular}{llll}
+    \begin{tabular}{lll}
         \hline
-        Network property & Leading order & Related process & Proof (\textit{SI Appendix})\\
+        Network property & Leading order & Proof (\textit{SI Appendix})\\
         \hline
-         Network distance $\hat{d}$ & $\hat{d} \sim C\sqrt{L/\lambda_b} - 2/ \lambda_b$ & Dispersal & 1.4.1 \\
-         Upstream river length $\hat{u}$ & $\hat{u} \sim C\sqrt{L/\lambda_b} - 3/(2 \lambda_b)$ & Disturbance & 1.4.2 \\
-         Network diameter $\hat{\mathcal{L}}$ & $\hat{\mathcal{L}} \sim C\sqrt{L/\lambda_b}$ & Disturbance & 1.4.3 \\
+         Network distance $\hat{d}$ & $\hat{d} \sim C\sqrt{L/\lambda_b} - 2/ \lambda_b$ & 1.4.1 \\
+         Upstream river length $\hat{u}$ & $\hat{u} \sim C\sqrt{L/\lambda_b} - 3/(2 \lambda_b)$ & 1.4.2 \\
+         Network diameter $\hat{\mathcal{L}}$ & $\hat{\mathcal{L}} \sim C\sqrt{L/\lambda_b}$ & 1.4.3 \\
          \hline
     \end{tabular}
     \label{tab:scaling}
@@ -229,7 +229,7 @@ The parameters $\mu^{(0)}$ and $\mu^{(1)}$ determine the baseline contributions 
 The disturbance term in Equation \ref{eq:mu-pp} increases with increasing $L$ (Figure \ref{fig:scheme}B). 
 This is because the broader spatial coverage of larger ecosystems (larger $L$) increases the likelihood that an episodic disturbance occurs somewhere in the upstream flow-connected area.
 Meanwhile, branching partitions the river network into flow-unconnected sub-networks (i.e., side tributaries), thereby dispersing the risk of synchronized extirpation (Figure \ref{fig:scheme}A and B).
-These effects of ecosystem size and complexity are mediated by the scaling of the upstream river length $\hat{u}$ (Table \ref{tab:scaling}), a mathematical fact emerging purely from the single assumption of random river bifurcation.
+These effects of ecosystem size and complexity are mediated by the scaling of the upstream river length $\hat{u}$ (Table \ref{tab:scaling}), a mathematical fact emerging purely from random river bifurcation.
 
 The metapopulation model in Equation \ref{eq:model-pp} is therefore derived rigorously from the mechanistic assumptions at the local habitat level, rather than being specified heuristically at the metapopulation level (Model Derivation, \textit{SI Appendix}).
 % The ecological consequences predicted by Equations \ref{eq:phi-pgle} and \ref{eq:mu-pp} emerge from the topological constraints of random bifurcation; they are therefore an emergent geometric fact rather than an assumption built into the theory.
@@ -250,13 +250,13 @@ This simplified formulation highlights the unique contributions of river network
 
 % Our analysis provided insights into the roles of ecosystem size and complexity in regulating predator–prey dynamics.
 Here, we present an exemplary case of predator-prey dynamics in Figure \ref{fig:pp-occ}, while a broader exploration across ecological scenarios is provided in Figure S2 (\textit{SI Appendix}). 
-Increasing branching consistently promoted the equilibrium occupancies by providing a dual advantage: it shortens dispersal pathways with increased colonization, while simultaneously compartmentalizing disturbance propagation and reducing synchronized extirpation (Figure \ref{fig:pp-occ} and Figure S2). 
+Increasing branching consistently increased the equilibrium occupancies by providing a dual advantage: it shortens dispersal pathways with increased colonization, while simultaneously compartmentalizing disturbance propagation and reducing synchronized extirpation (Figure \ref{fig:pp-occ} and Figure S2). 
 By contrast, the influence of ecosystem size was neutral because the colonization benefits of larger ecosystems were largely offset by the increased risk of downstream disturbance cascades (Figure \ref{fig:pp-occ}). 
 Increasing dispersal range (lower $\delta$) shifted the effect of ecosystem size from neutral to slightly positive by facilitating colonization from distant source habitats (Figure S2). 
 However, this positive effect appeared in small- to intermediate-sized ecosystems, with occupancy rapidly saturating as ecosystem size increased.
 These patterns were consistent across varying baseline disturbance rates ($\mu^{(0)}$) and spatial scales of disturbance cascades ($\nu$). 
 
-The metapopulation model assumes symmetric dispersal, whereas dispersal in riverine organisms can be biased downstream \citep[e.g.,][]{terui_asymmetric_2014}. 
+The mean-field metapopulation model assumes symmetric dispersal, whereas dispersal in riverine organisms can be biased downstream \citep[e.g.,][]{terui_asymmetric_2014}. 
 We therefore relaxed the assumption of dispersal symmetry in a spatially explicit model (\textit{SI Appendix}). 
 Although downstream-biased dispersal (four times higher in the downstream direction) slightly decreased prey and predator occupancies, the qualitative effects of ecosystem size and complexity remained similar across a range of ecological scenarios (Figures S3 and S4, \textit{SI Appendix}). 
 These results indicate that our metapopulation model provides a robust framework for analyzing the effects of ecosystem properties.
@@ -270,12 +270,12 @@ As such, although incorporating non-random network formation represents an inter
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
-\begin{figure}
+\begin{SCfigure}
     \centering
-    \includegraphics[width=\textwidth]{fig_theo_2sp.pdf}
+    \includegraphics[width=0.3\textwidth]{fig_theo_2sp.pdf}
     \caption{Ecosystem size (total river length $L$) and complexity (branching rate $\lambda_b$) dictate equilibrium occupancies of a predator-prey system. Parameters used in this result are: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. In each panel, one ecosystem property was held constant (left: $L = 2550$; right: $\lambda_b = 0.6$) while the other was varied along the x-axis. A broader parameter space was explored in the \textit{SI Appendix}.}
     \label{fig:pp-occ}
-\end{figure}
+\end{SCfigure}
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -384,7 +384,7 @@ $r_0$ & Resource supply [-] & 0.25, 0.50 \\
 Disturbance cascades play a central role in generating the weak effect of ecosystem size. 
 When their influence was removed from the model by treating the disturbance term in Equation \ref{eq:extn-main} as a constant (\textit{SI Appendix}), the predicted relationship reduced to classical expectations: ecosystem size exerted a strong positive effect on FCL (Figure \ref{fig:sim-main}C and Figure S13, \textit{SI Appendix}, for heatmaps).
 This result is consistent with established food chain theory \citep{holt_food_2002, takimoto_effects_2012, terui_spatial_2019} and empirical observations in systems where spatially cascading disturbances are likely negligible, such as lake ecosystems \citep{post_ecosystem_2000, takimoto_ecosystem_2008, doi_resource_2009}.
-Notably, ecosystem complexity continued to promote FCL even under this modified assumption, reflecting its persistent role in enhancing connectivity and facilitating colonization among habitats.
+Notably, ecosystem complexity continued to increase FCL even under this modified assumption, reflecting its persistent role in enhancing connectivity and facilitating colonization among habitats.
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
@@ -471,7 +471,8 @@ Thus, the present study speaks to the importance of spatial scale when examining
 
 \noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
 
-We found a negative influence of elevation on FCL (Figure \ref{fig:ridge}), likely reflecting insufficient resource availability to support long food chains at high elevations \citep{marzolf_ecosystem_2021, atkinson_determinants_2018}. 
+Our analysis addressed the hierarchical nature of environmental controls (Methods), revealing the negative influence of elevation on FCL at a site scale (Figure \ref{fig:ridge}).
+This result likely reflects insufficient resource and habitable space to support long food chains at high elevations \citep{marzolf_ecosystem_2021, atkinson_determinants_2018}. 
 High-elevation streams are typically smaller \citep{gomi_understanding_2002}, where dense riparian canopy cover reduces light reaching the stream surface, thereby limiting gross primary production and the energy available to support higher trophic levels \citep{finlay_light-mediated_2011, finlay_human_2013, bernhardt_light_2022}. 
 In addition, lower water temperatures, reduced nutrient availability, and rapid currents at higher elevations may further suppress primary production and limit population persistence of certain species \citep{gomi_understanding_2002, demars_temperature_2011}. 
 Collectively, these mechanisms suggest that elevation regulates gross primary production through multiple pathways, ultimately constraining FCL.
@@ -663,7 +664,7 @@ The inverse of the mean link length is an empirical proxy for theoretical branch
 
 We calculated the spatial average of air temperature, precipitation, and human footprint index for each watershed polygon, whose data were sourced from CHELSA BIOCLIM+ (average of 1981-2010, 30 arc-second) \citep{brun_global_2022} and a global Human Footprint dataset populated by Mu et al \citep{mu_global_2022}.
 For the human footprint index, we used data from 2000, 2005, ..., 2015 (5-year interval), and extracted values from the year nearest to the first sampling year in each watershed.
-We used the following R packages for our GIS analysis: \textit{sf} \citep{pkg_sf}, \textit{terra} \citep{pkg_terra}, \textit{exactextractr} \citep{pkg_exactextractr}, \textit{whitebox} \citep{pkg_whitebox}, and \textit{stars} \citep{pkg_stars}.
+% We used the following R packages for our GIS analysis: \textit{sf} \citep{pkg_sf}, \textit{terra} \citep{pkg_terra}, \textit{exactextractr} \citep{pkg_exactextractr}, \textit{whitebox} \citep{pkg_whitebox}, and \textit{stars} \citep{pkg_stars}.
 
 \subsubsection{Statistical analysis}
 
