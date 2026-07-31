@@ -300,10 +300,10 @@ var_level <- df_stats %>%
       size = 3
     ) +
     theme(axis.title.x = element_text(hjust = 0.5),  # center x-axis label
-          axis.title.y = element_text(hjust = 0.5)   # center y-axis label
+          axis.title.y = element_blank()   # blank
     ) +
-    labs(x = "Posterior estimate",
-         y = "Predictor"))
+    labs(x = "Posterior estimate")
+  )
 
 
 ## export
