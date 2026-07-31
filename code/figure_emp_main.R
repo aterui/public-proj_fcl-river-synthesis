@@ -153,7 +153,7 @@ g_map <- ggplot(sf_region) +
     #             alpha = 0.1) +
     scale_x_log10(labels = scales::label_log(digits = 2)) +
     scale_y_log10() +
-    labs(y = "Food chain length",
+    labs(y = "FCL",
          x = "Total river length (km)",
          size = "Weight") +
     guides(color = "none") +
@@ -190,7 +190,7 @@ g_map <- ggplot(sf_region) +
     scale_x_continuous(trans = "log10") +
     scale_y_continuous(trans = "log10") +
     labs(
-      y = "Food chain length",
+      y = "FCL",
       x = expression("Branching rate (per km)")
     ) +
     guides(size = "none",
