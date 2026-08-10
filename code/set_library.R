@@ -20,7 +20,6 @@ pacman::p_load(
   doFuture,
   progressr,
   tictoc,
-  OCNet,
   ## gis
   mapview,
   sf,
