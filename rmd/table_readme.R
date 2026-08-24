@@ -13,19 +13,20 @@ df_fnm <- tibble(file = fnm) %>%
   mutate(description = case_when(file == "data_env_flow.rds" ~ "Discharge data sourced from CaMa Flood.",
                                  file == "data_env_local.rds" ~ "Site-level environmental data.",
                                  file == "data_env_wsd.rds" ~ "Watershed-level environmental data.",
-                                 file == "data_fcl_src.rds" ~ "Source data for food chain length. This data contains sites that are located in semi-lentic rivers (> 5k sq-km in watershed area). This source data was used to generate `wgs84_fcl_site.rds`.",
-                                 file == "wgs84_fcl_site.rds" ~ "Point layer for site coordinates (with estimates of food chain length; class `sf`). Include temporal duplicates (either seasonal or annual) at some sites. Some watersheds are removed before analysis through a screening process (see `format_emp_data4nimble.R`)",
-                                 file == "wgs84_outlet.rds" ~ "Outlet coordinates of study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
-                                 file == "wgs84_region_lev01.rds" ~ "Polygon layer for HydroBASINS level-one (class `sf`).",
-                                 file == "wgs84_str_sub.rds" ~ "Polyline layer for study watersheds. Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
-                                 file == "wgs84_subwatershed.rds" ~ "Polygon layer for upstream watershed at each sampling site (class `sf`).",
-                                 file == "wgs84_wsd_sub.rds" ~ "Polygon layer for study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).")) %>% 
+                                 file == "data_fcl_src.rds" ~ "Source data for food chain length. This data contains sites that are located in semi-lentic rivers (> 5k sq-km in watershed area). This source data was used to generate `sf_fcl_site.rds`.",
+                                 file == "sf_fcl_site.rds" ~ "Point layer for site coordinates (with estimates of food chain length; class `sf`). Include temporal duplicates (either seasonal or annual) at some sites. Some watersheds are removed before analysis through a screening process (see `format_emp_data4nimble.R`)",
+                                 file == "sf_outlet.rds" ~ "Outlet coordinates of study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
+                                 file == "sf_hybas_lev01.rds" ~ "Polygon layer for HydroBASINS level-one (class `sf`).",
+                                 file == "sf_hybas_lev02.rds" ~ "Polygon layer for HydroBASINS level-two (class `sf`).",
+                                 file == "sf_channel.rds" ~ "Polyline layer for study watersheds. Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).",
+                                 file == "sf_subwsd.rds" ~ "Polygon layer for upstream watershed at each sampling site (class `sf`).",
+                                 file == "sf_wsd.rds" ~ "Polygon layer for study watersheds (class `sf`). Include some watersheds that are removed through a screening process (see `format_emp_data4nimble.R`).")) %>% 
   mutate(file = paste0("`", file, "`"))
 
 # column information ------------------------------------------------------
 
 ## file names
-fid <- !str_detect(fnm, "wgs84")
+fid <- !str_detect(fnm, "sf_")
 fid[str_detect(fnm, "fcl_site")] <- TRUE
 fnmx <- fnm[fid]
 
@@ -64,16 +65,18 @@ df_cnm <- tibble(file = unlist(x),
              column == "frac_forest" ~ "Fraction of forest within the upstream watershed area.",
              column == "frac_urban" ~ "Fraction of urban within the upstream watershed area.",
              column == "habitat" ~ "Habitat type of the sampling site.",
-             column == "hfp" ~ "Human footprint index.",
+             column == "hfp" ~ "Human footprint index at the watershed scale.",
              column == "huid" ~ "Hydrological unit ID. Grouped by HydroBASINS level-4. Used only for computational purposes.",
+             column == "hybas_id" ~ "HYBAS ID from HydroBASINS.",
              column == "key" ~ "GeoTIFF key used in watershed analysis. Ignore.",
              column == "lambda" ~ "Branching rate.",
              column == "last_verification" ~ "Last verified.",
              column == "lat" ~ "Latitude (Geodetic, WGS84).",
              column == "local_area" ~ "Upstream watershed area at the sampling site.",
              column == "local_elev" ~ "Elevation at the sampling site.",
-             column == "local_prec" ~ "Average annual precipitation amount [kg/(year m^2)] within the upstream watershed area.",
-             column == "local_temp" ~ "Average air temperature [degree Celcius] within the upstream watershed area.",
+             column == "local_hfp" ~ "Human footprint index within the upstream watershed area of the sampling site.",
+             column == "local_prec" ~ "Average annual precipitation amount [kg/(year m^2)] within the upstream watershed area of the sampling site.",
+             column == "local_temp" ~ "Average air temperature [degree Celcius] within the upstream watershed area of the sampling site.",
              column == "lon" ~ "Longitude (Geodetic, WGS84).",
              column == "mean_deltaC_base" ~ "Average value of delta 13 C for the baseline species.",
              column == "mean_deltaC_top" ~ "Average value of delta 13 C for the top consumer.",
@@ -84,7 +87,7 @@ df_cnm <- tibble(file = unlist(x),
              column == "n_sample_bottom_si" ~ "Number of stable isotope samples for the baseline species.",
              column == "n_sample_top_si" ~ "Number of stable isotope samples for the top consumer.",
              column == "note" ~ "Note",
-             column == "oid" ~ "Outlet ID.",
+             column == "oid" ~ "Watershed/Outlet ID. The unit of watershed-level analysis.",
              column == "org_site_id" ~ "Site name used in the original article.",
              column == "p_branch" ~ "Branching probability.",
              column == "prec" ~ "Average annual precipitation amount [kg/(year m^2)] within the watershed.",
@@ -105,6 +108,7 @@ df_cnm <- tibble(file = unlist(x),
              column == "tp_base" ~ "Trophic position of the baseline species.",
              column == "uid" ~ "Unique ID for the watershed.",
              column == "unit_area" ~ "Unit of watershed area.",
+             column == "unit_elev" ~ "Unit of elevation.",
              column == "unit_lambda" ~ "Unit of branching rate.",
              column == "unit_r_length" ~ "Unit of river length.",
              column == "utm" ~ "UTM code.",
