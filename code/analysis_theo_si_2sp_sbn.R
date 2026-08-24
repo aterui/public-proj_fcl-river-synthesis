@@ -1,5 +1,6 @@
 #' DESCRIPTION:
-#' Patch-level simulation using OCN
+#' Patch-level simulation using stochastic branching networks
+#' Dispersal asymmetry accounted for
 
 rm(list = ls())
 source("code/set_library.R")
