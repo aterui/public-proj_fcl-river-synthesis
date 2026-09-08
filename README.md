@@ -204,7 +204,7 @@ data package used in this repository is **GFCL version 0.3.0**.
 
 # Session Information
 
-    ## R version 4.5.1 (2025-06-13 ucrt)
+    ## R version 4.5.2 (2025-10-31 ucrt)
     ## Platform: x86_64-w64-mingw32/x64
     ## Running under: Windows 11 x64 (build 26200)
     ## 
@@ -218,7 +218,7 @@ data package used in this repository is **GFCL version 0.3.0**.
     ## [4] LC_NUMERIC=C                          
     ## [5] LC_TIME=English_United States.utf8    
     ## 
-    ## time zone: Asia/Tokyo
+    ## time zone: America/New_York
     ## tzcode source: internal
     ## 
     ## attached base packages:
@@ -238,12 +238,12 @@ data package used in this repository is **GFCL version 0.3.0**.
     ##  [1] tidyselect_1.2.1    farver_2.1.2        S7_0.2.2           
     ##  [4] fastmap_1.2.0       leaflet_2.2.3       pracma_2.4.6       
     ##  [7] pacman_0.5.1        digest_0.6.33       timechange_0.4.0   
-    ## [10] lifecycle_1.0.5     magrittr_2.0.5      compiler_4.5.1     
-    ## [13] rlang_1.2.0         tools_4.5.1         yaml_2.3.10        
+    ## [10] lifecycle_1.0.5     magrittr_2.0.5      compiler_4.5.2     
+    ## [13] rlang_1.2.0         tools_4.5.2         yaml_2.3.10        
     ## [16] knitr_1.50          htmlwidgets_1.6.4   sp_2.2-1           
     ## [19] classInt_0.4-11     here_1.0.1          RColorBrewer_1.1-3 
     ## [22] KernSmooth_2.23-20  withr_3.0.3         numDeriv_2016.8-1.1
-    ## [25] stats4_4.5.1        grid_4.5.1          leafem_0.2.5       
+    ## [25] stats4_4.5.2        grid_4.5.2          leafem_0.2.5       
     ## [28] e1071_1.7-17        globals_0.19.1      scales_1.4.0       
     ## [31] iterators_1.0.14    cli_3.6.6           rmarkdown_2.30     
     ## [34] generics_0.1.4      otel_0.2.0          rstudioapi_0.17.1  
