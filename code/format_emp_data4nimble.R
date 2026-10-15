@@ -17,7 +17,8 @@ sf_lev01 <- readRDS("data_raw/sf_hybas_lev01.rds") %>%
 
 sf_lev02 <- readRDS("data_raw/sf_hybas_lev02.rds") %>% 
   st_make_valid() %>% 
-  rename(hybas_lev02 = hybas)
+  rename(hybas_lev02 = hybas) %>% 
+  select(-region)
 
 sf_use_s2(FALSE)
 sf_fcl0 <- readRDS("data_raw/sf_fcl_site.rds") %>%
