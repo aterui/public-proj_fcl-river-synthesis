@@ -3,7 +3,7 @@ README
 
 # Article Information
 
-**Title**: Geometric ecosystem complexity regulates riverine food chains
+**Title**: Geometric ecosystem complexity underpins riverine food chains
 
 **Authors**: Terui A, Shibasaki S, Pomeranz JPF, Ibrahim M, Isaac E,
 LaRoque A, Yamazaki D, Finlay JC
@@ -204,7 +204,7 @@ data package used in this repository is **GFCL version 0.3.0**.
 
 # Session Information
 
-    ## R version 4.5.2 (2025-10-31 ucrt)
+    ## R version 4.6.1 (2026-06-24 ucrt)
     ## Platform: x86_64-w64-mingw32/x64
     ## Running under: Windows 11 x64 (build 26200)
     ## 
@@ -226,34 +226,34 @@ data package used in this repository is **GFCL version 0.3.0**.
     ## [8] base     
     ## 
     ## other attached packages:
-    ##  [1] terra_1.9-1      mapview_2.11.4   tictoc_1.1       progressr_0.11.0
-    ##  [5] doFuture_1.2.1   future_1.69.0    rpom_0.2.0       mcbrnet_1.4.2   
-    ##  [9] foreach_1.5.2    ape_5.8-1        ecotools_0.1.1   xtable_1.8-8    
-    ## [13] nimble_1.4.2     cowplot_1.2.0    magick_2.7.3     igraph_2.1.1    
-    ## [17] patchwork_1.3.2  sf_1.1-1         lubridate_1.9.5  forcats_1.0.0   
-    ## [21] stringr_1.6.0    dplyr_1.2.1      purrr_1.2.2      readr_2.2.0     
-    ## [25] tidyr_1.3.2      tibble_3.3.1     ggplot2_4.0.3    tidyverse_2.0.0 
+    ##  [1] terra_1.9-50    mapview_2.11.4  tictoc_1.2.1    progressr_1.0.0
+    ##  [5] doFuture_1.3.0  future_1.75.0   foreach_1.5.2   ape_5.8-1      
+    ##  [9] ecotools_0.1.1  xtable_1.8-8    nimble_1.4.3    cowplot_1.2.0  
+    ## [13] magick_2.9.1    igraph_2.3.3    patchwork_1.3.2 sf_1.1-2       
+    ## [17] lubridate_1.9.5 forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1    
+    ## [21] purrr_1.2.2     readr_2.2.0     tidyr_1.3.2     tibble_3.3.1   
+    ## [25] ggplot2_4.0.3   tidyverse_2.0.0
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] tidyselect_1.2.1    farver_2.1.2        S7_0.2.2           
     ##  [4] fastmap_1.2.0       leaflet_2.2.3       pracma_2.4.6       
-    ##  [7] pacman_0.5.1        digest_0.6.33       timechange_0.4.0   
-    ## [10] lifecycle_1.0.5     magrittr_2.0.5      compiler_4.5.2     
-    ## [13] rlang_1.2.0         tools_4.5.2         yaml_2.3.10        
-    ## [16] knitr_1.50          htmlwidgets_1.6.4   sp_2.2-1           
-    ## [19] classInt_0.4-11     here_1.0.1          RColorBrewer_1.1-3 
-    ## [22] KernSmooth_2.23-20  withr_3.0.3         numDeriv_2016.8-1.1
-    ## [25] stats4_4.5.2        grid_4.5.2          leafem_0.2.5       
+    ##  [7] pacman_0.5.1        digest_0.6.39       timechange_0.4.0   
+    ## [10] lifecycle_1.0.5     magrittr_2.0.5      compiler_4.6.1     
+    ## [13] rlang_1.3.0         tools_4.6.1         yaml_2.3.12        
+    ## [16] knitr_1.52          htmlwidgets_1.6.4   sp_2.2-3           
+    ## [19] classInt_0.4-11     here_1.0.2          RColorBrewer_1.1-3 
+    ## [22] KernSmooth_2.23-26  withr_3.0.3         numDeriv_2016.8-1.1
+    ## [25] stats4_4.6.1        grid_4.6.1          leafem_0.2.5       
     ## [28] e1071_1.7-17        globals_0.19.1      scales_1.4.0       
-    ## [31] iterators_1.0.14    cli_3.6.6           rmarkdown_2.30     
-    ## [34] generics_0.1.4      otel_0.2.0          rstudioapi_0.17.1  
-    ## [37] future.apply_1.9.1  tzdb_0.5.0          DBI_1.3.0          
-    ## [40] proxy_0.4-29        base64enc_0.1-3     vctrs_0.7.3        
-    ## [43] hms_1.1.4           listenv_0.8.0       crosstalk_1.2.2    
-    ## [46] units_1.0-1         glue_1.8.1          parallelly_1.46.1  
-    ## [49] codetools_0.2-18    stringi_1.8.7       gtable_0.3.6       
-    ## [52] raster_3.6-32       pillar_1.11.1       htmltools_0.5.8.1  
-    ## [55] satellite_1.0.4     R6_2.6.1            rprojroot_2.0.3    
-    ## [58] evaluate_1.0.5      lattice_0.22-7      png_0.1-7          
-    ## [61] class_7.3-20        Rcpp_1.1.2          coda_0.19-4.1      
-    ## [64] nlme_3.1-160        xfun_0.51           pkgconfig_2.0.3
+    ## [31] iterators_1.0.14    cli_3.6.6           rmarkdown_2.32     
+    ## [34] generics_0.1.4      otel_0.2.0          rstudioapi_0.19.0  
+    ## [37] future.apply_1.20.2 tzdb_0.5.0          DBI_1.3.0          
+    ## [40] proxy_0.4-29        base64enc_0.1-6     vctrs_0.7.3        
+    ## [43] hms_1.1.4           listenv_1.0.0       crosstalk_1.2.2    
+    ## [46] units_1.0-1         glue_1.8.1          parallelly_1.48.0  
+    ## [49] codetools_0.2-20    stringi_1.8.9       gtable_0.3.6       
+    ## [52] raster_3.6-32       pillar_1.11.1       htmltools_0.5.9    
+    ## [55] satellite_1.0.6     R6_2.6.1            rprojroot_2.1.1    
+    ## [58] evaluate_1.0.5      lattice_0.22-9      png_0.1-9          
+    ## [61] class_7.3-23        Rcpp_1.1.2          coda_0.19-4.1      
+    ## [64] nlme_3.1-169        xfun_0.60           pkgconfig_2.0.3

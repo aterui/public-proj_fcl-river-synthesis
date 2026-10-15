@@ -22,7 +22,7 @@ pacman::p_load(tidyverse,
 
 # Article Information
 
-**Title**: Geometric ecosystem complexity regulates riverine food chains
+**Title**: Geometric ecosystem complexity underpins riverine food chains
 
 **Authors**: Terui A, Shibasaki S, Pomeranz JPF, Ibrahim M, Isaac E,
 LaRoque A, Yamazaki D, Finlay JC
