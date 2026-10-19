@@ -68,8 +68,7 @@ sf_lev01 <- readRDS("data_raw/sf_hybas_lev01.rds") %>%
 ## site layer
 # outlet points joined to ecoregion info, restricted to sites included in the analysis
 sf_site <- readRDS("data_raw/sf_outlet.rds") %>%
-  left_join(df_ecor,
-            by = "oid") %>%
+  left_join(df_ecor) %>%
   filter(oid %in% oid_incl)
 
 # simplified + validity-checked basin polygons used as the background map layer
@@ -82,81 +81,99 @@ site_coords <- sf_site %>%
   mutate(
     x = st_coordinates(.)[, 1],
     y = st_coordinates(.)[, 2]
-  )
+  ) %>% 
+  as_tibble() %>% 
+  select(region, x, y)
+
+# shape
+symbols <- c(
+  21, 22, 24, 25,
+  22, 21, 24
+)
 
 # build the map: basin polygons + site points colored by ecoregion +
 # ellipses summarizing the spatial extent of each ecoregion's sites
-g_map <- ggplot(sf_region) +
-  geom_sf(
-    alpha = 0.5                        # background basin polygons, semi-transparent
-  ) +
-  geom_sf(
-    data = sf_site,
-    aes(color = region),         # site points colored by ecoregion
-    size = 1
-  ) +
-  ggforce::geom_mark_ellipse(
-    data = site_coords,
-    aes(
-      x = x, 
-      y = y, 
-      color = region,
-      fill = region
-    ),
-    linewidth = 0.1,
-    alpha = 0.15,
-    expand = unit(2, "mm")             # padding around enclosed points; smaller = tighter ellipse
-  ) + 
-  labs(
-    color = "Region",
-    fill = "Region"
-  ) +
-  coord_sf(xlim = c(-163.8, 163.8)) +  # restrict longitude extent of the map
-  theme_bw() +
-  theme(
-    axis.title = element_blank(),
-    axis.text = element_text(size = 12),
-    axis.ticks = element_blank(),
-    panel.border = element_blank()
-  )
+(
+  g_map <- ggplot(sf_region) +
+    geom_sf(
+      alpha = 0.5                        # background basin polygons, semi-transparent
+    ) +
+    geom_sf(
+      data = sf_site,
+      aes(
+        color = region,
+        fill = region,
+        shape = region
+      ),         # site points colored by ecoregion
+      size = 1
+    ) +
+    ggforce::geom_mark_hull(
+      data = site_coords,
+      aes(
+        x = x, y = y,
+        group = region,
+        color = region,
+        fill = region
+      ),
+      alpha = 0.15,
+      concavity = 0,
+      expand = unit(2.5, "mm")
+    ) + 
+    labs(
+      color = "Region",
+      fill = "Region",
+      shape = "Region"
+    ) +
+    coord_sf(xlim = c(-163.8, 163.8)) +  # restrict longitude extent of the map
+    scale_shape_manual(values = symbols) + 
+    theme_bw() +
+    theme(
+      axis.title = element_blank(),
+      axis.text = element_text(size = 12),
+      axis.ticks = element_blank(),
+      panel.border = element_blank()
+    ) +
+    guides(
+      color = guide_legend(override.aes = list(size = 3))
+    )
+)
 
 ## prediction plot 
 # source("code/set_theme.R")
 # ggplot2::theme_set(default_theme)
 
 ## fcl vs. watershed area
-(g_size <- df_mu_est %>% 
+(
+  g_size <- df_mu_est %>% 
     ggplot(
-      aes(x = r_length,
-          y = fcl_est)
+      aes(
+        x = r_length,
+        y = fcl_est
+      )
     ) +
     geom_point(
       aes(
         color = region,
+        fill = region,
+        shape = region,
         size = scl_w
       ),
       alpha = 0.5) + 
-    # geom_line(data = filter(df_yh, focus == "scl_log_rl"),
-    #           aes(x = r_length,
-    #               y = y,
-    #               color = region),
-    #           alpha = 1,
-    #           linetype = "dashed") +
-    # geom_line(data = filter(df_y, focus == "scl_log_rl"),
-    #           aes(x = r_length,
-    #               y = y)) +
-    # geom_ribbon(data = filter(df_y, focus == "scl_log_rl"),
-    #             aes(y = y,
-    #                 ymin = y_low,
-    #                 ymax = y_high,
-    #                 x = r_length),
-    #             alpha = 0.1) +
-    scale_x_log10(labels = scales::label_log(digits = 2)) +
+    scale_x_log10(
+      labels = scales::label_log(digits = 2)
+    ) +
     scale_y_log10() +
-    labs(y = "FCL",
-         x = "Total river length (km)",
-         size = "Weight") +
-    guides(color = "none") +
+    labs(
+      y = "FCL",
+      x = "Total river length (km)",
+      size = "Weight"
+    ) +
+    guides(
+      color = "none",
+      fill = "none",
+      shape = "none"
+    ) +
+    scale_shape_manual(values = symbols) +
     theme_classic() +
     theme(
       axis.title = element_text(size = 14),
@@ -166,35 +183,63 @@ g_map <- ggplot(sf_region) +
 )
 
 ## fcl vs. branching prob
-(g_b <- df_mu_est %>% 
-    ggplot(aes(x = lambda,
-               y = fcl_est)) +
-    geom_point(aes(color = region,
-                   size = scl_w),
-               alpha = 0.4) +
-    geom_line(data = filter(df_yh, focus == "scl_log_lambda"),
-              aes(x = lambda,
-                  y = y,
-                  color = region),
-              alpha = 1,
-              linetype = "dashed") + 
-    geom_line(data = filter(df_y, focus == "scl_log_lambda"),
-              aes(x = lambda,
-                  y = y)) +
-    geom_ribbon(data = filter(df_y, focus == "scl_log_lambda"),
-                aes(y = y,
-                    ymin = y_low,
-                    ymax = y_high,
-                    x = lambda),
-                alpha = 0.1) +
+(
+  g_b <- df_mu_est %>% 
+    ggplot(
+      aes(
+        x = lambda,
+        y = fcl_est
+      )
+    ) +
+    geom_point(
+      aes(
+        color = region,
+        fill = region,
+        shape = region,
+        size = scl_w
+      ),
+      alpha = 0.4
+    ) +
+    geom_line(
+      data = filter(df_yh, focus == "scl_log_lambda"),
+      aes(
+        x = lambda,
+        y = y,
+        color = region
+      ),
+      alpha = 1,
+      linetype = "dashed"
+    ) + 
+    geom_line(
+      data = filter(df_y, focus == "scl_log_lambda"),
+      aes(
+        x = lambda,
+        y = y
+      )
+    ) +
+    geom_ribbon(
+      data = filter(df_y, focus == "scl_log_lambda"),
+      aes(
+        y = y,
+        ymin = y_low,
+        ymax = y_high,
+        x = lambda
+      ),
+      alpha = 0.1
+    ) +
     scale_x_continuous(trans = "log10") +
     scale_y_continuous(trans = "log10") +
+    scale_shape_manual(values = symbols) +
     labs(
       y = "FCL",
       x = expression("Branching rate (per km)")
     ) +
-    guides(size = "none",
-           color = "none") +
+    guides(
+      size = "none",
+      color = "none",
+      fill = "none",
+      shape = "none"
+    ) +
     theme_classic() +
     theme(
       axis.title = element_text(size = 14),
@@ -284,7 +329,11 @@ var_level <- df_stats %>%
     geom_text(
       data = df_stats %>%
         mutate(var = factor(var, levels = var_level)),
-      aes(x = Inf, y = var, label = pp),
+      aes(
+        x = Inf, 
+        y = var, 
+        label = pp
+      ),
       inherit.aes = FALSE,
       hjust = 1.0,
       vjust = -0.3,
@@ -293,7 +342,11 @@ var_level <- df_stats %>%
     geom_text(
       data = df_stats %>%
         mutate(var = factor(var, levels = var_level)),
-      aes(x = -Inf, y = var, label = pn),
+      aes(
+        x = -Inf, 
+        y = var, 
+        label = pn
+      ),
       inherit.aes = FALSE,
       hjust = -1.0,
       vjust = -0.3,
@@ -303,7 +356,7 @@ var_level <- df_stats %>%
           axis.title.y = element_blank()   # blank
     ) +
     labs(x = "Posterior estimate")
-  )
+)
 
 
 ## export
