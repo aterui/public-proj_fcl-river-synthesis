@@ -227,12 +227,12 @@ data package used in this repository is **GFCL version 0.3.0**.
     ## 
     ## other attached packages:
     ##  [1] terra_1.9-50    mapview_2.11.4  tictoc_1.2.1    progressr_1.0.0
-    ##  [5] doFuture_1.3.0  future_1.75.0   foreach_1.5.2   ape_5.8-1      
-    ##  [9] ecotools_0.1.1  xtable_1.8-8    nimble_1.4.3    cowplot_1.2.0  
-    ## [13] magick_2.9.1    igraph_2.3.3    patchwork_1.3.2 sf_1.1-2       
-    ## [17] lubridate_1.9.5 forcats_1.0.1   stringr_1.6.0   dplyr_1.2.1    
-    ## [21] purrr_1.2.2     readr_2.2.0     tidyr_1.3.2     tibble_3.3.1   
-    ## [25] ggplot2_4.0.3   tidyverse_2.0.0
+    ##  [5] doFuture_1.3.0  future_1.75.0   rpom_0.2.0      mcbrnet_1.4.2  
+    ##  [9] foreach_1.5.2   ape_5.8-1       ecotools_0.1.1  xtable_1.8-8   
+    ## [13] nimble_1.4.3    cowplot_1.2.0   magick_2.9.1    igraph_2.3.4   
+    ## [17] patchwork_1.3.2 sf_1.1-2        lubridate_1.9.5 forcats_1.0.1  
+    ## [21] stringr_1.6.0   dplyr_1.2.1     purrr_1.2.2     readr_2.2.0    
+    ## [25] tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.3   tidyverse_2.0.0
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] tidyselect_1.2.1    farver_2.1.2        S7_0.2.2           
