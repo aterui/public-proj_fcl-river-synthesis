@@ -69,16 +69,16 @@ df_parms <- lapply(list_parms, FUN = function(x) {
                             parms == "z" ~ "$\\psi$",
                             parms == "theta" ~ "$\\theta$"),
          description = case_when(parms == "r0" ~ "Resource supply [-]",
-                                 parms == "b" ~ "Downstream accumulation rate of resources [per unit river length]",
-                                 parms == "g" ~ "Propagule production for producers [per habitat]",
-                                 parms == "h" ~ "Habitat density [per unit river length]",
+                                 parms == "b" ~ "Downstream accumulation rate of resources [unit river length]",
+                                 parms == "g" ~ "Propagule production for producers [habitat and unit time]",
+                                 parms == "h" ~ "Habitat density [unit river length]",
                                  parms == "delta0" ~ "Dispersal decay rate for producers [unit river length]",
-                                 parms == "mu0" ~ "Disturbance-induced extinction rate [per unit time]",
-                                 parms == "mu_p" ~ "Maximum prey-induced extinction rate [per unit time]",
-                                 parms == "mu_c" ~ "Predator-induced extinction rate [per unit time]",
-                                 parms == "nu" ~ "Distance decay rate of disturbance synchrony [per unit river length]",
-                                 parms == "z" ~ "Scaling exponent for propagule and dispersal parameters [per unit ln trophic position]",
-                                 parms == "theta" ~ "Degree of omnivory [per unit trophic position]")) %>% 
+                                 parms == "mu0" ~ "Disturbance-induced extinction rate [unit time]",
+                                 parms == "mu_p" ~ "Maximum prey-induced extinction rate [unit time]",
+                                 parms == "mu_c" ~ "Predator-induced extinction rate [unit time]",
+                                 parms == "nu" ~ "Distance decay rate of disturbance synchrony [unit river length]",
+                                 parms == "z" ~ "Scaling exponent for propagule and dispersal parameters [unit ln trophic position]",
+                                 parms == "theta" ~ "Degree of omnivory [unit trophic position]")) %>% 
   relocate(symbol, description) %>% 
   dplyr::select(-parms) %>% 
   rename_with(.fn = str_to_sentence)
