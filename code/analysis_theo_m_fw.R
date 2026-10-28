@@ -140,7 +140,6 @@ df_line <-
 ## RUN
 n_workers <- floor(0.8 * detectCores())
 plan(multisession, workers = n_workers)
-registerDoFuture()
 handlers(global = TRUE)
 
 tic(msg = "fcl heatmap run")
@@ -234,7 +233,6 @@ saveRDS(df_fcl_heat, file = "data_fmt/sim_fcl_m_heat.rds")
 ## RUN
 n_workers <- floor(0.8 * detectCores())
 plan(multisession, workers = n_workers)
-registerDoFuture()
 handlers(global = TRUE)
 
 tic(msg = "fcl line-art run")
