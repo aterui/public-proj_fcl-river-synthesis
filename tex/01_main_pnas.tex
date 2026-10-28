@@ -85,13 +85,12 @@ These influences of ecosystem complexity should propagate through predator-prey 
 Yet, previous studies on FCL predominantly assumed simplified landscapes for tractability, leaving this important question unanswered.
 
 Here, we show that ecosystem complexity, quantified by branching rate of river networks, plays a central role in shaping riverine food chains.
-Branching rate captures the fractal nature of river networks, exhibiting power-law scaling over network resolution \citep{terui_revisiting_2024} and stream orders \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, kovchegov_random_2022}.
+Branching rate captures the fractal nature of river networks, exhibiting scaling properties over network resolution \citep{terui_revisiting_2024} and stream orders \citep{peckham_reformulation_1999, rodriguez-iturbe_fractal_2001, kovchegov_random_2022}.
 Building on this metric, we develop a theoretical model that explicitly accounts for dispersal limitation and large-scale disturbance cascades, both ubiquitous phenomena in riverscapes \citep{radinger_patterns_2014, massoudieh_biogeochemical_2010, stanley_ecosystem_1997, swanson_flood_1998, nakamura_disturbance_2000, gomi_understanding_2002, messager_global_2021}.
 The model predicted that more branched river networks increase colonization potential through greater connectivity while simultaneously creating tributary refugia from landscape-scale cascading disturbances (e.g., floods and drying).
 This dual mechanism underpinned the persistence of long food chains under common structural properties of river networks.
 However, the relationship between FCL and ecosystem size was expected to remain weak across diverse ecological scenarios.
 These predictions were supported by cross-continental FCL data, providing strong empirical evidence for the role of ecosystem complexity in controlling FCL.
-% Our findings highlight the overlooked role of ecosystem complexity in shaping the vertical organization of food webs and offer a conceptual foundation for future conservation strategies.
 
 \section{Results and Discussion}
 
@@ -146,7 +145,6 @@ The predator exhibits a nested distribution within the distribution of the prey.
 
 We assumed two key processes governing local colonization--extinction dynamics at individual habitats, from which we analytically derived ecologically meaningful expressions for $\phi_k$ and $\mu_k$ at the metapopulation level. 
 First, propagules disperse through the river network according to an exponential dispersal kernel, $\exp(-\delta_k d_{ij})$, such that the probability of a propagule successfully reaching target habitat $i$ from source habitat $j$ declines with network distance $d_{ij}$ at rate $\delta_k$.
-% Without imposing any additional assumptions, 
 A spatial mean-field approximation \citep{ovaskainen_asymptotically_2006} yields the effective propagule $\phi_k$ as a function of the expected network distance $\hat{d} \equiv \mathbb{E}\bigl(d_{ij}\bigr)$ at the metapopulation level (Corollary 1.3.1, \textit{SI Appendix}), which exhibits the asymptotic scaling with $L$ and $\lambda_b$ (Table \ref{tab:scaling}):
 \\
 \begin{equation}
@@ -248,7 +246,6 @@ In reality, however, non-random geomorphic processes may shape the evolution of 
 Numerical frameworks based on Optimal Channel Networks (OCNs) \citep{rodriguez-iturbe_fractal_2001} can better capture the non-random formation of river networks. 
 Nevertheless, a simulation study has shown that models with random topology can generate ecological dynamics resembling those observed in both OCNs and real river networks \citep{lee_network_2022}. 
 As such, we leave this extension to future work.
-% As such, although incorporating non-random network formation represents an interesting avenue, we leave this extension to future work.
 
 \subsection{Extensions to Food Webs}
 
@@ -439,32 +436,31 @@ In addition, we statistically controlled the potential confounding effects of hu
 As such, including the human footprint index would also enable the model to account for river fragmentation, which is often linked to road crossings and land transformation.
 Nevertheless, our inference should be interpreted with caution because our dataset is geographically biased toward North America, Europe, Australia/Pacific regions. Filling geographic gaps will provide a more comprehensive understanding of the environmental controls on FCL.
 
-Our theoretical framework suggests plausible ecological mechanisms underlying the effect of branching complexity; however, other processes may also contribute.
+Although our theoretical framework suggests plausible ecological mechanisms underlying the effect of branching complexity, other processes may also contribute.
 Highly branched rivers support greater environmental heterogeneity and regional diversity \citep{terui_emergent_2021, uno_bridging_2026}, which may help sustain longer FCL \citep{shibasaki_food_2024}.
-This hypothesis warrants further theoretical exploration given the non-linear effect of environmental heterogeneity on ecological communities.
+This hypothesis, however, warrants further theoretical exploration given the non-linear effect of environmental heterogeneity on ecological communities.
 For example, increased heterogeneity reduces the area available for any particular habitat type (the area-heterogeneity trade-off), potentially increasing the extinction risk of habitat specialists \citep{allouche_areaheterogeneity_2012}.
-Another possible mechanism is that intricate river branching increases interactions with surrounding terrestrial ecosystems \citep{gomi_understanding_2002} and facilitate resource subsidies that could influence FCL \citep{terui_stream_2018}.
-Considering these alternative mechanisms may increase the robustness of our theoretical framework.
+Another possible mechanism is that intricate river branching increases interactions with surrounding terrestrial ecosystems \citep{gomi_understanding_2002} and facilitate resource subsidies that could increase FCL \citep{terui_stream_2018}.
+Considering these alternative mechanisms may improve the robustness of our theoretical framework.
 
 The substantial variation in FCL remains unexplained, and we suggest two avenues for future research. 
-First, large dams, which are widespread worldwide, may have complex effects on FCL by simultaneously altering disturbance regimes and fragmenting river networks \citep{tamario_barriers_2025}. 
-Explicitly accounting for these dual influences in empirical analyses might improve our ability to predict riverine FCL. 
+First, large dams, which are widespread worldwide, may have complex effects on FCL by simultaneously altering disturbance regimes and fragmenting river networks \citep{tamario_barriers_2025, ishiyama_predicting_2018}. 
+Accounting for these dual influences in empirical analyses might improve our ability to predict riverine FCL. 
 Second, considering eco-evolutionary dynamics may help explain the variation in FCL \citep{calcagno_coevolution_2023} because the branching architecture can shape genetic population structure by constraining dispersal pathways \citep{morrissey_maintenance_2009}.
-A fundamental limitation of our correlational analysis is that it cannot disentangle the contributions of these influences or establish causal relationships underlying the observed patterns.
-Controlled experiments are therefore needed. 
-Although watershed-scale experiments are impractical, microbial communities or other small-scale systems may provide a feasible alternative for testing the proposed and other mechanisms \citep{altermatt_big_2015, green_long_2023}.
+Correlational analysis of observational data would not allow us to disentangle the contributions of these processes; controlled experiments are therefore desired. 
+Although watershed-scale experiments are impractical, microbial communities or other small-scale systems may provide a feasible alternative for testing the suggested and other mechanisms \citep{altermatt_big_2015, green_long_2023}.
 
 \subsection{Implications}
 
 Over the past decades, the exploration of FCL controls has revolved around three major hypotheses: resource availability, environmental stability, and ecosystem size \citep{oksanen_exploitation_1981, pimm_number_1977, schoener_food_1989}.
 However, far less attention has been paid to ecosystem complexity despite the ubiquity of fractals across terrestrial \citep{turner_landscape_2015} and aquatic ecosystems \citep{rodriguez-iturbe_fractal_2001}.
 Here, our synthesis provides the first evidence that ecosystem complexity shapes food chains in rivers.
-The influence of ecosystem complexity arises purely from the physical architecture of spatial network structure, likely explaining the remarkable consistency across geographic regions.
+The influence of ecosystem complexity arises from the physical architecture of spatial network structure, likely explaining the remarkable consistency across geographic regions.
 Although our focus is on river networks, the underlying principle may extend to other spatially complex ecosystems.
 For example, forests exhibit complex vertical and horizontal structures, creating heterogeneous but highly connected microhabitats with varying susceptibilities to wind and fire disturbances \citep{peterson_contagious_2002, cansler_climate_2014}.
 Similarly, reef topography influences spatial disturbance patterns in marine systems \citep{connell_30year_1997}.
 Ecosystem complexity may therefore play a broader role in organizing food webs than previously recognized.
-% Highlighting this underappreciated aspect of ecosystems may provide deeper insights into how food webs are structured in nature.
+Our findings offer a conceptual foundation for future research embracing this underappreciated aspect of ecosystems.
 
 \section{Methods}
 
@@ -474,7 +470,6 @@ Ecosystem complexity may therefore play a broader role in organizing food webs t
 
 We used the preferential prey model to generate initial food webs \citep{johnson_trophic_2014}.
 We chose this method because it generates (i) acyclic food webs, (ii) food web structures comparable to those observed in nature, and (iii) a plausible range of FCL with parameter values informed by empirical food webs \citep{shibasaki_food_2024}.
-% Although the niche model \citep{williams_simple_2000} is used widely in food web research, this method is unsuitable for our study because it may create loops and cannibalism in a food web, which prevent us from defining trophic positions and FCL \citep{shibasaki_food_2024}.
 Here, we provide an overview of the preferential prey model, and full details are provided in \textit{SI Appendix}.
 
 The preferential prey model requires four parameters to build a food web: the number of (trophic) species $S$, the number of producer species $P$, the expected number of trophic links $N_l$, and trophic omnivory $\theta$ ($\theta > 0$).
@@ -521,7 +516,7 @@ Species at higher trophic positions produce fewer propagules but possess greater
 \subsubsection*{Model analysis}
 
 Our model builds on previous spatial food chain models \citep[e.g.,][]{holt_food_2002, takimoto_effects_2012, calcagno_constraints_2011, terui_spatial_2019}, but is substantially extended to incorporate the effects of river network structure and food web complexity. 
-The generalized model in Equation~\ref{eq:model-fw} is derived from mechanistic assumptions at the level of individual habitats and then scaled up to metapopulation dynamics using a spatial mean-field approximation \citep{ovaskainen_asymptotically_2006}. 
+The generalized model in Equation~\ref{eq:model-fw} is derived from ecological assumptions at the level of individual habitats and then scaled up to metapopulation dynamics using a spatial mean-field approximation \citep{ovaskainen_asymptotically_2006}. 
 The metapopulation model for a predator-prey system was recovered as a special case of Equation~\ref{eq:model-fw}, in which the establishment probability $c_k$, dispersal decay rate $\delta_k$, and propagule production $g_k$ were assumed to be constant across species.
 For brevity, the derivation is provided in \textit{SI Appendix}.
 The theoretical analyses were performed in R 4.5.2 \citep{r_program}.
@@ -548,7 +543,6 @@ These food webs are simulated with different parameter values, which are drawn r
 The means of these parameters were determined to reflect the typical values of the proportion of producers ($P / S \approx 0.19$) \citep{briand_community_1984} and connectance in nature ($N_l / S^2 \approx 0.11$) \citep{dunne_food-web_2002}.
 We crossed these 20 food webs with resource supply ($r_0 \in \{0.25, 0.50\}$) and disturbance levels ($\mu^{(0)} \in \{2.5, 5.0\}$) with other parameter values summarized in Table \ref{tab:parms}.
 In each simulation scenario, we systematically varied total river length $L$ and branching rate $\lambda_b$ as $L \in [100, 5000]$ and $\lambda_b \in [0.2, 1.0]$ (50 values with equal intervals) to assess their influences.
-% This analytical exploration results in $20 \times 2^2 \times 50^2 = 200,000$ runs.
 
 At equilibrium, we calculated the realized trophic position $\tau^{(w)}$ for persistent species as follows.
 Producers are assigned $\tau^{(w)} = 1$.
@@ -623,7 +617,6 @@ The inverse of the mean link length is an empirical proxy for theoretical branch
 
 We calculated the spatial average of air temperature, precipitation, and human footprint index for each watershed polygon, whose data were sourced from CHELSA BIOCLIM+ (average of 1981-2010, 30 arc-second) \citep{brun_global_2022} and a global Human Footprint dataset populated by Mu et al \citep{mu_global_2022}.
 For the human footprint index, we used data from 2000, 2005, ..., 2015 (5-year intervals), and extracted values from the year nearest to the first sampling year in each watershed.
-% We used the following R packages for our GIS analysis: \textit{sf} \citep{pkg_sf}, \textit{terra} \citep{pkg_terra}, \textit{exactextractr} \citep{pkg_exactextractr}, \textit{whitebox} \citep{pkg_whitebox}, and \textit{stars} \citep{pkg_stars}.
 
 \subsubsection*{Statistical analysis}
 
@@ -714,7 +707,7 @@ Data and codes used in this study are available at:
 
 \section*{Acknowledgements}
 
-We extend our gratitude to Yutaka Osada and Ryosuke Iritani for their valuable contributions to Lemma 1.4.2, as well as to Aisha Hamoud and Lucia Ramirez-Joseph for their assistance with data collection for empirical data analysis.
+We extend our gratitude to Yutaka Osada and Ryosuke Iritani for their valuable contributions to Lemma 1.4.4, as well as to Aisha Hamoud and Lucia Ramirez-Joseph for their assistance with data collection for empirical data analysis.
 Our empirical analysis would not have been possible without the previous studies listed in \textit{SI Appendix} and the generous provision of raw data from several authors of the published articles.
 This material is based upon work supported by the National Science Foundation through the Division of Environmental Biology (DEB 2015634 and 2015798).
 
