@@ -88,7 +88,7 @@ df_parms <- lapply(list_parms, FUN = function(x) {
 print(xtable(df_parms %>%
                dplyr::select(-Value.y) %>% 
                rename(Value = Value.x),
-             caption = "Parameter descriptions and values used for analytical predictions.",
+             caption = "Parameter descriptions and values used for analytical predictions. Units are shown in brackets.",
              label = "tab:parms"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
@@ -101,7 +101,7 @@ print(xtable(df_parms %>%
 print(xtable(df_parms %>%
                dplyr::select(-Value.x) %>% 
                rename(Value = Value.y),
-             caption = "Parameter descriptions and values used for numerical predictions.",
+             caption = "Parameter descriptions and values used for numerical predictions. Units are shown in brackets.",
              label = "tab:parms-num"),
       tabular.environment = "tabularx", # use \begin{tabularx}
       width = "\\textwidth", # scale table with \textwidth
@@ -263,3 +263,4 @@ print(xtable(df_src,
       size = "\\small",
       file = "tex/table_si_list.tex",
       floating = FALSE)
+
