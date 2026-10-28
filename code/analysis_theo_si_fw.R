@@ -90,7 +90,6 @@ p_th <- 1e-5
 ## RUN
 n_workers <- floor(0.8 * detectCores())
 plan(multisession, workers = n_workers)
-registerDoFuture()
 handlers(global = TRUE)
 
 tic(msg = "fcl heatmap run")
