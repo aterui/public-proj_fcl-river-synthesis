@@ -104,7 +104,7 @@ It can be interpreted as the average number of links per unit river length, wher
 \begin{figure*}
     \centering
     \includegraphics[width=0.8\textwidth]{fig_theo_scheme.pdf}
-    \caption{Modeling scheme. (A) Schematic representation of the random branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. Key network properties are defined as follows. Network distance $d$: the distance measured along the river network between two habitats (the gray broken line connecting black and open dots). Upstream river length $u$: the portion of the river located upstream of a focal habitat patch (the black solid lines above black dots). Network diameter $\mathcal{L}$: the river length from the outlet to a given upstream terminal (the gray broken line connecting the outlet and an upstream terminal). (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. Disturbance term $\mu^{(0)}(1 + \hat{\rho}\hat{u})$ (Equation \ref{eq:mu-pp}) increases with $L$ but decreases with $\lambda_b$. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
+    \caption{Modeling scheme. (A) Schematic representation of random branching networks. Ecosystem size is increased by expanding total river length $L$ without changing branching rate $\lambda_b$. Conversely, ecosystem complexity is increased by increasing branching rate while maintaining constant total river length. A ``link'' represents a river segment, and confluences indicate where segments meet. Habitat patches (black and open dots) are randomly distributed along the network. Key network properties are defined as follows. Network distance $d$: the distance measured along the river network between two habitats (the gray broken line connecting black and open dots). Upstream river length $u$: the portion of the river located upstream of a focal habitat patch (the black solid lines above black dots). Network diameter $\mathcal{L}$: the river length from the outlet to a given upstream terminal (the gray broken line connecting the outlet and an upstream terminal). (B) Effective propagule $\phi_k$ (Equation \ref{eq:phi-pgle}) increases with both total river length $L$ and branching rate $\lambda_b$. Disturbance term $\mu^{(0)}(1 + \hat{\rho}\hat{u})$ (Equation \ref{eq:mu-pp}) increases with $L$ but decreases with $\lambda_b$. For illustration, we set $h = 1$, $g = 1$, $\delta = 0.1$, and $\nu = 0.1$, and $\mu^{(0)} = 1$.}
     \label{fig:scheme}
 \end{figure*}
 
@@ -225,7 +225,7 @@ This simplified formulation highlights the unique contributions of river network
 \begin{figure}
     \centering
     \includegraphics[width=0.3\textwidth]{fig_theo_2sp.pdf}
-    \caption{Ecosystem size (total river length $L$) and complexity (branching rate $\lambda_b$) dictate equilibrium occupancies of a predator-prey system. Parameters used in this result are: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. In each panel, one ecosystem property was held constant (left: $L = 2550$; right: $\lambda_b = 0.6$) while the other was varied along the x-axis. A broader parameter space was explored in the \textit{SI Appendix}.}
+    \caption{Ecosystem size (total river length $L$) and complexity (branching rate $\lambda_b$) dictate equilibrium occupancies of a predator-prey system. Parameters used in this result are: habitat density $h = 1$, establishment probability $c = 0.5$, propagule production $g = 5$, dispersal decay rate $\delta = 0.1$, disturbance rate $\mu^{(0)} = 2.5$, prey-induced extinction rate $\mu^{(1)} = 5$, and disturbance decay rate $\nu = 0.1$. In each panel, one ecosystem property was held constant (left: $L = 2550$; right: $\lambda_b = 0.6$) while the other was varied along the x-axis. A broader parameter space was explored in \textit{SI Appendix}.}
     \label{fig:pp-occ}
 \end{figure}
 
@@ -519,7 +519,7 @@ Our model builds on previous spatial food chain models \citep[e.g.,][]{holt_food
 The generalized model in Equation~\ref{eq:model-fw} is derived from ecological assumptions at the level of individual habitats and then scaled up to metapopulation dynamics using a spatial mean-field approximation \citep{ovaskainen_asymptotically_2006}. 
 The metapopulation model for a predator-prey system was recovered as a special case of Equation~\ref{eq:model-fw}, in which the establishment probability $c_k$, dispersal decay rate $\delta_k$, and propagule production $g_k$ were assumed to be constant across species.
 For brevity, the derivation is provided in \textit{SI Appendix}.
-The theoretical analyses were performed in R 4.5.2 \citep{r_program}.
+The theoretical analyses were performed in R 4.6.1 \citep{r_program}.
 
 \textit{Analytical prediction.} In the absence of predation effects ($\mu^{(2)} = 0$), the equilibrium of the system defined by Equation \ref{eq:model-fw} can be derived analytically as
 \\
@@ -581,11 +581,11 @@ We used the following inclusion criteria to choose sites with sufficient informa
 Each site (i) must contain either stable isotope data of nitrogen ($\delta^{15}N$) for top and baseline species (producer or primary consumer) or an estimate of the maximum trophic position; 
 (ii) must contain reliable spatial coordinates for geospatial analysis; 
 (iii) must be located within a freshwater lotic system, excluding lentic (reservoirs, wetlands, lakes) and semi-lentic systems (large rivers with $>$ 5000 km$^2$ in watershed area); and (iv) can be associated with potential environmental drivers in GIS.
+After this screening process, we retained 317 sites located in 115 watersheds from 46 studies (\textit{SI Appendix}, Table S4), of which 228 sites included $\Delta^{15}N$ values from suitable top predators. 
 
-We also obtained information on whether stable isotope data at each site included the isotopic signature of a suitable top predator in the system.
+We obtained information on whether stable isotope data at each site included the isotopic signature of a suitable top predator in the system.
 We categorized the site as ``a suitable top predator collected'' if the study explicitly stated so or targeted the top consumer community (typically fish) for stable isotope analysis.
 We used this information to properly account for the imperfect sampling of top predators in our statistical analysis.
-After this screening process, we retained 317 sites located in 115 watersheds from 46 studies (\textit{SI Appendix}, Table S4), of which 228 sites included $\Delta^{15}N$ values from suitable top predators. 
 
 When $\delta^{15}N$ values are available, we used the following equation to estimate FCL:
 \\
@@ -688,7 +688,7 @@ If spatially biased, the distance ratio shows deviation from one, where $d_{w} <
 The Gaussian function $\exp[-\xi_2 (1 - d_{w})^2]$ returns smaller values as $d_{w}$ deviates from one, thus awarding more weights if spatially random.
 The parameters $\xi_1$ and $\xi_2$ control how quickly $\zeta_w$ increases with the number of sampling sites and the spatial randomness, and these were estimated through the stochastic search of Bayesian inference.
 
-We fitted our model to the data using NIMBLE version 1.2.1 \citep{nimble, pkg_nimble} in R 4.5.2 \citep{r_program}.
+We fitted our model to the data using NIMBLE version 1.4.3 \citep{nimble, pkg_nimble} in R 4.6.1 \citep{r_program}.
 We assigned weakly informative priors to parameters: $\alpha_m,~\beta_0,~\beta_m \sim \mbox{Normal}(0, 5^2)$; $\sigma,~\sigma_{\varepsilon},~\sigma_{\eta} \sim t^+(0, 1, 10)$; $\xi_1 \sim \mbox{Normal}^+(0, 1)$; $\xi_2 \sim \mbox{Normal}^+(0, (\ln 10)^2)$; and $\nu \sim \mbox{Trunc(Exp}(0.1); 2, \infty)$, where plus signs indicate half-Normal or half-t distributions. 
 Four Markov chain Monte Carlo (MCMC) chains were run until parameter estimates
 converged.
