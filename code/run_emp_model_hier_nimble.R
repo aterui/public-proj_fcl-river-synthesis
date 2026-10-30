@@ -144,7 +144,8 @@ parms <- c("a",
            "b0",
            "nu",
            "sigma",
-           "z")
+           "z",
+           "Rsq")
 
 ## model setup as nimbleModel
 post_h0 <- nimbleMCMC(
@@ -191,10 +192,15 @@ post_h0 <- nimbleMCMC(
 
 ## append variable names
 vn <- with(list_const, c(colnames(X1), colnames(X2)))
+df_varname <- tibble(
+  parms = 
+    c(paste0("a[", seq_len(ncol(X1)), "]"),
+      paste0("b[", seq_len(ncol(X2)), "]")),
+  varname = vn
+)
 
 df_est_h0 <- df_est_h0 %>% 
-  mutate(varname = c(vn,
-                     rep(NA, nrow(df_est_h0) - length(vn))))
+  left_join(df_varname)
 
 ## export
 if(max(df_est_h0$rhat, na.rm = TRUE) < 1.1) {
@@ -307,10 +313,15 @@ post_h1 <- nimbleMCMC(
 
 ## append variable names
 vn <- with(list_const, c(colnames(X1), colnames(X2)))
+df_varname <- tibble(
+  parms = 
+    c(paste0("a[", seq_len(ncol(X1)), "]"),
+      paste0("b[", seq_len(ncol(X2)), "]")),
+  varname = vn
+)
 
 df_est_h1 <- df_est_h1 %>% 
-  mutate(varname = c(vn,
-                     rep(NA, nrow(df_est_h1) - length(vn))))
+  left_join(df_varname)
 
 ## export
 if(max(df_est_h1$rhat, na.rm = TRUE) < 1.1) {

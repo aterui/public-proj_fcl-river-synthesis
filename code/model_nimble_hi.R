@@ -56,6 +56,7 @@ m0 <- nimble::nimbleCode({
     ## - watershed regression
     a0[j] ~ dnorm(a0_hat[j], tau = tau_w[j])
     a0_hat[j] <- sum(b[1:K2] * X2[j, 1:K2]) + r[H[j]]
+    eps[j] <- a0_hat[j] - a0[j]
     
     ## - "scl_w[j]" scaled weight
     ## - "Ratio[j]" is the distance ratio to randomly-generated sites
@@ -72,5 +73,10 @@ m0 <- nimble::nimbleCode({
     r[h] ~ dnorm(0, sd = sigma[3])
     b0[h] <- b[1] + r[h]
   }
+  
+  ## conditional R^2
+  sumsq1 <- sum(scl_w[1:Nw] * eps[1:Nw]^2)
+  sumsq0 <- sum(scl_w[1:Nw] * (a0[1:Nw] - mean(a0[1:Nw]))^2)
+  Rsq <- 1 - (sumsq1 / sumsq0)
   
 })
